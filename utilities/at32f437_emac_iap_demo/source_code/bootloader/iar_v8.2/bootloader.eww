@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspace>
+    <project>
+        <path>$WS_DIR$\bootloader.ewp</path>
+    </project>
+    <batchBuild>
+        <batchDefinition>
+            <name>all</name>
+            <member>
+                <project>bootloader</project>
+                <configuration>bootloader</configuration>
+            </member>
+        </batchDefinition>
+    </batchBuild>
+</workspace>

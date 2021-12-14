@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<workspace>
+  <project>
+    <path>$WS_DIR$\qspi_algorithm.ewp</path>
+  </project>
+  <batchBuild>
+    <batchDefinition>
+      <name>ALL</name>
+      <member>
+        <project>qspi_algorithm</project>
+        <configuration>Flash_AT32F435_USD_4KB</configuration>
+      </member>
+      <member>
+        <project>qspi_algorithm</project>
+        <configuration>Flash_AT32F435_USD_512B</configuration>
+      </member>
+      <member>
+        <project>qspi_algorithm</project>
+        <configuration>Flash_AT32F435_1024K</configuration>
+      </member>
+      <member>
+        <project>qspi_algorithm</project>
+        <configuration>Flash_AT32F435_192K</configuration>
+      </member>
+      <member>
+        <project>qspi_algorithm</project>
+        <configuration>Flash_AT32F435_256K</configuration>
+      </member>
+      <member>
+        <project>qspi_algorithm</project>
+        <configuration>Flash_AT32F435_4032K</configuration>
+      </member>
+      <member>
+        <project>qspi_algorithm</project>
+        <configuration>Flash_AT32F435_960K</configuration>
+      </member>
+    </batchDefinition>
+  </batchBuild>
+</workspace>
+
+
