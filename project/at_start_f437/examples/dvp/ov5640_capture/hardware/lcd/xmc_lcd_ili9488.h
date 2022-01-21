@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     xmc_lcd_ili9488.h
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    xmc_lcd program header
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -26,18 +26,31 @@
 #ifndef __XMC_LCD_ili9488_H
 #define __XMC_LCD_ili9488_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
+/* Includes ------------------------------------------------------------------*/
 #include "at32f435_437_board.h"
 
-/* the address of write data & command (xmc_a16) */
-#define  XMC_LCD_COMMAND                 0x60000000  
-#define  XMC_LCD_DATA                    0x60000002
+/** @addtogroup AT32F437_periph_examples
+  * @{
+  */
 
-#define LCD_BL_HIGH                      gpio_bits_set(GPIOB,GPIO_PINS_0)
-#define LCD_BL_LOW                       gpio_bits_reset(GPIOB,GPIO_PINS_0)
+/** @addtogroup 437_DVP_ov5640_capture
+  * @{
+  */
+
+/* the address of write data & command (xmc_a16) */
+#define  XMC_LCD_COMMAND                 (0x60000000)  
+#define  XMC_LCD_DATA                    (0x60000002)
+
+#define LCD_BL_HIGH                      gpio_bits_set(GPIOG,GPIO_PINS_2)
+#define LCD_BL_LOW                       gpio_bits_reset(GPIOG,GPIO_PINS_2)
 
 /* the lcd reset line */                 
-#define LCD_RESET_HIGH                   gpio_bits_set(GPIOD,GPIO_PINS_3)
-#define LCD_RESET_LOW                    gpio_bits_reset(GPIOD,GPIO_PINS_3)
+#define LCD_RESET_HIGH                   gpio_bits_set(GPIOG,GPIO_PINS_3)
+#define LCD_RESET_LOW                    gpio_bits_reset(GPIOG,GPIO_PINS_3)
 
 typedef struct  
 {										    
@@ -135,4 +148,16 @@ void lcd_string_show(uint16_t x, uint16_t y, uint16_t width, uint16_t height, ui
 void lcd_fill(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey, uint16_t color);
 void lcd_color_fill(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey, uint16_t *color);
 
+/**
+  * @}
+  */
+
+/**
+  * @}
+  */
+
+#ifdef __cplusplus
+}
 #endif
+
+#endif /* __XMC_LCD_ili9488_H */

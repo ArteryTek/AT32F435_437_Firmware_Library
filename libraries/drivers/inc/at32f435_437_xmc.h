@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_xmc.h
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    at32f435_437 xmc header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -139,37 +139,26 @@ typedef enum
 } xmc_ecc_enable_type;
 
 /**
-  * @brief xmc nor/sram bank type
+  * @brief xmc nor/sram subbank type
   */
 typedef enum
 {
-  XMC_BANK1_NOR_SRAM1                    = 0x00000000, /*!< xmc nor/sram bank1 */
-  XMC_BANK1_NOR_SRAM2                    = 0x00000002, /*!< xmc nor/sram bank2 */
-  XMC_BANK1_NOR_SRAM3                    = 0x00000004, /*!< xmc nor/sram bank3 */
-  XMC_BANK1_NOR_SRAM4                    = 0x00000006  /*!< xmc nor/sram bank4 */
-} xmc_nor_sram_bank_type;
+  XMC_BANK1_NOR_SRAM1                    = 0x00000000, /*!< xmc nor/sram subbank1 */
+  XMC_BANK1_NOR_SRAM2                    = 0x00000001, /*!< xmc nor/sram subbank2 */
+  XMC_BANK1_NOR_SRAM3                    = 0x00000002, /*!< xmc nor/sram subbank3 */
+  XMC_BANK1_NOR_SRAM4                    = 0x00000003  /*!< xmc nor/sram subbank4 */
+} xmc_nor_sram_subbank_type;
 
 /**
-  * @brief xmc subbank1 nor/sram type
+  * @brief xmc class bank type
   */
 typedef enum
 {
-  XMC_SUBBANK1_NOR_SRAM1                 = 0x00000000, /*!< xmc nor/sram subbank1 */
-  XMC_SUBBANK1_NOR_SRAM2                 = 0x00000001, /*!< xmc nor/sram subbank2 */
-  XMC_SUBBANK1_NOR_SRAM3                 = 0x00000002, /*!< xmc nor/sram subbank3 */
-  XMC_SUBBANK1_NOR_SRAM4                 = 0x00000003  /*!< xmc nor/sram subbank4 */
-} xmc_subbank1_nor_sram_type;
-
-/**
-  * @brief xmc nand bank type
-  */
-typedef enum
-{
-  XMC_BANK2_NAND                         = 0x00000010, /*!< xmc nand flash bank2 */
-  XMC_BANK3_NAND                         = 0x00000100, /*!< xmc nand flash bank3 */
-  XMC_BANK4_PCCARD                       = 0x00001000, /*!< xmc pc card bank4 */
-  XMC_BANK5_6_SDRAM                      = 0x00010000  /*!< xmc sdram bank5/6 */
-} xmc_nand_bank_type;
+  XMC_BANK2_NAND                         = 0x00000000, /*!< xmc nand flash bank2 */
+  XMC_BANK3_NAND                         = 0x00000001, /*!< xmc nand flash bank3 */
+  XMC_BANK4_PCCARD                       = 0x00000002, /*!< xmc pc card bank4 */
+  XMC_BANK5_6_SDRAM                      = 0x00000003  /*!< xmc sdram bank5/6 */
+} xmc_class_bank_type;
 
 /**
   * @brief xmc memory type
@@ -187,7 +176,7 @@ typedef enum
 typedef enum
 {
   XMC_BUSTYPE_8_BITS                     = 0x00000000, /*!< xmc databuss width 8bits */
-  XMC_BUSTYPE_16_BITS                    = 0x00000010  /*!< xmc databuss width 16bits */ 
+  XMC_BUSTYPE_16_BITS                    = 0x00000010  /*!< xmc databuss width 16bits */
 } xmc_data_width_type;
 
 /**
@@ -205,8 +194,8 @@ typedef enum
 typedef enum
 {
   XMC_WAIT_SIGNAL_SYN_BEFORE             = 0x00000000, /*!< xmc nwait signal is active one data cycle before wait state */
-  XMC_WAIT_SIGNAL_SYN_DURING             = 0x00000800  /*!< xmc nwait signal is active during wait state */ 
-} xmc_wait_timing_type; 
+  XMC_WAIT_SIGNAL_SYN_DURING             = 0x00000800  /*!< xmc nwait signal is active during wait state */
+} xmc_wait_timing_type;
 
 /**
   * @brief xmc access mode type
@@ -321,9 +310,9 @@ typedef enum
   */
 typedef enum
 {
-  XMC_READ_DELAY_0                           = 0x00000000, /*!< xmc sdram no delay */
-  XMC_READ_DELAY_1                           = 0x00000001, /*!< xmc sdram delay 1 clock*/
-  XMC_READ_DELAY_2                           = 0x00000002, /*!< xmc sdram delay 2 clock */
+  XMC_READ_DELAY_0                       = 0x00000000, /*!< xmc sdram no delay */
+  XMC_READ_DELAY_1                       = 0x00000001, /*!< xmc sdram delay 1 clock*/
+  XMC_READ_DELAY_2                       = 0x00000002, /*!< xmc sdram delay 2 clock */
 }xmc_sdram_rd_delay_type;
 
 /**
@@ -402,7 +391,7 @@ typedef enum
   */
 typedef struct
 {
-  xmc_nor_sram_bank_type                 bank;                /*!< xmc nor/sram bank */
+  xmc_nor_sram_subbank_type              subbank;             /*!< xmc nor/sram subbank */
   xmc_extended_mode_type                 write_timing_enable; /*!< xmc nor/sram write timing enable */
   uint32_t                               addr_setup_time;     /*!< xmc nor/sram address setup time */
   uint32_t                               addr_hold_time;      /*!< xmc nor/sram address hold time */
@@ -418,7 +407,7 @@ typedef struct
   */
 typedef struct
 {
-  xmc_nor_sram_bank_type                 bank;                /*!< xmc nor/sram bank */
+  xmc_nor_sram_subbank_type              subbank;             /*!< xmc nor/sram subbank */
   xmc_data_addr_mux_type                 data_addr_multiplex; /*!< xmc nor/sram address/data multiplexing enable */
   xmc_memory_type                        device;              /*!< xmc nor/sram memory device */
   xmc_data_width_type                    bus_type;            /*!< xmc nor/sram data bus width */
@@ -439,7 +428,7 @@ typedef struct
 
 typedef struct
 {
-  xmc_nand_bank_type                     nand_bank;      /*!< xmc nand/pccard bank */
+  xmc_class_bank_type                    class_bank;     /*!< xmc nand/pccard bank */
   uint32_t                               mem_setup_time; /*!< xmc nand/pccard memory setup time */
   uint32_t                               mem_waite_time; /*!< xmc nand/pccard memory wait time */
   uint32_t                               mem_hold_time;  /*!< xmc nand/pccard memory hold time */
@@ -452,7 +441,7 @@ typedef struct
 
 typedef struct
 {
-  xmc_nand_bank_type                     nand_bank;        /*!< xmc nand bank */
+  xmc_class_bank_type                    nand_bank;        /*!< xmc nand bank */
   xmc_nand_pccard_wait_type              wait_enable;      /*!< xmc wait feature enable */
   xmc_data_width_type                    bus_type;         /*!< xmc nand bus width */
   xmc_ecc_enable_type                    ecc_enable;       /*!< xmc nand ecc enable */
@@ -478,7 +467,7 @@ typedef struct
 
 typedef struct
 {
-  xmc_sdram_bank_type                    bank;             /*!< xmc sdram bank bype */
+  xmc_sdram_bank_type                    sdram_bank;       /*!< xmc sdram bank bype */
   xmc_sdram_inbk_type                    internel_banks;   /*!< xmc sdram internal banks */
   xmc_sdram_clkdiv_type                  clkdiv;           /*!< xmc sdram clock div */
   uint8_t                                write_protection; /*!< xmc sdram write protection */
@@ -517,17 +506,14 @@ typedef struct
   uint32_t                               data;         /*!< mode register data */
 } xmc_sdram_cmd_type;
 
-/**
-  * @brief xmc controller
-  */
 typedef struct
 {
   /**
-    * @brief xmc bk1ctrl register, offset:0x00+0x08*(x-1) x= 1...4
+    * @brief xmc bank1 bk1ctrl register, offset:0x00+0x08*(x-1) x= 1...4
     */
   union
   {
-    __IO uint32_t bk1ctrl[8];
+    __IO uint32_t bk1ctrl;
     struct
     {
       __IO uint32_t en                   : 1; /* [0] */
@@ -547,21 +533,15 @@ typedef struct
       __IO uint32_t crpgs                : 3; /* [18:16] */
       __IO uint32_t mwmc                 : 1; /* [19] */
       __IO uint32_t reserved2            : 12;/* [31:20] */
-    } bk1ctrl_bit[8];
+    } bk1ctrl_bit;
   };
-} xmc_bank1_type;
 
-/**
-  * @brief xmc bank1e
-  */
-typedef struct
-{
   /**
-    * @brief xmc bk1tmgwr register, offset:0x104+0x08*(x-1) x= 1...4
+    * @brief xmc bank1 bk1tmg register, offset:0x04+0x08*(x-1) x= 1...4
     */
   union
   {
-    __IO uint32_t bk1tmgwr[7];
+    __IO uint32_t bk1tmg;
     struct
     {
       __IO uint32_t addrst               : 4; /* [3:0] */
@@ -572,37 +552,86 @@ typedef struct
       __IO uint32_t dtlat                : 4; /* [27:24] */
       __IO uint32_t asyncm               : 2; /* [29:28] */
       __IO uint32_t reserved1            : 2; /* [31:30] */
-    } bk1tmgwr_bit[7];
+    } bk1tmg_bit;
   };
-} xmc_bank1_ext_type;
 
-/**
-  * @brief xmc bank1h
-  */
+} xmc_bank1_ctrl_tmg_reg_type;
+
 typedef struct
 {
-    /**
-    * @brief xmc bk1ext register, offset:0x220+0x08*(x-1) x= 1...4
+  /**
+    * @brief xmc bank1 bk1tmgwr register, offset:0x104+0x08*(x-1) x= 1...4
     */
   union
   {
-    __IO uint32_t bk1ext[4];
+    __IO uint32_t bk1tmgwr;
+    struct
+    {
+      __IO uint32_t addrst               : 4; /* [3:0] */
+      __IO uint32_t addrht               : 4; /* [7:4] */
+      __IO uint32_t dtst                 : 8; /* [15:8] */
+      __IO uint32_t buslat               : 4; /* [19:16] */
+      __IO uint32_t reserved1            : 8; /* [27:20] */
+      __IO uint32_t asyncm               : 2; /* [29:28] */
+      __IO uint32_t reserved2            : 2; /* [31:30] */
+    } bk1tmgwr_bit;
+  };
+
+  /**
+    * @brief xmc bank1 reserved register
+    */
+  __IO uint32_t reserved1;
+
+} xmc_bank1_tmgwr_reg_type;
+
+/**
+  * @brief xmc bank1 registers
+  */
+typedef struct
+{
+  /**
+    * @brief xmc bank1 ctrl and tmg register, offset:0x00~0x1C
+    */
+  xmc_bank1_ctrl_tmg_reg_type ctrl_tmg_group[4];
+
+  /**
+    * @brief xmc bank1 reserved register, offset:0x20~0x100
+    */
+  __IO uint32_t reserved1[57];
+
+ /**
+    * @brief xmc bank1 tmgwr register, offset:0x104~0x11C
+    */
+  xmc_bank1_tmgwr_reg_type tmgwr_group[4];
+
+  /**
+    * @brief xmc bank1 reserved register, offset:0x120~0x21C
+    */
+  __IO uint32_t reserved2[64];
+
+  /**
+    * @brief xmc bank1 ext register, offset:0x220~0x22C
+    */
+  union
+  {
+    __IO uint32_t ext[4];
     struct
     {
       __IO uint32_t buslatw2w            : 8; /* [7:0] */
       __IO uint32_t buslatr2r            : 8; /* [15:8] */
       __IO uint32_t reserved1            : 16;/* [31:16] */
-    } bk1ext_bit[4];
+    } ext_bit[4];
   };
-} xmc_bank1_hide_type;
+
+} xmc_bank1_type;
 
 /**
-  * @brief xmc bank2
+  * @brief xmc bank2 registers
   */
 typedef struct
 {
   /**
-    * @brief xmc bk2ctrl register, offset:0x40+0x20*(x-1) x=2
+    * @brief xmc bk2ctrl register, offset:0x60
     */
   union
   {
@@ -624,11 +653,11 @@ typedef struct
   };
 
   /**
-    * @brief xmc bk2sts register, offset:0x44+0x20*(x-1) x=2
+    * @brief xmc bk2is register, offset:0x64
     */
   union
   {
-    __IO uint32_t bk2sts;
+    __IO uint32_t bk2is;
     struct
     {
       __IO uint32_t res                  : 1; /* [0] */
@@ -639,11 +668,11 @@ typedef struct
       __IO uint32_t feien                : 1; /* [5] */
       __IO uint32_t fifoe                : 1; /* [6] */
       __IO uint32_t reserved1            : 25;/* [31:7] */
-    } bk2sts_bit;
+    } bk2is_bit;
   };
 
   /**
-  * @brief xmc bk2tmgmem register, offset:0x48+0x20*(x-1) x=2
+  * @brief xmc bk2tmgmem register, offset:0x68
   */
   union
   {
@@ -658,7 +687,7 @@ typedef struct
   };
 
   /**
-  * @brief xmc bk2tmgatt register, offset:0x4C+0x20*(x-1) x=2
+  * @brief xmc bk2tmgatt register, offset:0x6C
   */
   union
   {
@@ -673,12 +702,12 @@ typedef struct
   };
 
   /**
-  * @brief xmc reserved register
+  * @brief xmc reserved register, offset:0x70
   */
-  uint32_t      reserved;
+  __IO uint32_t reserved1;
 
   /**
-  * @brief xmc bk2ecc register, offset:0x54+0x20*(x-1) x=2
+  * @brief xmc bk2ecc register, offset:0x74
   */
   union
   {
@@ -692,12 +721,12 @@ typedef struct
 } xmc_bank2_type;
 
 /**
-  * @brief xmc bank3
+  * @brief xmc bank3 registers
   */
 typedef struct
 {
   /**
-    * @brief xmc bk3ctrl register, offset:0x40+0x20*(x-1) x=3
+    * @brief xmc bk3ctrl register, offset:0x80
     */
   union
   {
@@ -719,11 +748,11 @@ typedef struct
   };
 
   /**
-    * @brief xmc bk3sts register, offset:0x44+0x20*(x-1) x=3
+    * @brief xmc bk3is register, offset:0x84
     */
   union
   {
-    __IO uint32_t bk3sts;
+    __IO uint32_t bk3is;
     struct
     {
       __IO uint32_t res                  : 1; /* [0] */
@@ -734,11 +763,11 @@ typedef struct
       __IO uint32_t feien                : 1; /* [5] */
       __IO uint32_t fifoe                : 1; /* [6] */
       __IO uint32_t reserved1            : 25;/* [31:7] */
-    } bk3sts_bit;
+    } bk3is_bit;
   };
 
   /**
-  * @brief xmc bk3tmgmem register, offset:0x48+0x20*(x-1) x=3
+  * @brief xmc bk3tmgmem register, offset:0x88
   */
   union
   {
@@ -753,7 +782,7 @@ typedef struct
   };
 
   /**
-  * @brief xmc bk3tmgatt register, offset:0x4C+0x20*(x-1) x=3
+  * @brief xmc bk3tmgatt register, offset:0x8C
   */
   union
   {
@@ -768,12 +797,12 @@ typedef struct
   };
 
   /**
-  * @brief xmc reserved register
+  * @brief xmc reserved register, offset:0x90
   */
-  uint32_t      reserved;
+  __IO uint32_t reserved1;
 
   /**
-  * @brief xmc bk3ecc register, offset:0x54+0x20*(x-1) x=3
+  * @brief xmc bk3ecc register, offset:0x94
   */
   union
   {
@@ -786,13 +815,13 @@ typedef struct
 } xmc_bank3_type;
 
 /**
-  * @brief xmc bank4
+  * @brief xmc bank4 registers
   */
 typedef struct
 {
 
   /**
-    * @brief xmc bk4ctrl register, offset:0x40+0x20*(x-1) x=4
+    * @brief xmc bk4ctrl register, offset:0xA0
     */
   union
   {
@@ -814,11 +843,11 @@ typedef struct
   };
 
   /**
-    * @brief xmc bk4sts register, offset:0x44+0x20*(x-1) x=4
+    * @brief xmc bk4is register, offset:0xA4
     */
   union
   {
-    __IO uint32_t bk4sts;
+    __IO uint32_t bk4is;
     struct
     {
       __IO uint32_t res                  : 1; /* [0] */
@@ -829,11 +858,11 @@ typedef struct
       __IO uint32_t feien                : 1; /* [5] */
       __IO uint32_t fifoe                : 1; /* [6] */
       __IO uint32_t reserved1            : 25;/* [31:7] */
-    } bk4sts_bit;
+    } bk4is_bit;
   };
 
   /**
-  * @brief xmc bk4tmgmem register, offset:0x48+0x20*(x-1) x=4
+  * @brief xmc bk4tmgmem register, offset:0xA8
   */
   union
   {
@@ -848,7 +877,7 @@ typedef struct
   };
 
   /**
-  * @brief xmc bk4tmgatt register, offset:0x4C+0x20*(x-1) x=4
+  * @brief xmc bk4tmgatt register, offset:0xAC
   */
   union
   {
@@ -879,16 +908,16 @@ typedef struct
 } xmc_bank4_type;
 
 /**
-  * @brief xmc sdram bank5-6 type
+  * @brief xmc sdram type
   */
 typedef struct
 {
   /**
-    * @brief xmc sdctrl register, offset:0x140+4*(x-1) x=1,2
+    * @brief xmc sdram ctrl register, offset:0x140~0x144
     */
   union
   {
-    __IO uint32_t sdctrl[2];
+    __IO uint32_t ctrl[2];
     struct
     {
       __IO uint32_t ca                   : 2; /* [1:0] */
@@ -901,15 +930,15 @@ typedef struct
       __IO uint32_t bstr                 : 1; /* [12] */
       __IO uint32_t rd                   : 2; /* [14:13] */
       __IO uint32_t reserved1            : 17;/* [31:15] */
-    } sdctrl_bit[2];
+    } ctrl_bit[2];
   };
 
   /**
-    * @brief xmc sdtm register, offset:0x148+4*(x-1) x=1,2
+    * @brief xmc sdram tm register, offset:0x148~0x14C
     */
   union
   {
-    __IO uint32_t sdtm[2];
+    __IO uint32_t tm[2];
     struct
     {
       __IO uint32_t tmrd                 : 4; /* [3:0] */
@@ -920,97 +949,95 @@ typedef struct
       __IO uint32_t trp                  : 4; /* [23:20] */
       __IO uint32_t trcd                 : 4; /* [27:24] */
       __IO uint32_t reserved1            : 4; /* [31:28] */
-    } sdtm_bit[2];
+    } tm_bit[2];
 
   };
 
 /**
-    * @brief xmc sdcmd register, offset:0x150
+    * @brief xmc sdram cmd register, offset:0x150
     */
   union
   {
-    __IO uint32_t sdcmd;
+    __IO uint32_t cmd;
     struct
     {
       __IO uint32_t cmd                  : 3; /* [2:0] */
       __IO uint32_t bk2                  : 1; /* [3] */
       __IO uint32_t bk1                  : 1; /* [4] */
       __IO uint32_t art                  : 4; /* [8:5] */
-      __IO uint32_t mrd                  : 13; /* [21:9] */
-      __IO uint32_t reserved1            : 10; /* [31:22] */
-    } sdcmd_bit;
+      __IO uint32_t mrd                  : 13;/* [21:9] */
+      __IO uint32_t reserved1            : 10;/* [31:22] */
+    } cmd_bit;
   };
 
   /**
-    * @brief xmc sdrcnt register, offset:0x154
+    * @brief xmc sdram rcnt register, offset:0x154
     */
   union
   {
-    __IO uint32_t sdrcnt;
+    __IO uint32_t rcnt;
     struct
     {
       __IO uint32_t errc                 : 1; /* [0] */
-      __IO uint32_t rc                   : 13; /* [13:1] */
+      __IO uint32_t rc                   : 13;/* [13:1] */
       __IO uint32_t erien                : 1; /* [14] */
-      __IO uint32_t reserved1            : 17; /* [31:15] */
-    } sdrcnt_bit;
+      __IO uint32_t reserved1            : 17;/* [31:15] */
+    } rcnt_bit;
   };
 
   /**
-    * @brief xmc sdsts register, offset:0x158
+    * @brief xmc sdram sts register, offset:0x158
     */
   union
   {
-    __IO uint32_t sdsts;
+    __IO uint32_t sts;
     struct
     {
       __IO uint32_t err                  : 1; /* [0] */
       __IO uint32_t bk1sts               : 2; /* [2:1] */
       __IO uint32_t bk2sts               : 2; /* [4:3] */
       __IO uint32_t busy                 : 1; /* [5] */
-      __IO uint32_t reserved1            : 26; /* [31:6] */
-    } sdsts_bit;
+      __IO uint32_t reserved1            : 26;/* [31:6] */
+    } sts_bit;
   };
-}xmc_bank5_6_type;
+}xmc_sdram_type;
 
 /**
   * @}
   */
 
 #define XMC_BANK1                        ((xmc_bank1_type *) XMC_BANK1_REG_BASE)
-#define XMC_BANK1E                       ((xmc_bank1_ext_type *) XMC_BANK1E_REG_BASE)
-#define XMC_BANK1H                       ((xmc_bank1_hide_type *) XMC_BANK1E_H_BASE)
 #define XMC_BANK2                        ((xmc_bank2_type *) XMC_BANK2_REG_BASE)
 #define XMC_BANK3                        ((xmc_bank3_type *) XMC_BANK3_REG_BASE)
 #define XMC_BANK4                        ((xmc_bank4_type *) XMC_BANK4_REG_BASE)
-#define XMC_BANK5_6                      ((xmc_bank5_6_type *) XMC_BANK5_6_REG_BASE)
+#define XMC_SDRAM                        ((xmc_sdram_type *) XMC_SDRAM_REG_BASE)
 
 /** @defgroup XMC_exported_functions
   * @{
   */
 
-void xmc_nor_sram_reset(xmc_nor_sram_bank_type xmc_bank);
+void xmc_nor_sram_reset(xmc_nor_sram_subbank_type xmc_subbank);
 void xmc_nor_sram_init(xmc_norsram_init_type* xmc_norsram_init_struct);
 void xmc_nor_sram_timing_config(xmc_norsram_timing_init_type* xmc_rw_timing_struct,
                                 xmc_norsram_timing_init_type* xmc_w_timing_struct);
 void xmc_norsram_default_para_init(xmc_norsram_init_type* xmc_nor_sram_init_struct);
 void xmc_norsram_timing_default_para_init(xmc_norsram_timing_init_type* xmc_rw_timing_struct,
                                           xmc_norsram_timing_init_type* xmc_w_timing_struct);
-void xmc_nor_sram_enable(xmc_nor_sram_bank_type xmc_bank, confirm_state new_state);
-void xmc_ext_timing_config(xmc_subbank1_nor_sram_type xmc_sub_bank, uint16_t w2w_timing, uint16_t r2r_timing);
-void xmc_nand_reset(xmc_nand_bank_type xmc_bank);
+void xmc_nor_sram_enable(xmc_nor_sram_subbank_type xmc_subbank, confirm_state new_state);
+void xmc_ext_timing_config(xmc_nor_sram_subbank_type xmc_sub_bank, uint16_t w2w_timing, uint16_t r2r_timing);
+void xmc_nand_reset(xmc_class_bank_type xmc_bank);
 void xmc_nand_init(xmc_nand_init_type* xmc_nand_init_struct);
 void xmc_nand_timing_config(xmc_nand_pccard_timinginit_type* xmc_common_spacetiming_struct,
                             xmc_nand_pccard_timinginit_type* xmc_attribute_spacetiming_struct);
 void xmc_nand_default_para_init(xmc_nand_init_type* xmc_nand_init_struct);
 void xmc_nand_timing_default_para_init(xmc_nand_pccard_timinginit_type* xmc_common_spacetiming_struct,
                                        xmc_nand_pccard_timinginit_type* xmc_attribute_spacetiming_struct);
-void xmc_nand_enable(xmc_nand_bank_type xmc_bank, confirm_state new_state);
-void xmc_nand_ecc_enable(xmc_nand_bank_type xmc_bank, confirm_state new_state);
-uint32_t xmc_ecc_get(xmc_nand_bank_type xmc_bank);
-void xmc_interrupt_enable(xmc_nand_bank_type xmc_bank, xmc_interrupt_sources_type xmc_int, confirm_state new_state);
-flag_status xmc_flag_status_get(xmc_nand_bank_type xmc_bank, xmc_interrupt_flag_type xmc_flag);
-void xmc_flag_clear(xmc_nand_bank_type xmc_bank, xmc_interrupt_flag_type xmc_flag);
+void xmc_nand_enable(xmc_class_bank_type xmc_bank, confirm_state new_state);
+void xmc_nand_ecc_enable(xmc_class_bank_type xmc_bank, confirm_state new_state);
+uint32_t xmc_ecc_get(xmc_class_bank_type xmc_bank);
+void xmc_interrupt_enable(xmc_class_bank_type xmc_bank, xmc_interrupt_sources_type xmc_int, confirm_state new_state);
+flag_status xmc_flag_status_get(xmc_class_bank_type xmc_bank, xmc_interrupt_flag_type xmc_flag);
+void xmc_flag_clear(xmc_class_bank_type xmc_bank, xmc_interrupt_flag_type xmc_flag);
 void xmc_pccard_reset(void);
 void xmc_pccard_init(xmc_pccard_init_type* xmc_pccard_init_struct);
 void xmc_pccard_timing_config(xmc_nand_pccard_timinginit_type* xmc_common_spacetiming_struct,
@@ -1021,7 +1048,6 @@ void xmc_pccard_timing_default_para_init(xmc_nand_pccard_timinginit_type* xmc_co
                                          xmc_nand_pccard_timinginit_type* xmc_attribute_spacetiming_struct,
                                          xmc_nand_pccard_timinginit_type* xmc_iospace_timing_struct);
 void xmc_pccard_enable(confirm_state new_state);
-
 void xmc_sdram_reset(xmc_sdram_bank_type xmc_bank);
 void xmc_sdram_init(xmc_sdram_init_type *xmc_sdram_init_struct, xmc_sdram_timing_type *xmc_sdram_timing_struct);
 void xmc_sdram_default_para_init(xmc_sdram_init_type *xmc_sdram_init_struct, xmc_sdram_timing_type *xmc_sdram_timing_struct);

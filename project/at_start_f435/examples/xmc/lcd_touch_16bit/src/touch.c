@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     touch.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    this file contains all the functions prototypes for the 
   *           touch firmware driver.
   **************************************************************************
@@ -82,10 +82,6 @@ void touch_pin_init(void)
   gpio_init_struct.gpio_pull = GPIO_PULL_NONE; 
   gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER; 
   gpio_init(GPIOB, &gpio_init_struct); 
-  
-//  gpio_bits_set(GPIOB, GPIO_PINS_13); 
-//  gpio_bits_set(GPIOB, GPIO_PINS_14); 
-//  gpio_bits_set(GPIOB, GPIO_PINS_12); 
   
   gpio_init_struct.gpio_pins = GPIO_PINS_11; 
   gpio_init_struct.gpio_mode = GPIO_MODE_INPUT; 

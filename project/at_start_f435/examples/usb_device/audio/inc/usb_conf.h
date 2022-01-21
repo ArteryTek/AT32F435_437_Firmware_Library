@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     usb_conf.h
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    usb config header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -23,7 +23,7 @@
   *
   **************************************************************************
   */
-  
+
 /* define to prevent recursive inclusion -------------------------------------*/
 #ifndef __USB_CONF_H
 #define __USB_CONF_H
@@ -31,16 +31,15 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
- 
+
 #include "at32f435_437_usb.h"
 #include "at32f435_437.h"
 #include "at32f435_437_board.h"
-#include "stdio.h"
 
 /** @addtogroup AT32F435_periph_examples
   * @{
   */
-  
+
 /** @addtogroup 435_USB_device_audio
   * @{
   */
@@ -90,7 +89,7 @@ extern "C" {
 #define OTG_PIN_ID_SOURCE                GPIO_PINS_SOURCE10
 
 #define OTG_PIN_SOF_GPIO                 GPIOA
-#define OTG_PIN_SOF_GPIO_CLOCK           CRM_GPIOB_PERIPH_CLOCK
+#define OTG_PIN_SOF_GPIO_CLOCK           CRM_GPIOA_PERIPH_CLOCK
 #define OTG_PIN_SOF                      GPIO_PINS_8
 #define OTG_PIN_SOF_SOURCE               GPIO_PINS_SOURCE8
 
@@ -122,7 +121,7 @@ extern "C" {
 #define OTG_PIN_ID_SOURCE                GPIO_PINS_SOURCE10
 
 #define OTG_PIN_SOF_GPIO                 GPIOA
-#define OTG_PIN_SOF_GPIO_CLOCK           CRM_GPIOB_PERIPH_CLOCK
+#define OTG_PIN_SOF_GPIO_CLOCK           CRM_GPIOA_PERIPH_CLOCK
 #define OTG_PIN_SOF                      GPIO_PINS_4
 #define OTG_PIN_SOF_SOURCE               GPIO_PINS_SOURCE4
 
@@ -140,8 +139,8 @@ extern "C" {
 #define USBD_RX_SIZE                     128
 #define USBD_EP0_TX_SIZE                 24
 #define USBD_EP1_TX_SIZE                 64
-#define USBD_EP2_TX_SIZE                 4
-#define USBD_EP3_TX_SIZE                 4
+#define USBD_EP2_TX_SIZE                 16
+#define USBD_EP3_TX_SIZE                 16
 #define USBD_EP4_TX_SIZE                 0
 #define USBD_EP5_TX_SIZE                 0
 #define USBD_EP6_TX_SIZE                 0
@@ -208,7 +207,7 @@ void usb_delay_us(uint32_t us);
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
@@ -218,4 +217,3 @@ void usb_delay_us(uint32_t us);
 #endif
 
 #endif
-

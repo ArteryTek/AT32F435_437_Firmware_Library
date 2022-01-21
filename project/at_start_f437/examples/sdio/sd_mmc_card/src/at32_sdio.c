@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32_sdio.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    this file provides a set of functions needed to manage the
   *           sdio/mmc card memory.
   **************************************************************************
@@ -1273,7 +1273,7 @@ sd_error_status_type sd_block_read(uint8_t *buf, long long addr, uint16_t blk_si
   * @param  nblks: number of blocks to be read.
   * @retval sd_error_status_type: sd card error code.
   */
-__align(4) uint32_t *tempbuff;
+uint32_t *tempbuff;
 sd_error_status_type sd_mult_blocks_read(uint8_t *buf, long long addr, uint16_t blk_size, uint32_t nblks)
 {
   sd_error_status_type status = SD_OK;

@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     at32f435_437_int.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    main interrupt service routines.
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -27,16 +27,15 @@
 /* includes ------------------------------------------------------------------*/
 #include "at32f435_437_int.h"
 #include "at32f435_437_board.h"
-#include "stdio.h"
 
 /** @addtogroup AT32F437_periph_examples
   * @{
   */
-  
+
 /** @addtogroup 437_ERTC_wakeup_timer
   * @{
   */
-  
+
 extern void ertc_wakeup_show(void);
 
 /**
@@ -146,15 +145,15 @@ void ERTC_WKUP_IRQHandler(void)
   if(ertc_flag_get(ERTC_WATF_FLAG) != RESET)
   {
     printf("wakeup\r\n");
-    
+
     at32_led_on(LED2);
-    
+
     /* clear wakeup timer flag */
     ertc_flag_clear(ERTC_WATF_FLAG);
-    
+
     /* clear exint flag */
     exint_flag_clear(EXINT_LINE_22);
-  } 
+  }
 }
 
 /**

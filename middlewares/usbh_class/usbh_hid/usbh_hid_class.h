@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     usbh_hid_class.h
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    usb host hid class header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -124,7 +124,7 @@ typedef struct
   usb_hid_ctrl_state_type                ctrl_state;
   usb_hid_state_type                     state;
   uint16_t                               poll_timer;
-  uint8_t buffer[64];
+  uint32_t buffer[16];
 }usbh_hid_type;
 
 extern usbh_class_handler_type uhost_class_handler;

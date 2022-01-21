@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     usbh_int.h
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    usb header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -55,6 +55,7 @@ void usbh_hch_in_handler(usbh_core_type *uhost, uint8_t chn);
 void usbh_hch_out_handler(usbh_core_type *uhost, uint8_t chn);
 void usbh_rx_qlvl_handler(usbh_core_type *uhost);
 void usbh_wakeup_handler(usbh_core_type *uhost);
+void usbh_sof_handler(usbh_core_type *uhost);
 
 /**
   * @}

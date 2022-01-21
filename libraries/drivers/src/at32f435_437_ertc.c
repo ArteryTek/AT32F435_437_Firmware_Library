@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_ertc.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    contains all the functions for the ertc firmware library
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -102,7 +102,7 @@ error_status ertc_wait_update(void)
   ertc_write_protect_disable();
 
   /* clear updf flag */
-  ERTC->sts_bit.updf = 0;
+  ERTC->sts = ~(ERTC_UPDF_FLAG | 0x00000080) | (ERTC->sts_bit.imen << 7);
 
   /* enable write protection */
   ertc_write_protect_enable();
@@ -170,7 +170,7 @@ error_status ertc_init_mode_enter(void)
   if(ERTC->sts_bit.imf == 0)
   {
     /* enter init mode */
-    ERTC->sts_bit.imen = 1;
+    ERTC->sts = 0xFFFFFFFF;
 
     while(ERTC->sts_bit.imf == 0)
     {
@@ -196,7 +196,7 @@ error_status ertc_init_mode_enter(void)
   */
 void ertc_init_mode_exit(void)
 {
-  ERTC->sts_bit.imen = FALSE;
+  ERTC->sts = 0xFFFFFF7F;
 }
 
 /**
@@ -1374,7 +1374,7 @@ void ertc_tamper_enable(ertc_tamper_select_type tamper_x, confirm_state new_stat
 /**
   * @brief  enable or disable interrupt.
   * @param  source: interrupts sources
-  *         this parameter can be one of the following values:
+  *         this parameter can be any combination of the following values:
   *         - ERTC_TP_INT: tamper interrupt.
   *         - ERTC_ALA_INT: alarm a interrupt.
   *         - ERTC_ALB_INT: alarm b interrupt.
@@ -1509,7 +1509,7 @@ void ertc_flag_clear(uint32_t flag)
   /* disable write protection */
   ertc_write_protect_disable();
 
-  ERTC->sts &= ~flag;
+  ERTC->sts = ~(flag | 0x00000080) | (ERTC->sts_bit.imen << 7);
 
   /* enable write protection */
   ertc_write_protect_enable();

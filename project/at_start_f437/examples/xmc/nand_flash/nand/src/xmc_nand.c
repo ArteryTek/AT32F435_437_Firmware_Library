@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     xmc_nand.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    nand configuration
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -23,7 +23,6 @@
   *
   **************************************************************************
   */
-#include "at32f435_437_board.h"
 #include "xmc_nand.h"
 
 /** @addtogroup AT32F437_periph_examples
@@ -100,12 +99,12 @@ void nand_init(void)
   xmc_nand_init(&nand_init_struct);
   
   xmc_nand_timing_default_para_init(&regular_spacetiming_struct, &special_spacetiming_struct); 
-  regular_spacetiming_struct.nand_bank = XMC_BANK2_NAND;
+  regular_spacetiming_struct.class_bank = XMC_BANK2_NAND;
   regular_spacetiming_struct.mem_setup_time = 254;
   regular_spacetiming_struct.mem_hiz_time = 254;
   regular_spacetiming_struct.mem_hold_time = 254;
   regular_spacetiming_struct.mem_waite_time = 254;
-  special_spacetiming_struct.nand_bank = XMC_BANK2_NAND;
+  special_spacetiming_struct.class_bank = XMC_BANK2_NAND;
   special_spacetiming_struct.mem_setup_time = 254;
   special_spacetiming_struct.mem_hiz_time = 254;
   special_spacetiming_struct.mem_hold_time = 254;
@@ -230,7 +229,7 @@ uint32_t nand_write_small_page(uint8_t *pbuffer, nand_address_type address_struc
 uint32_t nand_read_small_page(uint8_t *pbuffer, nand_address_type address_struct, uint32_t num_page_to_read)
 {
   uint32_t index = 0x00, num_page_read = 0x00, address_status = NAND_VALID_ADDRESS;
-  uint32_t status = NAND_READY, size = 0x00 ,i;
+  uint32_t status = NAND_READY, size = 0x00 ;
 
   while((num_page_to_read != 0x0) && (address_status == NAND_VALID_ADDRESS))
   {
@@ -251,10 +250,8 @@ uint32_t nand_read_small_page(uint8_t *pbuffer, nand_address_type address_struct
 #endif 
     *(__IO uint8_t *)(Bank_NAND_ADDR | CMD_AREA) = NAND_CMD_AREA_TRUE1;         
 
-    for(i = 0; i < 25000; i++)
-    {
-        ;
-    }
+    delay_ms(1);
+    
     /* calculate the size */
     size = (NAND_PAGE_SIZE + NAND_SPARE_AREA_SIZE) + ((NAND_PAGE_SIZE + NAND_SPARE_AREA_SIZE)  * num_page_read);
     
@@ -352,7 +349,7 @@ uint32_t nand_write_spare_area(uint8_t *pbuffer, nand_address_type address_struc
 uint32_t nand_read_spare_area(uint8_t *pbuffer, nand_address_type address_struct, uint32_t num_spare_area_to_read)
 {
   uint32_t num_spare_area_read = 0x00, index = 0x00, address_status = NAND_VALID_ADDRESS;
-  uint32_t status = NAND_READY, size = 0x00 ,i;
+  uint32_t status = NAND_READY, size = 0x00;
 
   while((num_spare_area_to_read != 0x0) && (address_status == NAND_VALID_ADDRESS))
   {     
@@ -367,10 +364,7 @@ uint32_t nand_read_spare_area(uint8_t *pbuffer, nand_address_type address_struct
 
     *(__IO uint8_t *)(Bank_NAND_ADDR | CMD_AREA) = NAND_CMD_AREA_TRUE1;      
             
-    for(i = 0; i < 25000; i++)
-    {
-        ;
-    }
+    delay_ms(1);
           
     /* data read */
     size = NAND_SPARE_AREA_SIZE +  (NAND_SPARE_AREA_SIZE * num_spare_area_read);

@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     dvp.h
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    header file of dvp program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -45,7 +45,7 @@
 
 extern edma_init_type edma_init_struct;
 void dvp_config(void);
-void dvp_dma_init(uint32_t mem0addr,uint32_t mem1addr,uint16_t memsize,edma_memory_data_size_type memblen,confirm_state meminc);
+void dvp_dma_init(uint32_t mem0addr,uint32_t mem1addr,uint16_t memsize);
 void dvp_start(void);
 void dvp_stop(void);
 void dvp_io_init(void);

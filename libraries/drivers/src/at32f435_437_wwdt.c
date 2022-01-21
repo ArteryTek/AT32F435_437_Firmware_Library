@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_wwdt.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    contains all the functions for the wwdt firmware library
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -73,7 +73,7 @@ void wwdt_divider_set(wwdt_division_type division)
   */
 void wwdt_flag_clear(void)
 {
-  WWDT->sts_bit.rldf = FALSE;
+  WWDT->sts = 0;
 }
 
 /**

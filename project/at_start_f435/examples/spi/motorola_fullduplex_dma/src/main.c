@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -26,7 +26,6 @@
 
 #include "at32f435_437_board.h"
 #include "at32f435_437_clock.h"
-#include <stdio.h>
 
 /** @addtogroup AT32F435_periph_examples
   * @{

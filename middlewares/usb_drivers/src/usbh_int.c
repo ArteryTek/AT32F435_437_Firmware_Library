@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     usbh_int.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    usb host interrupt request
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -59,6 +59,7 @@ void usbh_irq_handler(otg_core_type *otgdev)
     }
     if(intsts & USB_OTG_SOF_FLAG)
     {
+      usbh_sof_handler(uhost);
       usb_global_clear_interrupt(usbx, USB_OTG_SOF_FLAG);
     }
     if(intsts & USB_OTG_MODEMIS_FLAG)
@@ -112,6 +113,16 @@ void usbh_irq_handler(otg_core_type *otgdev)
 void usbh_wakeup_handler(usbh_core_type *uhost)
 {
   uhost->global_state = USBH_WAKEUP;
+}
+
+/**
+  * @brief  usb host sof handler
+  * @param  uhost: to the structure of usbh_core_type
+  * @retval none
+  */
+void usbh_sof_handler(usbh_core_type *uhost)
+{
+  uhost->timer ++;
 }
 
 /**
@@ -194,7 +205,11 @@ void usbh_hch_in_handler(usbh_core_type *uhost, uint8_t chn)
       usb_chh->hcchar_bit.oddfrm = TRUE;
       uhost->urb_state[chn] = URB_DONE;
     }
-     uhost->hch[chn].toggle_in ^= 1;
+    else if(usb_chh->hcchar_bit.eptype == EPT_ISO_TYPE)
+    {
+      uhost->urb_state[chn] = URB_DONE;
+    }
+    uhost->hch[chn].toggle_in ^= 1;
   }
   else if(hcint_value & USB_OTG_HC_CHHLTD_FLAG)
   {
@@ -436,8 +451,6 @@ void usbh_port_handler(usbh_core_type *uhost)
   {
     if(prt & USB_OTG_HPRT_PRTCONSTS)
     {
-      /* usb unmask disconnect */
-      usbx->gintmsk_bit.disconintmsk = 0;
       /* connect callback */
       uhost->conn_sts = 1;
     }
@@ -466,7 +479,6 @@ void usbh_port_handler(usbh_core_type *uhost)
       /* clean up hprt */
       usb_host->hprt &= ~(USB_OTG_HPRT_PRTENA | USB_OTG_HPRT_PRTENCHNG | 
                USB_OTG_HPRT_PRTOVRCACT | USB_OTG_HPRT_PRTCONDET);
-      usbx->gintmsk_bit.disconintmsk = 1;
     }
   }
   

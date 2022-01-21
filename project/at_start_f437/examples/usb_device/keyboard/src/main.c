@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -43,7 +43,7 @@
 
 /* usb global struct define */
 otg_core_type otg_core_struct;
-extern uint8_t hid_suspend_flag;
+extern __IO uint8_t hid_suspend_flag;
 void usb_clock48m_select(usb_clk48_s clk_s);
 void keyboard_send_string(uint8_t *string, uint8_t len);
 void usb_gpio_config(void);
@@ -71,17 +71,18 @@ void keyboard_send_string(uint8_t *string, uint8_t len)
         break;
       }
     }
-  }
-  /* send 0x00 */
-  while(1)
-  {
-    if(g_u8tx_completed == 1)
+    /* send 0x00 */
+    while(1)
     {
-      g_u8tx_completed = 0;
-      usb_hid_keyboard_send_char(&otg_core_struct.dev, 0x00);
-      break;
+      if(g_u8tx_completed == 1)
+      {
+        g_u8tx_completed = 0;
+        usb_hid_keyboard_send_char(&otg_core_struct.dev, 0x00);
+        break;
+      }
     }
   }
+  
 }
 
 

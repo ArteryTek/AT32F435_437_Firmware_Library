@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_qspi.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    contain all the functions for qspi firmware library
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -167,10 +167,7 @@ flag_status qspi_flag_get(qspi_type* qspi_x, uint32_t flag)
   */
 void qspi_flag_clear( qspi_type* qspi_x, uint32_t flag)
 {
-  if(flag == QSPI_CMDSTS_FLAG)
-  {
-    qspi_x->cmdsts_bit.cmdsts = TRUE;
-  }
+  qspi_x->cmdsts = QSPI_CMDSTS_FLAG;
 }
 
 /**

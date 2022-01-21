@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     usbd_core.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    usb device driver
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -645,7 +645,7 @@ void usbd_enter_suspend(usbd_core_type *udev)
 void usbd_flush_tx_fifo(usbd_core_type *udev, uint8_t ept_num)
 {
   /* flush endpoint tx fifo */
-  usb_flush_tx_fifo(udev->usb_reg, ept_num & 0xF);
+  usb_flush_tx_fifo(udev->usb_reg, ept_num & 0x1F);
 }
 
 /**
@@ -759,6 +759,8 @@ usb_sts_type usbd_core_init(usbd_core_type *udev,
   udev->device_addr = 0;
   udev->class_handler = class_handler;
   udev->desc_handler = desc_handler;
+  /* set device disconnect */
+  usbd_disconnect(udev);
   
   /* set endpoint to default status */
   usb_ept_default_init(udev);

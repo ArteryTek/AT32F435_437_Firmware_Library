@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_gpio.h
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    at32f435_437 gpio header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -452,7 +452,7 @@ typedef struct
   };
 
   /**
-    * @brief gpio iocb register, offset:0x28
+    * @brief gpio clr register, offset:0x28
     */
   union
   {

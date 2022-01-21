@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_int.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    main interrupt service routines.
   **************************************************************************
   */
@@ -122,8 +122,6 @@ void EMAC_IRQHandler(void)
   }
 
   /* clear the emac dma rx it pending bits */
-  //EMAC_DMA->sts_bit.ri = 1;
-  //EMAC_DMA->sts_bit.nis = 1;
-  EMAC_DMA->sts = 0x00000040;
-  EMAC_DMA->sts = 0x00010000;
+  emac_dma_flag_clear(EMAC_DMA_RI_FLAG);
+  emac_dma_flag_clear(EMAC_DMA_NIS_FLAG);
 }

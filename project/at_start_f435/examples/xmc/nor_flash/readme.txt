@@ -1,15 +1,15 @@
 /**
   **************************************************************************
   * @file     readme.txt
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    readme
   **************************************************************************
   */
 
   this example provides a basic example of how to use the xmc firmware library and
-	an associate driver to perform erase/read/write operations on the m29w128fl,
-	m29w128gl or s29gl128p nor memories.
+	an associate driver to perform erase/read/write operations on the m29w128fl or
+	m29w128gl nor memories.
   usart1 using pa9 to printf the result.
 
   the pin to pin with nor flash and xmc:

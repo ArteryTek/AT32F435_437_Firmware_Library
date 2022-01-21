@@ -2078,6 +2078,9 @@
             <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f435_437_crm.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f435_437_usart.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f435_437_flash.c</name>
         </file>
         <file>

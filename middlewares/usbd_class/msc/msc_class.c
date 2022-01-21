@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     msc_class.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    usb msc class type
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -130,7 +130,7 @@ usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup)
       switch(setup->bRequest)
       {
         case MSC_REQ_GET_MAX_LUN:
-          usbd_ctrl_send(pudev, &msc_struct.max_lun, 1);
+          usbd_ctrl_send(pudev, (uint8_t *)&msc_struct.max_lun, 1);
           break;
         case MSC_REQ_BO_RESET:
           bot_scsi_reset(udev);
@@ -220,10 +220,6 @@ usb_sts_type class_in_handler(void *udev, uint8_t ept_num)
   usb_sts_type status = USB_OK;
   usbd_core_type *pudev = (usbd_core_type *)udev;
   usb_flush_tx_fifo(pudev->usb_reg, ept_num&0x7F);
-//  if(msc_struct.msc_state != MSC_STATE_MACHINE_IDLE)
-//  {
-//    bot_scsi_datain_handler(udev, ept_num);
-//  }
   bot_scsi_datain_handler(udev, ept_num);
   return status;
 }
@@ -237,8 +233,7 @@ usb_sts_type class_in_handler(void *udev, uint8_t ept_num)
 usb_sts_type class_out_handler(void *udev, uint8_t ept_num)
 {
   usb_sts_type status = USB_OK;
-//  if(msc_struct.msc_state == MSC_STATE_MACHINE_IDLE)
-//    msc_struct.msc_state = MSC_STATE_MACHINE_CMD;
+
   bot_scsi_dataout_handler(udev, ept_num);
   return status;
 }

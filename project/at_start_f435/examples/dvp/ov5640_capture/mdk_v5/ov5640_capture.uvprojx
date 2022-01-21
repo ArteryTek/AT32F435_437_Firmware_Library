@@ -10,7 +10,7 @@
       <TargetName>ov5640_capture</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060061::V5.06 update 1 (build 61)::ARMCC</pCCUsed>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::.\ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -327,7 +327,7 @@
             <uC99>0</uC99>
             <uGnu>0</uGnu>
             <useXO>0</useXO>
-            <v6Lang>5</v6Lang>
+            <v6Lang>3</v6Lang>
             <v6LangP>3</v6LangP>
             <vShortEn>1</vShortEn>
             <vShortWch>1</vShortWch>
@@ -441,6 +441,11 @@
               <FileName>at32f435_437_crm.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\..\libraries\drivers\src\at32f435_437_crm.c</FilePath>
+            </File>
+            <File>
+              <FileName>at32f435_437_usart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\libraries\drivers\src\at32f435_437_usart.c</FilePath>
             </File>
             <File>
               <FileName>at32f435_437_dma.c</FileName>

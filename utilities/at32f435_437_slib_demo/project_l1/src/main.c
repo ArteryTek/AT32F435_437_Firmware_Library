@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -26,7 +26,6 @@
 
 #include "at32f435_437_board.h"
 #include "at32f435_437_clock.h"
-#include <stdio.h>
 #include "math_helper.h"
 #include "fir_filter.h"
 
@@ -54,13 +53,13 @@ void config_flash_interrupt(void);
   * @retval flash status
   */
 void config_flash_interrupt(void)
-{    
-  flash_unlock();  
+{
+  flash_unlock();
   flash_interrupt_enable(FLASH_BANK1_ERR_INT, TRUE);
   flash_lock();
   /* config nvic priority group */
   nvic_priority_group_config(NVIC_PRIORITY_GROUP_4);
- 
+
   nvic_irq_enable(FLASH_IRQn, 0, 0);
 }
 
@@ -73,13 +72,13 @@ int main(void)
 {
   arm_status status;
   float32_t  *inputf32, *outputf32, snr;
-  
+
   system_clock_config();
   at32_board_init();
-  
+
   /* initialize input and output buffer pointers */
   inputf32 = &testInput_f32_1kHz_15kHz[0];
-  outputf32 = &testOutput[0];    
+  outputf32 = &testOutput[0];
 
  /* configure flash to generate an interrupt when a write protect error occur */
   config_flash_interrupt();
@@ -88,8 +87,8 @@ int main(void)
   while(at32_button_press() == NO_BUTTON)
   {
     at32_led_toggle(LED3);
-    delay_ms(100); 
-  }  
+    delay_ms(100);
+  }
   at32_led_off(LED3);
 
   /* call the fir low pass filter function */
@@ -105,12 +104,12 @@ int main(void)
   {
     status = ARM_MATH_SUCCESS;
   }
-  
+
   /* infinite loop */
   while(1)
   {
     if(status == ARM_MATH_TEST_FAILURE)
-    {	
+    {
       /* toggle red led2 if fir function failed */
       at32_led_toggle(LED2);
       delay_ms(500);
@@ -121,16 +120,13 @@ int main(void)
       at32_led_toggle(LED4);
       delay_ms(500);
     }
-  }   
+  }
 }
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
-
-
-
+  */

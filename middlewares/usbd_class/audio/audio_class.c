@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     audio_class.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    usb audio class type
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -62,6 +62,8 @@ void audio_set_interface(void *udev, usb_setup_type *setup);
 
 usb_audio_type audio_struct = {0, 0, 0, 0, 0, 0x1400, 0, 0, 0, {0x0000, 0x1400, 0x33}, {0x0000, 0x1400, 0x33}};
 
+static __IO uint16_t audio_feedback_state = 0;
+static __IO uint8_t audio_spk_out_stage = 0;
 /* usb device class handler */
 usbd_class_handler audio_class_handler = 
 {
@@ -114,8 +116,10 @@ usb_sts_type class_clear_handler(void *udev)
   /* close in endpoint */
   usbd_ept_close(pudev, USBD_AUDIO_MIC_IN_EPT);
   
+#if AUDIO_SUPPORT_FEEDBACK  
   /* close in endpoint */
   usbd_ept_close(pudev, USBD_AUDIO_FEEDBACK_EPT);
+#endif
   
   /* close out endpoint */
   usbd_ept_close(pudev, USBD_AUDIO_SPK_OUT_EPT);
@@ -294,7 +298,6 @@ usb_sts_type class_ept0_rx_handler(void *udev)
 usb_sts_type class_in_handler(void *udev, uint8_t ept_num)
 {
   usb_sts_type status = USB_OK;
-  usbd_core_type *pudev = (usbd_core_type *)udev;
   uint32_t len = 0;
   
   /* ...user code...
@@ -303,15 +306,13 @@ usb_sts_type class_in_handler(void *udev, uint8_t ept_num)
   if((ept_num & 0x7F) == (USBD_AUDIO_MIC_IN_EPT & 0x7F))
   {
     len = audio_codec_mic_get_data(audio_struct.audio_mic_data);
-    usb_flush_tx_fifo(pudev->usb_reg, USBD_AUDIO_MIC_IN_EPT & 0x7F);
-    usbd_ept_send(pudev, USBD_AUDIO_MIC_IN_EPT, audio_struct.audio_mic_data, len);
+    usbd_flush_tx_fifo(udev, USBD_AUDIO_MIC_IN_EPT);
+    usbd_ept_send(udev, USBD_AUDIO_MIC_IN_EPT, audio_struct.audio_mic_data, len);
   }
   
   else if((ept_num & 0x7F) == (USBD_AUDIO_FEEDBACK_EPT & 0x7F))
   {
-    len = audio_codec_spk_feedback(audio_struct.audio_feed_back);
-    usb_flush_tx_fifo(pudev->usb_reg, USBD_AUDIO_FEEDBACK_EPT & 0x7F);
-    usbd_ept_send(pudev, USBD_AUDIO_FEEDBACK_EPT, audio_struct.audio_feed_back, len);
+    audio_feedback_state = 0;
   }
   
   return status;
@@ -336,7 +337,7 @@ usb_sts_type class_out_handler(void *udev, uint8_t ept_num)
   {
     /* speaker data*/
     audio_codec_spk_fifo_write(audio_struct.audio_spk_data, g_rxlen);
-    
+    audio_spk_out_stage = 1;
     /* get next data */
     usbd_ept_recv(pudev, USBD_AUDIO_SPK_OUT_EPT, audio_struct.audio_spk_data, AUDIO_SPK_OUT_MAXPACKET_SIZE);
   }
@@ -352,7 +353,33 @@ usb_sts_type class_out_handler(void *udev, uint8_t ept_num)
 usb_sts_type class_sof_handler(void *udev)
 {
   usb_sts_type status = USB_OK;
-  
+
+#if AUDIO_SUPPORT_FEEDBACK  
+  if(audio_spk_out_stage & 2)
+  {
+    audio_spk_out_stage = 0;
+  }
+  else if( audio_spk_out_stage )
+  {
+    audio_spk_out_stage |= 2;
+    
+    if( 0 == audio_feedback_state )
+    {
+      usbd_core_type *pudev = (usbd_core_type *)udev;
+      int len = audio_codec_spk_feedback(audio_struct.audio_feed_back);
+      usbd_ept_send(pudev, USBD_AUDIO_FEEDBACK_EPT, audio_struct.audio_feed_back, len);
+      audio_feedback_state = 1;
+    }
+      if( audio_feedback_state++ > (1<<FEEDBACK_REFRESH_TIME) ) //timeout
+      {
+        usbd_core_type *pudev = (usbd_core_type *)udev;
+        int len = audio_codec_spk_feedback(audio_struct.audio_feed_back);
+        usbd_flush_tx_fifo(pudev, USBD_AUDIO_FEEDBACK_EPT);
+        usbd_ept_send(pudev, USBD_AUDIO_FEEDBACK_EPT, audio_struct.audio_feed_back, len);
+        audio_feedback_state = 1;
+      }
+  }
+#endif  
   /* ...user code... */
   
   return status;
@@ -403,6 +430,7 @@ usb_sts_type class_event_handler(void *udev, usbd_event_type event)
   */
 void audio_inisoincom_event(void *udev)
 {
+#if  0  
   usbd_core_type *pudev = (usbd_core_type *)udev;
   uint32_t fnsof = OTG_DEVICE(pudev->usb_reg)->dsts_bit.soffn;
   uint32_t epctl_fb = USB_INEPT(pudev->usb_reg, (USBD_AUDIO_FEEDBACK_EPT&0x7F))->diepctl_bit.dpid;
@@ -427,7 +455,7 @@ void audio_inisoincom_event(void *udev)
     len = audio_codec_mic_get_data(audio_struct.audio_mic_data);
     usbd_ept_send(pudev, USBD_AUDIO_MIC_IN_EPT, audio_struct.audio_mic_data, len);
   }
-  
+#endif  
 }
 
 /**
@@ -443,22 +471,26 @@ void audio_req_get_cur(void *udev, usb_setup_type *setup)
   {
     if(HBYTE(setup->wValue) == AUDIO_MUTE_CONTROL)
     {
-      usbd_ctrl_send(pudev, &audio_struct.spk_mute, setup->wLength);
+      audio_struct.g_audio_cur[0] = audio_struct.spk_mute;
+      usbd_ctrl_send(pudev, audio_struct.g_audio_cur, setup->wLength);
     }
     else
     {
-      usbd_ctrl_send(pudev, (uint8_t *)&audio_struct.spk_volume, setup->wLength);
+      *((uint16_t *)audio_struct.g_audio_cur) = audio_struct.spk_volume;
+      usbd_ctrl_send(pudev, audio_struct.g_audio_cur, setup->wLength);
     }
   }
   else
   {
     if(HBYTE(setup->wValue) == AUDIO_MUTE_CONTROL)
     {
-      usbd_ctrl_send(pudev, &audio_struct.mic_mute, setup->wLength);
+      audio_struct.g_audio_cur[0] = audio_struct.mic_mute;
+      usbd_ctrl_send(pudev, audio_struct.g_audio_cur, setup->wLength);
     }
     else
     {
-      usbd_ctrl_send(pudev, (uint8_t *)&audio_struct.mic_volume, setup->wLength);
+      *((uint16_t *)audio_struct.g_audio_cur) = audio_struct.mic_volume;
+      usbd_ctrl_send(pudev, audio_struct.g_audio_cur, setup->wLength);
     }
     
   }
@@ -514,11 +546,13 @@ void audio_req_get_min(void *udev, usb_setup_type *setup)
   usbd_core_type *pudev = (usbd_core_type *)udev;
   if(HBYTE(setup->wIndex) == AUDIO_SPK_FEATURE_UNIT_ID)
   {
-    usbd_ctrl_send(pudev, (uint8_t *)&audio_struct.spk_volume_limits[0], setup->wLength);
+    *((uint16_t *)audio_struct.g_audio_cur) = audio_struct.spk_volume_limits[0];
+    usbd_ctrl_send(pudev, audio_struct.g_audio_cur, setup->wLength);
   }
   else
   {
-    usbd_ctrl_send(pudev, (uint8_t *)&audio_struct.mic_volume_limits[0], setup->wLength);
+    *((uint16_t *)audio_struct.g_audio_cur) = audio_struct.mic_volume_limits[0];
+    usbd_ctrl_send(pudev, audio_struct.g_audio_cur, setup->wLength);
   }
 }
 
@@ -533,11 +567,13 @@ void audio_req_get_max(void *udev, usb_setup_type *setup)
   usbd_core_type *pudev = (usbd_core_type *)udev;
   if(HBYTE(setup->wIndex) == AUDIO_SPK_FEATURE_UNIT_ID)
   {
-    usbd_ctrl_send(pudev, (uint8_t *)&audio_struct.spk_volume_limits[1], setup->wLength);
+    *((uint16_t *)audio_struct.g_audio_cur) = audio_struct.spk_volume_limits[1];
+    usbd_ctrl_send(pudev, audio_struct.g_audio_cur, setup->wLength);
   }
   else
   {
-    usbd_ctrl_send(pudev, (uint8_t *)&audio_struct.mic_volume_limits[1], setup->wLength);
+    *((uint16_t *)audio_struct.g_audio_cur) = audio_struct.mic_volume_limits[1];
+    usbd_ctrl_send(pudev, audio_struct.g_audio_cur, setup->wLength);
   }
 }
 
@@ -552,11 +588,13 @@ void audio_req_get_res(void *udev, usb_setup_type *setup)
   usbd_core_type *pudev = (usbd_core_type *)udev;
   if(HBYTE(setup->wIndex) == AUDIO_SPK_FEATURE_UNIT_ID)
   {
-    usbd_ctrl_send(pudev, (uint8_t *)&audio_struct.spk_volume_limits[2], setup->wLength);
+    *((uint16_t *)audio_struct.g_audio_cur) = audio_struct.spk_volume_limits[2];
+    usbd_ctrl_send(pudev, audio_struct.g_audio_cur, setup->wLength);
   }
   else
   {
-    usbd_ctrl_send(pudev, (uint8_t *)&audio_struct.mic_volume_limits[2], setup->wLength);
+    *((uint16_t *)audio_struct.g_audio_cur) = audio_struct.mic_volume_limits[2];
+    usbd_ctrl_send(pudev, audio_struct.g_audio_cur, setup->wLength);
   }
 }
 
@@ -577,7 +615,6 @@ void audio_set_interface(void *udev, usb_setup_type *setup)
     if(audio_struct.spk_alt_setting )
     {
       usbd_ept_recv(pudev, USBD_AUDIO_SPK_OUT_EPT, audio_struct.audio_spk_data, AUDIO_SPK_OUT_MAXPACKET_SIZE);
-      usbd_ept_send(pudev, USBD_AUDIO_FEEDBACK_EPT, audio_struct.audio_feed_back, 3); 
     }
     
   }

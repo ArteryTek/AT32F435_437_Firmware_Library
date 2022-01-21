@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_dvp.h
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    at32f435_437 dvp header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -372,11 +372,11 @@ typedef struct
   };
 
   /**
-    * @brief dvp icr register, offset:0x14
+    * @brief dvp iclr register, offset:0x14
     */
   union
   {
-    __IO uint32_t icr;
+    __IO uint32_t iclr;
     struct
     {
       __IO uint32_t cfdic                : 1; /* [0] */
@@ -385,7 +385,7 @@ typedef struct
       __IO uint32_t vsic                 : 1; /* [3] */
       __IO uint32_t hsic                 : 1; /* [4] */
       __IO uint32_t reserved1            : 27;/* [31:5] */
-    } icr_bit;
+    } iclr_bit;
   };
 
   /**

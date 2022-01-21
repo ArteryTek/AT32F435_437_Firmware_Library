@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32_emac.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    emac config program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -203,7 +203,7 @@ error_status emac_layer2_configuration(void)
   emac_control_config_type mac_control_para;
   emac_dma_config_type dma_control_para;
   crm_periph_clock_enable(CRM_SCFG_PERIPH_CLOCK, TRUE);
-  #ifdef MII
+  #ifdef MII_MODE
   scfg_emac_interface_set(SCFG_EMAC_SELECT_MII);
   #elif defined RMII_MODE
   scfg_emac_interface_set(SCFG_EMAC_SELECT_RMII);

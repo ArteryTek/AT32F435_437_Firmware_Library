@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     usbh_core.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    usb host driver
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -512,6 +512,8 @@ usb_sts_type usbh_core_init(usbh_core_type *uhost,
   /* host user handler */
   uhost->user_handler->user_init();
   
+  uhost->timer = 0;
+  
   /* usb host cfg default init */
   usbh_cfg_default_init(uhost);
   
@@ -541,9 +543,6 @@ usb_sts_type usbh_core_init(usbh_core_type *uhost,
   
   /* clock select */
   usbh_fsls_clksel(usbx, USB_HCFG_CLK_48M);
-  
-  /* reset host port */
-  usbh_reset_port(uhost);
   
   /* set support ls and fs device */
   host->hcfg_bit.fslssupp = 0;
@@ -950,10 +949,12 @@ void usbh_reset_port(usbh_core_type *uhost)
   /* set port reset */
   usb_host->hprt = hprt_val | USB_OTG_HPRT_PRTRST;
   
-  usb_delay_ms(10);
+  usb_delay_ms(100);
   
   /* clear port reset */
   usb_host->hprt = hprt_val & (~USB_OTG_HPRT_PRTRST);
+  
+  usb_delay_ms(20);
   
 }
 
@@ -967,9 +968,6 @@ static void usbh_attached(usbh_core_type *uhost)
   /* get free channel */
   uhost->ctrl.hch_in = usbh_alloc_channel(uhost, 0x80);
   uhost->ctrl.hch_out = usbh_alloc_channel(uhost, 0x00);
-  
-  /* reset port */
-  usbh_reset_port(uhost);
   
   /* user reset callback handler */
   uhost->user_handler->user_reset();
@@ -990,6 +988,9 @@ static void usbh_attached(usbh_core_type *uhost)
                 uhost->dev.address, EPT_CONTROL_TYPE,
                 uhost->ctrl.ept0_size, 
                 uhost->dev.speed);
+                
+  usb_flush_tx_fifo(uhost->usb_reg, 0x10);
+  usb_flush_rx_fifo(uhost->usb_reg);
                 
   /* user attached callback */   
   uhost->user_handler->user_attached();
@@ -1027,7 +1028,7 @@ static void usbh_class_request(usbh_core_type *uhost)
   {
     uhost->global_state = USBH_CLASS;
   }
-  else if(status == USB_ERROR)
+  else if(status == USB_ERROR || status == USB_FAIL)
   {
     uhost->global_state = USBH_ERROR_STATE;
   }
@@ -1133,13 +1134,22 @@ static void usbh_disconnect(usbh_core_type *uhost)
 usb_sts_type usbh_loop_handler(usbh_core_type *uhost)
 {
   usb_sts_type status = USB_FAIL;
-
+  
+  if(uhost->conn_sts == 0 && 
+      uhost->global_state != USBH_IDLE && 
+      uhost->global_state != USBH_DISCONNECT)
+  {
+    uhost->global_state  = USBH_IDLE;
+  }
   switch(uhost->global_state)
   {
     case USBH_IDLE:
       if(uhost->conn_sts == 1)
       {
         uhost->global_state  = USBH_PORT_EN;
+        
+        /* wait stable */
+        usb_delay_ms(200);
         
         /* port reset */
         usbh_reset_port(uhost);
@@ -1153,9 +1163,6 @@ usb_sts_type usbh_loop_handler(usbh_core_type *uhost)
       if(uhost->port_enable)
       {
         uhost->global_state  = USBH_ATTACHED;
-        
-        /* wait stable */
-        usb_delay_ms(50);
       }
       break;
       

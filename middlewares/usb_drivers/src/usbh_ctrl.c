@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     usbh_ctrl.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    usb host control request
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -365,7 +365,10 @@ usb_sts_type usbh_ctrl_error_handler(usbh_core_type *uhost)
   else
   {
     uhost->ctrl.sts = CTRL_FAIL;
-    status = USB_FAIL;
+    uhost->global_state = USBH_DISCONNECT;
+    uhost->ctrl.err_cnt = 0;
+    USBH_DEBUG("control error: device not response");
+    status = USB_ERROR;
   }
   return status;
 }

@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_mcudbg.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    contains all the functions for the mcudbg firmware library
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -48,7 +48,7 @@
   */
 uint32_t debug_device_id_get(void)
 {
-    return DEBUG->pid;
+  return DEBUGMCU->pid;
 }
 /**
   * @brief  set periph debug mode                  
@@ -64,11 +64,11 @@ void debug_low_power_mode_set(uint32_t low_power_mode, confirm_state new_state)
 {
   if(new_state != FALSE)
   {
-    DEBUG->ctrl |= low_power_mode; 
+    DEBUGMCU->ctrl |= low_power_mode; 
   }
   else
   {
-    DEBUG->ctrl &= ~low_power_mode;  
+    DEBUGMCU->ctrl &= ~low_power_mode;  
   }    
 }
 /**
@@ -91,11 +91,11 @@ void debug_apb1_periph_mode_set(uint32_t apb1_periph, confirm_state new_state)
 {
   if(new_state != FALSE)
   {
-    DEBUG->apb1_frz |= apb1_periph; 
+    DEBUGMCU->apb1_frz |= apb1_periph; 
   }
   else
   {
-    DEBUG->apb1_frz &= ~apb1_periph;  
+    DEBUGMCU->apb1_frz &= ~apb1_periph;  
   }   
 }
 /**
@@ -112,11 +112,11 @@ void debug_apb2_periph_mode_set(uint32_t apb2_periph, confirm_state new_state)
 {
   if(new_state != FALSE)
   {
-    DEBUG->apb2_frz |= apb2_periph; 
+    DEBUGMCU->apb2_frz |= apb2_periph; 
   }
   else
   {
-    DEBUG->apb2_frz &= ~apb2_periph;  
+    DEBUGMCU->apb2_frz &= ~apb2_periph;  
   }   
 }
 

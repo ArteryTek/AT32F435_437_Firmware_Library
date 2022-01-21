@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -54,11 +54,12 @@ int main(void)
   nvic_priority_group_config(NVIC_PRIORITY_GROUP_4);
   lcd_init();
   lcd_clear(WHITE);
-    
+
   lcd_string_show(30, 50, 200, 16, 16, (uint8_t *)"Artery AT32F435/F437");
   lcd_string_show(30, 70, 200, 16, 16, (uint8_t *)"OV5640 TEST");
-  lcd_string_show(30, 110, 200, 16, 16, (uint8_t *)"2021/6/21");
+  lcd_string_show(30, 90, 200, 16, 16, (uint8_t *)"2021/6/21");
 
+  delay_ms(500);
   while(ov5640_init() != SUCCESS)
   {
     lcd_string_show(30, 130, 240, 16, 16, (uint8_t *)"OV5640 ERR");
@@ -70,7 +71,7 @@ int main(void)
 
   lcd_string_show(30, 130, 200, 16, 16, (uint8_t *)"OV5640 OK");
 
-  delay_ms(200);
+  delay_ms(500);
   ov5640_capture();
   while(1)
   {
@@ -98,13 +99,12 @@ void ov5640_capture(void)
 
   dvp_config();
 
-  dvp_dma_init((uint32_t)XMC_LCD_DATA, 0, 38400, EDMA_MEMORY_DATA_WIDTH_HALFWORD, FALSE);
+  dvp_dma_init((uint32_t)XMC_LCD_DATA, 0, 38400);
 
   delay_ms(100);
   ov5640_outsize_set(0, 0, LCD_W, LCD_H);
   ov5640_reg_read(0x4730, &reg_val);
   dvp_start();
-  lcd_clear(YELLOW);
 }
 
 /**

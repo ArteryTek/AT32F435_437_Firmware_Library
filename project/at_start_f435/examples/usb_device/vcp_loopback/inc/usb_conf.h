@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     usb_conf.h
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    usb config header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -89,7 +89,7 @@ extern "C" {
 #define OTG_PIN_ID_SOURCE                GPIO_PINS_SOURCE10
 
 #define OTG_PIN_SOF_GPIO                 GPIOA
-#define OTG_PIN_SOF_GPIO_CLOCK           CRM_GPIOB_PERIPH_CLOCK
+#define OTG_PIN_SOF_GPIO_CLOCK           CRM_GPIOA_PERIPH_CLOCK
 #define OTG_PIN_SOF                      GPIO_PINS_8
 #define OTG_PIN_SOF_SOURCE               GPIO_PINS_SOURCE8
 
@@ -121,7 +121,7 @@ extern "C" {
 #define OTG_PIN_ID_SOURCE                GPIO_PINS_SOURCE10
 
 #define OTG_PIN_SOF_GPIO                 GPIOA
-#define OTG_PIN_SOF_GPIO_CLOCK           CRM_GPIOB_PERIPH_CLOCK
+#define OTG_PIN_SOF_GPIO_CLOCK           CRM_GPIOA_PERIPH_CLOCK
 #define OTG_PIN_SOF                      GPIO_PINS_4
 #define OTG_PIN_SOF_SOURCE               GPIO_PINS_SOURCE4
 

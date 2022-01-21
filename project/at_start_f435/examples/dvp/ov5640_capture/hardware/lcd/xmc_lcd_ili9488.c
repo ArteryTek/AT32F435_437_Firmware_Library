@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     xmc_lcd_ili9488.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    xmc_lcd program file
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -45,12 +45,14 @@ void xmc_init(void)
   crm_periph_clock_enable(CRM_GPIOD_PERIPH_CLOCK, TRUE);
   crm_periph_clock_enable(CRM_GPIOE_PERIPH_CLOCK, TRUE);
   crm_periph_clock_enable(CRM_GPIOF_PERIPH_CLOCK, TRUE); 
+  crm_periph_clock_enable(CRM_GPIOG_PERIPH_CLOCK, TRUE);
   /* enable the xmc clock */
   crm_periph_clock_enable(CRM_XMC_PERIPH_CLOCK, TRUE);
   
   /*-- gpio configuration ------------------------------------------------------*/
   gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE0, GPIO_MUX_12);
   gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE1, GPIO_MUX_12);
+  gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE4, GPIO_MUX_12);
   gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE5, GPIO_MUX_12); 
   gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE7, GPIO_MUX_12);  
   gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE8, GPIO_MUX_12);
@@ -88,7 +90,7 @@ void xmc_init(void)
 
    /*-- xmc configuration ------------------------------------------------------*/
   xmc_norsram_default_para_init(&xmc_norsram_init_struct);
-  xmc_norsram_init_struct.bank = XMC_BANK1_NOR_SRAM1;
+  xmc_norsram_init_struct.subbank = XMC_BANK1_NOR_SRAM1;
   xmc_norsram_init_struct.data_addr_multiplex = XMC_DATA_ADDR_MUX_DISABLE;
   xmc_norsram_init_struct.device = XMC_DEVICE_SRAM;
   xmc_norsram_init_struct.bus_type = XMC_BUSTYPE_16_BITS;
@@ -105,29 +107,37 @@ void xmc_init(void)
   
   /* timing configuration */
   xmc_norsram_timing_default_para_init(&rw_timing_struct, &w_timing_struct);
-  rw_timing_struct.bank = XMC_BANK1_NOR_SRAM1;
+  rw_timing_struct.subbank = XMC_BANK1_NOR_SRAM1;
   rw_timing_struct.write_timing_enable = XMC_WRITE_TIMING_ENABLE;
   rw_timing_struct.addr_setup_time = 0x2;
   rw_timing_struct.addr_hold_time = 0x0;
-  rw_timing_struct.data_setup_time = 0x4;
+  rw_timing_struct.data_setup_time = 0x2;
   rw_timing_struct.bus_latency_time = 0x0;
   rw_timing_struct.clk_psc = 0x0;
   rw_timing_struct.data_latency_time = 0x0;
   rw_timing_struct.mode = XMC_ACCESS_MODE_A;
-  w_timing_struct.bank = XMC_BANK1_NOR_SRAM1;
+  w_timing_struct.subbank = XMC_BANK1_NOR_SRAM1;
   w_timing_struct.write_timing_enable = XMC_WRITE_TIMING_ENABLE;
   w_timing_struct.addr_setup_time = 0x2;
   w_timing_struct.addr_hold_time = 0x0;
-  w_timing_struct.data_setup_time = 0x4;
+  w_timing_struct.data_setup_time = 0x2;
   w_timing_struct.bus_latency_time = 0x0;
   w_timing_struct.clk_psc = 0x0;
   w_timing_struct.data_latency_time = 0x0;
   w_timing_struct.mode = XMC_ACCESS_MODE_A;  
   xmc_nor_sram_timing_config(&rw_timing_struct, &w_timing_struct);
   
-  xmc_ext_timing_config(XMC_SUBBANK1_NOR_SRAM1,0,0); 
+  xmc_ext_timing_config(XMC_BANK1_NOR_SRAM1,0,0); 
   /* enable xmc_bank1_nor_sram4 */
   xmc_nor_sram_enable(XMC_BANK1_NOR_SRAM1, TRUE);
+  
+  /* lcd backlight and reset pins configuration */
+  gpio_init_struct.gpio_pins = GPIO_PINS_2 | GPIO_PINS_3;
+  gpio_init_struct.gpio_mode = GPIO_MODE_OUTPUT;
+  gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
+  gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
+  gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
+  gpio_init(GPIOG, &gpio_init_struct);
 }
 
 _lcd_dev lcddev;
@@ -138,7 +148,7 @@ uint16_t lcd_read(void)
 {
   uint16_t data;  
   
-  data = *(uint16_t*)XMC_LCD_DATA;
+  data = *(__IO uint16_t*)XMC_LCD_DATA;
   
   return data;  
 }
@@ -150,7 +160,7 @@ uint16_t lcd_read(void)
   */
 void lcd_reg_write(uint16_t data)
 { 
-  *(uint16_t*) XMC_LCD_COMMAND = data;
+  *(__IO uint16_t*) XMC_LCD_COMMAND = data;
 }
 
 /**
@@ -160,7 +170,7 @@ void lcd_reg_write(uint16_t data)
   */
 void lcd_data_write(uint16_t data)
 {
-  *(uint16_t*) XMC_LCD_DATA = data;
+  *(__IO uint16_t*) XMC_LCD_DATA = data;
 }
 
 /**
@@ -181,8 +191,8 @@ uint16_t lcd_data_read(void)
   */
 void lcd_command_write(uint16_t lcd_comm, uint16_t lcd_regvalue)
 {	  
-  *(uint16_t*) XMC_LCD_COMMAND = lcd_comm;  
-  *(uint16_t*) XMC_LCD_DATA = lcd_regvalue; 
+  *(__IO uint16_t*) XMC_LCD_COMMAND = lcd_comm;  
+  *(__IO uint16_t*) XMC_LCD_DATA = lcd_regvalue; 
 }	   
 
 /**
@@ -231,7 +241,7 @@ void lcd_data_16bit_write(uint16_t data)
 	 LCD->LCD_RAM = data>>8;
 	 LCD->LCD_RAM = data;
 #else
-	 *(uint16_t*) XMC_LCD_DATA = data;
+	 *(__IO uint16_t*) XMC_LCD_DATA = data;
 #endif
 }
 
@@ -319,7 +329,7 @@ void lcd_clear(uint16_t color)
 		LCD->LCD_RAM = color>>8;
 		LCD->LCD_RAM = color;
 #else
-		*(uint16_t*) XMC_LCD_DATA = color;
+		*(__IO uint16_t*) XMC_LCD_DATA = color;
 #endif
 	}
 } 
@@ -332,7 +342,11 @@ void lcd_clear(uint16_t color)
 void lcd_init(void)
 {
 	xmc_init();
- LCD_RESET_HIGH;
+  LCD_RESET_HIGH;
+	delay_ms(120);
+  LCD_RESET_LOW;
+	delay_ms(120);
+  LCD_RESET_HIGH;
 	delay_ms(120);
   
 	lcd_reg_write(0xF7);
@@ -417,9 +431,12 @@ void lcd_init(void)
 	lcd_reg_write(0x11);
 	delay_ms(120);
 	lcd_reg_write(0x29);
+	delay_ms(120);
 
- lcd_direction(USE_HORIZONTAL);
+  lcd_direction(USE_HORIZONTAL);
+	delay_ms(120);
 	LCD_BL_HIGH;	 
+	delay_ms(120);
 	lcd_clear(BLUE);
 }
 

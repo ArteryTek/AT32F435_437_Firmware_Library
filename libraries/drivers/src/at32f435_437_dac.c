@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_dac.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    contains all the functions for the dac firmware library
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -429,10 +429,10 @@ void dac_udr_flag_clear(dac_select_type dac_select)
   switch(dac_select)
   {
     case DAC1_SELECT:
-      DAC->sts = (uint32_t)(0x1 << 13);
+      DAC->sts = DAC1_D1DMAUDRF;
       break;
     case DAC2_SELECT:
-      DAC->sts = (uint32_t)(0x1 << 29);
+      DAC->sts = DAC2_D2DMAUDRF;
       break;
     default:
       break;

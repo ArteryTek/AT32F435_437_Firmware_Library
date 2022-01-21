@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     usbh_core.h
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    usb host core header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -301,6 +301,7 @@ typedef struct
   
   uint32_t                               conn_sts;                       /*!< connect status */      
   uint32_t                               port_enable;                    /*!< port enable status */
+  uint32_t                               timer;                          /*!< sof timer */
   
   uint32_t                               err_cnt[USB_HOST_CHANNEL_NUM];  /*!< error counter */
   uint32_t                               xfer_cnt[USB_HOST_CHANNEL_NUM]; /*!< xfer counter */

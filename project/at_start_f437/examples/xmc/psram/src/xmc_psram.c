@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     xmc_psram.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    xmc_psram program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -34,7 +34,7 @@
   * @{
   */
   
-#define BANK1_SRAM3_ADDR    ((uint32_t)0x68000000) 
+#define BANK1_SRAM3_ADDR    (uint32_t)0x68000000
 
 /** 
   * @brief  init psram interface
@@ -160,7 +160,7 @@ void psram_init(void)
 
   /*-- xmc configuration ------------------------------------------------------*/
   xmc_norsram_default_para_init(&xmc_norsram_init_struct);
-  xmc_norsram_init_struct.bank = XMC_BANK1_NOR_SRAM3;
+  xmc_norsram_init_struct.subbank = XMC_BANK1_NOR_SRAM3;
   xmc_norsram_init_struct.data_addr_multiplex = XMC_DATA_ADDR_MUX_ENABLE;
   xmc_norsram_init_struct.device = XMC_DEVICE_PSRAM;
   xmc_norsram_init_struct.bus_type = XMC_BUSTYPE_16_BITS;
@@ -177,7 +177,7 @@ void psram_init(void)
   
   /* timing configuration */
   xmc_norsram_timing_default_para_init(&rw_timing_struct, &w_timing_struct);
-  rw_timing_struct.bank = XMC_BANK1_NOR_SRAM3;
+  rw_timing_struct.subbank = XMC_BANK1_NOR_SRAM3;
   rw_timing_struct.write_timing_enable = XMC_WRITE_TIMING_DISABLE;
   rw_timing_struct.addr_hold_time      = 0x08;
   rw_timing_struct.addr_setup_time     = 0x09;
@@ -186,7 +186,7 @@ void psram_init(void)
   rw_timing_struct.bus_latency_time    = 0x0;
   rw_timing_struct.clk_psc             = 0x0;
   rw_timing_struct.mode = XMC_ACCESS_MODE_A;
-  w_timing_struct.bank = XMC_BANK1_NOR_SRAM3;
+  w_timing_struct.subbank = XMC_BANK1_NOR_SRAM3;
   w_timing_struct.write_timing_enable = XMC_WRITE_TIMING_DISABLE;
   w_timing_struct.addr_hold_time      = 0x08;
   w_timing_struct.addr_setup_time     = 0x09;
@@ -214,7 +214,7 @@ void psram_writebuffer(uint16_t* pbuffer, uint32_t writeaddr, uint32_t numhalfwo
   for(; numhalfwordtowrite != 0; numhalfwordtowrite--) /*!< while there is data to write */
   {
     /*!< Transfer data to the memory */
-    *(uint16_t *) (BANK1_SRAM3_ADDR + writeaddr) = *pbuffer++;
+    *(__IO uint16_t *) (BANK1_SRAM3_ADDR + writeaddr) = *pbuffer++;
     
     /*!< increment the address*/  
     writeaddr += 2;

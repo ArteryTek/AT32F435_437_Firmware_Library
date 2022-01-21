@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_edma.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    contains all the functions for the edma firmware library
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -550,7 +550,7 @@ void edma_flag_clear(uint32_t edma_flag)
 {
   if(edma_flag > ((uint32_t)0x20000000))
   {
-    EDMA->clr2 = edma_flag;
+    EDMA->clr2 = (uint32_t)(edma_flag & 0x0FFFFFFF);
   }
   else
   {

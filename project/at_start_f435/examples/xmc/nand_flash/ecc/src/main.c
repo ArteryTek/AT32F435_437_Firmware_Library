@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -27,7 +27,6 @@
 #include "xmc_ecc.h"
 #include "at32f435_437_board.h"
 #include "at32f435_437_clock.h"
-#include "stdio.h"
 
 /** @addtogroup AT32F435_periph_examples
   * @{
@@ -46,84 +45,6 @@ uint32_t j = 0, ecc_value_write = 0, ecc_value_read = 0, ecc_value_write_last = 
 
 void fill_buffer(uint8_t *pbuffer, uint16_t bufferlenght, uint32_t offset);
 void nand_ecc_correction(uint8_t *pbuffer, uint32_t tx_ecc_value, uint32_t rx_ecc_value);
-
-/* suport printf function, usemicrolib is unnecessary */
-#if (__ARMCC_VERSION > 6000000)
-  __asm (".global __use_no_semihosting\n\t");
-  void _sys_exit(int x)
-  {
-    x = x;
-  }
-  /* __use_no_semihosting was requested, but _ttywrch was */
-  void _ttywrch(int ch)
-  {
-    ch = ch;
-  }
-  FILE __stdout;
-#else
- #ifdef __CC_ARM
-  #pragma import(__use_no_semihosting)
-  struct __FILE
-  {
-    int handle;
-  };
-  FILE __stdout;
-  void _sys_exit(int x)
-  {
-    x = x;
-  }
- #endif
-#endif
-
-#if defined ( __GNUC__ ) && !defined (__clang__)
-  #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
-#else
-  #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
-#endif
-
-/**
-  * @brief  retargets the c library printf function to the usart.
-  * @param  none
-  * @retval none
-  */
-PUTCHAR_PROTOTYPE
-{
-  while(usart_flag_get(USART1, USART_TDBE_FLAG) == RESET);
-  usart_data_transmit(USART1, ch);
-  return ch;
-}
-
-__IO uint32_t time_cnt = 0;
-
-/**
-  * @brief  initialize uart1
-  * @param  baudrate: uart baudrate
-  * @retval none
-  */
-void uart_print_init(uint32_t baudrate)
-{
-  gpio_init_type gpio_init_struct;
-
-  /* enable the uart1 and gpio clock */
-  crm_periph_clock_enable(CRM_USART1_PERIPH_CLOCK, TRUE);
-  crm_periph_clock_enable(CRM_GPIOA_PERIPH_CLOCK, TRUE);
-
-  gpio_default_para_init(&gpio_init_struct);
-
-  /* configure the uart1 tx pin */
-  gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
-  gpio_init_struct.gpio_out_type  = GPIO_OUTPUT_PUSH_PULL;
-  gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
-  gpio_init_struct.gpio_pins = GPIO_PINS_9;
-  gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
-  gpio_init(GPIOA, &gpio_init_struct);
-  gpio_pin_mux_config(GPIOA, GPIO_PINS_SOURCE9, GPIO_MUX_7);
-  
-  /* configure uart param */
-  usart_init(USART1, baudrate, USART_DATA_8BITS, USART_STOP_1_BIT);
-  usart_transmitter_enable(USART1, TRUE);
-  usart_enable(USART1, TRUE);
-}
 
 /**
   * @brief  Fill the global buffer
@@ -150,7 +71,7 @@ void fill_buffer(uint8_t *pbuffer, uint16_t bufferlenght, uint32_t offset)
   */
 void nand_ecc_correction(uint8_t *pbuffer,uint32_t tx_ecc_value ,uint32_t rx_ecc_value)
 {
-  uint32_t ecc_value, position ,byte_position;
+  uint32_t ecc_value=0, position=0 ,byte_position=0;
   uint8_t i,compare_data;
   
   /* check ecc value */
@@ -158,9 +79,9 @@ void nand_ecc_correction(uint8_t *pbuffer,uint32_t tx_ecc_value ,uint32_t rx_ecc
   {
     /* 2048 byte -- 28bit ecc valid value; 8192 byte -- 32bit ecc valid value */
 #ifdef H27U1G8F2CTR
-    ecc_value =(tx_ecc_value^rx_ecc_value)&0x0FFFFFFF;
+    ecc_value =(tx_ecc_value^rx_ecc_value) & (uint32_t)0x0FFFFFFF;
 #elif defined K9GAG08U0E
-    ecc_value =(tx_ecc_value^rx_ecc_value)&0xFFFFFFFF;
+    ecc_value =(tx_ecc_value^rx_ecc_value) & (uint32_t)0xFFFFFFFF;
 #endif    
     /* 1 bit error correction */
 #ifdef H27U1G8F2CTR
@@ -172,20 +93,19 @@ void nand_ecc_correction(uint8_t *pbuffer,uint32_t tx_ecc_value ,uint32_t rx_ecc
       compare_data = (ecc_value>>(i*2))&0x3;
       
       /* find position */
-      if(compare_data==0x2)
+      if(compare_data == 0x2)
       {
         position |= (1<<i);
       }
-      
       /* more than 1 bit erroc */
-      else if(compare_data!=0x1)
+      else if(compare_data != 0x1)
       {
         return;
       }
     }
     
     /* correct receive value */
-    byte_position = position/8;
+    byte_position = (uint32_t)(position/8);
     pbuffer[byte_position] ^= 1 << (position % 8);
   }
 }

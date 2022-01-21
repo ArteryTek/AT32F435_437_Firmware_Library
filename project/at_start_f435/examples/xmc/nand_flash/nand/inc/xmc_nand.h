@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
   * @file     xmc_nand.h
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    header file for the nand configuration.    
   ******************************************************************************
   *                       Copyright notice & Disclaimer
@@ -83,11 +83,11 @@ typedef struct
 #define Bank2_NAND_ADDR                  ((uint32_t)0x70000000)     
 
 #ifdef H27U1G8F2CTR
-#define NAND_AT_MakerID                  0xAD
-#define NAND_AT_DeviceID                 0xF1
+#define NAND_AT_MakerID                  (uint8_t)0xAD
+#define NAND_AT_DeviceID                 (uint8_t)0xF1
 #elif defined K9GAG08U0E                 
-#define NAND_AT_MakerID                  0xEC
-#define NAND_AT_DeviceID                 0xD5
+#define NAND_AT_MakerID                  (uint8_t)0xEC
+#define NAND_AT_DeviceID                 (uint8_t)0xD5
 #endif
 
 /** @defgroup NAND_area_define
@@ -184,13 +184,13 @@ typedef struct
   
 /*-- xmc nand memory address computation ------------------------------------*/  
 /* 1st addressing cycle */
-#define addr_1st_cycle(addr)             (uint8_t)((addr) & 0xFF)  
+#define addr_1st_cycle(addr)             (uint8_t)((addr) & (uint32_t)0x000000FF)  
 /* 2nd addressing cycle */               
-#define addr_2nd_cycle(addr)             (uint8_t)(((addr) & 0xFF00) >> 8)   
+#define addr_2nd_cycle(addr)             (uint8_t)(((addr) & (uint32_t)0x0000FF00) >> 8)   
 /* 3rd addressing cycle */               
-#define addr_3rd_cycle(addr)             (uint8_t)(((addr) & 0xFF0000) >> 16)   
+#define addr_3rd_cycle(addr)             (uint8_t)(((addr) & (uint32_t)0x00FF0000) >> 16)   
 /* 4th addressing cycle */               
-#define addr_4th_cycle(addr)             (uint8_t)(((addr) & 0xFF000000) >> 24) 
+#define addr_4th_cycle(addr)             (uint8_t)(((addr) & (uint32_t)0xFF000000) >> 24) 
 
 /**
   * @}

@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -161,8 +161,8 @@ void usart_configuration(void)
   /* clear sc exint line pending bit */
   exint_flag_clear(SC_OFF_EXINT);
 
-  /* sc_usart clock set to 4.28mhz (apbclk = 120 mhz / 28) */
-  usart_irda_smartcard_division_set(SC_USART, 14);
+  /* sc_usart clock set to 4.5mhz (apbclk = 144 mhz / 32) */
+  usart_irda_smartcard_division_set(SC_USART, 16);
   /* sc_usart guard time set to 2 bit */
   usart_smartcard_guard_time_set(SC_USART, 0x2);
 

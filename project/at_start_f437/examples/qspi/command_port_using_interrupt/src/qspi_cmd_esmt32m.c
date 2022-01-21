@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     qspi_cmd_esmt32m.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    qspi_cmd_esmt32m program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -38,7 +38,7 @@
 #define FLASH_PAGE_PROGRAM_SIZE          256
 
 qspi_cmd_type esmt32m_cmd_config;
-flag_status qspi_state_is_busy = RESET;
+volatile flag_status qspi_state_is_busy = RESET;
 
 void qspi_busy_check(void);
 void qspi_write_enable(void);

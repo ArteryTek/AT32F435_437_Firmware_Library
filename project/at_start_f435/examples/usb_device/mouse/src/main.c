@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -43,8 +43,8 @@
 
 /* usb global struct define */
 otg_core_type otg_core_struct;
-uint8_t press_mouse = 0;
-extern uint8_t hid_suspend_flag;
+__IO uint8_t press_mouse = 0;
+extern __IO uint8_t hid_suspend_flag;
 void usb_clock48m_select(usb_clk48_s clk_s);
 void keyboard_send_string(uint8_t *string, uint8_t len);
 void usb_gpio_config(void);

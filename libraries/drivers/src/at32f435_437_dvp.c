@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_dvp.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    contains all the functions for the dvp firmware library
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -375,7 +375,7 @@ flag_status dvp_flag_get(uint32_t flag)
 void dvp_flag_clear(uint32_t flag)
 {
   flag &= ~0x80000000;
-  DVP->icr = flag;
+  DVP->iclr = flag;
 }
 
 /**

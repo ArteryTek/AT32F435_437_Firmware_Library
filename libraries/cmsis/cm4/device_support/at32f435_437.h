@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437.h
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    at32f435_437 header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -62,7 +62,7 @@ extern "C" {
     !defined (AT32F437VCT7) && !defined (AT32F437VGT7) && !defined (AT32F437VMT7) && \
     !defined (AT32F437ZCT7) && !defined (AT32F437ZGT7) && !defined (AT32F437ZMT7)
 
-    #error "Please select first the target at32f4xx device used in your application (in at32f4xx.h file)"
+    #error "Please select first the target device used in your application (in at32f435_437.h file)"
 #endif
 
 #if defined (AT32F435CCU7) || defined (AT32F435CGU7) || defined (AT32F435CMU7) || \
@@ -100,7 +100,7 @@ extern "C" {
   */
 #define __AT32F435_437_LIBRARY_VERSION_MAJOR    (0x02) /*!< [31:24] major version */
 #define __AT32F435_437_LIBRARY_VERSION_MIDDLE   (0x00) /*!< [23:16] middle version */
-#define __AT32F435_437_LIBRARY_VERSION_MINOR    (0x02) /*!< [15:8]  minor version */
+#define __AT32F435_437_LIBRARY_VERSION_MINOR    (0x04) /*!< [15:8]  minor version */
 #define __AT32F435_437_LIBRARY_VERSION_RC       (0x00) /*!< [7:0]  release candidate */
 #define __AT32F435_437_LIBRARY_VERSION          ((__AT32F435_437_LIBRARY_VERSION_MAJOR << 24)  | \
                                                  (__AT32F435_437_LIBRARY_VERSION_MIDDLE << 16) | \
@@ -411,12 +411,10 @@ typedef enum {ERROR = 0, SUCCESS = !ERROR} error_status;
 #define QSPI1_REG_BASE                   ((uint32_t)0xA0001000)
 #define XMC_REG_BASE                     ((uint32_t)0xA0000000)
 #define XMC_BANK1_REG_BASE               (XMC_REG_BASE + 0x0000)
-#define XMC_BANK1E_REG_BASE              (XMC_REG_BASE + 0x0104)
-#define XMC_BANK1E_H_BASE                (XMC_REG_BASE + 0x0220)
 #define XMC_BANK2_REG_BASE               (XMC_REG_BASE + 0x0060)
 #define XMC_BANK3_REG_BASE               (XMC_REG_BASE + 0x0080)
 #define XMC_BANK4_REG_BASE               (XMC_REG_BASE + 0x00A0)
-#define XMC_BANK5_6_REG_BASE             (XMC_REG_BASE + 0x0140)
+#define XMC_SDRAM_REG_BASE               (XMC_REG_BASE + 0x0140)
 #define QSPI1_MEM_BASE                   ((uint32_t)0x90000000)
 #define XMC_MEM_BASE                     ((uint32_t)0x60000000)
 #define PERIPH_BASE                      ((uint32_t)0x40000000)
@@ -770,7 +768,8 @@ typedef enum {ERROR = 0, SUCCESS = !ERROR} error_status;
 /**
   * @}
   */
-  
+
+#include "at32f435_437_def.h"
 #include "at32f435_437_conf.h"
 
 #ifdef __cplusplus

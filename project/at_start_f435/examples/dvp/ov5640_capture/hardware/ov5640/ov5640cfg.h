@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     ov5640cfg.h
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    header file of ov5640cfg program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -92,7 +92,7 @@ const uint16_t ov5640_rgb565_reg_tbl[][2] =
   0x501F, 0x01,
   /* 1280x800, 15fps */
   /* input clock 24mhz, pclk 42mhz */
-  0x3035, 0x81, /* pll */
+  0x3035, 0x21, /* pll */
   0x3036, 0x69, /* pll */
   0x3c07, 0x07, /* lightmeter 1 threshold[7:0] */
   0x3820, 0x46, /* flip */
@@ -136,23 +136,19 @@ const uint16_t ov5640_rgb565_reg_tbl[][2] =
   0x3824, 0x04, /* pclk manual divider */
   0x5001, 0xA3, /* sde on, scale on, uv average off, color matrix on, awb on */
   0x3503, 0x00, /* aec/agc on */
-
+  
+#ifdef EMBEDDED_MODE
   /* embedded code configer */
   0x471b, 0x00, /* hsync mode enable */
   0x4719, 0x01, /* ccir656 eav/sav option */
   0x4715, 0x00, /* 0x0f ccir656 dummy line number at beginning of the frame */
   0x4730, 0x61, /* ccir656 mode */
 
-  /* embedded code when 0x4730 = 0x81 */
-//  0x4732, 0xC0, /* fs */
-//  0x4733, 0xE0, /* fe */
-//  0x4734, 0x80, /* ls */
-//  0x4735, 0xA0, /* le */
-
-  0x4732, 0x01,
-  0x4733, 0x0F,
-  0x4734, 0x10,
-  0x4735, 0xF0,
+  0x4732, 0x01, /* sync code frame start */
+  0x4733, 0x0F, /* sync code frame end */
+  0x4734, 0x10, /* sync code line start */
+  0x4735, 0xF0, /* sync code line end */
+#endif
 };
 
 const uint16_t ov5640_uxga_init_reg_tbl[][2] =
@@ -373,9 +369,8 @@ const uint16_t ov5640_uxga_init_reg_tbl[][2] =
   0x530b, 0x04, /* cip sharpen th offset 1 */
   0x530c, 0x06, /* cip sharpen th offset 2 */
   0x5025, 0x00,
+  0x4740, 0x23, /* vsync high */
   0x3008, 0x02, /* wake up from standby, bit[6] */
-
-  0x4740, 0x21, /* vsync high */
 };
 
 /**

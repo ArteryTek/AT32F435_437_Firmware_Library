@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_usb.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    contains all the functions for the usb firmware library
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -314,8 +314,7 @@ void usb_set_tx_fifo(otg_global_type *usbx, uint8_t txfifo, uint16_t size)
   offset = usbx->grxfsiz;
   if(txfifo == 0)
   {
-    usbx->gnptxfsiz_ept0tx_bit.nptxfstaddr = offset;
-    usbx->gnptxfsiz_ept0tx_bit.nptxfdep = size;
+    usbx->gnptxfsiz_ept0tx = offset | (size << 16);
   }
   else
   {
@@ -324,8 +323,7 @@ void usb_set_tx_fifo(otg_global_type *usbx, uint8_t txfifo, uint16_t size)
     {
       offset += usbx->dieptxfn_bit[i_index].ineptxfdep;
     }
-    usbx->dieptxfn_bit[txfifo-1].ineptxfstaddr = offset;
-    usbx->dieptxfn_bit[txfifo-1].ineptxfdep = size;
+    usbx->dieptxfn[txfifo - 1] = offset | (size << 16);
   }
 }
 
@@ -428,7 +426,11 @@ void usb_write_packet(otg_global_type *usbx, uint8_t *pusr_buf, uint16_t num, ui
   uint32_t *pbuf = (uint32_t *)pusr_buf;
   for(n_index = 0; n_index < nhbytes; n_index ++)
   {
+#if defined (__ICCARM__) && (__VER__ < 7000000)
+    USB_FIFO(usbx, num) = *(__packed uint32_t *)pbuf;
+#else
     USB_FIFO(usbx, num) = __UNALIGNED_UINT32_READ(pbuf);
+#endif
     pbuf ++;
   }
 }
@@ -447,7 +449,11 @@ void usb_read_packet(otg_global_type *usbx, uint8_t *pusr_buf, uint16_t num, uin
   uint32_t *pbuf = (uint32_t *)pusr_buf;
   for(n_index = 0; n_index < nhbytes; n_index ++)
   {
+#if defined (__ICCARM__) && (__VER__ < 7000000)
+    *(__packed uint32_t *)pbuf = USB_FIFO(usbx, 0);
+#else
     __UNALIGNED_UINT32_WRITE(pbuf, (USB_FIFO(usbx, 0)));
+#endif
     pbuf ++;
   }
 }

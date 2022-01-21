@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
   * @file     xmc_sdram.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    sdram program.    
   ******************************************************************************
   *                       Copyright notice & Disclaimer
@@ -144,7 +144,7 @@ void sdram_init(void)
   /*-- xmc configuration ------------------------------------------------------*/
   xmc_sdram_default_para_init(&sdram_init_struct, &sdram_timing_struct);
   
-  sdram_init_struct.bank                       = XMC_SDRAM_BANK1;
+  sdram_init_struct.sdram_bank                 = XMC_SDRAM_BANK1;
   sdram_init_struct.internel_banks             = XMC_INBK_4;
   sdram_init_struct.clkdiv                     = XMC_CLKDIV_2;
   sdram_init_struct.write_protection           = FALSE;
@@ -250,7 +250,7 @@ void sdram_writebuffer(uint16_t* pbuffer, uint32_t writeaddr, uint32_t numhalfwo
   for(; numhalfwordtowrite != 0; numhalfwordtowrite--) /*!< while there is data to write */
   {
     /*!< Transfer data to the memory */
-    *(uint16_t *) (SDRAM_BANK1_ADDR + writeaddr) = *pbuffer++;
+    *(__IO uint16_t *) (SDRAM_BANK1_ADDR + writeaddr) = *pbuffer++;
     
     /*!< increment the address*/  
     writeaddr += 2;

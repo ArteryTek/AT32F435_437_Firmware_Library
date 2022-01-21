@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     ov5640.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    ov5640 program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -41,7 +41,8 @@
 
 #define I2C_TIMEOUT                      0x2FFFFFF
                                          
-#define I2Cx_CLKCTRL                     0x1080D8FF
+//#define I2Cx_CLKCTRL                     0x1080D8FF
+#define I2Cx_CLKCTRL                     0x30F05292
 #define I2Cx_ADDRESS                     0xA0
                                          
 #define I2Cx_PORT                        I2C1

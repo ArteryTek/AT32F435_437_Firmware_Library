@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
   * @file     xmc_nor.h
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    header file for the nor configuration.    
   ******************************************************************************
   *                       Copyright notice & Disclaimer
@@ -198,7 +198,7 @@ void nor_init(void)
 
   /*-- xmc configuration ------------------------------------------------------*/
   xmc_norsram_default_para_init(&xmc_norsram_init_struct);
-  xmc_norsram_init_struct.bank = XMC_BANK1_NOR_SRAM2;
+  xmc_norsram_init_struct.subbank = XMC_BANK1_NOR_SRAM2;
   xmc_norsram_init_struct.data_addr_multiplex = XMC_DATA_ADDR_MUX_DISABLE;
   xmc_norsram_init_struct.device = XMC_DEVICE_NOR;
   xmc_norsram_init_struct.bus_type = XMC_BUSTYPE_16_BITS;
@@ -215,7 +215,7 @@ void nor_init(void)
   
   /* timing configuration */
   xmc_norsram_timing_default_para_init(&rw_timing_struct, &w_timing_struct);
-  rw_timing_struct.bank = XMC_BANK1_NOR_SRAM2;
+  rw_timing_struct.subbank = XMC_BANK1_NOR_SRAM2;
   rw_timing_struct.write_timing_enable = XMC_WRITE_TIMING_ENABLE;
   rw_timing_struct.addr_setup_time = 0x8;
   rw_timing_struct.addr_hold_time = 0x0;
@@ -224,7 +224,7 @@ void nor_init(void)
   rw_timing_struct.clk_psc = 0x0;
   rw_timing_struct.data_latency_time = 0x0;
   rw_timing_struct.mode = XMC_ACCESS_MODE_B;
-  w_timing_struct.bank = XMC_BANK1_NOR_SRAM2;
+  w_timing_struct.subbank = XMC_BANK1_NOR_SRAM2;
   w_timing_struct.write_timing_enable = XMC_WRITE_TIMING_ENABLE;
   w_timing_struct.addr_setup_time = 0x8;
   w_timing_struct.addr_hold_time = 0x0;

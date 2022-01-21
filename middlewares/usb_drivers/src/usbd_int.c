@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     usbd_int.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    usb interrupt request
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -425,8 +425,8 @@ void usbd_reset_handler(usbd_core_type *udev)
   /* endpoint fifo alloc */
   usbd_fifo_alloc(udev);
   
-  /* flush tx fifo 0 */
-  usb_flush_tx_fifo(usbx, 0);
+  /* flush all tx fifo */
+  usb_flush_tx_fifo(usbx, 0x10);
   
   /* clear in and out endpoint interrupt flag */
   for(i_index = 0; i_index < USB_EPT_MAX_NUM; i_index ++)

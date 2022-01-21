@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_xmc.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    contains all the functions for the xmc firmware library
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -43,7 +43,7 @@
   
 /**
   * @brief  xmc nor or sram registers reset 
-  * @param  xmc_bank    
+  * @param  xmc_subbank    
   *         this parameter can be one of the following values:  
   *         - XMC_BANK1_NOR_SRAM1      
   *         - XMC_BANK1_NOR_SRAM2         
@@ -51,20 +51,20 @@
   *         - XMC_BANK1_NOR_SRAM4    
   * @retval none
   */
-void xmc_nor_sram_reset(xmc_nor_sram_bank_type xmc_bank)
+void xmc_nor_sram_reset(xmc_nor_sram_subbank_type xmc_subbank)
 {
   /* XMC_BANK1_NORSRAM1 */
-  if(xmc_bank == XMC_BANK1_NOR_SRAM1)
+  if(xmc_subbank == XMC_BANK1_NOR_SRAM1)
   {
-    XMC_BANK1->bk1ctrl[xmc_bank] = 0x000030DB;
+    XMC_BANK1->ctrl_tmg_group[xmc_subbank].bk1ctrl = 0x000030DB;
   }
   /* XMC_BANK1_NORSRAM2,  XMC_BANK1_NORSRAM3 or XMC_BANK1_NORSRAM4 */
   else
   {
-    XMC_BANK1->bk1ctrl[xmc_bank] = 0x000030D2;
+    XMC_BANK1->ctrl_tmg_group[xmc_subbank].bk1ctrl = 0x000030D2;
   }
-  XMC_BANK1->bk1ctrl[xmc_bank + 1] = 0x0FFFFFFF;
-  XMC_BANK1E->bk1tmgwr[xmc_bank] = 0x0FFFFFFF;
+  XMC_BANK1->ctrl_tmg_group[xmc_subbank].bk1tmg = 0x0FFFFFFF;
+  XMC_BANK1->tmgwr_group[xmc_subbank].bk1tmgwr = 0x0FFFFFFF;
 }
 
 /**
@@ -78,7 +78,7 @@ void xmc_nor_sram_reset(xmc_nor_sram_bank_type xmc_bank)
 void xmc_nor_sram_init(xmc_norsram_init_type* xmc_norsram_init_struct)
 {
   /* bank1 nor/sram control register configuration */
-  XMC_BANK1->bk1ctrl[xmc_norsram_init_struct->bank] = 
+  XMC_BANK1->ctrl_tmg_group[xmc_norsram_init_struct->subbank].bk1ctrl = 
   (uint32_t)xmc_norsram_init_struct->data_addr_multiplex |
   xmc_norsram_init_struct->device |
   xmc_norsram_init_struct->bus_type |
@@ -95,7 +95,7 @@ void xmc_nor_sram_init(xmc_norsram_init_type* xmc_norsram_init_struct)
   /* if nor flash device */
   if(xmc_norsram_init_struct->device == XMC_DEVICE_NOR)
   {
-    XMC_BANK1->bk1ctrl_bit[xmc_norsram_init_struct->bank].noren = 0x1;
+    XMC_BANK1->ctrl_tmg_group[xmc_norsram_init_struct->subbank].bk1ctrl_bit.noren = 0x1;
   }
 }
 
@@ -114,7 +114,7 @@ void xmc_nor_sram_timing_config(xmc_norsram_timing_init_type* xmc_rw_timing_stru
                                 xmc_norsram_timing_init_type* xmc_w_timing_struct)
 {
   /* bank1 nor/sram timing register configuration */
-  XMC_BANK1->bk1ctrl[xmc_rw_timing_struct->bank + 1] = 
+  XMC_BANK1->ctrl_tmg_group[xmc_rw_timing_struct->subbank].bk1tmg = 
   (uint32_t)xmc_rw_timing_struct->addr_setup_time |
   (xmc_rw_timing_struct->addr_hold_time << 4) |
   (xmc_rw_timing_struct->data_setup_time << 8) |
@@ -126,7 +126,7 @@ void xmc_nor_sram_timing_config(xmc_norsram_timing_init_type* xmc_rw_timing_stru
   /* bank1 nor/sram timing register for write configuration, if extended mode is used */
   if(xmc_rw_timing_struct->write_timing_enable == XMC_WRITE_TIMING_ENABLE)
   {
-    XMC_BANK1E->bk1tmgwr[xmc_w_timing_struct->bank] = 
+    XMC_BANK1->tmgwr_group[xmc_w_timing_struct->subbank].bk1tmgwr = 
     (uint32_t)xmc_w_timing_struct->addr_setup_time |
     (xmc_w_timing_struct->addr_hold_time << 4) |
     (xmc_w_timing_struct->data_setup_time << 8) |
@@ -137,7 +137,7 @@ void xmc_nor_sram_timing_config(xmc_norsram_timing_init_type* xmc_rw_timing_stru
   }
   else
   {
-    XMC_BANK1E->bk1tmgwr[xmc_w_timing_struct->bank] = 0x0FFFFFFF;
+    XMC_BANK1->tmgwr_group[xmc_w_timing_struct->subbank].bk1tmgwr = 0x0FFFFFFF;
   }
 }
 
@@ -150,7 +150,7 @@ void xmc_nor_sram_timing_config(xmc_norsram_timing_init_type* xmc_rw_timing_stru
 void xmc_norsram_default_para_init(xmc_norsram_init_type* xmc_nor_sram_init_struct)
 {
   /* reset nor/sram init structure parameters values */
-  xmc_nor_sram_init_struct->bank = XMC_BANK1_NOR_SRAM1;
+  xmc_nor_sram_init_struct->subbank = XMC_BANK1_NOR_SRAM1;
   xmc_nor_sram_init_struct->data_addr_multiplex = XMC_DATA_ADDR_MUX_ENABLE;
   xmc_nor_sram_init_struct->device = XMC_DEVICE_SRAM;
   xmc_nor_sram_init_struct->bus_type = XMC_BUSTYPE_8_BITS;
@@ -176,7 +176,7 @@ void xmc_norsram_default_para_init(xmc_norsram_init_type* xmc_nor_sram_init_stru
 void xmc_norsram_timing_default_para_init(xmc_norsram_timing_init_type* xmc_rw_timing_struct,
                                           xmc_norsram_timing_init_type* xmc_w_timing_struct)
 {
-  xmc_rw_timing_struct->bank = XMC_BANK1_NOR_SRAM1;
+  xmc_rw_timing_struct->subbank = XMC_BANK1_NOR_SRAM1;
   xmc_rw_timing_struct->write_timing_enable = XMC_WRITE_TIMING_DISABLE;
   xmc_rw_timing_struct->addr_setup_time = 0xF;
   xmc_rw_timing_struct->addr_hold_time = 0xF;
@@ -185,7 +185,7 @@ void xmc_norsram_timing_default_para_init(xmc_norsram_timing_init_type* xmc_rw_t
   xmc_rw_timing_struct->clk_psc = 0xF;
   xmc_rw_timing_struct->data_latency_time = 0xF;
   xmc_rw_timing_struct->mode = XMC_ACCESS_MODE_A;
-  xmc_w_timing_struct->bank = XMC_BANK1_NOR_SRAM1;
+  xmc_w_timing_struct->subbank = XMC_BANK1_NOR_SRAM1;
   xmc_w_timing_struct->write_timing_enable = XMC_WRITE_TIMING_DISABLE;
   xmc_w_timing_struct->addr_setup_time = 0xF;
   xmc_w_timing_struct->addr_hold_time = 0xF;
@@ -198,7 +198,7 @@ void xmc_norsram_timing_default_para_init(xmc_norsram_timing_init_type* xmc_rw_t
 
 /**
   * @brief  enable or disable the specified nor/sram memory bank.
-  * @param  xmc_bank    
+  * @param  xmc_subbank    
   *         this parameter can be one of the following values:  
   *         - XMC_BANK1_NOR_SRAM1      
   *         - XMC_BANK1_NOR_SRAM2         
@@ -207,27 +207,27 @@ void xmc_norsram_timing_default_para_init(xmc_norsram_timing_init_type* xmc_rw_t
   * @param  new_state (TRUE or FALSE)
   * @retval none
   */
-void xmc_nor_sram_enable(xmc_nor_sram_bank_type xmc_bank, confirm_state new_state)
+void xmc_nor_sram_enable(xmc_nor_sram_subbank_type xmc_subbank, confirm_state new_state)
 {
-  XMC_BANK1->bk1ctrl_bit[xmc_bank].en = new_state;
+  XMC_BANK1->ctrl_tmg_group[xmc_subbank].bk1ctrl_bit.en = new_state;
 }
 
 /**
   * @brief  config the bus turnaround phase.
   * @param  xmc_sub_bank    
   *         this parameter can be one of the following values:      
-  *         - XMC_SUBBANK1_NOR_SRAM1             
-  *         - XMC_SUBBANK1_NOR_SRAM2            
-  *         - XMC_SUBBANK1_NOR_SRAM3            
-  *         - XMC_SUBBANK1_NOR_SRAM4           
+  *         - XMC_BANK1_NOR_SRAM1             
+  *         - XMC_BANK1_NOR_SRAM2            
+  *         - XMC_BANK1_NOR_SRAM3            
+  *         - XMC_BANK1_NOR_SRAM4           
   * @param  w2w_timing :write timing
   * @param  r2r_timing :read timing
   * @retval none
   */
-void xmc_ext_timing_config(xmc_subbank1_nor_sram_type xmc_sub_bank, uint16_t w2w_timing, uint16_t r2r_timing)
+void xmc_ext_timing_config(xmc_nor_sram_subbank_type xmc_sub_bank, uint16_t w2w_timing, uint16_t r2r_timing)
 { 
-  XMC_BANK1H->bk1ext_bit[xmc_sub_bank].buslatr2r = r2r_timing<<8;
-  XMC_BANK1H->bk1ext_bit[xmc_sub_bank].buslatw2w = w2w_timing;  
+  XMC_BANK1->ext_bit[xmc_sub_bank].buslatr2r = r2r_timing<<8;
+  XMC_BANK1->ext_bit[xmc_sub_bank].buslatw2w = w2w_timing;  
 }
 
 /**
@@ -238,21 +238,21 @@ void xmc_ext_timing_config(xmc_subbank1_nor_sram_type xmc_sub_bank, uint16_t w2w
   *         - XMC_BANK3_NAND           
   * @retval none
   */
-void xmc_nand_reset(xmc_nand_bank_type xmc_bank)
+void xmc_nand_reset(xmc_class_bank_type xmc_bank)
 {
-  /* set the XMC_BANK2_NAND registers to their reset values */
+  /* set the xmc_bank2_nand registers to their reset values */
   if(xmc_bank == XMC_BANK2_NAND)
   {
     XMC_BANK2->bk2ctrl = 0x00000018;
-    XMC_BANK2->bk2sts = 0x00000040;
+    XMC_BANK2->bk2is = 0x00000040;
     XMC_BANK2->bk2tmgatt = 0xFCFCFCFC;
     XMC_BANK2->bk2tmgmem = 0xFCFCFCFC;
   }
-  /* set the XMC_BANK3_NAND registers to their reset values */
+  /* set the xmc_bank3_nand registers to their reset values */
   else
   {
     XMC_BANK3->bk3ctrl = 0x00000018;
-    XMC_BANK3->bk3sts = 0x00000040;
+    XMC_BANK3->bk3is = 0x00000040;
     XMC_BANK3->bk3tmgatt = 0xFCFCFCFC;
     XMC_BANK3->bk3tmgmem = 0xFCFCFCFC;
   }
@@ -319,7 +319,7 @@ void xmc_nand_timing_config(xmc_nand_pccard_timinginit_type* xmc_regular_spaceti
             (xmc_special_spacetiming_struct->mem_hold_time << 16) | 
             (xmc_special_spacetiming_struct->mem_hiz_time << 24);
   /* xmc_bank2_nand registers configuration */
-  if(xmc_regular_spacetiming_struct->nand_bank == XMC_BANK2_NAND)
+  if(xmc_regular_spacetiming_struct->class_bank == XMC_BANK2_NAND)
   {
     XMC_BANK2->bk2tmgatt = tempatt;
     XMC_BANK2->bk2tmgmem = tempmem;    
@@ -360,12 +360,12 @@ void xmc_nand_default_para_init(xmc_nand_init_type* xmc_nand_init_struct)
 void xmc_nand_timing_default_para_init(xmc_nand_pccard_timinginit_type* xmc_regular_spacetiming_struct,
                                        xmc_nand_pccard_timinginit_type* xmc_special_spacetiming_struct)
 {
-  xmc_regular_spacetiming_struct->nand_bank = XMC_BANK2_NAND;
+  xmc_regular_spacetiming_struct->class_bank = XMC_BANK2_NAND;
   xmc_regular_spacetiming_struct->mem_hold_time  = 0xFC;
   xmc_regular_spacetiming_struct->mem_waite_time = 0xFC;
   xmc_regular_spacetiming_struct->mem_setup_time = 0xFC;
   xmc_regular_spacetiming_struct->mem_hiz_time = 0xFC;
-  xmc_special_spacetiming_struct->nand_bank = XMC_BANK2_NAND;
+  xmc_special_spacetiming_struct->class_bank = XMC_BANK2_NAND;
   xmc_special_spacetiming_struct->mem_hold_time = 0xFC;
   xmc_special_spacetiming_struct->mem_waite_time = 0xFC;
   xmc_special_spacetiming_struct->mem_setup_time = 0xFC;
@@ -381,7 +381,7 @@ void xmc_nand_timing_default_para_init(xmc_nand_pccard_timinginit_type* xmc_regu
   * @param  new_state (TRUE or FALSE)
   * @retval none
   */
-void xmc_nand_enable(xmc_nand_bank_type xmc_bank, confirm_state new_state)
+void xmc_nand_enable(xmc_class_bank_type xmc_bank, confirm_state new_state)
 {
   /* enable or disable the nand bank2 by setting the en bit in the bk2ctrl register */
   if(xmc_bank == XMC_BANK2_NAND)
@@ -404,7 +404,7 @@ void xmc_nand_enable(xmc_nand_bank_type xmc_bank, confirm_state new_state)
   * @param  new_state (TRUE or FALSE)
   * @retval none
   */
-void xmc_nand_ecc_enable(xmc_nand_bank_type xmc_bank, confirm_state new_state)
+void xmc_nand_ecc_enable(xmc_class_bank_type xmc_bank, confirm_state new_state)
 {
   /* enable the selected nand bank2 ecc function by setting the eccen bit in the bk2ctrl register */
   if(xmc_bank == XMC_BANK2_NAND)
@@ -426,7 +426,7 @@ void xmc_nand_ecc_enable(xmc_nand_bank_type xmc_bank, confirm_state new_state)
   *   - XMC_BANK3_NAND
   * @retval the error correction code (ecc) value.
   */
-uint32_t xmc_ecc_get(xmc_nand_bank_type xmc_bank)
+uint32_t xmc_ecc_get(xmc_class_bank_type xmc_bank)
 {
   uint32_t eccvaule = 0x0;
   
@@ -454,11 +454,11 @@ uint32_t xmc_ecc_get(xmc_nand_bank_type xmc_bank)
   */
 void xmc_sdram_reset(xmc_sdram_bank_type xmc_bank)
 {
-  XMC_BANK5_6->sdctrl[xmc_bank] = 0x000002D0;
-  XMC_BANK5_6->sdtm[xmc_bank]   = 0x0FFFFFFF;
-  XMC_BANK5_6->sdcmd            = 0x00000000;
-  XMC_BANK5_6->sdrcnt           = 0x00000000;
-  XMC_BANK5_6->sdsts            = 0x00000000;
+  XMC_SDRAM->ctrl[xmc_bank] = 0x000002D0;
+  XMC_SDRAM->tm[xmc_bank]   = 0x0FFFFFFF;
+  XMC_SDRAM->cmd            = 0x00000000;
+  XMC_SDRAM->rcnt           = 0x00000000;
+  XMC_SDRAM->sts            = 0x00000000;
 }
 
 /**
@@ -474,50 +474,50 @@ void xmc_sdram_reset(xmc_sdram_bank_type xmc_bank)
   */
 void xmc_sdram_init(xmc_sdram_init_type *xmc_sdram_init_struct, xmc_sdram_timing_type *xmc_sdram_timing_struct)
 {
-  if(xmc_sdram_init_struct->bank == XMC_SDRAM_BANK1)
+  if(xmc_sdram_init_struct->sdram_bank == XMC_SDRAM_BANK1)
   {
-    XMC_BANK5_6->sdctrl_bit[XMC_SDRAM_BANK1].ca = xmc_sdram_init_struct->column_address;
-    XMC_BANK5_6->sdctrl_bit[XMC_SDRAM_BANK1].ra = xmc_sdram_init_struct->row_address;
-    XMC_BANK5_6->sdctrl_bit[XMC_SDRAM_BANK1].db = xmc_sdram_init_struct->width;
-    XMC_BANK5_6->sdctrl_bit[XMC_SDRAM_BANK1].inbk = xmc_sdram_init_struct->internel_banks;
-    XMC_BANK5_6->sdctrl_bit[XMC_SDRAM_BANK1].cas = xmc_sdram_init_struct->cas;
-    XMC_BANK5_6->sdctrl_bit[XMC_SDRAM_BANK1].wrp = xmc_sdram_init_struct->write_protection;
-    XMC_BANK5_6->sdctrl_bit[XMC_SDRAM_BANK1].bstr = xmc_sdram_init_struct->burst_read;
-    XMC_BANK5_6->sdctrl_bit[XMC_SDRAM_BANK1].rd = xmc_sdram_init_struct->read_delay;
-    XMC_BANK5_6->sdctrl_bit[XMC_SDRAM_BANK1].clkdiv = xmc_sdram_init_struct->clkdiv;
+    XMC_SDRAM->ctrl_bit[XMC_SDRAM_BANK1].ca = xmc_sdram_init_struct->column_address;
+    XMC_SDRAM->ctrl_bit[XMC_SDRAM_BANK1].ra = xmc_sdram_init_struct->row_address;
+    XMC_SDRAM->ctrl_bit[XMC_SDRAM_BANK1].db = xmc_sdram_init_struct->width;
+    XMC_SDRAM->ctrl_bit[XMC_SDRAM_BANK1].inbk = xmc_sdram_init_struct->internel_banks;
+    XMC_SDRAM->ctrl_bit[XMC_SDRAM_BANK1].cas = xmc_sdram_init_struct->cas;
+    XMC_SDRAM->ctrl_bit[XMC_SDRAM_BANK1].wrp = xmc_sdram_init_struct->write_protection;
+    XMC_SDRAM->ctrl_bit[XMC_SDRAM_BANK1].bstr = xmc_sdram_init_struct->burst_read;
+    XMC_SDRAM->ctrl_bit[XMC_SDRAM_BANK1].rd = xmc_sdram_init_struct->read_delay;
+    XMC_SDRAM->ctrl_bit[XMC_SDRAM_BANK1].clkdiv = xmc_sdram_init_struct->clkdiv;
     
-    XMC_BANK5_6->sdtm_bit[XMC_SDRAM_BANK1].tmrd = xmc_sdram_timing_struct->tmrd;
-    XMC_BANK5_6->sdtm_bit[XMC_SDRAM_BANK1].txsr = xmc_sdram_timing_struct->txsr;
-    XMC_BANK5_6->sdtm_bit[XMC_SDRAM_BANK1].tras = xmc_sdram_timing_struct->tras;
-    XMC_BANK5_6->sdtm_bit[XMC_SDRAM_BANK1].trc = xmc_sdram_timing_struct->trc;
-    XMC_BANK5_6->sdtm_bit[XMC_SDRAM_BANK1].twr = xmc_sdram_timing_struct->twr;
-    XMC_BANK5_6->sdtm_bit[XMC_SDRAM_BANK1].trp = xmc_sdram_timing_struct->trp;
-    XMC_BANK5_6->sdtm_bit[XMC_SDRAM_BANK1].trcd = xmc_sdram_timing_struct->trcd;
+    XMC_SDRAM->tm_bit[XMC_SDRAM_BANK1].tmrd = xmc_sdram_timing_struct->tmrd;
+    XMC_SDRAM->tm_bit[XMC_SDRAM_BANK1].txsr = xmc_sdram_timing_struct->txsr;
+    XMC_SDRAM->tm_bit[XMC_SDRAM_BANK1].tras = xmc_sdram_timing_struct->tras;
+    XMC_SDRAM->tm_bit[XMC_SDRAM_BANK1].trc = xmc_sdram_timing_struct->trc;
+    XMC_SDRAM->tm_bit[XMC_SDRAM_BANK1].twr = xmc_sdram_timing_struct->twr;
+    XMC_SDRAM->tm_bit[XMC_SDRAM_BANK1].trp = xmc_sdram_timing_struct->trp;
+    XMC_SDRAM->tm_bit[XMC_SDRAM_BANK1].trcd = xmc_sdram_timing_struct->trcd;
   }
   
-  if(xmc_sdram_init_struct->bank == XMC_SDRAM_BANK2)
+  if(xmc_sdram_init_struct->sdram_bank == XMC_SDRAM_BANK2)
   {
-    XMC_BANK5_6->sdctrl_bit[XMC_SDRAM_BANK2].ca = xmc_sdram_init_struct->column_address;
-    XMC_BANK5_6->sdctrl_bit[XMC_SDRAM_BANK2].ra = xmc_sdram_init_struct->row_address;
-    XMC_BANK5_6->sdctrl_bit[XMC_SDRAM_BANK2].db = xmc_sdram_init_struct->width;
-    XMC_BANK5_6->sdctrl_bit[XMC_SDRAM_BANK2].inbk = xmc_sdram_init_struct->internel_banks;
-    XMC_BANK5_6->sdctrl_bit[XMC_SDRAM_BANK2].cas = xmc_sdram_init_struct->cas;
-    XMC_BANK5_6->sdctrl_bit[XMC_SDRAM_BANK2].wrp = xmc_sdram_init_struct->write_protection;
+    XMC_SDRAM->ctrl_bit[XMC_SDRAM_BANK2].ca = xmc_sdram_init_struct->column_address;
+    XMC_SDRAM->ctrl_bit[XMC_SDRAM_BANK2].ra = xmc_sdram_init_struct->row_address;
+    XMC_SDRAM->ctrl_bit[XMC_SDRAM_BANK2].db = xmc_sdram_init_struct->width;
+    XMC_SDRAM->ctrl_bit[XMC_SDRAM_BANK2].inbk = xmc_sdram_init_struct->internel_banks;
+    XMC_SDRAM->ctrl_bit[XMC_SDRAM_BANK2].cas = xmc_sdram_init_struct->cas;
+    XMC_SDRAM->ctrl_bit[XMC_SDRAM_BANK2].wrp = xmc_sdram_init_struct->write_protection;
     /* sdctrl2 bstr is not care */
-    XMC_BANK5_6->sdctrl_bit[XMC_SDRAM_BANK1].bstr = xmc_sdram_init_struct->burst_read;
-    XMC_BANK5_6->sdctrl_bit[XMC_SDRAM_BANK2].rd = xmc_sdram_init_struct->read_delay;
+    XMC_SDRAM->ctrl_bit[XMC_SDRAM_BANK1].bstr = xmc_sdram_init_struct->burst_read;
+    XMC_SDRAM->ctrl_bit[XMC_SDRAM_BANK2].rd = xmc_sdram_init_struct->read_delay;
     /* sdctrl2 clkdiv is not care */
-    XMC_BANK5_6->sdctrl_bit[XMC_SDRAM_BANK1].clkdiv = xmc_sdram_init_struct->clkdiv;
+    XMC_SDRAM->ctrl_bit[XMC_SDRAM_BANK1].clkdiv = xmc_sdram_init_struct->clkdiv;
     
-    XMC_BANK5_6->sdtm_bit[XMC_SDRAM_BANK2].tmrd = xmc_sdram_timing_struct->tmrd;
-    XMC_BANK5_6->sdtm_bit[XMC_SDRAM_BANK2].txsr = xmc_sdram_timing_struct->txsr;
-    XMC_BANK5_6->sdtm_bit[XMC_SDRAM_BANK2].tras = xmc_sdram_timing_struct->tras;
+    XMC_SDRAM->tm_bit[XMC_SDRAM_BANK2].tmrd = xmc_sdram_timing_struct->tmrd;
+    XMC_SDRAM->tm_bit[XMC_SDRAM_BANK2].txsr = xmc_sdram_timing_struct->txsr;
+    XMC_SDRAM->tm_bit[XMC_SDRAM_BANK2].tras = xmc_sdram_timing_struct->tras;
     /* sdtm2 trc is not care */
-    XMC_BANK5_6->sdtm_bit[XMC_SDRAM_BANK1].trc = xmc_sdram_timing_struct->trc;
-    XMC_BANK5_6->sdtm_bit[XMC_SDRAM_BANK2].twr = xmc_sdram_timing_struct->twr;
+    XMC_SDRAM->tm_bit[XMC_SDRAM_BANK1].trc = xmc_sdram_timing_struct->trc;
+    XMC_SDRAM->tm_bit[XMC_SDRAM_BANK2].twr = xmc_sdram_timing_struct->twr;
     /* sdtm2 trp is not care */
-    XMC_BANK5_6->sdtm_bit[XMC_SDRAM_BANK1].trp = xmc_sdram_timing_struct->trp;
-    XMC_BANK5_6->sdtm_bit[XMC_SDRAM_BANK2].trcd = xmc_sdram_timing_struct->trcd;
+    XMC_SDRAM->tm_bit[XMC_SDRAM_BANK1].trp = xmc_sdram_timing_struct->trp;
+    XMC_SDRAM->tm_bit[XMC_SDRAM_BANK2].trcd = xmc_sdram_timing_struct->trcd;
   }
 }
 
@@ -532,7 +532,7 @@ void xmc_sdram_init(xmc_sdram_init_type *xmc_sdram_init_struct, xmc_sdram_timing
 void xmc_sdram_default_para_init(xmc_sdram_init_type *xmc_sdram_init_struct, xmc_sdram_timing_type *xmc_sdram_timing_struct)
 {
   /* reset sdram init structure parameters values */
-  xmc_sdram_init_struct->bank             = XMC_SDRAM_BANK1;
+  xmc_sdram_init_struct->sdram_bank       = XMC_SDRAM_BANK1;
   xmc_sdram_init_struct->internel_banks   = XMC_INBK_4;
   xmc_sdram_init_struct->clkdiv           = XMC_NO_CLK;
   xmc_sdram_init_struct->write_protection = FALSE;
@@ -560,7 +560,7 @@ void xmc_sdram_default_para_init(xmc_sdram_init_type *xmc_sdram_init_struct, xmc
   */
 void xmc_sdram_cmd(xmc_sdram_cmd_type *xmc_sdram_cmd_struct)
 {
-  XMC_BANK5_6->sdcmd = (xmc_sdram_cmd_struct->auto_refresh << 5) |
+  XMC_SDRAM->cmd = (xmc_sdram_cmd_struct->auto_refresh << 5) |
                        (xmc_sdram_cmd_struct->data << 9) | 
                        xmc_sdram_cmd_struct->cmd | 
                        xmc_sdram_cmd_struct->cmd_banks;
@@ -579,11 +579,11 @@ uint32_t xmc_sdram_status_get(xmc_sdram_bank_type xmc_bank)
 {
   if(xmc_bank == XMC_SDRAM_BANK1)
   {
-    return ((XMC_BANK5_6->sdsts >> 1) & XMC_STATUS_MASK);
+    return ((XMC_SDRAM->sts >> 1) & XMC_STATUS_MASK);
   }
   else
   {
-    return ((XMC_BANK5_6->sdsts >> 3) & XMC_STATUS_MASK);
+    return ((XMC_SDRAM->sts >> 3) & XMC_STATUS_MASK);
   }
 }
 
@@ -594,7 +594,7 @@ uint32_t xmc_sdram_status_get(xmc_sdram_bank_type xmc_bank)
   */
 void xmc_sdram_refresh_counter_set(uint32_t counter)
 {
-  XMC_BANK5_6->sdrcnt_bit.rc = counter;
+  XMC_SDRAM->rcnt_bit.rc = counter;
 }
 
 /**
@@ -604,7 +604,7 @@ void xmc_sdram_refresh_counter_set(uint32_t counter)
   */
 void xmc_sdram_auto_refresh_set(uint32_t number)
 {
-  XMC_BANK5_6->sdcmd_bit.art = number;
+  XMC_SDRAM->cmd_bit.art = number;
 }
 
 /**
@@ -624,29 +624,29 @@ void xmc_sdram_auto_refresh_set(uint32_t number)
   * @param  new_state (TRUE or FALSE)
   * @retval none
   */
-void xmc_interrupt_enable(xmc_nand_bank_type xmc_bank, xmc_interrupt_sources_type xmc_int, confirm_state new_state)
+void xmc_interrupt_enable(xmc_class_bank_type xmc_bank, xmc_interrupt_sources_type xmc_int, confirm_state new_state)
 {
   if(new_state != FALSE)
   {
     /* enable the selected xmc_bank2 interrupts */
     if(xmc_bank == XMC_BANK2_NAND)
     {
-      XMC_BANK2->bk2sts |= xmc_int;
+      XMC_BANK2->bk2is |= xmc_int;
     }
     /* enable the selected xmc_bank3 interrupts */
     else if(xmc_bank == XMC_BANK3_NAND)
     {
-      XMC_BANK3->bk3sts |= xmc_int;
+      XMC_BANK3->bk3is |= xmc_int;
     }
     /* enable the selected xmc_bank4 interrupts */
     else if(xmc_bank == XMC_BANK4_PCCARD)
     {
-      XMC_BANK4->bk4sts |= xmc_int;
+      XMC_BANK4->bk4is |= xmc_int;
     }
-    /* enable the selected xmc_bank5_6 interrupts */
+    /* enable the selected xmc_sdram interrupts */
     else
     {
-      XMC_BANK5_6->sdrcnt |= xmc_int;
+      XMC_SDRAM->rcnt |= xmc_int;
     }
   }
   else
@@ -654,22 +654,22 @@ void xmc_interrupt_enable(xmc_nand_bank_type xmc_bank, xmc_interrupt_sources_typ
     /* disable the selected xmc_bank2 interrupts */
     if(xmc_bank == XMC_BANK2_NAND)
     {
-      XMC_BANK2->bk2sts &= ~xmc_int;
+      XMC_BANK2->bk2is &= ~xmc_int;
     }
     /* disable the selected xmc_bank3 interrupts */
     else if(xmc_bank == XMC_BANK3_NAND)
     {
-      XMC_BANK3->bk3sts &= ~xmc_int;
+      XMC_BANK3->bk3is &= ~xmc_int;
     }
     /* disable the selected xmc_bank4 interrupts */
     else if(xmc_bank == XMC_BANK4_PCCARD)
     {
-      XMC_BANK4->bk4sts &= ~xmc_int;
+      XMC_BANK4->bk4is &= ~xmc_int;
     }
-    /* disable the selected xmc_bank5_6 interrupts */
+    /* disable the selected xmc_sdram interrupts */
     else
     {
-      XMC_BANK5_6->sdrcnt &= ~xmc_int;
+      XMC_SDRAM->rcnt &= ~xmc_int;
     }
   }
 }
@@ -692,26 +692,26 @@ void xmc_interrupt_enable(xmc_nand_bank_type xmc_bank, xmc_interrupt_sources_typ
   *         - XMC_ERR_FLAG
   * @retval none
   */
-flag_status xmc_flag_status_get(xmc_nand_bank_type xmc_bank, xmc_interrupt_flag_type xmc_flag)
+flag_status xmc_flag_status_get(xmc_class_bank_type xmc_bank, xmc_interrupt_flag_type xmc_flag)
 {
   flag_status status = RESET;
   uint32_t temp = 0;
   
   if(xmc_bank == XMC_BANK2_NAND)
   {
-    temp = XMC_BANK2->bk2sts;
+    temp = XMC_BANK2->bk2is;
   }
   else if(xmc_bank == XMC_BANK3_NAND)
   {
-    temp = XMC_BANK3->bk3sts;
+    temp = XMC_BANK3->bk3is;
   }
   else if(xmc_bank == XMC_BANK4_PCCARD)
   {
-    temp = XMC_BANK4->bk4sts;
+    temp = XMC_BANK4->bk4is;
   }
   else
   {
-    temp = XMC_BANK5_6->sdsts;
+    temp = XMC_SDRAM->sts;
   }
   /* get the flag status */
   if((temp & xmc_flag) == RESET)
@@ -739,27 +739,30 @@ flag_status xmc_flag_status_get(xmc_nand_bank_type xmc_bank, xmc_interrupt_flag_
   *         - XMC_RISINGEDGE_FLAG
   *         - XMC_LEVEL_FLAG
   *         - XMC_FALLINGEDGE_FLAG
-  *         - XMC_FEMPT_FLAG
-  *         - XMC_REFRESH_FLAG
+  *         - XMC_ERR_FLAG
   * @retval none
   */
-void xmc_flag_clear(xmc_nand_bank_type xmc_bank, xmc_interrupt_flag_type xmc_flag)
+void xmc_flag_clear(xmc_class_bank_type xmc_bank, xmc_interrupt_flag_type xmc_flag)
 {
+  __IO uint32_t int_state;
   if(xmc_bank == XMC_BANK2_NAND)
   {
-    XMC_BANK2->bk2sts &= ~xmc_flag;
+    int_state = XMC_BANK2->bk2is & 0x38; /* keep interrupt state */
+    XMC_BANK2->bk2is = (~(xmc_flag | 0x38) | int_state);
   }
   else if(xmc_bank == XMC_BANK3_NAND)
   {
-    XMC_BANK3->bk3sts &= ~xmc_flag;
+    int_state = XMC_BANK3->bk3is & 0x38; /* keep interrupt state */
+    XMC_BANK3->bk3is = (~(xmc_flag | 0x38) | int_state);
   }
   else if(xmc_bank == XMC_BANK4_PCCARD)
   {
-    XMC_BANK4->bk4sts &= ~xmc_flag;
+    int_state = XMC_BANK4->bk4is & 0x38; /* keep interrupt state */   
+    XMC_BANK4->bk4is = (~(xmc_flag | 0x38) | int_state);
   }
   else
   {
-    XMC_BANK5_6->sdrcnt |= xmc_flag;
+    XMC_SDRAM->rcnt |= xmc_flag;
   }
 }
 
@@ -772,7 +775,7 @@ void xmc_pccard_reset(void)
 {
   /* Set the XMC_Bank4 registers to their reset values */
   XMC_BANK4->bk4ctrl = 0x00000018;
-  XMC_BANK4->bk4sts = 0x00000000;
+  XMC_BANK4->bk4is = 0x00000000;
   XMC_BANK4->bk4tmgatt = 0xFCFCFCFC;
   XMC_BANK4->bk4tmgio = 0xFCFCFCFC;
   XMC_BANK4->bk4tmgmem = 0xFCFCFCFC;
@@ -864,17 +867,17 @@ void xmc_pccard_timing_default_para_init(xmc_nand_pccard_timinginit_type* xmc_re
                                          xmc_nand_pccard_timinginit_type* xmc_special_spacetiming_struct, 
                                          xmc_nand_pccard_timinginit_type* xmc_iospace_timing_struct)
 {
-  xmc_regular_spacetiming_struct->nand_bank = XMC_BANK4_PCCARD;
+  xmc_regular_spacetiming_struct->class_bank = XMC_BANK4_PCCARD;
   xmc_regular_spacetiming_struct->mem_hold_time  = 0xFC;
   xmc_regular_spacetiming_struct->mem_waite_time = 0xFC;
   xmc_regular_spacetiming_struct->mem_setup_time = 0xFC;
   xmc_regular_spacetiming_struct->mem_hiz_time = 0xFC;
-  xmc_special_spacetiming_struct->nand_bank = XMC_BANK4_PCCARD;
+  xmc_special_spacetiming_struct->class_bank = XMC_BANK4_PCCARD;
   xmc_special_spacetiming_struct->mem_hold_time  = 0xFC;
   xmc_special_spacetiming_struct->mem_waite_time = 0xFC;
   xmc_special_spacetiming_struct->mem_setup_time = 0xFC;
   xmc_special_spacetiming_struct->mem_hiz_time = 0xFC;
-  xmc_iospace_timing_struct->nand_bank = XMC_BANK4_PCCARD;
+  xmc_iospace_timing_struct->class_bank = XMC_BANK4_PCCARD;
   xmc_iospace_timing_struct->mem_hold_time = 0xFC;
   xmc_iospace_timing_struct->mem_waite_time = 0xFC;
   xmc_iospace_timing_struct->mem_setup_time = 0xFC;

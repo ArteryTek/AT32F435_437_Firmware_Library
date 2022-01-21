@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     usbh_hid_class.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    usb host hid class type
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -396,7 +396,7 @@ usb_sts_type uhost_process_handler(void *uhost)
       break;
     
     case USB_HID_GET:
-      usbh_interrupt_recv(puhost, phid->chin, phid->buffer, phid->in_maxpacket);
+      usbh_interrupt_recv(puhost, phid->chin, (uint8_t *)phid->buffer, phid->in_maxpacket);
       phid->state = USB_HID_POLL;
       phid->poll_timer = usbh_get_frame(puhost->usb_reg);
       break;
@@ -414,11 +414,11 @@ usb_sts_type uhost_process_handler(void *uhost)
           puhost->urb_state[phid->chin] = URB_IDLE;
           if(phid->protocol == USB_HID_MOUSE_PROTOCOL_CODE)
           {
-            usbh_hid_mouse_decode(phid->buffer);
+            usbh_hid_mouse_decode((uint8_t *)phid->buffer);
           }
           else if(phid->protocol == USB_HID_KEYBOARD_PROTOCOL_CODE)
           {
-            usbh_hid_keyboard_decode(phid->buffer);
+            usbh_hid_keyboard_decode((uint8_t *)phid->buffer);
           }
             
         }

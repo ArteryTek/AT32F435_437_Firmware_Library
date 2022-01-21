@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     ov5640.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    header file of ov5640 program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -50,6 +50,9 @@
 #define OV5640_ADDR                      ((uint16_t)0x0078)  /*!< ov5640 address           */
 #define OV5640_CHIPIDH                   ((uint16_t)0x300A)  /*!< ov5640 chip id high bits */
 #define OV5640_CHIPIDL                   ((uint16_t)0x300B)  /*!< ov5640 chip id low bits  */
+
+#define HARDWARE_MODE
+//#define EMBEDDED_MODE
 
 /**
   * @}

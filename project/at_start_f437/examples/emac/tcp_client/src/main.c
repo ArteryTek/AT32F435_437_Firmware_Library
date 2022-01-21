@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -27,7 +27,6 @@
 #include "at32f435_437_board.h"
 #include "at32f435_437_clock.h"
 #include "at32_emac.h"
-#include "stdio.h"
 #include "netconf.h"
 #include "tcp_client.h"
   
@@ -78,7 +77,7 @@ int main(void)
     
     if(pcb != NULL)
     {	
-      tcp_client_send_data(pcb, TCP_CLIENT_TEST_DATA, sizeof(TCP_CLIENT_TEST_DATA));      //Send data to TCP server actively
+      tcp_client_send_data(pcb, (unsigned char *)TCP_CLIENT_TEST_DATA, sizeof(TCP_CLIENT_TEST_DATA));      //Send data to TCP server actively
     }
     
     at32_led_toggle(LED2);

@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -27,16 +27,15 @@
 #include "at32f435_437_board.h"
 #include "at32f435_437_clock.h"
 #include <string.h>
-#include <stdio.h>
 
 /** @addtogroup AT32F435_periph_examples
   * @{
   */
-  
+
 /** @addtogroup 435_QSPI_xip_port_write_read QSPI_xip_port_write_read
   * @{
   */
-  
+
 extern void qspi_xip_init_ly68l6400(void);
 
 #define TEST_SIZE                        4096
@@ -51,10 +50,10 @@ uint8_t rbuf[TEST_SIZE];
 void qspi_config(void)
 {
   gpio_init_type gpio_init_struct;
-  
+
   /* enable the qspi clock */
   crm_periph_clock_enable(CRM_QSPI1_PERIPH_CLOCK, TRUE);
-  
+
   /* enable the pin clock */
   crm_periph_clock_enable(CRM_GPIOF_PERIPH_CLOCK, TRUE);
   crm_periph_clock_enable(CRM_GPIOG_PERIPH_CLOCK, TRUE);
@@ -70,27 +69,27 @@ void qspi_config(void)
   gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
   gpio_init(GPIOF, &gpio_init_struct);
   gpio_pin_mux_config(GPIOF, GPIO_PINS_SOURCE8, GPIO_MUX_10);
-  
+
   /* configure the io1 gpio */
   gpio_init_struct.gpio_pins = GPIO_PINS_9;
   gpio_init(GPIOF, &gpio_init_struct);
   gpio_pin_mux_config(GPIOF, GPIO_PINS_SOURCE9, GPIO_MUX_10);
-  
+
   /* configure the io2 gpio */
   gpio_init_struct.gpio_pins = GPIO_PINS_7;
   gpio_init(GPIOF, &gpio_init_struct);
   gpio_pin_mux_config(GPIOF, GPIO_PINS_SOURCE7, GPIO_MUX_9);
-  
+
   /* configure the io3 gpio */
   gpio_init_struct.gpio_pins = GPIO_PINS_6;
   gpio_init(GPIOF, &gpio_init_struct);
   gpio_pin_mux_config(GPIOF, GPIO_PINS_SOURCE6, GPIO_MUX_9);
-  
+
   /* configure the sck gpio */
   gpio_init_struct.gpio_pins = GPIO_PINS_10;
   gpio_init(GPIOF, &gpio_init_struct);
   gpio_pin_mux_config(GPIOF, GPIO_PINS_SOURCE10, GPIO_MUX_9);
-  
+
   /* configure the cs gpio */
   gpio_init_struct.gpio_pins = GPIO_PINS_6;
   gpio_init(GPIOG, &gpio_init_struct);
@@ -106,7 +105,7 @@ int main(void)
 {
   uint16_t i, err = 0;
   uint8_t *qspi1_mem_addr;
-  
+
   system_clock_config();
   at32_board_init();
 
@@ -118,18 +117,18 @@ int main(void)
   /* qspi config */
   qspi_config();
   qspi_xip_init_ly68l6400();
-  
+
   qspi1_mem_addr = (uint8_t*)QSPI1_MEM_BASE;
-  
+
   memcpy(qspi1_mem_addr, wbuf, TEST_SIZE);
-  
+
   memcpy(rbuf, qspi1_mem_addr, TEST_SIZE);
-  
+
   if(memcmp(rbuf, wbuf, TEST_SIZE))
   {
     err = 1;
   }
-  
+
   while(1)
   {
     if(err == 0)
@@ -147,8 +146,8 @@ int main(void)
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */

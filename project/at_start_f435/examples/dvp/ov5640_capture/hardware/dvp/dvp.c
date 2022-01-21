@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     dvp.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    dvp program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -43,6 +43,15 @@ uint8_t ov_frame = 0;
 extern void jpeg_data_process(void);
 void dvp_int_handler(void);
 
+typedef struct
+{
+  uint32_t CR_NDT;
+  uint32_t PA;
+  uint32_t M0A;
+  uint32_t LLP;
+  
+}Descriptors_Format_def;
+
 /**
   * @brief  configure dvp
   * @param  none
@@ -55,15 +64,18 @@ void dvp_config(void)
   nvic_irq_enable(DVP_IRQn, 0, 0);
 
   dvp_capture_mode_set(DVP_CAP_FUNC_MODE_CONTINUOUS);
-  dvp_sync_mode_set(DVP_SYNC_MODE_EMBEDDED);
-  dvp_hsync_polarity_set(DVP_HSYNC_POLARITY_HIGH);
+  dvp_hsync_polarity_set(DVP_HSYNC_POLARITY_LOW);
   dvp_vsync_polarity_set(DVP_VSYNC_POLARITY_LOW);
-  dvp_pclk_polarity_set(DVP_CLK_POLARITY_FALLING);
+  dvp_pclk_polarity_set(DVP_CLK_POLARITY_RISING);
   dvp_zoomout_set(DVP_PCDC_ALL, DVP_PCDS_CAP_FIRST, DVP_LCDC_ALL, DVP_LCDS_CAP_FIRST);
   dvp_zoomout_select(DVP_PCDSE_CAP_FIRST);
   dvp_pixel_data_length_set(DVP_PIXEL_DATA_LENGTH_8);
-
+#ifdef HARDWARE_MODE
+  dvp_sync_mode_set(DVP_SYNC_MODE_HARDWARE);
+#else
+  dvp_sync_mode_set(DVP_SYNC_MODE_EMBEDDED);
   dvp_sync_code_set(0xFF, 0xFF, 0xC7, 0xDA);
+#endif
 
   /* enable the interrupts */
   dvp_interrupt_enable(DVP_CFD_INT | DVP_OVR_INT | DVP_ESE_INT | DVP_VS_INT | DVP_HS_INT, TRUE);
@@ -133,7 +145,7 @@ void dvp_io_init(void)
   * @param  meminc: memory increase
   * @retval none
   */
-void dvp_dma_init(uint32_t mem0addr, uint32_t mem1addr, uint16_t memsize, edma_memory_data_size_type memlen, confirm_state meminc)
+void dvp_dma_init(uint32_t mem0addr, uint32_t mem1addr, uint16_t memsize)
 {
   crm_periph_clock_enable(CRM_EDMA_PERIPH_CLOCK, TRUE);
 
@@ -142,9 +154,9 @@ void dvp_dma_init(uint32_t mem0addr, uint32_t mem1addr, uint16_t memsize, edma_m
   edma_init_struct.buffer_size                = memsize;
   edma_init_struct.direction                  = EDMA_DIR_PERIPHERAL_TO_MEMORY;
   edma_init_struct.peripheral_inc_enable      = FALSE;
-  edma_init_struct.memory_inc_enable          = meminc;
+  edma_init_struct.memory_inc_enable          = FALSE;
   edma_init_struct.peripheral_data_width      = EDMA_PERIPHERAL_DATA_WIDTH_WORD;
-  edma_init_struct.memory_data_width          = memlen;
+  edma_init_struct.memory_data_width          = EDMA_MEMORY_DATA_WIDTH_HALFWORD;
   edma_init_struct.loop_mode_enable           = TRUE;
   edma_init_struct.priority                   = EDMA_PRIORITY_HIGH;
   edma_init_struct.fifo_mode_enable           = TRUE;
@@ -225,6 +237,20 @@ void EDMA_Stream4_IRQHandler(void)
   if(edma_flag_get(EDMA_FDT4_FLAG) != RESET)
   {
     edma_flag_clear(EDMA_FDT4_FLAG);
+  }
+}
+
+/**
+  * @brief  edma stream4 irq handler
+  * @param  none
+  * @retval none
+  */
+void EDMA_Stream1_IRQHandler(void)
+{
+  if(edma_flag_get(EDMA_FDT1_FLAG) != RESET)
+  {
+    edma_flag_clear(EDMA_FDT1_FLAG);
+    edma_stream_enable(EDMA_STREAM1, TRUE);
   }
 }
 

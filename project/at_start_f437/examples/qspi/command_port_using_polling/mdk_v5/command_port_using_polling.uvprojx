@@ -437,6 +437,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\..\libraries\drivers\src\at32f435_437_crm.c</FilePath>
             </File>
+            <File>
+              <FileName>at32f435_437_usart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\libraries\drivers\src\at32f435_437_usart.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

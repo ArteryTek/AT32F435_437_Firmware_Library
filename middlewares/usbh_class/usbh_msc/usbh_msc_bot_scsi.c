@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     usbh_msc_bot_scsi.c
-  * @version  v2.0.2
-  * @date     2021-11-26
+  * @version  v2.0.4
+  * @date     2021-12-31
   * @brief    usb host msc bulk-only transfer and scsi type
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -598,7 +598,7 @@ usb_sts_type msc_bot_scsi_init(usbh_msc_type *msc_struct)
   msc_struct->max_lun = 0;
   msc_struct->use_lun = 0;
   msc_struct->bot_trans.msc_struct = &usbh_msc;
-  msc_struct->bot_trans.cmd_state = CMD_STATE_WAIT;
+  msc_struct->bot_trans.cmd_state = CMD_STATE_SEND;
   msc_struct->bot_trans.bot_state = BOT_STATE_SEND_CBW;
   return USB_OK;
 }
