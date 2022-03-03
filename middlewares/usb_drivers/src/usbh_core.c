@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     usbh_core.c
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    usb host driver
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -424,6 +424,10 @@ usb_sts_type usbh_cfg_default_init(usbh_core_type *uhost)
   /* default speed is full speed */
   uhost->dev.speed = USB_FULL_SPEED_CORE_ID;
   
+  uhost->timer = 0;
+  
+  uhost->ctrl.err_cnt = 0;
+  
   /* free all channel */
   usbh_free_channel(uhost, uhost->ctrl.hch_in);
   usbh_free_channel(uhost, uhost->ctrl.hch_out);
@@ -632,7 +636,7 @@ void usbh_hc_open(usbh_core_type *uhost,
                    uint8_t ept_num, 
                    uint8_t dev_address,
                    uint8_t type, 
-                   uint8_t maxpacket, 
+                   uint16_t maxpacket, 
                    uint8_t speed)
 {
   /* device address */
@@ -741,16 +745,16 @@ usb_sts_type usbh_ctrl_result_check(usbh_core_type *uhost, ctrl_ept0_sts_type ne
 }
 
 /**
-  * @brief  auto alloc address (1...127) 
+  * @brief  auto alloc address (1...20) 
   * @param  none
-  * @retval address (1...127)
+  * @retval address (1...20)
   */
 uint8_t usbh_alloc_address(void)
 {
-  static uint8_t address = 0;
-  if(address == 127)
-    address = 0;
-  return address + 1;
+  static uint8_t address = 1;
+  if(address == 20)
+    address = 1;
+  return address ++;
 }
 
 
@@ -1163,6 +1167,7 @@ usb_sts_type usbh_loop_handler(usbh_core_type *uhost)
       if(uhost->port_enable)
       {
         uhost->global_state  = USBH_ATTACHED;
+        usb_delay_ms(50);
       }
       break;
       

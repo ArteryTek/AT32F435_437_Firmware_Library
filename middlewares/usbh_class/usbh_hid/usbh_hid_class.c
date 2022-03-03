@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     usbh_hid_class.c
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    usb host hid class type
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -43,13 +43,13 @@
   * @{
   */
  
- usb_sts_type uhost_init_handler(void *uhost);
- usb_sts_type uhost_reset_handler(void *uhost);
- usb_sts_type uhost_request_handler(void *uhost);
- usb_sts_type uhost_process_handler(void *uhost);
+ static usb_sts_type uhost_init_handler(void *uhost);
+ static usb_sts_type uhost_reset_handler(void *uhost);
+ static usb_sts_type uhost_request_handler(void *uhost);
+ static usb_sts_type uhost_process_handler(void *uhost);
  
  usbh_hid_type usbh_hid;
- usbh_class_handler_type uhost_class_handler = 
+ usbh_class_handler_type uhost_hid_class_handler = 
  {
    uhost_init_handler,
    uhost_reset_handler,
@@ -63,7 +63,7 @@
   * @param  uhost: to the structure of usbh_core_type
   * @retval status: usb_sts_type status
   */
-usb_sts_type uhost_init_handler(void *uhost)
+static usb_sts_type uhost_init_handler(void *uhost)
 {
   usbh_core_type *puhost = (usbh_core_type *)uhost;
   usb_sts_type status = USB_OK;
@@ -107,6 +107,7 @@ usb_sts_type uhost_init_handler(void *uhost)
                     puhost->dev.address, EPT_INT_TYPE,
                     phid->in_maxpacket, 
                     puhost->dev.speed);
+      usbh_set_toggle(puhost, phid->chin, 0);
     }
     else
     {
@@ -121,6 +122,7 @@ usb_sts_type uhost_init_handler(void *uhost)
                     puhost->dev.address, EPT_INT_TYPE,
                     phid->out_maxpacket, 
                     puhost->dev.speed);
+      usbh_set_toggle(puhost, phid->chout, 0);
     }
   }
   phid->ctrl_state = USB_HID_STATE_IDLE;
@@ -132,7 +134,7 @@ usb_sts_type uhost_init_handler(void *uhost)
   * @param  uhost: to the structure of usbh_core_type
   * @retval status: usb_sts_type status
   */
-usb_sts_type uhost_reset_handler(void *uhost)
+static usb_sts_type uhost_reset_handler(void *uhost)
 {
   usbh_core_type *puhost = (usbh_core_type *)uhost;
   usbh_hid_type *phid =  (usbh_hid_type *)puhost->class_handler->pdata;
@@ -333,7 +335,7 @@ usb_sts_type usbh_clear_endpoint_feature(usbh_core_type *uhost, uint8_t ept_num,
   * @param  uhost: to the structure of usbh_core_type
   * @retval status: usb_sts_type status
   */
-usb_sts_type uhost_request_handler(void *uhost)
+static usb_sts_type uhost_request_handler(void *uhost)
 {
   usb_sts_type status = USB_WAIT;
   usbh_core_type *puhost = (usbh_core_type *)uhost;
@@ -384,7 +386,7 @@ usb_sts_type uhost_request_handler(void *uhost)
   * @param  uhost: to the structure of usbh_core_type
   * @retval status: usb_sts_type status
   */
-usb_sts_type uhost_process_handler(void *uhost)
+static usb_sts_type uhost_process_handler(void *uhost)
 {
   usbh_core_type *puhost = (usbh_core_type *)uhost;
   usbh_hid_type *phid =  (usbh_hid_type *)puhost->class_handler->pdata;

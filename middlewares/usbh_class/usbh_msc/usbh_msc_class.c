@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     usbh_msc_class.c
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    usb host msc class type
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -41,18 +41,18 @@
   * @{
   */
 
-usb_sts_type uhost_init_handler(void *uhost);
-usb_sts_type uhost_reset_handler(void *uhost);
-usb_sts_type uhost_request_handler(void *uhost);
-usb_sts_type uhost_process_handler(void *uhost);
+static usb_sts_type uhost_init_handler(void *uhost);
+static usb_sts_type uhost_reset_handler(void *uhost);
+static usb_sts_type uhost_request_handler(void *uhost);
+static usb_sts_type uhost_process_handler(void *uhost);
 
-usb_sts_type usbh_msc_get_max_lun(void *uhost, uint8_t *lun);
-usb_sts_type usbh_msc_clear_feature(void *uhost, uint8_t ept_num);
+static usb_sts_type usbh_msc_get_max_lun(void *uhost, uint8_t *lun);
+static usb_sts_type usbh_msc_clear_feature(void *uhost, uint8_t ept_num);
 
 
 usbh_msc_type usbh_msc;
 
-usbh_class_handler_type uhost_class_handler = 
+usbh_class_handler_type uhost_msc_class_handler = 
 {
  uhost_init_handler,
  uhost_reset_handler,
@@ -68,7 +68,7 @@ usbh_class_handler_type uhost_class_handler =
   * @param  uhost: to the structure of usbh_core_type
   * @retval status: usb_sts_type status
   */
-usb_sts_type uhost_init_handler(void *uhost)
+static usb_sts_type uhost_init_handler(void *uhost)
 {
   usbh_core_type *puhost = (usbh_core_type *)uhost;
   usb_sts_type status = USB_OK;
@@ -125,7 +125,7 @@ usb_sts_type uhost_init_handler(void *uhost)
   * @param  uhost: to the structure of usbh_core_type
   * @retval status: usb_sts_type status
   */
-usb_sts_type uhost_reset_handler(void *uhost)
+static usb_sts_type uhost_reset_handler(void *uhost)
 {
   usbh_core_type *puhost = (usbh_core_type *)uhost;
   usbh_msc_type *pmsc = (usbh_msc_type *)puhost->class_handler->pdata;
@@ -167,7 +167,7 @@ usb_sts_type uhost_reset_handler(void *uhost)
   * @param  uhost: to the structure of usbh_core_type
   * @retval status: usb_sts_type status
   */
-usb_sts_type uhost_request_handler(void *uhost)
+static usb_sts_type uhost_request_handler(void *uhost)
 {
   usbh_core_type *puhost = (usbh_core_type *)uhost;
   usbh_msc_type *pmsc = (usbh_msc_type *)puhost->class_handler->pdata;
@@ -210,7 +210,7 @@ usb_sts_type uhost_request_handler(void *uhost)
   * @param  uhost: to the structure of usbh_core_type
   * @retval status: usb_sts_type status
   */
-usb_sts_type uhost_process_handler(void *uhost)
+static usb_sts_type uhost_process_handler(void *uhost)
 {
   usbh_core_type *puhost = (usbh_core_type *)uhost;
   usbh_msc_type *pmsc = (usbh_msc_type *)puhost->class_handler->pdata;
@@ -273,13 +273,12 @@ usb_sts_type uhost_process_handler(void *uhost)
             status = usbh_msc_bot_scsi_request_sense(uhost, &pmsc->bot_trans, pmsc->cur_lun);
             if(status == USB_OK)
             {
-              pmsc->l_unit_n[pmsc->cur_lun].state = USBH_MSC_IDLE;
-              pmsc->cur_lun ++;
+              pmsc->l_unit_n[pmsc->cur_lun].state = USBH_MSC_TEST_UNIT_READY;
             }
             else if(status == USB_FAIL)
             {
               pmsc->l_unit_n[pmsc->cur_lun].ready = MSC_NOT_READY;
-              pmsc->cur_lun ++;
+              pmsc->l_unit_n[pmsc->cur_lun].state = USBH_MSC_ERROR;
             }
             break;
  
@@ -310,7 +309,7 @@ usb_sts_type uhost_process_handler(void *uhost)
   * @param  lun: max lun buffer
   * @retval status: usb_sts_type status
   */
-usb_sts_type usbh_msc_get_max_lun(void *uhost, uint8_t *lun)
+static usb_sts_type usbh_msc_get_max_lun(void *uhost, uint8_t *lun)
 {
   usbh_core_type *puhost = (usbh_core_type *)uhost;
   usb_sts_type status = USB_WAIT;
@@ -340,7 +339,7 @@ usb_sts_type usbh_msc_get_max_lun(void *uhost, uint8_t *lun)
   * @param  ept_num: endpoint number
   * @retval status: usb_sts_type status
   */
-usb_sts_type usbh_msc_clear_feature(void *uhost, uint8_t ept_num)
+static usb_sts_type usbh_msc_clear_feature(void *uhost, uint8_t ept_num)
 {
   usbh_core_type *puhost = (usbh_core_type *)uhost;
   usb_sts_type status = USB_WAIT;
@@ -376,6 +375,65 @@ msc_error_type usbh_msc_is_ready(void *uhost, uint8_t lun)
   return pmsc->l_unit_n[lun].ready;
 }
 
+
+/**
+  * @brief  usb host msc read and write handle
+  * @param  uhost: to the structure of usbh_core_type
+  * @param  address: logical block address
+  * @param  data_len: transfer data length
+  * @param  buffer: transfer data buffer
+  * @param  lun: logical unit number
+  * @retval status: usb_sts_type status
+  */
+usb_sts_type usbh_msc_rw_handle(void *uhost, uint32_t address, uint32_t len, uint8_t *buffer, uint8_t lun)
+{
+  usbh_core_type *puhost = (usbh_core_type *)uhost;
+  usbh_msc_type *pmsc = (usbh_msc_type *)puhost->class_handler->pdata;
+  usb_sts_type status = USB_WAIT;
+  switch(pmsc->l_unit_n[lun].state)
+  {
+    case USBH_MSC_READ10:
+      status = usbh_msc_bot_scsi_read(uhost, &pmsc->bot_trans, address, buffer, len, lun);
+      if(status == USB_OK)
+      {
+        pmsc->l_unit_n[lun].state = USBH_MSC_IDLE;
+      }
+      else if(status == USB_FAIL)
+      {
+        pmsc->l_unit_n[lun].state = USBH_MSC_REQUEST_SENSE;
+        status = USB_WAIT;
+      }
+      break;
+    case USBH_MSC_WRITE:
+      status = usbh_msc_bot_scsi_write(uhost, &pmsc->bot_trans, address, buffer, len, lun);
+      if(status == USB_OK)
+      {
+        pmsc->l_unit_n[lun].state = USBH_MSC_IDLE;
+      }
+      else if(status == USB_FAIL)
+      {
+        pmsc->l_unit_n[lun].state = USBH_MSC_REQUEST_SENSE;
+        status = USB_WAIT;
+      }
+      break;
+    case USBH_MSC_REQUEST_SENSE:
+      status = usbh_msc_bot_scsi_request_sense(uhost, &pmsc->bot_trans, lun);
+      if(status == USB_OK)
+      {
+        pmsc->l_unit_n[lun].state = USBH_MSC_IDLE;
+        status = USB_FAIL;
+      }
+      else if(status == USB_FAIL)
+      {
+        USBH_DEBUG("device not support");
+      }
+      break;
+    default:
+      break;
+  }
+  return status;
+}
+
 /**
   * @brief  usb host msc read
   * @param  uhost: to the structure of usbh_core_type
@@ -389,7 +447,6 @@ usb_sts_type usbh_msc_read(void *uhost, uint32_t address, uint32_t len, uint8_t 
 {
   usbh_core_type *puhost = (usbh_core_type *)uhost;
   usbh_msc_type *pmsc = (usbh_msc_type *)puhost->class_handler->pdata;
-  usb_sts_type status;
   uint32_t timeout = 0;
   if(puhost->conn_sts == 0 || puhost->global_state != USBH_CLASS
     || pmsc->l_unit_n[lun].state != USBH_MSC_IDLE)
@@ -397,31 +454,20 @@ usb_sts_type usbh_msc_read(void *uhost, uint32_t address, uint32_t len, uint8_t 
     return USB_FAIL;
   }
   pmsc->bot_trans.msc_struct = &usbh_msc;
-  pmsc->state = USBH_MSC_READ10;
   pmsc->l_unit_n[lun].state = USBH_MSC_READ10;
   pmsc->use_lun = lun;
   
   timeout = puhost->timer;
-  while(1)
+  
+  while(usbh_msc_rw_handle(uhost, address, len, buffer, lun) == USB_WAIT)
   {
     if(puhost->conn_sts == 0 || (puhost->timer - timeout) > (len * 10000))
     {
       pmsc->l_unit_n[lun].state = USBH_MSC_IDLE;
       return USB_FAIL;
     }
-    status = usbh_msc_bot_scsi_read(uhost, &pmsc->bot_trans, address, buffer, len, lun);
-    if(status == USB_OK)
-    {
-      pmsc->l_unit_n[lun].state = USBH_MSC_IDLE;
-      break;
-    }
-    else if(status == USB_FAIL)
-    {
-      pmsc->l_unit_n[lun].state = USBH_MSC_IDLE;
-      break;
-    }
   }
-  return status;
+  return USB_OK;
 }
 
 /**
@@ -437,7 +483,6 @@ usb_sts_type usbh_msc_write(void *uhost, uint32_t address, uint32_t len, uint8_t
 {
   usbh_core_type *puhost = (usbh_core_type *)uhost;
   usbh_msc_type *pmsc = (usbh_msc_type *)puhost->class_handler->pdata;
-  usb_sts_type status;
   uint32_t timeout = 0;
   if(puhost->conn_sts == 0 || puhost->global_state != USBH_CLASS
     || pmsc->l_unit_n[lun].state != USBH_MSC_IDLE)
@@ -446,31 +491,19 @@ usb_sts_type usbh_msc_write(void *uhost, uint32_t address, uint32_t len, uint8_t
   }
   
   pmsc->bot_trans.msc_struct = &usbh_msc;
-  pmsc->state = USBH_MSC_WRITE;
   pmsc->l_unit_n[lun].state = USBH_MSC_WRITE;
   pmsc->use_lun = lun;
   
   timeout = puhost->timer;
-  while(1)
+  while(usbh_msc_rw_handle(uhost, address, len, buffer, lun) == USB_WAIT)
   {
     if(puhost->conn_sts == 0 || (puhost->timer - timeout) > (len * 10000))
     {
       pmsc->l_unit_n[lun].state = USBH_MSC_IDLE;
       return USB_FAIL;
     }
-    status = usbh_msc_bot_scsi_write(uhost, &pmsc->bot_trans, address, buffer, len, lun);
-    if(status == USB_OK)
-    {
-      pmsc->l_unit_n[lun].state = USBH_MSC_IDLE;
-      break;
-    }
-    else if(status == USB_FAIL)
-    {
-      pmsc->l_unit_n[lun].state = USBH_MSC_IDLE;
-      break;
-    }
   }
-  return status;
+  return USB_OK;
 }
 
 /**

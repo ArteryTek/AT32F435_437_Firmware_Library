@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -80,12 +80,12 @@ int main(void)
   usbd_init(&otg_core_struct,
             USB_FULL_SPEED_CORE_ID,
             USB_ID,
-            &class_handler,
-            &desc_handler);
+            &printer_class_handler,
+            &printer_desc_handler);
 
   while(1)
   {
-    /* get usb vcp receive data */
+    /* get usb printer receive data */
     /* usb_printer_get_rxdata(&otg_core_struct.dev, usb_buffer); */
 
     /* user code ...*/

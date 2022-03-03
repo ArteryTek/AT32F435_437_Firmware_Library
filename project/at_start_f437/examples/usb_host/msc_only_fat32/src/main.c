@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -82,7 +82,7 @@ int main(void)
   usbh_init(&otg_core_struct,
             USB_FULL_SPEED_CORE_ID,
             USB_ID,
-            &uhost_class_handler,
+            &uhost_msc_class_handler,
             &usbh_user_handle);
   while(1)
   {

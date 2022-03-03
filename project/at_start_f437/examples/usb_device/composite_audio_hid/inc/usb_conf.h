@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     usb_conf.h
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    usb config header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -139,7 +139,7 @@ extern "C" {
 #define USBD_RX_SIZE                     128
 #define USBD_EP0_TX_SIZE                 24
 #define USBD_EP1_TX_SIZE                 64
-#define USBD_EP2_TX_SIZE                 16
+#define USBD_EP2_TX_SIZE                 20
 #define USBD_EP3_TX_SIZE                 16
 #define USBD_EP4_TX_SIZE                 0
 #define USBD_EP5_TX_SIZE                 0
@@ -150,8 +150,8 @@ extern "C" {
 #define USBD2_RX_SIZE                    128
 #define USBD2_EP0_TX_SIZE                24
 #define USBD2_EP1_TX_SIZE                64
-#define USBD2_EP2_TX_SIZE                4
-#define USBD2_EP3_TX_SIZE                0
+#define USBD2_EP2_TX_SIZE                20
+#define USBD2_EP3_TX_SIZE                16
 #define USBD2_EP4_TX_SIZE                0
 #define USBD2_EP5_TX_SIZE                0
 #define USBD2_EP6_TX_SIZE                0

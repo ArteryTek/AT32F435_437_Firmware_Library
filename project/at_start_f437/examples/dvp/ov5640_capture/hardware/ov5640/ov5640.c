@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     ov5640.c
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    ov5640 program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -41,7 +41,6 @@
 
 #define I2C_TIMEOUT                      0x2FFFFFF
                                          
-//#define I2Cx_CLKCTRL                     0x1080D8FF
 #define I2Cx_CLKCTRL                     0x30F05292
 #define I2Cx_ADDRESS                     0xA0
                                          
@@ -165,15 +164,15 @@ error_status ov5640_init(void)
   uint16_t reg;
   gpio_init_type gpio_initure;
 
-  crm_periph_clock_enable(CRM_GPIOD_PERIPH_CLOCK, TRUE);
+  crm_periph_clock_enable(CRM_GPIOC_PERIPH_CLOCK, TRUE);
   gpio_default_para_init(&gpio_initure);
   /* DVP_RST Pin-PD6 */
-  gpio_initure.gpio_pins = GPIO_PINS_6;
+  gpio_initure.gpio_pins = GPIO_PINS_3;
   gpio_initure.gpio_mode = GPIO_MODE_OUTPUT;
   gpio_initure.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
   gpio_initure.gpio_pull = GPIO_PULL_UP;
   gpio_initure.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
-  gpio_init(GPIOD, &gpio_initure);
+  gpio_init(GPIOC, &gpio_initure);
 
   OV5640_RST_LOW;
   delay_ms(100);

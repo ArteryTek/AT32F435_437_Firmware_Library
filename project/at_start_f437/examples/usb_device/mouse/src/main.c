@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -44,7 +44,6 @@
 /* usb global struct define */
 otg_core_type otg_core_struct;
 __IO uint8_t press_mouse = 0;
-extern __IO uint8_t hid_suspend_flag;
 void usb_clock48m_select(usb_clk48_s clk_s);
 void keyboard_send_string(uint8_t *string, uint8_t len);
 void usb_gpio_config(void);
@@ -120,7 +119,7 @@ int main(void)
     }
  #ifdef USB_LOW_POWER_WAKUP
      /* enter deep sleep */
-    if(hid_suspend_flag == 1)
+    if(((mouse_type *)(otg_core_struct.dev.class_handler->pdata))->hid_suspend_flag == 1)
     {
       at32_led_off(LED2);
       at32_led_off(LED3);
@@ -136,7 +135,7 @@ int main(void)
         __NOP();
       }
       system_clock_recover();
-      hid_suspend_flag = 0;
+      ((mouse_type *)(otg_core_struct.dev.class_handler->pdata))->hid_suspend_flag = 0;
       at32_led_on(LED2);
       at32_led_on(LED3);
       at32_led_on(LED4);

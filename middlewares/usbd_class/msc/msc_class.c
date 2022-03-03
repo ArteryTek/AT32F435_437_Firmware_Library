@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     msc_class.c
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    usb msc class type
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -41,22 +41,17 @@
   * @{
   */
 
-usb_sts_type class_init_handler(void *udev);
-usb_sts_type class_clear_handler(void *udev);
-usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup);
-usb_sts_type class_ept0_tx_handler(void *udev);
-usb_sts_type class_ept0_rx_handler(void *udev);
-usb_sts_type class_in_handler(void *udev, uint8_t ept_num);
-usb_sts_type class_out_handler(void *udev, uint8_t ept_num);
-usb_sts_type class_sof_handler(void *udev);
-usb_sts_type class_event_handler(void *udev, usbd_event_type event);
+static usb_sts_type class_init_handler(void *udev);
+static usb_sts_type class_clear_handler(void *udev);
+static usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup);
+static usb_sts_type class_ept0_tx_handler(void *udev);
+static usb_sts_type class_ept0_rx_handler(void *udev);
+static usb_sts_type class_in_handler(void *udev, uint8_t ept_num);
+static usb_sts_type class_out_handler(void *udev, uint8_t ept_num);
+static usb_sts_type class_sof_handler(void *udev);
+static usb_sts_type class_event_handler(void *udev, usbd_event_type event);
 
-/* usb rx and tx buffer */
-static uint32_t alt_setting = 0;
-
-extern msc_type msc_struct;
-extern cbw_type cbw_struct;
-extern csw_type csw_struct;
+msc_type msc_struct;
 
 /* usb device class handler */
 usbd_class_handler msc_class_handler = 
@@ -70,6 +65,7 @@ usbd_class_handler msc_class_handler =
   class_out_handler,
   class_sof_handler,
   class_event_handler,
+  &msc_struct
 };
 
 /**
@@ -77,7 +73,7 @@ usbd_class_handler msc_class_handler =
   * @param  udev: to the structure of usbd_core_type
   * @retval status of usb_sts_type                            
   */
-usb_sts_type class_init_handler(void *udev)
+static usb_sts_type class_init_handler(void *udev)
 {
   usb_sts_type status = USB_OK;
   usbd_core_type *pudev = (usbd_core_type *)udev;
@@ -98,7 +94,7 @@ usb_sts_type class_init_handler(void *udev)
   * @param  udev: to the structure of usbd_core_type
   * @retval status of usb_sts_type                            
   */
-usb_sts_type class_clear_handler(void *udev)
+static usb_sts_type class_clear_handler(void *udev)
 {
   usb_sts_type status = USB_OK;
   usbd_core_type *pudev = (usbd_core_type *)udev;
@@ -118,10 +114,11 @@ usb_sts_type class_clear_handler(void *udev)
   * @param  setup: setup packet
   * @retval status of usb_sts_type                            
   */
-usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup)
+static usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup)
 {
   usb_sts_type status = USB_OK;
   usbd_core_type *pudev = (usbd_core_type *)udev;
+  msc_type *pmsc = (msc_type *)pudev->class_handler->pdata;
   switch(setup->bmRequestType & USB_REQ_TYPE_RESERVED)
   {
     /* class request */
@@ -151,17 +148,17 @@ usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup)
           usbd_ctrl_unsupport(pudev);
           break;
         case USB_STD_REQ_GET_INTERFACE:
-          usbd_ctrl_send(pudev, (uint8_t *)&alt_setting, 1);
+          usbd_ctrl_send(pudev, (uint8_t *)&pmsc->alt_setting, 1);
           break;
         case USB_STD_REQ_SET_INTERFACE:
-          alt_setting = setup->wValue;
+          pmsc->alt_setting = setup->wValue;
           break;
         case USB_STD_REQ_CLEAR_FEATURE:
           usbd_ept_close(pudev, (uint8_t)setup->wIndex);
         
           if((setup->wIndex & 0x80) == 0x80)
           {
-            usb_flush_tx_fifo(pudev->usb_reg, setup->wIndex & 0x7F);
+            usbd_flush_tx_fifo(pudev, setup->wIndex & 0x7F);
             usbd_ept_open(pudev, (uint8_t)setup->wIndex, EPT_BULK_TYPE, USBD_IN_MAXPACKET_SIZE);
           }
           else
@@ -186,7 +183,7 @@ usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup)
   * @param  udev: to the structure of usbd_core_type
   * @retval status of usb_sts_type                            
   */
-usb_sts_type class_ept0_tx_handler(void *udev)
+static usb_sts_type class_ept0_tx_handler(void *udev)
 {
   usb_sts_type status = USB_OK;
   
@@ -200,7 +197,7 @@ usb_sts_type class_ept0_tx_handler(void *udev)
   * @param  udev: usb device core handler type
   * @retval status of usb_sts_type                            
   */
-usb_sts_type class_ept0_rx_handler(void *udev)
+static usb_sts_type class_ept0_rx_handler(void *udev)
 {
   usb_sts_type status = USB_OK;
   usbd_core_type *pudev = (usbd_core_type *)udev;
@@ -215,11 +212,11 @@ usb_sts_type class_ept0_rx_handler(void *udev)
   * @param  ept_num: endpoint number
   * @retval status of usb_sts_type                            
   */
-usb_sts_type class_in_handler(void *udev, uint8_t ept_num)
+static usb_sts_type class_in_handler(void *udev, uint8_t ept_num)
 {
   usb_sts_type status = USB_OK;
   usbd_core_type *pudev = (usbd_core_type *)udev;
-  usb_flush_tx_fifo(pudev->usb_reg, ept_num&0x7F);
+  usbd_flush_tx_fifo(pudev, ept_num&0x7F);
   bot_scsi_datain_handler(udev, ept_num);
   return status;
 }
@@ -230,7 +227,7 @@ usb_sts_type class_in_handler(void *udev, uint8_t ept_num)
   * @param  ept_num: endpoint number
   * @retval status of usb_sts_type                            
   */
-usb_sts_type class_out_handler(void *udev, uint8_t ept_num)
+static usb_sts_type class_out_handler(void *udev, uint8_t ept_num)
 {
   usb_sts_type status = USB_OK;
 
@@ -243,7 +240,7 @@ usb_sts_type class_out_handler(void *udev, uint8_t ept_num)
   * @param  udev: to the structure of usbd_core_type
   * @retval status of usb_sts_type                            
   */
-usb_sts_type class_sof_handler(void *udev)
+static usb_sts_type class_sof_handler(void *udev)
 {
   usb_sts_type status = USB_OK;
   
@@ -258,7 +255,7 @@ usb_sts_type class_sof_handler(void *udev)
   * @param  event: usb device event
   * @retval status of usb_sts_type                            
   */
-usb_sts_type class_event_handler(void *udev, usbd_event_type event)
+static usb_sts_type class_event_handler(void *udev, usbd_event_type event)
 {
   usb_sts_type status = USB_OK;
   switch(event)

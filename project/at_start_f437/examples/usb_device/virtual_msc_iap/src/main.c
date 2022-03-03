@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -327,7 +327,6 @@ void flash_fat16_loop_status(void)
       break;
     case UPGRADE_UNKNOWN:
       flash_fat16_set_name((const uint8_t *)"Unkown", 6);
-      flash_iap.msc_up_status = UPGRADE_DONE;
       break;
     case UPGRADE_DONE:
       break;

@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -46,7 +46,7 @@ otg_core_type otg_core_struct;
 void usb_clock48m_select(usb_clk48_s clk_s);
 void usb_gpio_config(void);
 void usb_low_power_wakeup_config(void);
-uint8_t report_buf[USBD_IN_MAXPACKET_SIZE];
+uint8_t report_buf[USBD_AUHID_IN_MAXPACKET_SIZE];
 
 /**
   * @brief  main function.
@@ -94,7 +94,7 @@ int main(void)
     {
       report_buf[0] = HID_REPORT_ID_5;
       report_buf[1] = (~report_buf[1]) & 0x1;
-      class_send_report(&otg_core_struct.dev, report_buf, USBD_IN_MAXPACKET_SIZE);
+      audio_hid_class_send_report(&otg_core_struct.dev, report_buf, USBD_AUHID_IN_MAXPACKET_SIZE);
     }
     delay_ms(100);
   }

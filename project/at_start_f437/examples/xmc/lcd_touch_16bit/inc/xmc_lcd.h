@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     xmc_lcd.h
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    xmc_lcd program header
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -62,8 +62,8 @@ extern lcd_dev_type *lcd_struct;
   */
 
 /* the address of write data & command (xmc_a0) */
-#define  XMC_LCD_COMMAND                 0x60000000
-#define  XMC_LCD_DATA                    0x60000002
+#define  XMC_LCD_COMMAND                 0x6C000000
+#define  XMC_LCD_DATA                    0x6C000800
 /**
   * @}
   */
@@ -71,17 +71,13 @@ extern lcd_dev_type *lcd_struct;
 /** @defgroup LCD_reset_line
   * @{
   */
-  
-/* the lcd reset line */                 
-#define LCD_RESET_HIGH                   gpio_bits_set(GPIOB,GPIO_PINS_9)
-#define LCD_RESET_LOW                    gpio_bits_reset(GPIOB,GPIO_PINS_9)
  
 /**
   * @}
   */
   
-#define LCD_BL_HIGH                      gpio_bits_set(GPIOB,GPIO_PINS_8)
-#define LCD_BL_LOW                       gpio_bits_reset(GPIOB,GPIO_PINS_8)
+#define LCD_BL_HIGH                      gpio_bits_set(GPIOC,GPIO_PINS_0)
+#define LCD_BL_LOW                       gpio_bits_reset(GPIOC,GPIO_PINS_0)
 static uint16_t LCD_ID;
 #define WHITE                            0xFFFF
 #define BLACK                            0x0000    

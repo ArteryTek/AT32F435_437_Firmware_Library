@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     mouse_class.c
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    usb hid mouse class type
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -40,23 +40,17 @@
   * @{
   */
 
-usb_sts_type class_init_handler(void *udev);
-usb_sts_type class_clear_handler(void *udev);
-usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup);
-usb_sts_type class_ept0_tx_handler(void *udev);
-usb_sts_type class_ept0_rx_handler(void *udev);
-usb_sts_type class_in_handler(void *udev, uint8_t ept_num);
-usb_sts_type class_out_handler(void *udev, uint8_t ept_num);
-usb_sts_type class_sof_handler(void *udev);
-usb_sts_type class_event_handler(void *udev, usbd_event_type event);
+static usb_sts_type class_init_handler(void *udev);
+static usb_sts_type class_clear_handler(void *udev);
+static usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup);
+static usb_sts_type class_ept0_tx_handler(void *udev);
+static usb_sts_type class_ept0_rx_handler(void *udev);
+static usb_sts_type class_in_handler(void *udev, uint8_t ept_num);
+static usb_sts_type class_out_handler(void *udev, uint8_t ept_num);
+static usb_sts_type class_sof_handler(void *udev);
+static usb_sts_type class_event_handler(void *udev, usbd_event_type event);
 
-/* hid static variable */
-static uint32_t hid_protocol = 0;
-static uint32_t hid_set_idle = 0;
-static uint32_t alt_setting = 0;
-static uint8_t hid_state;
-__IO uint8_t hid_suspend_flag = 0;
-uint8_t hid_set_report[64];
+mouse_type mouse_struct;
 
 /* usb device class handler */
 usbd_class_handler mouse_class_handler = 
@@ -70,6 +64,7 @@ usbd_class_handler mouse_class_handler =
   class_out_handler,
   class_sof_handler,
   class_event_handler,
+  &mouse_struct
 };
 
 /**
@@ -77,13 +72,13 @@ usbd_class_handler mouse_class_handler =
   * @param  udev: to the structure of usbd_core_type
   * @retval status of usb_sts_type                            
   */
-usb_sts_type class_init_handler(void *udev)
+static usb_sts_type class_init_handler(void *udev)
 {
   usb_sts_type status = USB_OK;
   usbd_core_type *pudev = (usbd_core_type *)udev;
   
   /* open hid in endpoint */
-  usbd_ept_open(pudev, USBD_HID_IN_EPT, EPT_INT_TYPE, USBD_IN_MAXPACKET_SIZE);
+  usbd_ept_open(pudev, USBD_MOUSE_IN_EPT, EPT_INT_TYPE, USBD_MOUSE_IN_MAXPACKET_SIZE);
   
   return status;
 }
@@ -93,13 +88,13 @@ usb_sts_type class_init_handler(void *udev)
   * @param  udev: to the structure of usbd_core_type
   * @retval status of usb_sts_type                            
   */
-usb_sts_type class_clear_handler(void *udev)
+static usb_sts_type class_clear_handler(void *udev)
 {
   usb_sts_type status = USB_OK;
   usbd_core_type *pudev = (usbd_core_type *)udev;
   
   /* close hid in endpoint */
-  usbd_ept_close(pudev, USBD_HID_IN_EPT);
+  usbd_ept_close(pudev, USBD_MOUSE_IN_EPT);
   
   return status;
 }
@@ -110,10 +105,11 @@ usb_sts_type class_clear_handler(void *udev)
   * @param  setup: setup packet
   * @retval status of usb_sts_type                            
   */
-usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup)
+static usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup)
 {
   usb_sts_type status = USB_OK;
   usbd_core_type *pudev = (usbd_core_type *)udev;
+  mouse_type *pmouse = (mouse_type *)pudev->class_handler->pdata;
   uint16_t len;
   uint8_t *buf;
 
@@ -124,20 +120,20 @@ usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup)
       switch(setup->bRequest)
       {
         case HID_REQ_SET_PROTOCOL:
-          hid_protocol = (uint8_t)setup->wValue;
+          pmouse->hid_protocol = (uint8_t)setup->wValue;
           break;
         case HID_REQ_GET_PROTOCOL:
-          usbd_ctrl_send(pudev, (uint8_t *)&hid_protocol, 1);
+          usbd_ctrl_send(pudev, (uint8_t *)&pmouse->hid_protocol, 1);
           break;
         case HID_REQ_SET_IDLE:
-          hid_set_idle = (uint8_t)(setup->wValue >> 8);
+          pmouse->hid_set_idle = (uint8_t)(setup->wValue >> 8);
           break;
         case HID_REQ_GET_IDLE:
-          usbd_ctrl_send(pudev, (uint8_t *)&hid_set_idle, 1);
+          usbd_ctrl_send(pudev, (uint8_t *)&pmouse->hid_set_idle, 1);
           break;
         case HID_REQ_SET_REPORT:
-          hid_state = HID_REQ_SET_REPORT;
-          usbd_ctrl_recv(pudev, hid_set_report, setup->wLength);
+          pmouse->hid_state = HID_REQ_SET_REPORT;
+          usbd_ctrl_recv(pudev, pmouse->hid_set_report, setup->wLength);
           break;
         default:
           usbd_ctrl_unsupport(pudev);
@@ -151,21 +147,21 @@ usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup)
         case USB_STD_REQ_GET_DESCRIPTOR:
           if(setup->wValue >> 8 == HID_REPORT_DESC)
           {
-            len = MIN(USBD_HID_SIZ_REPORT_DESC, setup->wLength);
-            buf = (uint8_t *)g_usbd_hid_report;
+            len = MIN(USBD_MOUSE_SIZ_REPORT_DESC, setup->wLength);
+            buf = (uint8_t *)g_usbd_mouse_report;
           }
           else if(setup->wValue >> 8 == HID_DESCRIPTOR_TYPE)
           {
             len = MIN(9, setup->wLength);
-            buf = (uint8_t *)g_hid_usb_desc;
+            buf = (uint8_t *)g_mouse_usb_desc;
           }
           usbd_ctrl_send(pudev, (uint8_t *)buf, len);
           break;
         case USB_STD_REQ_GET_INTERFACE:
-          usbd_ctrl_send(pudev, (uint8_t *)&alt_setting, 1);
+          usbd_ctrl_send(pudev, (uint8_t *)&pmouse->alt_setting, 1);
           break;
         case USB_STD_REQ_SET_INTERFACE:
-          alt_setting = setup->wValue;
+          pmouse->alt_setting = setup->wValue;
           break;
       }
       break;
@@ -181,7 +177,7 @@ usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup)
   * @param  udev: to the structure of usbd_core_type
   * @retval status of usb_sts_type                            
   */
-usb_sts_type class_ept0_tx_handler(void *udev)
+static usb_sts_type class_ept0_tx_handler(void *udev)
 {
   usb_sts_type status = USB_OK;
   
@@ -195,16 +191,17 @@ usb_sts_type class_ept0_tx_handler(void *udev)
   * @param  udev: to the structure of usbd_core_type
   * @retval status of usb_sts_type                            
   */
-usb_sts_type class_ept0_rx_handler(void *udev)
+static usb_sts_type class_ept0_rx_handler(void *udev)
 {
   usb_sts_type status = USB_OK;
   usbd_core_type *pudev = (usbd_core_type *)udev;
+  mouse_type *pmouse = (mouse_type *)pudev->class_handler->pdata;
   uint32_t recv_len = usbd_get_recv_len(pudev, 0);
   /* ...user code... */
-  if( hid_state == HID_REQ_SET_REPORT)
+  if( pmouse->hid_state == HID_REQ_SET_REPORT)
   {
     /* hid buffer process */
-    hid_state = 0;
+    pmouse->hid_state = 0;
   }
   
   return status;
@@ -216,7 +213,7 @@ usb_sts_type class_ept0_rx_handler(void *udev)
   * @param  ept_num: endpoint number
   * @retval status of usb_sts_type                            
   */
-usb_sts_type class_in_handler(void *udev, uint8_t ept_num)
+static usb_sts_type class_in_handler(void *udev, uint8_t ept_num)
 {
   usb_sts_type status = USB_OK;
   
@@ -233,7 +230,7 @@ usb_sts_type class_in_handler(void *udev, uint8_t ept_num)
   * @param  ept_num: endpoint number
   * @retval status of usb_sts_type                            
   */
-usb_sts_type class_out_handler(void *udev, uint8_t ept_num)
+static usb_sts_type class_out_handler(void *udev, uint8_t ept_num)
 {
   usb_sts_type status = USB_OK;
   
@@ -245,7 +242,7 @@ usb_sts_type class_out_handler(void *udev, uint8_t ept_num)
   * @param  udev: to the structure of usbd_core_type
   * @retval status of usb_sts_type                            
   */
-usb_sts_type class_sof_handler(void *udev)
+static usb_sts_type class_sof_handler(void *udev)
 {
   usb_sts_type status = USB_OK;
   
@@ -260,9 +257,11 @@ usb_sts_type class_sof_handler(void *udev)
   * @param  event: usb device event
   * @retval status of usb_sts_type                            
   */
-usb_sts_type class_event_handler(void *udev, usbd_event_type event)
+static usb_sts_type class_event_handler(void *udev, usbd_event_type event)
 {
   usb_sts_type status = USB_OK;
+  usbd_core_type *pudev = (usbd_core_type *)udev;
+  mouse_type *pmouse = (mouse_type *)pudev->class_handler->pdata;
   switch(event)
   {
     case USBD_RESET_EVENT:
@@ -271,7 +270,7 @@ usb_sts_type class_event_handler(void *udev, usbd_event_type event)
     
       break;
     case USBD_SUSPEND_EVENT:
-      hid_suspend_flag = 1;
+      pmouse->hid_suspend_flag = 1;
       /* ...user code... */
     
       break;
@@ -292,15 +291,15 @@ usb_sts_type class_event_handler(void *udev, usbd_event_type event)
   * @param  len: report length
   * @retval status of usb_sts_type                            
   */
-usb_sts_type class_send_report(void *udev, uint8_t *report, uint16_t len)
+usb_sts_type usb_mouse_class_send_report(void *udev, uint8_t *report, uint16_t len)
 {
   usb_sts_type status = USB_OK;
   usbd_core_type *pudev = (usbd_core_type *)udev;
 
   if(usbd_connect_state_get(pudev) == USB_CONN_STATE_CONFIGURED)
   {
-    usbd_flush_tx_fifo(pudev, USBD_HID_IN_EPT);
-    usbd_ept_send(pudev, USBD_HID_IN_EPT, report, len);
+    usbd_flush_tx_fifo(pudev, USBD_MOUSE_IN_EPT);
+    usbd_ept_send(pudev, USBD_MOUSE_IN_EPT, report, len);
   }
   
   return status;
@@ -314,7 +313,8 @@ usb_sts_type class_send_report(void *udev, uint8_t *report, uint16_t len)
   */
 void usb_hid_mouse_send(void *udev, uint8_t op)
 {
-  static uint8_t mouse_buffer[4] = {0, 0, 0, 0};
+  usbd_core_type *pudev = (usbd_core_type *)udev;
+  mouse_type *pmouse = (mouse_type *)pudev->class_handler->pdata;
   int8_t posx = 0, posy = 0, button = 0;
   switch(op)
   {
@@ -345,11 +345,11 @@ void usb_hid_mouse_send(void *udev, uint8_t op)
     default:
       break;
   }
-  mouse_buffer[0] = button;
-  mouse_buffer[1] = posx;
-  mouse_buffer[2] = posy;
+  pmouse->mouse_buffer[0] = button;
+  pmouse->mouse_buffer[1] = posx;
+  pmouse->mouse_buffer[2] = posy;
   
-  class_send_report(udev, mouse_buffer, 4);
+  usb_mouse_class_send_report(udev, pmouse->mouse_buffer, 4);
 }
 
 /**

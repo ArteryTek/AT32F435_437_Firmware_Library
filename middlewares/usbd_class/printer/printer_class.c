@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     printer_class.c
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    usb printer class type
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -40,35 +40,28 @@
   * @{
   */
 
-usb_sts_type class_init_handler(void *udev);
-usb_sts_type class_clear_handler(void *udev);
-usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup);
-usb_sts_type class_ept0_tx_handler(void *udev);
-usb_sts_type class_ept0_rx_handler(void *udev);
-usb_sts_type class_in_handler(void *udev, uint8_t ept_num);
-usb_sts_type class_out_handler(void *udev, uint8_t ept_num);
-usb_sts_type class_sof_handler(void *udev);
-usb_sts_type class_event_handler(void *udev, usbd_event_type event);
+static usb_sts_type class_init_handler(void *udev);
+static usb_sts_type class_clear_handler(void *udev);
+static usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup);
+static usb_sts_type class_ept0_tx_handler(void *udev);
+static usb_sts_type class_ept0_rx_handler(void *udev);
+static usb_sts_type class_in_handler(void *udev, uint8_t ept_num);
+static usb_sts_type class_out_handler(void *udev, uint8_t ept_num);
+static usb_sts_type class_sof_handler(void *udev);
+static usb_sts_type class_event_handler(void *udev, usbd_event_type event);
 
-/* usb rx and tx buffer */
-static uint32_t alt_setting = 0;
-static uint8_t g_rx_buff[USBD_OUT_MAXPACKET_SIZE];
-__IO uint8_t g_tx_completed = 1, g_rx_completed = 0;
-
-uint8_t PRINTER_DEVICE_ID[PRINTER_DEVICE_ID_LEN] =
+ALIGNED_HEAD static uint8_t printer_device_id[PRINTER_DEVICE_ID_LEN] ALIGNED_TAIL=
 {
   0x00, 0x16,
   'M', 'F', 'G',':','A','r','t','e', 'r', 'y' ,' ',
   'C','M', 'D', ':', 'E', 'S', 'C', 'P', 'O', 'S',' ',
 };
-static uint32_t g_printer_port_status = 0x18;
-uint8_t g_printer_data[USBD_OUT_MAXPACKET_SIZE];
 
 /* static variable */
-
+printer_type printer_struct;
 
 /* usb device class handler */
-usbd_class_handler class_handler = 
+usbd_class_handler printer_class_handler = 
 {
   class_init_handler,
   class_clear_handler,
@@ -79,6 +72,7 @@ usbd_class_handler class_handler =
   class_out_handler,
   class_sof_handler,
   class_event_handler,
+  &printer_struct
 };
 
 /**
@@ -86,21 +80,23 @@ usbd_class_handler class_handler =
   * @param  udev: to the structure of usbd_core_type
   * @retval status of usb_sts_type                            
   */
-usb_sts_type class_init_handler(void *udev)
+static usb_sts_type class_init_handler(void *udev)
 {
   usb_sts_type status = USB_OK;
   usbd_core_type *pudev = (usbd_core_type *)udev;
+  printer_type *pprter = (printer_type *)pudev->class_handler->pdata;
     
   /* open in endpoint */
-  usbd_ept_open(pudev, USBD_PRINTER_BULK_IN_EPT, EPT_BULK_TYPE, USBD_OUT_MAXPACKET_SIZE);
+  usbd_ept_open(pudev, USBD_PRINTER_BULK_IN_EPT, EPT_BULK_TYPE, USBD_PRINTER_IN_MAXPACKET_SIZE);
   
   /* open out endpoint */
-  usbd_ept_open(pudev, USBD_PRINTER_BULK_OUT_EPT, EPT_BULK_TYPE, USBD_OUT_MAXPACKET_SIZE);
+  usbd_ept_open(pudev, USBD_PRINTER_BULK_OUT_EPT, EPT_BULK_TYPE, USBD_PRINTER_OUT_MAXPACKET_SIZE);
   
   /* set out endpoint to receive status */
-  usbd_ept_recv(pudev, USBD_PRINTER_BULK_OUT_EPT, g_rx_buff, USBD_OUT_MAXPACKET_SIZE);
+  usbd_ept_recv(pudev, USBD_PRINTER_BULK_OUT_EPT, pprter->g_rx_buff, USBD_PRINTER_OUT_MAXPACKET_SIZE);
   
-  g_tx_completed = 1;
+  pprter->g_tx_completed = 1;
+  pprter->g_printer_port_status = 0x18;
   
   return status;
 }
@@ -110,7 +106,7 @@ usb_sts_type class_init_handler(void *udev)
   * @param  udev: to the structure of usbd_core_type
   * @retval status of usb_sts_type                            
   */
-usb_sts_type class_clear_handler(void *udev)
+static usb_sts_type class_clear_handler(void *udev)
 {
   usb_sts_type status = USB_OK;
   usbd_core_type *pudev = (usbd_core_type *)udev;
@@ -130,10 +126,11 @@ usb_sts_type class_clear_handler(void *udev)
   * @param  setup: setup packet
   * @retval status of usb_sts_type                            
   */
-usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup)
+static usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup)
 {
   usb_sts_type status = USB_OK;
   usbd_core_type *pudev = (usbd_core_type *)udev;
+  printer_type *pprter = (printer_type *)pudev->class_handler->pdata;
 
   switch(setup->bmRequestType & USB_REQ_TYPE_RESERVED)
   {
@@ -142,13 +139,13 @@ usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup)
       switch(setup->bRequest)
       {
         case PRINTER_REQ_GET_DEVICE_ID:
-          usbd_ctrl_send(pudev, PRINTER_DEVICE_ID, PRINTER_DEVICE_ID_LEN);
+          usbd_ctrl_send(pudev, printer_device_id, PRINTER_DEVICE_ID_LEN);
           break;
         case PRINTER_REQ_GET_PORT_STATUS:
-          usbd_ctrl_send(pudev, (uint8_t *)&g_printer_port_status, 1);
+          usbd_ctrl_send(pudev, (uint8_t *)&pprter->g_printer_port_status, 1);
           break;
         case PRINTER_REQ_GET_SOFT_RESET:
-          usbd_ctrl_recv(pudev, g_printer_data, USBD_OUT_MAXPACKET_SIZE);
+          usbd_ctrl_recv(pudev, pprter->g_printer_data, USBD_PRINTER_OUT_MAXPACKET_SIZE);
           break;
         default:
           usbd_ctrl_unsupport(pudev);
@@ -163,10 +160,10 @@ usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup)
           usbd_ctrl_unsupport(pudev);
           break;
         case USB_STD_REQ_GET_INTERFACE:
-          usbd_ctrl_send(pudev, (uint8_t *)&alt_setting, 1);
+          usbd_ctrl_send(pudev, (uint8_t *)&pprter->alt_setting, 1);
           break;
         case USB_STD_REQ_SET_INTERFACE:
-          alt_setting = setup->wValue;
+          pprter->alt_setting = setup->wValue;
           break;
         default:
           break;
@@ -184,7 +181,7 @@ usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup)
   * @param  udev: to the structure of usbd_core_type
   * @retval status of usb_sts_type                            
   */
-usb_sts_type class_ept0_tx_handler(void *udev)
+static usb_sts_type class_ept0_tx_handler(void *udev)
 {
   usb_sts_type status = USB_OK;
   
@@ -198,7 +195,7 @@ usb_sts_type class_ept0_tx_handler(void *udev)
   * @param  udev: usb device core handler type
   * @retval status of usb_sts_type                            
   */
-usb_sts_type class_ept0_rx_handler(void *udev)
+static usb_sts_type class_ept0_rx_handler(void *udev)
 {
   usb_sts_type status = USB_OK;
   
@@ -213,16 +210,17 @@ usb_sts_type class_ept0_rx_handler(void *udev)
   * @param  ept_num: endpoint number
   * @retval status of usb_sts_type                            
   */
-usb_sts_type class_in_handler(void *udev, uint8_t ept_num)
+static usb_sts_type class_in_handler(void *udev, uint8_t ept_num)
 {
   usbd_core_type *pudev = (usbd_core_type *)udev;
+  printer_type *pprter = (printer_type *)pudev->class_handler->pdata;
   usb_sts_type status = USB_OK;
   
   /* ...user code...
     trans next packet data
   */
   usbd_flush_tx_fifo(pudev, ept_num);
-  g_tx_completed = 1;
+  pprter->g_tx_completed = 1;
   
   return status;
 }
@@ -233,12 +231,14 @@ usb_sts_type class_in_handler(void *udev, uint8_t ept_num)
   * @param  ept_num: endpoint number
   * @retval status of usb_sts_type                            
   */
-usb_sts_type class_out_handler(void *udev, uint8_t ept_num)
+static usb_sts_type class_out_handler(void *udev, uint8_t ept_num)
 {
   usb_sts_type status = USB_OK;
+  usbd_core_type *pudev = (usbd_core_type *)udev;
+  printer_type *pprter = (printer_type *)pudev->class_handler->pdata;
   
   /*set recv flag*/
-  g_rx_completed = 1;
+   pprter->g_rx_completed = 1;
   
   return status;
 }
@@ -248,7 +248,7 @@ usb_sts_type class_out_handler(void *udev, uint8_t ept_num)
   * @param  udev: to the structure of usbd_core_type
   * @retval status of usb_sts_type                            
   */
-usb_sts_type class_sof_handler(void *udev)
+static usb_sts_type class_sof_handler(void *udev)
 {
   usb_sts_type status = USB_OK;
   
@@ -263,7 +263,7 @@ usb_sts_type class_sof_handler(void *udev)
   * @param  event: usb device event
   * @retval status of usb_sts_type                            
   */
-usb_sts_type class_event_handler(void *udev, usbd_event_type event)
+static usb_sts_type class_event_handler(void *udev, usbd_event_type event)
 {
   usb_sts_type status = USB_OK;
   switch(event)
@@ -304,9 +304,10 @@ error_status usb_printer_send_data(void *udev, uint8_t *send_data, uint16_t len)
 {
   error_status status = SUCCESS;
   usbd_core_type *pudev = (usbd_core_type *)udev;
-  if(g_tx_completed)
+  printer_type *pprter = (printer_type *)pudev->class_handler->pdata;
+  if(pprter->g_tx_completed)
   {
-    g_tx_completed = 0;
+    pprter->g_tx_completed = 0;
     usbd_ept_send(pudev, USBD_PRINTER_BULK_IN_EPT, send_data, len);
   }
   else

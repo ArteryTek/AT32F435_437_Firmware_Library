@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -104,12 +104,12 @@ int main(void)
 
   at32_board_init();
 
-  uart_print_init(115200);
-
   button_exint_init();
 
   /* usb gpio config */
   usb_gpio_config();
+  
+  uart_print_init(115200);
 
 #ifdef USB_LOW_POWER_WAKUP
   usb_low_power_wakeup_config();
@@ -128,7 +128,7 @@ int main(void)
   usbh_init(&otg_core_struct,
             USB_FULL_SPEED_CORE_ID,
             USB_ID,
-            &uhost_class_handler,
+            &uhost_hid_class_handler,
             &usbh_user_handle);
   while(1)
   {

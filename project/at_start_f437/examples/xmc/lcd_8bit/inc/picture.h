@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     picture.h
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    this file contains all the picture used for lcd display.
   **************************************************************************
   *                       Copyright notice & Disclaimer

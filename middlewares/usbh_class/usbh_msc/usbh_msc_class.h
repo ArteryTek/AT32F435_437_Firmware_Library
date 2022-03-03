@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     usbh_msc_class.h
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    usb host msc class header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -87,34 +87,6 @@ typedef enum
   USBH_MSC_STATE_COMPLETE,
 }usbh_msc_ctrl_state_type;
 
-///**
-//  * @brief  usb msc process state
-//  */
-//typedef enum
-//{
-//  USBH_MSC_INIT,
-//  USBH_MSC_INQUIRY,
-//  USBH_MSC_READ_CAPACITY10,
-//  USBH_MSC_READ10,
-//  USBH_MSC_BUSY,
-//  USBH_MSC_ERROR,
-//}usbh_msc_state_type;
-
-/**
-  * @brief  usb hid descriptor type
-  */
-typedef struct
-{
-  uint8_t bLength;
-  uint8_t bDescriptorType;
-  uint16_t bcdHID;
-  uint8_t bCountryCode;
-  uint8_t bNumDescriptors;
-  uint8_t bReportDescriptorType;
-  uint16_t wItemLength;
-}usb_hid_desc_type;
-
-
 /**
   * @brief  usb msc struct
   */
@@ -145,11 +117,12 @@ typedef struct
   uint8_t buffer[64];
 }usbh_msc_type;
 
-extern usbh_class_handler_type uhost_class_handler;
+extern usbh_class_handler_type uhost_msc_class_handler;
 extern usbh_msc_type usbh_msc;
 msc_error_type usbh_msc_is_ready(void *uhost, uint8_t lun);
 usb_sts_type usbh_msc_write(void *uhost, uint32_t address, uint32_t len, uint8_t *buffer, uint8_t lun);
 usb_sts_type usbh_msc_read(void *uhost, uint32_t address, uint32_t len, uint8_t *buffer, uint8_t lun);
+usb_sts_type usbh_msc_rw_handle(void *uhost, uint32_t address, uint32_t len, uint8_t *buffer, uint8_t lun);
 usb_sts_type msc_bot_scsi_init(usbh_msc_type *msc_struct);
 
 /**

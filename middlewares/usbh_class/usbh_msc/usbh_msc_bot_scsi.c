@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     usbh_msc_bot_scsi.c
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    usb host msc bulk-only transfer and scsi type
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -202,10 +202,19 @@ static usb_sts_type usbh_cmd_read(msc_bot_trans_type *bot_trans, uint8_t *cmd, u
   * @param  csw: to the structure of msc_bot_csw_type
   * @retval status: usb_sts_type status
   */
-usb_sts_type usbh_check_csw(msc_bot_cbw_type *cbw, msc_bot_csw_type *csw)
+usb_sts_type usbh_check_csw(void *uhost, msc_bot_cbw_type *cbw, msc_bot_csw_type *csw)
 {
-  usb_sts_type status = USB_OK;
-  
+  usb_sts_type status = USB_FAIL;
+  if(csw->dCBWSignature == MSC_CSW_SIGNATURE)
+  {
+    if(csw->dCBWTag == cbw->dCBWTag)
+    {
+      if(csw->bCSWStatus == 0)
+      {
+        status = USB_OK;
+      }
+    }
+  }
   return status;
 }
 
@@ -219,6 +228,7 @@ usb_sts_type usb_bot_request(void *uhost, msc_bot_trans_type *bot_trans)
 {
   usb_sts_type status = USB_WAIT;
   urb_sts_type urb_status;
+  usb_sts_type clr_status;
   usbh_core_type *puhost = (usbh_core_type *)uhost;
   usbh_msc_type *msc_struct = (usbh_msc_type *)bot_trans->msc_struct;
   switch(bot_trans->bot_state)
@@ -254,7 +264,7 @@ usb_sts_type usb_bot_request(void *uhost, msc_bot_trans_type *bot_trans)
       }
       else if(urb_status == URB_STALL)
       {
-         bot_trans->bot_state = BOT_STATE_ERROR;
+         bot_trans->bot_state = BOT_STATE_ERROR_OUT;
       }
       break;
       
@@ -289,7 +299,7 @@ usb_sts_type usb_bot_request(void *uhost, msc_bot_trans_type *bot_trans)
       }
       else if(urb_status == URB_STALL)
       {
-        bot_trans->bot_state = BOT_STATE_ERROR;
+        bot_trans->bot_state = BOT_STATE_ERROR_IN;
       }
     
       break;
@@ -327,7 +337,7 @@ usb_sts_type usb_bot_request(void *uhost, msc_bot_trans_type *bot_trans)
       }
       else if(urb_status == URB_STALL)
       {
-        bot_trans->bot_state = BOT_STATE_ERROR;
+        bot_trans->bot_state = BOT_STATE_ERROR_OUT;
       }
       break;
       
@@ -343,22 +353,32 @@ usb_sts_type usb_bot_request(void *uhost, msc_bot_trans_type *bot_trans)
       {
         bot_trans->bot_state = BOT_STATE_SEND_CBW;
         bot_trans->cmd_state = CMD_STATE_SEND;
-        status = usbh_check_csw(&bot_trans->cbw, &bot_trans->csw);
+        status = usbh_check_csw(uhost, &bot_trans->cbw, &bot_trans->csw);
       }
       else if(urb_status == URB_STALL)
       {
-        bot_trans->bot_state = BOT_STATE_ERROR;
+        bot_trans->bot_state = BOT_STATE_ERROR_IN;
       }
     
       break;
-    case BOT_STATE_ERROR:
-      if(usbh_clear_ept_feature(puhost, msc_struct->eptin, 0) == USB_OK)
+    case BOT_STATE_ERROR_IN:
+      clr_status = usbh_clear_ept_feature(puhost, msc_struct->eptin, msc_struct->chin);
+      if(clr_status == USB_OK)
       {
         bot_trans->bot_state = BOT_STATE_RECV_CSW;
+        usbh_set_toggle(puhost, msc_struct->chin, 0);
       }
       
       break;
-    
+    case BOT_STATE_ERROR_OUT:
+      clr_status = usbh_clear_ept_feature(puhost, msc_struct->eptout, msc_struct->chout);
+      if(clr_status == USB_OK)
+      {
+        usbh_set_toggle(puhost, msc_struct->chout, 1 - puhost->hch[msc_struct->chout].toggle_out);
+        usbh_set_toggle(puhost, msc_struct->chin, 0);
+        bot_trans->bot_state = BOT_STATE_ERROR_IN;
+      }
+      break;
     case BOT_STATE_COMPLETE:
       break;
     
@@ -384,19 +404,23 @@ usb_sts_type usbh_msc_bot_scsi_get_inquiry(void *uhost,  msc_bot_trans_type *bot
   switch(bot_trans->cmd_state)
   {
     case CMD_STATE_SEND:
-    usbh_bot_cbw(&bot_trans->cbw, MSC_INQUIRY_DATA_LEN, MSC_INQUIRY_CMD_LEN, MSC_CBW_FLAG_IN);
-    usbh_cmd_inquiry(bot_trans, bot_trans->cbw.CBWCB, lun);
-    bot_trans->cmd_state = CMD_STATE_WAIT;
-    bot_trans->bot_state = BOT_STATE_SEND_CBW;
+      usbh_bot_cbw(&bot_trans->cbw, MSC_INQUIRY_DATA_LEN, MSC_INQUIRY_CMD_LEN, MSC_CBW_FLAG_IN);
+      usbh_cmd_inquiry(bot_trans, bot_trans->cbw.CBWCB, lun);
+      bot_trans->cmd_state = CMD_STATE_WAIT;
+      bot_trans->bot_state = BOT_STATE_SEND_CBW;
     break;
     
     case CMD_STATE_WAIT:
-    if(usb_bot_request(uhost, bot_trans) == USB_OK)
-    {
-       status = USB_OK;
-      bot_trans->cmd_state = CMD_STATE_SEND;
-    }
-    break;
+      status = usb_bot_request(uhost, bot_trans);
+      if(status == USB_OK)
+      {
+        bot_trans->cmd_state = CMD_STATE_SEND;
+      }
+      if(status == USB_FAIL)
+      {
+        bot_trans->cmd_state = CMD_STATE_SEND;
+      }
+      break;
     default:
       break;
   }
@@ -418,22 +442,26 @@ usb_sts_type usbh_msc_bot_scsi_capacity(void *uhost, msc_bot_trans_type *bot_tra
   switch(bot_trans->cmd_state)
   {
     case CMD_STATE_SEND:
-    usbh_bot_cbw(&bot_trans->cbw, MSC_CAPACITY10_DATA_LEN, MSC_CAPACITY10_CMD_LEN, MSC_CBW_FLAG_IN);
-    usbh_cmd_capacity10(bot_trans, bot_trans->cbw.CBWCB, lun);
-    bot_trans->cmd_state = CMD_STATE_WAIT;
-    bot_trans->bot_state = BOT_STATE_SEND_CBW;
-    break;
+      usbh_bot_cbw(&bot_trans->cbw, MSC_CAPACITY10_DATA_LEN, MSC_CAPACITY10_CMD_LEN, MSC_CBW_FLAG_IN);
+      usbh_cmd_capacity10(bot_trans, bot_trans->cbw.CBWCB, lun);
+      bot_trans->cmd_state = CMD_STATE_WAIT;
+      bot_trans->bot_state = BOT_STATE_SEND_CBW;
+      break;
     
     case CMD_STATE_WAIT:
-    if(usb_bot_request(uhost, bot_trans) == USB_OK)
-    {
-      status = USB_OK;
-      capacity->blk_nbr = bot_trans->buffer[3] | bot_trans->buffer[2] << 8 |
-                          bot_trans->buffer[1] << 16 | bot_trans->buffer[0] << 24;
-      capacity->blk_size =  bot_trans->buffer[7] | bot_trans->buffer[6] << 8 ;
-      bot_trans->cmd_state = CMD_STATE_SEND;
-    }
-    break;
+      status = usb_bot_request(uhost, bot_trans);
+      if(status == USB_OK)
+      {
+        capacity->blk_nbr = bot_trans->buffer[3] | bot_trans->buffer[2] << 8 |
+                            bot_trans->buffer[1] << 16 | bot_trans->buffer[0] << 24;
+        capacity->blk_size =  bot_trans->buffer[7] | bot_trans->buffer[6] << 8 ;
+        bot_trans->cmd_state = CMD_STATE_SEND;
+      }
+      if(status == USB_FAIL)
+      {
+        bot_trans->cmd_state = CMD_STATE_SEND;
+      }
+      break;
     default:
       break;
   }
@@ -454,20 +482,24 @@ usb_sts_type usbh_msc_bot_scsi_test_unit_ready(void *uhost, msc_bot_trans_type *
   switch(bot_trans->cmd_state)
   {
     case CMD_STATE_SEND:
-    usbh_bot_cbw(&bot_trans->cbw, MSC_TEST_UNIT_READY_DATA_LEN, 
-                 MSC_TEST_UNIT_READY_CMD_LEN, MSC_CBW_FLAG_OUT);
-    usbh_cmd_test_unit_ready(bot_trans, bot_trans->cbw.CBWCB, lun);
-    bot_trans->cmd_state = CMD_STATE_WAIT;
-    bot_trans->bot_state = BOT_STATE_SEND_CBW;
+      usbh_bot_cbw(&bot_trans->cbw, MSC_TEST_UNIT_READY_DATA_LEN, 
+                   MSC_TEST_UNIT_READY_CMD_LEN, MSC_CBW_FLAG_OUT);
+      usbh_cmd_test_unit_ready(bot_trans, bot_trans->cbw.CBWCB, lun);
+      bot_trans->cmd_state = CMD_STATE_WAIT;
+      bot_trans->bot_state = BOT_STATE_SEND_CBW;
     break;
     
     case CMD_STATE_WAIT:
-    if(usb_bot_request(uhost, bot_trans) == USB_OK)
-    {
-       status = USB_OK;
-       bot_trans->cmd_state = CMD_STATE_SEND;
-    }
-    break;
+      status = usb_bot_request(uhost, bot_trans);
+      if(status == USB_OK)
+      {
+         bot_trans->cmd_state = CMD_STATE_SEND;
+      }
+      if(status == USB_FAIL)
+      {
+        bot_trans->cmd_state = CMD_STATE_SEND;
+      }
+      break;
     default:
       break;
   }
@@ -488,20 +520,24 @@ usb_sts_type usbh_msc_bot_scsi_request_sense(void *uhost, msc_bot_trans_type *bo
   switch(bot_trans->cmd_state)
   {
     case CMD_STATE_SEND:
-    usbh_bot_cbw(&bot_trans->cbw, MSC_REQUEST_SENSE_DATA_LEN, 
-                 MSC_REQUEST_SENSE_CMD_LEN, MSC_CBW_FLAG_IN);
-    usbh_cmd_requset_sense(bot_trans, bot_trans->cbw.CBWCB, lun);
-    bot_trans->cmd_state = CMD_STATE_WAIT;
-    bot_trans->bot_state = BOT_STATE_SEND_CBW;
+      usbh_bot_cbw(&bot_trans->cbw, MSC_REQUEST_SENSE_DATA_LEN, 
+                   MSC_REQUEST_SENSE_CMD_LEN, MSC_CBW_FLAG_IN);
+      usbh_cmd_requset_sense(bot_trans, bot_trans->cbw.CBWCB, lun);
+      bot_trans->cmd_state = CMD_STATE_WAIT;
+      bot_trans->bot_state = BOT_STATE_SEND_CBW;
     break;
     
     case CMD_STATE_WAIT:
-    if(usb_bot_request(uhost, bot_trans) == USB_OK)
-    {
-       status = USB_OK;
-       bot_trans->cmd_state = CMD_STATE_SEND;
-    }
-    break;
+      status = usb_bot_request(uhost, bot_trans);
+      if(status == USB_OK)
+      {
+         bot_trans->cmd_state = CMD_STATE_SEND;
+      }
+      if(status == USB_FAIL)
+      {
+        bot_trans->cmd_state = CMD_STATE_SEND;
+      }
+      break;
     default:
       break;
   }
@@ -526,19 +562,23 @@ usb_sts_type usbh_msc_bot_scsi_write(void *uhost, msc_bot_trans_type *bot_trans,
   switch(bot_trans->cmd_state)
   {
     case CMD_STATE_SEND:
-    usbh_bot_cbw(&bot_trans->cbw, write_len * 512, 
-                 MSC_WRITE_CMD_LEN, MSC_CBW_FLAG_OUT);
-    usbh_cmd_write(bot_trans, bot_trans->cbw.CBWCB, lun, write_len, address, write_data);
-    bot_trans->cmd_state = CMD_STATE_WAIT;
-    bot_trans->bot_state = BOT_STATE_SEND_CBW;
+      usbh_bot_cbw(&bot_trans->cbw, write_len * 512, 
+                   MSC_WRITE_CMD_LEN, MSC_CBW_FLAG_OUT);
+      usbh_cmd_write(bot_trans, bot_trans->cbw.CBWCB, lun, write_len, address, write_data);
+      bot_trans->cmd_state = CMD_STATE_WAIT;
+      bot_trans->bot_state = BOT_STATE_SEND_CBW;
     break;
     
     case CMD_STATE_WAIT:
-    if(usb_bot_request(uhost, bot_trans) == USB_OK)
-    {
-       status = USB_OK;
-       bot_trans->cmd_state = CMD_STATE_SEND;
-    }
+      status = usb_bot_request(uhost, bot_trans);
+      if(status == USB_OK)
+      {
+         bot_trans->cmd_state = CMD_STATE_SEND;
+      }
+      if(status == USB_FAIL)
+      {
+        bot_trans->cmd_state = CMD_STATE_SEND;
+      }
     break;
     default:
       break;
@@ -564,20 +604,24 @@ usb_sts_type usbh_msc_bot_scsi_read(void *uhost, msc_bot_trans_type *bot_trans,
   switch(bot_trans->cmd_state)
   {
     case CMD_STATE_SEND:
-    usbh_bot_cbw(&bot_trans->cbw, read_len * 512, 
-                 MSC_READ_CMD_LEN, MSC_CBW_FLAG_IN);
-    usbh_cmd_read(bot_trans, bot_trans->cbw.CBWCB, lun, read_len, address, read_data);
-    bot_trans->cmd_state = CMD_STATE_WAIT;
-    bot_trans->bot_state = BOT_STATE_SEND_CBW;
+      usbh_bot_cbw(&bot_trans->cbw, read_len * 512, 
+                   MSC_READ_CMD_LEN, MSC_CBW_FLAG_IN);
+      usbh_cmd_read(bot_trans, bot_trans->cbw.CBWCB, lun, read_len, address, read_data);
+      bot_trans->cmd_state = CMD_STATE_WAIT;
+      bot_trans->bot_state = BOT_STATE_SEND_CBW;
     break;
     
     case CMD_STATE_WAIT:
-    if(usb_bot_request(uhost, bot_trans) == USB_OK)
-    {
-       status = USB_OK;
-       bot_trans->cmd_state = CMD_STATE_SEND;
-    }
-    break;
+      status = usb_bot_request(uhost, bot_trans);
+      if(status == USB_OK)
+      {
+         bot_trans->cmd_state = CMD_STATE_SEND;
+      }
+      if(status == USB_FAIL)
+      {
+        bot_trans->cmd_state = CMD_STATE_SEND;
+      }
+      break;
     default:
       break;
   }

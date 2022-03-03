@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     touch.c
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    this file contains all the functions prototypes for the 
   *           touch firmware driver.
   **************************************************************************
@@ -63,18 +63,25 @@ void touch_pin_init(void)
   /* enable the gpio clock */
   crm_periph_clock_enable(CRM_GPIOB_PERIPH_CLOCK, TRUE); 
   crm_periph_clock_enable(CRM_GPIOD_PERIPH_CLOCK, TRUE); 
-  crm_periph_clock_enable(CRM_SPI2_PERIPH_CLOCK, TRUE); 
+  crm_periph_clock_enable(CRM_SPI4_PERIPH_CLOCK, TRUE); 
   
-  gpio_pin_mux_config(GPIOB, GPIO_PINS_SOURCE13, GPIO_MUX_5);
-  gpio_pin_mux_config(GPIOB, GPIO_PINS_SOURCE14, GPIO_MUX_5);
-  gpio_pin_mux_config(GPIOB, GPIO_PINS_SOURCE15, GPIO_MUX_5);
+  gpio_pin_mux_config(GPIOB, GPIO_PINS_SOURCE13, GPIO_MUX_6);
+  gpio_pin_mux_config(GPIOB, GPIO_PINS_SOURCE8, GPIO_MUX_6);
+  gpio_pin_mux_config(GPIOA, GPIO_PINS_SOURCE1, GPIO_MUX_5);
   
-  gpio_init_struct.gpio_pins = GPIO_PINS_13 |  GPIO_PINS_14 |GPIO_PINS_15; 
+  gpio_init_struct.gpio_pins = GPIO_PINS_13 |  GPIO_PINS_8; 
   gpio_init_struct.gpio_mode = GPIO_MODE_MUX; 
   gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL; 
   gpio_init_struct.gpio_pull = GPIO_PULL_NONE; 
   gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER; 
   gpio_init(GPIOB, &gpio_init_struct); 
+  
+  gpio_init_struct.gpio_pins = GPIO_PINS_1; 
+  gpio_init_struct.gpio_mode = GPIO_MODE_MUX; 
+  gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL; 
+  gpio_init_struct.gpio_pull = GPIO_PULL_NONE; 
+  gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER; 
+  gpio_init(GPIOA, &gpio_init_struct); 
   
   gpio_init_struct.gpio_pins = GPIO_PINS_12; 
   gpio_init_struct.gpio_mode = GPIO_MODE_OUTPUT; 
@@ -101,8 +108,8 @@ void touch_pin_init(void)
   spi_init_struct.clock_polarity = SPI_CLOCK_POLARITY_HIGH; 
   spi_init_struct.clock_phase = SPI_CLOCK_PHASE_2EDGE; 
   spi_init_struct.cs_mode_selection = SPI_CS_SOFTWARE_MODE; 
-  spi_init(SPI2, &spi_init_struct); 
-  spi_enable(SPI2, TRUE); 
+  spi_init(SPI4, &spi_init_struct); 
+  spi_enable(SPI4, TRUE); 
 }
 
 /**
@@ -200,11 +207,11 @@ uint16_t touch_read_ad(uint8_t xy)
   */
 void touch_write_1byte(uint8_t cmd)
 {
-  while(spi_i2s_flag_get(SPI2, SPI_I2S_TDBE_FLAG) == RESET); 
-  spi_i2s_data_transmit(SPI2, cmd); 
+  while(spi_i2s_flag_get(SPI4, SPI_I2S_TDBE_FLAG) == RESET); 
+  spi_i2s_data_transmit(SPI4, cmd); 
   
-  while(spi_i2s_flag_get(SPI2, SPI_I2S_RDBF_FLAG) == RESET); 
-  SPI2->dt; 
+  while(spi_i2s_flag_get(SPI4, SPI_I2S_RDBF_FLAG) == RESET); 
+  SPI4->dt; 
 }
 
 /**
@@ -216,11 +223,11 @@ uint8_t touch_read_1byte(void)
 {
   uint8_t touch; 
   
-  while(spi_i2s_flag_get(SPI2, SPI_I2S_TDBE_FLAG) == RESET); 
-  spi_i2s_data_transmit(SPI2, 0XFF); 
+  while(spi_i2s_flag_get(SPI4, SPI_I2S_TDBE_FLAG) == RESET); 
+  spi_i2s_data_transmit(SPI4, 0XFF); 
   
-  while(spi_i2s_flag_get(SPI2, SPI_I2S_RDBF_FLAG) == RESET); 
-  touch = spi_i2s_data_receive(SPI2); 
+  while(spi_i2s_flag_get(SPI4, SPI_I2S_RDBF_FLAG) == RESET); 
+  touch = spi_i2s_data_receive(SPI4); 
   
   return touch; 
 }

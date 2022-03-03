@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     readme.txt
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    readme
   **************************************************************************
   */
@@ -16,20 +16,19 @@
 
   the pin to pin with lcd and xmc:
   - spi2_sck  pb13    --->   spi_sck
-  - spi2_miso pb14    --->   spi_miso
-  - spi2_mosi pb15    --->   spi_mosi
+  - spi2_miso pb8     --->   spi_miso
+  - spi2_mosi pa1     --->   spi_mosi
   - gpio      pb11    --->   t_pen
   - gpio      pb12    --->   t_cs
-  - gpio      pb8     --->   lcd_bl
-  - gpio      pb9     --->   lcd_reset
-  - xmc_a0    pf0     --->   lcd_rs
-  - xmc_ne1   pd7     --->   lcd_cs
-  - xmc_nwe   pd5     --->   lcd_wr
-  - xmc_noe   pd4     --->   lcd_rd
+  - gpio      pc0     --->   lcd_bl
+  - xmc_a10   pd5     --->   lcd_rs
+  - xmc_ne4   pc4     --->   lcd_cs
+  - xmc_nwe   pc2     --->   lcd_wr
+  - xmc_noe   pc5     --->   lcd_rd
   - xmc_d0    pd14    --->   data[0]
   - xmc_d1    pd15    --->   data[1]
-  - xmc_d2    pd0     --->   data[2]
-  - xmc_d3    pd1     --->   data[3]
+  - xmc_d2    pc11    --->   data[2]
+  - xmc_d3    pc12    --->   data[3]
   - xmc_d4    pe7     --->   data[4]
   - xmc_d5    pe8     --->   data[5]
   - xmc_d6    pe9     --->   data[6]

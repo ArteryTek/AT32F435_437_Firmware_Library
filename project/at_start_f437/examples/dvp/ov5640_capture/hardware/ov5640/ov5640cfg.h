@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     ov5640cfg.h
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    header file of ov5640cfg program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -371,6 +371,7 @@ const uint16_t ov5640_uxga_init_reg_tbl[][2] =
   0x5025, 0x00,
   0x4740, 0x23, /* vsync high */
   0x3008, 0x02, /* wake up from standby, bit[6] */
+
 };
 
 /**

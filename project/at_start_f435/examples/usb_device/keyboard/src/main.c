@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -45,7 +45,7 @@
 otg_core_type otg_core_struct;
 extern __IO uint8_t hid_suspend_flag;
 void usb_clock48m_select(usb_clk48_s clk_s);
-void keyboard_send_string(uint8_t *string, uint8_t len);
+void keyboard_send_string(void *udev, uint8_t *string, uint8_t len);
 void usb_gpio_config(void);
 void usb_low_power_wakeup_config(void);
 void system_clock_recover(void);
@@ -57,27 +57,29 @@ void button_exint_init(void);
   * @param  len: send string length
   * @retval none
   */
-void keyboard_send_string(uint8_t *string, uint8_t len)
+void keyboard_send_string(void *udev, uint8_t *string, uint8_t len)
 {
   uint8_t index = 0;
+  usbd_core_type *pudev = (usbd_core_type *)udev;
+  keyboard_type *pkeyboard = (keyboard_type *)pudev->class_handler->pdata;
   for(index = 0; index < len; index ++)
   {
     while(1)
     {
-      if(g_u8tx_completed == 1)
+      if(pkeyboard->g_u8tx_completed == 1)
       {
-        g_u8tx_completed = 0;
-        usb_hid_keyboard_send_char(&otg_core_struct.dev, string[index]);
+        pkeyboard->g_u8tx_completed = 0;
+        usb_hid_keyboard_send_char(udev, string[index]);
         break;
       }
     }
     /* send 0x00 */
     while(1)
     {
-      if(g_u8tx_completed == 1)
+      if(pkeyboard->g_u8tx_completed == 1)
       {
-        g_u8tx_completed = 0;
-        usb_hid_keyboard_send_char(&otg_core_struct.dev, 0x00);
+        pkeyboard->g_u8tx_completed = 0;
+        usb_hid_keyboard_send_char(udev, 0x00);
         break;
       }
     }
@@ -134,7 +136,7 @@ int main(void)
     {
       if(usbd_connect_state_get(&otg_core_struct.dev) == USB_CONN_STATE_CONFIGURED)
       {
-        keyboard_send_string((uint8_t *)" Keyboard Demo\r\n", 16);
+        keyboard_send_string(&otg_core_struct.dev, (uint8_t *)" Keyboard Demo\r\n", 16);
       }
       /* remote wakeup */
       if(usbd_connect_state_get(&otg_core_struct.dev) == USB_CONN_STATE_SUSPENDED
@@ -146,7 +148,7 @@ int main(void)
 
 #ifdef USB_LOW_POWER_WAKUP
      /* enter deep sleep */
-    if(hid_suspend_flag == 1)
+    if(((keyboard_type *)(otg_core_struct.dev.class_handler->pdata))->hid_suspend_flag == 1)
     {
       at32_led_off(LED2);
       at32_led_off(LED3);
@@ -162,7 +164,7 @@ int main(void)
         __NOP();
       }
       system_clock_recover();
-      hid_suspend_flag = 0;
+      ((keyboard_type *)(otg_core_struct.dev.class_handler->pdata))->hid_suspend_flag = 0;
       at32_led_on(LED2);
       at32_led_on(LED3);
       at32_led_on(LED4);

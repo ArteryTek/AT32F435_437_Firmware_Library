@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     audio_class.h
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    usb audio class file
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -108,6 +108,9 @@ typedef struct
   uint8_t audio_spk_data[AUDIO_SPK_OUT_MAXPACKET_SIZE];
   uint8_t audio_mic_data[AUDIO_MIC_IN_MAXPACKET_SIZE];
   uint8_t audio_feed_back[AUDIO_FEEDBACK_MAXPACKET_SIZE+1];
+  
+   __IO uint16_t audio_feedback_state;
+   __IO uint8_t audio_spk_out_stage;
 }usb_audio_type;
 
 extern usbd_class_handler audio_class_handler;

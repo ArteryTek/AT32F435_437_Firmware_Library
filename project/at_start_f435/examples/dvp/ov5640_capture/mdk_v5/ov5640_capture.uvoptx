@@ -258,8 +258,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\hardware\ov5640\ov5640.c</PathWithFileName>
-      <FilenameWithoutPath>ov5640.c</FilenameWithoutPath>
+      <PathWithFileName>..\hardware\dvp\dvp.c</PathWithFileName>
+      <FilenameWithoutPath>dvp.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -270,8 +270,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\hardware\dvp\dvp.c</PathWithFileName>
-      <FilenameWithoutPath>dvp.c</FilenameWithoutPath>
+      <PathWithFileName>..\hardware\ov5640\ov5640.c</PathWithFileName>
+      <FilenameWithoutPath>ov5640.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -282,8 +282,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\hardware\lcd\xmc_lcd_ili9488.c</PathWithFileName>
-      <FilenameWithoutPath>xmc_lcd_ili9488.c</FilenameWithoutPath>
+      <PathWithFileName>..\hardware\lcd\xmc_lcd.c</PathWithFileName>
+      <FilenameWithoutPath>xmc_lcd.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

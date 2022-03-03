@@ -22,7 +22,7 @@
           <StartupFile></StartupFile>
           <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0AT32F437_4032 -FS08000000 -FL03F0000 -FP0($$Device:-AT32F437ZMT7$Flash\AT32F437_4032.FLM))</FlashDriverDll>
           <DeviceId>0</DeviceId>
-          <RegisterFile>$$Device:-</RegisterFile>
+          <RegisterFile>$$Device:-AT32F437ZMT7$Device\Include\at32f435_437.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
           <Cmp></Cmp>
           <Asm></Asm>
@@ -38,8 +38,8 @@
           <BinPath></BinPath>
           <IncludePath></IncludePath>
           <LibPath></LibPath>
-          <RegisterFilePath>AT32F437ZMT7$Device\Include\at32f435_437.h\</RegisterFilePath>
-          <DBRegisterFilePath>AT32F437ZMT7$Device\Include\at32f435_437.h\</DBRegisterFilePath>
+          <RegisterFilePath></RegisterFilePath>
+          <DBRegisterFilePath></DBRegisterFilePath>
           <TargetStatus>
             <Error>0</Error>
             <ExitCodeStop>0</ExitCodeStop>
@@ -418,19 +418,19 @@
           <GroupName>hardware</GroupName>
           <Files>
             <File>
-              <FileName>ov5640.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\hardware\ov5640\ov5640.c</FilePath>
-            </File>
-            <File>
               <FileName>dvp.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\hardware\dvp\dvp.c</FilePath>
             </File>
             <File>
-              <FileName>xmc_lcd_ili9488.c</FileName>
+              <FileName>ov5640.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\hardware\lcd\xmc_lcd_ili9488.c</FilePath>
+              <FilePath>..\hardware\ov5640\ov5640.c</FilePath>
+            </File>
+            <File>
+              <FileName>xmc_lcd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\hardware\lcd\xmc_lcd.c</FilePath>
             </File>
           </Files>
         </Group>

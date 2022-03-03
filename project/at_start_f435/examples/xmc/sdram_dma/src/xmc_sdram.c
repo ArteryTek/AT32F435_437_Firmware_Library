@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
   * @file     xmc_sdram.c
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    sdram program.    
   ******************************************************************************
   *                       Copyright notice & Disclaimer
@@ -148,7 +148,7 @@ void sdram_init(void)
   
   sdram_init_struct.sdram_bank                 = XMC_SDRAM_BANK1;
   sdram_init_struct.internel_banks             = XMC_INBK_4;
-  sdram_init_struct.clkdiv                     = XMC_CLKDIV_2;
+  sdram_init_struct.clkdiv                     = XMC_CLKDIV_3;
   sdram_init_struct.write_protection           = FALSE;
   sdram_init_struct.burst_read                 = FALSE;
   sdram_init_struct.read_delay                 = XMC_READ_DELAY_1;

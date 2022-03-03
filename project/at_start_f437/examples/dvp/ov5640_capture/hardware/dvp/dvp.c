@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     dvp.c
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    dvp program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -26,7 +26,7 @@
 
 #include "at32f435_437.h"
 #include "dvp.h"
-#include "xmc_lcd_ili9488.h"
+#include "xmc_lcd.h"
 #include "ov5640.h"
 
 /** @addtogroup AT32F437_periph_examples
@@ -96,44 +96,32 @@ void dvp_io_init(void)
   crm_periph_clock_enable(CRM_DVP_PERIPH_CLOCK, TRUE);
   crm_periph_clock_enable(CRM_GPIOA_PERIPH_CLOCK, TRUE);
   crm_periph_clock_enable(CRM_GPIOB_PERIPH_CLOCK, TRUE);
-  crm_periph_clock_enable(CRM_GPIOC_PERIPH_CLOCK, TRUE);
-  crm_periph_clock_enable(CRM_GPIOD_PERIPH_CLOCK, TRUE);
   crm_periph_clock_enable(CRM_GPIOE_PERIPH_CLOCK, TRUE);
-  crm_periph_clock_enable(CRM_GPIOG_PERIPH_CLOCK, TRUE);
 
-  gpio_pin_mux_config(GPIOA, GPIO_PINS_SOURCE4,  GPIO_MUX_13);
-  gpio_pin_mux_config(GPIOA, GPIO_PINS_SOURCE6,  GPIO_MUX_13);
-  gpio_pin_mux_config(GPIOB, GPIO_PINS_SOURCE3,  GPIO_MUX_13);
-  gpio_pin_mux_config(GPIOC, GPIO_PINS_SOURCE6,  GPIO_MUX_13);
-  gpio_pin_mux_config(GPIOC, GPIO_PINS_SOURCE7,  GPIO_MUX_13);
-  gpio_pin_mux_config(GPIOC, GPIO_PINS_SOURCE8,  GPIO_MUX_13);
-  gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE3,  GPIO_MUX_13);
-  gpio_pin_mux_config(GPIOE, GPIO_PINS_SOURCE5,  GPIO_MUX_13);
-  gpio_pin_mux_config(GPIOE, GPIO_PINS_SOURCE6,  GPIO_MUX_13);
-  gpio_pin_mux_config(GPIOG, GPIO_PINS_SOURCE9,  GPIO_MUX_13);
-  gpio_pin_mux_config(GPIOG, GPIO_PINS_SOURCE11, GPIO_MUX_13);
+  gpio_pin_mux_config(GPIOA, GPIO_PINS_SOURCE4,  GPIO_MUX_13);//HS
+  gpio_pin_mux_config(GPIOA, GPIO_PINS_SOURCE6,  GPIO_MUX_13);//PCLK
+  gpio_pin_mux_config(GPIOA, GPIO_PINS_SOURCE9,  GPIO_MUX_13);//D0
+  gpio_pin_mux_config(GPIOA, GPIO_PINS_SOURCE10,  GPIO_MUX_13);//D1
+  gpio_pin_mux_config(GPIOA, GPIO_PINS_SOURCE11,  GPIO_MUX_13);//D2
+  gpio_pin_mux_config(GPIOA, GPIO_PINS_SOURCE12, GPIO_MUX_13);//D3
+  gpio_pin_mux_config(GPIOB, GPIO_PINS_SOURCE4,  GPIO_MUX_13);//D5
+  gpio_pin_mux_config(GPIOB, GPIO_PINS_SOURCE7,  GPIO_MUX_13);//VS
+  gpio_pin_mux_config(GPIOB, GPIO_PINS_SOURCE9,  GPIO_MUX_13);//D7
+  gpio_pin_mux_config(GPIOE, GPIO_PINS_SOURCE4,  GPIO_MUX_13);//D4
+  gpio_pin_mux_config(GPIOE, GPIO_PINS_SOURCE5,  GPIO_MUX_13);//D6
 
-  gpio_initure.gpio_pins = GPIO_PINS_4 | GPIO_PINS_6;
+  gpio_initure.gpio_pins = GPIO_PINS_4 | GPIO_PINS_6 | GPIO_PINS_9 | GPIO_PINS_10 | GPIO_PINS_11 | GPIO_PINS_12;
   gpio_initure.gpio_mode = GPIO_MODE_MUX;
   gpio_initure.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
   gpio_initure.gpio_pull = GPIO_PULL_UP;
   gpio_initure.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
   gpio_init(GPIOA, &gpio_initure);
 
-  gpio_initure.gpio_pins = GPIO_PINS_3;
+  gpio_initure.gpio_pins = GPIO_PINS_4 | GPIO_PINS_7 | GPIO_PINS_9;
   gpio_init(GPIOB, &gpio_initure);
 
-  gpio_initure.gpio_pins = GPIO_PINS_6 | GPIO_PINS_7 | GPIO_PINS_8;
-  gpio_init(GPIOC, &gpio_initure);
-
-  gpio_initure.gpio_pins = GPIO_PINS_3;
-  gpio_init(GPIOD, &gpio_initure);
-
-  gpio_initure.gpio_pins = GPIO_PINS_5 | GPIO_PINS_6;
+  gpio_initure.gpio_pins = GPIO_PINS_4 | GPIO_PINS_5;
   gpio_init(GPIOE, &gpio_initure);
-
-  gpio_initure.gpio_pins = GPIO_PINS_9 | GPIO_PINS_11;
-  gpio_init(GPIOG, &gpio_initure);
 }
 
 /**
@@ -187,7 +175,7 @@ void dvp_dma_init(uint32_t mem0addr, uint32_t mem1addr, uint16_t memsize)
   */
 void dvp_start(void)
 {
-  lcd_windows_set(0, 0, LCD_W, LCD_H);
+  lcd_struct->lcd_setblock(0, 0, LCD_W, LCD_H);
   edma_stream_enable(EDMA_STREAM4, TRUE);
   dvp_capture_enable(TRUE);
 }
@@ -223,7 +211,7 @@ void DVP_IRQHandler(void)
   */
 void dvp_frame_done(void)
 {
-  lcd_windows_set(0, 0, LCD_W, LCD_H);
+  lcd_struct->lcd_setblock(0, 0, LCD_W, LCD_H);
   ov_frame++;
 }
 
@@ -237,20 +225,6 @@ void EDMA_Stream4_IRQHandler(void)
   if(edma_flag_get(EDMA_FDT4_FLAG) != RESET)
   {
     edma_flag_clear(EDMA_FDT4_FLAG);
-  }
-}
-
-/**
-  * @brief  edma stream4 irq handler
-  * @param  none
-  * @retval none
-  */
-void EDMA_Stream1_IRQHandler(void)
-{
-  if(edma_flag_get(EDMA_FDT1_FLAG) != RESET)
-  {
-    edma_flag_clear(EDMA_FDT1_FLAG);
-    edma_stream_enable(EDMA_STREAM1, TRUE);
   }
 }
 

@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -73,8 +73,8 @@ static void tmr1_config(void)
 
   crm_periph_clock_enable(CRM_TMR1_PERIPH_CLOCK, TRUE);
 
-  /* (systemclock / 28800) / 10000 = 1Hz(1s) */
-  tmr_base_init(TMR1, 10000, 28800);
+  /* (systemclock / (system_core_clock/10000)) / 10000 = 1Hz(1s) */
+  tmr_base_init(TMR1, 10000-1, system_core_clock/10000-1);
   tmr_cnt_dir_set(TMR1, TMR_COUNT_UP);
   tmr_clock_source_div_set(TMR1, TMR_CLOCK_DIV1);
   tmr_interrupt_enable(TMR1, TMR_OVF_INT, TRUE);
@@ -128,7 +128,6 @@ int main(void)
   at32_led_on(LED3);
   at32_led_on(LED4);
   tmr1_config();
-  /* configure pa0 in interrupt mode */
   exint_line4_config();
   tmr_counter_enable(TMR1, TRUE);
   while(1)

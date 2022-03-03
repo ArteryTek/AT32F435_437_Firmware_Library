@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     usbh_msc_bot_scsi.h
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    usb host msc bulk-only transfer and scsi header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -84,7 +84,8 @@ typedef enum
   BOT_STATE_DATA_OUT_WAIT,
   BOT_STATE_RECV_CSW,
   BOT_STATE_RECV_CSW_WAIT,
-  BOT_STATE_ERROR,
+  BOT_STATE_ERROR_IN,
+  BOT_STATE_ERROR_OUT,
   BOT_STATE_COMPLETE
 }msc_bot_state_type;
 

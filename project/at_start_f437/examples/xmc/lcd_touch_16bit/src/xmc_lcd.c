@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     xmc_lcd.c
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    xmc_lcd program file
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -60,101 +60,65 @@ void xmc_init(void)
   xmc_norsram_timing_init_type rw_timing_struct, w_timing_struct;
   
   /* enable the gpio clock */
-  crm_periph_clock_enable(CRM_GPIOB_PERIPH_CLOCK, TRUE);
+//  crm_periph_clock_enable(CRM_GPIOB_PERIPH_CLOCK, TRUE);
   crm_periph_clock_enable(CRM_GPIOC_PERIPH_CLOCK, TRUE);
   crm_periph_clock_enable(CRM_GPIOD_PERIPH_CLOCK, TRUE);
   crm_periph_clock_enable(CRM_GPIOE_PERIPH_CLOCK, TRUE);
-  crm_periph_clock_enable(CRM_GPIOF_PERIPH_CLOCK, TRUE);
+//  crm_periph_clock_enable(CRM_GPIOF_PERIPH_CLOCK, TRUE);
   
   /* enable the xmc clock */
   crm_periph_clock_enable(CRM_XMC_PERIPH_CLOCK, TRUE);
   
   /*-- gpio configuration ------------------------------------------------------*/
-  gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE4, GPIO_MUX_12);
-  gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE5, GPIO_MUX_12);
-  gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE7, GPIO_MUX_12);
-  gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE0, GPIO_MUX_12);
-  gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE1, GPIO_MUX_12);
+  gpio_pin_mux_config(GPIOC, GPIO_PINS_SOURCE2, GPIO_MUX_14);
+  gpio_pin_mux_config(GPIOC, GPIO_PINS_SOURCE4, GPIO_MUX_14); 
+  gpio_pin_mux_config(GPIOC, GPIO_PINS_SOURCE5, GPIO_MUX_14); 
+  gpio_pin_mux_config(GPIOC, GPIO_PINS_SOURCE11, GPIO_MUX_14);
+  gpio_pin_mux_config(GPIOC, GPIO_PINS_SOURCE12, GPIO_MUX_14);
+  gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE5, GPIO_MUX_10); 
   gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE8, GPIO_MUX_12);
   gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE9, GPIO_MUX_12);
   gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE10, GPIO_MUX_12);
   gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE14, GPIO_MUX_12);
-  gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE15, GPIO_MUX_12);
+  gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE15, GPIO_MUX_12);  
+  
   gpio_pin_mux_config(GPIOE, GPIO_PINS_SOURCE7, GPIO_MUX_12);
   gpio_pin_mux_config(GPIOE, GPIO_PINS_SOURCE8, GPIO_MUX_12);
   gpio_pin_mux_config(GPIOE, GPIO_PINS_SOURCE9, GPIO_MUX_12);
-  gpio_pin_mux_config(GPIOE, GPIO_PINS_SOURCE10, GPIO_MUX_12);
-  gpio_pin_mux_config(GPIOE, GPIO_PINS_SOURCE11, GPIO_MUX_12);
+  gpio_pin_mux_config(GPIOE, GPIO_PINS_SOURCE10, GPIO_MUX_12); 
+  gpio_pin_mux_config(GPIOE, GPIO_PINS_SOURCE11, GPIO_MUX_12);    
   gpio_pin_mux_config(GPIOE, GPIO_PINS_SOURCE12, GPIO_MUX_12);
+  gpio_pin_mux_config(GPIOE, GPIO_PINS_SOURCE13, GPIO_MUX_12);
   gpio_pin_mux_config(GPIOE, GPIO_PINS_SOURCE14, GPIO_MUX_12);
-  gpio_pin_mux_config(GPIOE, GPIO_PINS_SOURCE15, GPIO_MUX_12);
-  gpio_pin_mux_config(GPIOF, GPIO_PINS_SOURCE0, GPIO_MUX_12);
+  gpio_pin_mux_config(GPIOE, GPIO_PINS_SOURCE15, GPIO_MUX_12);  
   
-  /* ne1/nwe/noe lines configuration */
-  gpio_init_struct.gpio_pins = GPIO_PINS_4 | GPIO_PINS_5 | GPIO_PINS_7 ;
-  gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
-  gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
-  gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
-  gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
-  gpio_init(GPIOD, &gpio_init_struct);
-  
-  /* a0 lines configuration */
-  gpio_init_struct.gpio_pins = GPIO_PINS_0;
-  gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
-  gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
-  gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
-  gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
-  gpio_init(GPIOF, &gpio_init_struct);
-  
-  /* data lines configuration */
-  gpio_init_struct.gpio_pins = GPIO_PINS_0 | GPIO_PINS_1 | GPIO_PINS_8 | GPIO_PINS_9 | GPIO_PINS_10 | GPIO_PINS_14 | GPIO_PINS_15;
-  gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
-  gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
-  gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
-  gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
-  gpio_init(GPIOD, &gpio_init_struct);
-  
-  gpio_init_struct.gpio_pins = GPIO_PINS_7 | GPIO_PINS_8 | GPIO_PINS_9 | GPIO_PINS_10 | GPIO_PINS_11 | GPIO_PINS_12 | GPIO_PINS_13 | GPIO_PINS_14 | GPIO_PINS_15;
-  gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
-  gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
-  gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
-  gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
-  gpio_init(GPIOE, &gpio_init_struct);
-  
-  /* lcd reset lines configuration */
-  gpio_init_struct.gpio_pins = GPIO_PINS_9;
-  gpio_init_struct.gpio_mode = GPIO_MODE_OUTPUT;
-  gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
-  gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
-  gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
-  gpio_init(GPIOB, &gpio_init_struct);
-  
-  /* lcd bl lines configuration */
-  gpio_init_struct.gpio_pins = GPIO_PINS_8;
-  gpio_init_struct.gpio_mode = GPIO_MODE_OUTPUT;
-  gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
-  gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
-  gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
-  gpio_init(GPIOB, &gpio_init_struct);
-  
-  /* lcd rs/cs/wr/rd lines configuration */
-  gpio_init_struct.gpio_pins = GPIO_PINS_5;
+  /* lcd data lines configuration */  
+  gpio_init_struct.gpio_pins = GPIO_PINS_2 | GPIO_PINS_4 | GPIO_PINS_5  | GPIO_PINS_11| GPIO_PINS_12;
   gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
   gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
   gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
   gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
   gpio_init(GPIOC, &gpio_init_struct);
   
-  gpio_init_struct.gpio_pins = GPIO_PINS_2 | GPIO_PINS_11 | GPIO_PINS_7;
-  gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
+  
+  gpio_init_struct.gpio_pins =  GPIO_PINS_5 | GPIO_PINS_8 | GPIO_PINS_9  | GPIO_PINS_10 | GPIO_PINS_14 | GPIO_PINS_15;
+  gpio_init(GPIOD, &gpio_init_struct);
+  
+  gpio_init_struct.gpio_pins =  GPIO_PINS_7 | GPIO_PINS_8 | GPIO_PINS_9 | GPIO_PINS_10 | GPIO_PINS_11 | GPIO_PINS_12 | GPIO_PINS_13 | GPIO_PINS_14 | GPIO_PINS_15;
+  gpio_init(GPIOE, &gpio_init_struct);
+  
+  /* lcd bl lines configuration */
+  gpio_init_struct.gpio_pins = GPIO_PINS_0;
+  gpio_init_struct.gpio_mode = GPIO_MODE_OUTPUT;
   gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
   gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
   gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
-  gpio_init(GPIOD, &gpio_init_struct);
+  gpio_init(GPIOC, &gpio_init_struct);
+  
 
   /*-- xmc configuration ------------------------------------------------------*/
   xmc_norsram_default_para_init(&xmc_norsram_init_struct);
-  xmc_norsram_init_struct.subbank = XMC_BANK1_NOR_SRAM1;
+  xmc_norsram_init_struct.subbank = XMC_BANK1_NOR_SRAM4;
   xmc_norsram_init_struct.data_addr_multiplex = XMC_DATA_ADDR_MUX_DISABLE;
   xmc_norsram_init_struct.device = XMC_DEVICE_SRAM;
   xmc_norsram_init_struct.bus_type = XMC_BUSTYPE_16_BITS;
@@ -171,7 +135,7 @@ void xmc_init(void)
   
   /* timing configuration */
   xmc_norsram_timing_default_para_init(&rw_timing_struct, &w_timing_struct);
-  rw_timing_struct.subbank = XMC_BANK1_NOR_SRAM1;
+  rw_timing_struct.subbank = XMC_BANK1_NOR_SRAM4;
   rw_timing_struct.write_timing_enable = XMC_WRITE_TIMING_ENABLE;
   rw_timing_struct.addr_setup_time = 0x2;
   rw_timing_struct.addr_hold_time = 0x0;
@@ -180,7 +144,7 @@ void xmc_init(void)
   rw_timing_struct.clk_psc = 0x0;
   rw_timing_struct.data_latency_time = 0x0;
   rw_timing_struct.mode = XMC_ACCESS_MODE_A;
-  w_timing_struct.subbank = XMC_BANK1_NOR_SRAM1;
+  w_timing_struct.subbank = XMC_BANK1_NOR_SRAM4;
   w_timing_struct.write_timing_enable = XMC_WRITE_TIMING_ENABLE;
   w_timing_struct.addr_setup_time = 0x2;
   w_timing_struct.addr_hold_time = 0x0;
@@ -192,7 +156,7 @@ void xmc_init(void)
   xmc_nor_sram_timing_config(&rw_timing_struct, &w_timing_struct);
   
   /* enable xmc_bank1_nor_sram4 */
-  xmc_nor_sram_enable(XMC_BANK1_NOR_SRAM1, TRUE);
+  xmc_nor_sram_enable(XMC_BANK1_NOR_SRAM4, TRUE);
 }
 
 /**
@@ -206,8 +170,6 @@ void lcd_init(void)
 {
   /* init xmc */
   lcd_struct->xmc_init();
-  
-  LCD_RESET_HIGH;
   
   delay_ms(50);
   

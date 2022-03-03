@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -196,8 +196,8 @@ int main(void)
   usbd_init(&otg_core_struct,
             USB_FULL_SPEED_CORE_ID,
             USB_ID,
-            &class_handler,
-            &desc_handler);
+            &cdc_class_handler,
+            &cdc_desc_handler);
 
 
   /* acc config */
@@ -255,7 +255,7 @@ int main(void)
       if(data_len == 0)
         send_zero_packet = 0;
 
-      timeout = 50000;
+      timeout = 5000000;
       do
       {
         /* send data to host */

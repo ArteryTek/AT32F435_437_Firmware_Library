@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     ov5640.c
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    header file of ov5640 program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -43,8 +43,8 @@
 
 #define LIGHT_SWITCH        0
 
-#define OV5640_RST_HIGH  gpio_bits_set(GPIOD, GPIO_PINS_6);
-#define OV5640_RST_LOW   gpio_bits_reset(GPIOD, GPIO_PINS_6);
+#define OV5640_RST_HIGH  gpio_bits_set(GPIOC, GPIO_PINS_3);
+#define OV5640_RST_LOW   gpio_bits_reset(GPIOC, GPIO_PINS_3);
 
 #define OV5640_ID                        ((uint16_t)0x5640)  /*!< ov5640 id                */
 #define OV5640_ADDR                      ((uint16_t)0x0078)  /*!< ov5640 address           */

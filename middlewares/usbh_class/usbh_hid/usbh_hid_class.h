@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     usbh_hid_class.h
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    usb host hid class header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -127,7 +127,7 @@ typedef struct
   uint32_t buffer[16];
 }usbh_hid_type;
 
-extern usbh_class_handler_type uhost_class_handler;
+extern usbh_class_handler_type uhost_hid_class_handler;
 
 
 /**

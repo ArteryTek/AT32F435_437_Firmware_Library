@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     usbh_int.c
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    usb host interrupt request
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -133,11 +133,8 @@ void usbh_sof_handler(usbh_core_type *uhost)
 void usbh_disconnect_handler(usbh_core_type *uhost)
 {
   otg_global_type *usbx = uhost->usb_reg;
-  otg_host_type *usb_host = OTG_HOST(usbx);
+
   uint8_t i_index;
-  
-  usb_host->hprt &= ~(USB_OTG_HPRT_PRTENA | USB_OTG_HPRT_PRTENCHNG | 
-               USB_OTG_HPRT_PRTOVRCACT | USB_OTG_HPRT_PRTCONDET);
   
   usb_host_disable(usbx);
   
@@ -225,10 +222,24 @@ void usbh_hch_in_handler(usbh_core_type *uhost, uint8_t chn)
     else if(uhost->hch[chn].state == HCH_XACTERR || 
             uhost->hch[chn].state == HCH_DATATGLERR)
     {
-      uhost->urb_state[chn] = URB_ERROR;
-      
+      uhost->err_cnt[chn] ++;
+      if(uhost->err_cnt[chn] > 3)
+      {
+        uhost->urb_state[chn] = URB_ERROR;
+        uhost->err_cnt[chn] = 0;
+      }
+      else
+      {
+        uhost->urb_state[chn] = URB_NOTREADY;
+      }
       usb_chh->hcchar_bit.chdis = FALSE;
       usb_chh->hcchar_bit.chena = TRUE;
+    }
+    else if(uhost->hch[chn].state == HCH_NAK)
+    {
+      usb_chh->hcchar_bit.chdis = FALSE;
+      usb_chh->hcchar_bit.chena = TRUE;
+      uhost->urb_state[chn] = URB_NOTREADY;
     }
     usb_chh->hcint = USB_OTG_HC_CHHLTD_FLAG;  
   }
@@ -237,18 +248,22 @@ void usbh_hch_in_handler(usbh_core_type *uhost, uint8_t chn)
     usb_chh->hcintmsk_bit.chhltdmsk = TRUE;
     uhost->hch[chn].state = HCH_XACTERR;
     usb_hch_halt(usbx, chn);
+    uhost->err_cnt[chn] ++;
     usb_chh->hcint = USB_OTG_HC_XACTERR_FLAG;  
   }
   else if(hcint_value & USB_OTG_HC_NAK_FLAG)
   {
     if(usb_chh->hcchar_bit.eptype == EPT_INT_TYPE)
     {
+      uhost->err_cnt[chn] = 0;
       usb_chh->hcintmsk_bit.chhltdmsk = TRUE;
       usb_hch_halt(usbx, chn);
     }
     else if(usb_chh->hcchar_bit.eptype == EPT_BULK_TYPE ||
       usb_chh->hcchar_bit.eptype == EPT_CONTROL_TYPE)
     {
+      uhost->err_cnt[chn] = 0;
+      usb_chh->hcintmsk_bit.chhltdmsk = TRUE;
       usb_chh->hcchar_bit.chdis = FALSE;
       usb_chh->hcchar_bit.chena = TRUE;
     }
@@ -310,7 +325,8 @@ void usbh_hch_out_handler(usbh_core_type *uhost, uint8_t chn)
     if(uhost->hch[chn].state == HCH_XFRC)
     {
       uhost->urb_state[chn] = URB_DONE;
-      if(uhost->hch[chn].ept_type == EPT_BULK_TYPE)
+      if(uhost->hch[chn].ept_type == EPT_BULK_TYPE || 
+        uhost->hch[chn].ept_type == EPT_INT_TYPE)
       {
         uhost->hch[chn].toggle_out ^= 1;
       }
@@ -326,7 +342,16 @@ void usbh_hch_out_handler(usbh_core_type *uhost, uint8_t chn)
     else if(uhost->hch[chn].state == HCH_XACTERR || 
             uhost->hch[chn].state == HCH_DATATGLERR)
     {
-      uhost->urb_state[chn]  = URB_ERROR;
+      uhost->err_cnt[chn] ++;
+      if(uhost->err_cnt[chn] > 3)
+      {
+        uhost->urb_state[chn] = URB_ERROR;
+        uhost->err_cnt[chn] = 0;
+      }
+      else
+      {
+        uhost->urb_state[chn] = URB_NOTREADY;
+      }
       
       usb_chh->hcchar_bit.chdis = FALSE;
       usb_chh->hcchar_bit.chena = TRUE;
@@ -336,6 +361,7 @@ void usbh_hch_out_handler(usbh_core_type *uhost, uint8_t chn)
   else if( hcint_value & USB_OTG_HC_XACTERR_FLAG)
   {
     usb_chh->hcintmsk_bit.chhltdmsk = TRUE;
+    uhost->err_cnt[chn] ++;
     uhost->hch[chn].state = HCH_XACTERR;
     usb_hch_halt(usbx, chn);
     usb_chh->hcint = USB_OTG_HC_XACTERR_FLAG | USB_OTG_HC_NAK_FLAG;  
@@ -343,6 +369,7 @@ void usbh_hch_out_handler(usbh_core_type *uhost, uint8_t chn)
   else if( hcint_value & USB_OTG_HC_NAK_FLAG)
   {
     usb_chh->hcintmsk_bit.chhltdmsk = TRUE;
+    uhost->err_cnt[chn] = 0;
     usb_hch_halt(usbx, chn);
     uhost->hch[chn].state = HCH_NAK;
     usb_chh->hcint = USB_OTG_HC_NAK_FLAG;  
@@ -477,8 +504,7 @@ void usbh_port_handler(usbh_core_type *uhost)
     else
     {
       /* clean up hprt */
-      usb_host->hprt &= ~(USB_OTG_HPRT_PRTENA | USB_OTG_HPRT_PRTENCHNG | 
-               USB_OTG_HPRT_PRTOVRCACT | USB_OTG_HPRT_PRTCONDET);
+      uhost->port_enable = 0;
     }
   }
   

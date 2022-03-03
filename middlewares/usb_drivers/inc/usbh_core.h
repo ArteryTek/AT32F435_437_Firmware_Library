@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     usbh_core.h
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    usb host core header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -240,11 +240,11 @@ typedef struct
   uint8_t                                hch_out;                        /*!< out channel number */
   uint8_t                                ept0_size;                      /*!< endpoint 0 size */
   uint8_t                                *buffer;                        /*!< endpoint 0 transfer buffer */
+  usb_setup_type                         setup;                          /*!< control setup type */
   uint16_t                               len;                            /*!< transfer length */
   uint8_t                                err_cnt;                        /*!< error counter */
-  uint16_t                               timer;                          /*!< transfer timer */
+  uint32_t                               timer;                          /*!< transfer timer */
   ctrl_sts_type                          sts;                            /*!< control transfer status */
-  usb_setup_type                         setup;                          /*!< control setup type */
   ctrl_ept0_sts_type                     state;                          /*!< endpoint 0 state */
 } usbh_ctrl_type;
 
@@ -345,7 +345,7 @@ void usbh_hc_open(usbh_core_type *uhost,
                    uint8_t ept_num, 
                    uint8_t dev_address,
                    uint8_t type, 
-                   uint8_t maxpacket, 
+                   uint16_t maxpacket, 
                    uint8_t speed);
 void usbh_active_vbus(usbh_core_type *uhost, confirm_state state);
 

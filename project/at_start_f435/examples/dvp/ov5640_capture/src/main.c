@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -27,7 +27,7 @@
 #include "at32f435_437.h"
 #include "at32f435_437_board.h"
 #include "at32f435_437_clock.h"
-#include "xmc_lcd_ili9488.h"
+#include "xmc_lcd.h"
 #include "ov5640.h"
 #include "dvp.h"
 
@@ -39,6 +39,7 @@
   * @{
   */
 
+uint16_t point_color;
 void ov5640_capture(void);
 
 /**
@@ -48,12 +49,14 @@ void ov5640_capture(void);
   */
 int main(void)
 {
+  lcd_struct = &lcd_dev_struct;
   system_clock_config();
   
   at32_board_init();
   nvic_priority_group_config(NVIC_PRIORITY_GROUP_4);
-  lcd_init();
-  lcd_clear(WHITE);
+  lcd_struct->lcd_init();
+  point_color = WHITE;
+  lcd_struct->lcd_clear(point_color);
 
   lcd_string_show(30, 50, 200, 16, 16, (uint8_t *)"Artery AT32F435/F437");
   lcd_string_show(30, 70, 200, 16, 16, (uint8_t *)"OV5640 TEST");

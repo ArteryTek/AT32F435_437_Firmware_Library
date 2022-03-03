@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.4
-  * @date     2021-12-31
+  * @version  v2.0.5
+  * @date     2022-02-11
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -170,8 +170,9 @@ int main(void)
   /* transfer procedure:the "BUFFER_SIZE" data transfer */
   while(tx_index < BUFFER_SIZE)
   {
-    while(spi_i2s_flag_get(SPI3, SPI_I2S_TDBE_FLAG) == RESET);
+    while(spi_i2s_flag_get(SPI2, SPI_I2S_TDBE_FLAG) == RESET);
     spi_i2s_data_transmit(SPI2, spi2_buffer_tx[tx_index]);
+    while(spi_i2s_flag_get(SPI3, SPI_I2S_TDBE_FLAG) == RESET);
     spi_i2s_data_transmit(SPI3, spi3_buffer_tx[tx_index++]);
     while(spi_i2s_flag_get(SPI2, SPI_I2S_RDBF_FLAG) == RESET);
     spi2_buffer_rx[rx_index] = spi_i2s_data_receive(SPI2);
@@ -205,8 +206,9 @@ int main(void)
   /* transfer procedure:the "BUFFER_SIZE" data transfer */
   while(tx_index < BUFFER_SIZE)
   {
-    while(spi_i2s_flag_get(SPI2, SPI_I2S_TDBE_FLAG) == RESET);
+    while(spi_i2s_flag_get(SPI3, SPI_I2S_TDBE_FLAG) == RESET);
     spi_i2s_data_transmit(SPI3, spi3_buffer_tx[tx_index]);
+    while(spi_i2s_flag_get(SPI2, SPI_I2S_TDBE_FLAG) == RESET);
     spi_i2s_data_transmit(SPI2, spi2_buffer_tx[tx_index++]);
     while(spi_i2s_flag_get(SPI3, SPI_I2S_RDBF_FLAG) == RESET);
     spi3_buffer_rx[rx_index] = spi_i2s_data_receive(SPI3);
