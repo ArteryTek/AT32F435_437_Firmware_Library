@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_crc.h
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    at32f435_437 crc header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -74,7 +74,7 @@ typedef enum
 typedef struct
 {
   /**
-    * @brief crc dt register, offset:0x00 
+    * @brief crc dt register, offset:0x00
     */
   union
   {
@@ -86,7 +86,7 @@ typedef struct
   };
 
   /**
-    * @brief crc cdt register, offset:0x04 
+    * @brief crc cdt register, offset:0x04
     */
   union
   {
@@ -99,7 +99,7 @@ typedef struct
   };
 
   /**
-    * @brief crc ctrl register, offset:0x08 
+    * @brief crc ctrl register, offset:0x08
     */
   union
   {
@@ -120,7 +120,7 @@ typedef struct
   __IO uint32_t reserved1;
 
   /**
-    * @brief crc idt register, offset:0x10 
+    * @brief crc idt register, offset:0x10
     */
   union
   {

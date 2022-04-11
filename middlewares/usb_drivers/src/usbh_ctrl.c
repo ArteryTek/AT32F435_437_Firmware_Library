@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     usbh_ctrl.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    usb host control request
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -30,17 +30,17 @@
 /** @addtogroup AT32F435_437_middlewares_usbh_drivers
   * @{
   */
-  
+
 /** @defgroup USBH_drivers_control
   * @brief usb host drivers control
   * @{
-  */  
+  */
 
 /** @defgroup USBH_ctrl_private_functions
   * @{
   */
-  
-/* control timeout 5s */  
+
+/* control timeout 5s */
 #define CTRL_TIMEOUT          5000
 
 /**
@@ -56,7 +56,7 @@ usb_sts_type usbh_ctrl_send_setup(usbh_core_type *uhost, uint8_t *buffer, uint8_
   uhost->hch[hc_num].data_pid = HCH_PID_SETUP;
   uhost->hch[hc_num].trans_buf = buffer;
   uhost->hch[hc_num].trans_len = 8; /*setup */
-  
+
   return usbh_in_out_request(uhost, hc_num);
 }
 
@@ -68,14 +68,14 @@ usb_sts_type usbh_ctrl_send_setup(usbh_core_type *uhost, uint8_t *buffer, uint8_
   * @param  hc_num: channel number
   * @retval status: usb_sts_type status
   */
-usb_sts_type usbh_ctrl_recv_data(usbh_core_type *uhost, uint8_t *buffer, 
+usb_sts_type usbh_ctrl_recv_data(usbh_core_type *uhost, uint8_t *buffer,
                             uint8_t length, uint16_t hc_num)
 {
   uhost->hch[hc_num].dir = 1;
   uhost->hch[hc_num].data_pid = HCH_PID_DATA1;
   uhost->hch[hc_num].trans_buf = buffer;
-  uhost->hch[hc_num].trans_len = length; 
-  
+  uhost->hch[hc_num].trans_len = length;
+
   return usbh_in_out_request(uhost, hc_num);
 }
 
@@ -87,13 +87,13 @@ usb_sts_type usbh_ctrl_recv_data(usbh_core_type *uhost, uint8_t *buffer,
   * @param  hc_num: channel number
   * @retval status: usb_sts_type status
   */
-usb_sts_type usbh_ctrl_send_data(usbh_core_type *uhost, uint8_t *buffer, 
+usb_sts_type usbh_ctrl_send_data(usbh_core_type *uhost, uint8_t *buffer,
                             uint8_t length, uint16_t hc_num)
 {
   uhost->hch[hc_num].dir = 0;
   uhost->hch[hc_num].trans_buf = buffer;
   uhost->hch[hc_num].trans_len = length;
-  
+
   if(length == 0)
   {
     uhost->hch[uhost->ctrl.hch_out].toggle_out = 1;
@@ -116,7 +116,7 @@ usb_sts_type usbh_ctrl_send_data(usbh_core_type *uhost, uint8_t *buffer,
   */
 usb_sts_type usbh_ctrl_setup_handler(usbh_core_type *uhost)
 {
-  usbh_ctrl_send_setup(uhost, (uint8_t *)(&uhost->ctrl.setup), 
+  usbh_ctrl_send_setup(uhost, (uint8_t *)(&uhost->ctrl.setup),
                        uhost->ctrl.hch_out);
   uhost->ctrl.state = CONTROL_SETUP_WAIT;
   return USB_OK;
@@ -190,11 +190,11 @@ usb_sts_type usbh_ctrl_setup_wait_handler(usbh_core_type *uhost, uint32_t *timeo
 usb_sts_type usbh_ctrl_data_in_handler(usbh_core_type *uhost)
 {
   usb_sts_type status = USB_OK;
-  usbh_ctrl_recv_data(uhost, uhost->ctrl.buffer, 
+  usbh_ctrl_recv_data(uhost, uhost->ctrl.buffer,
                       uhost->ctrl.len,
                       uhost->ctrl.hch_in);
   uhost->ctrl.state = CONTROL_DATA_IN_WAIT;
-  
+
   return status;
 }
 
@@ -209,7 +209,7 @@ usb_sts_type usbh_ctrl_data_in_wait_handler(usbh_core_type *uhost, uint32_t time
   usb_sts_type status = USB_OK;
   urb_sts_type urb_state;
   urb_state = uhost->urb_state[uhost->ctrl.hch_in];
-  
+
   if(urb_state == URB_DONE)
   {
     uhost->ctrl.state = CONTROL_STATUS_OUT;
@@ -231,7 +231,7 @@ usb_sts_type usbh_ctrl_data_in_wait_handler(usbh_core_type *uhost, uint32_t time
       uhost->ctrl.sts = CTRL_XACTERR;
       status = USB_ERROR;
     }
-  
+
   }
   return status;
 }
@@ -245,12 +245,12 @@ usb_sts_type usbh_ctrl_data_out_handler(usbh_core_type *uhost)
 {
   usb_sts_type status = USB_OK;
   uhost->hch[uhost->ctrl.hch_out].toggle_out = 1;
-  
-  usbh_ctrl_send_data(uhost, uhost->ctrl.buffer, 
+
+  usbh_ctrl_send_data(uhost, uhost->ctrl.buffer,
                       uhost->ctrl.len,
                       uhost->ctrl.hch_out);
   uhost->ctrl.state = CONTROL_DATA_OUT_WAIT;
-  
+
   return status;
 }
 
@@ -305,8 +305,8 @@ usb_sts_type usbh_ctrl_status_in_handler(usbh_core_type *uhost)
   usbh_ctrl_recv_data(uhost, 0, 0,
                       uhost->ctrl.hch_in);
   uhost->ctrl.state = CONTROL_STATUS_IN_WAIT;
-  
-  
+
+
   return status;
 }
 
@@ -356,10 +356,10 @@ usb_sts_type usbh_ctrl_status_out_handler(usbh_core_type *uhost)
 {
   usb_sts_type status = USB_OK;
   uhost->hch[uhost->ctrl.hch_out].toggle_out ^= 1;
-  
+
   usbh_ctrl_send_data(uhost, 0, 0, uhost->ctrl.hch_out);
   uhost->ctrl.state = CONTROL_STATUS_OUT_WAIT;
-  
+
   return status;
 }
 
@@ -456,50 +456,50 @@ usb_sts_type usbh_ctrl_transfer_loop(usbh_core_type *uhost)
   usb_sts_type status = USB_WAIT;
   static uint32_t timeout = 0;
   uhost->ctrl.sts = CTRL_START;
-  
+
   switch(uhost->ctrl.state)
   {
     case CONTROL_SETUP:
       usbh_ctrl_setup_handler(uhost);
       uhost->ctrl.timer = uhost->timer;
       break;
-    
+
     case CONTROL_SETUP_WAIT:
       usbh_ctrl_setup_wait_handler(uhost, &timeout);
       break;
-      
+
     case CONTROL_DATA_IN:
       usbh_ctrl_data_in_handler(uhost);
       uhost->ctrl.timer = uhost->timer;
       break;
-    
+
     case CONTROL_DATA_IN_WAIT:
       usbh_ctrl_data_in_wait_handler(uhost, timeout);
       break;
-    
+
     case CONTROL_DATA_OUT:
       usbh_ctrl_data_out_handler(uhost);
       uhost->ctrl.timer = uhost->timer;
       break;
-    
+
     case CONTROL_DATA_OUT_WAIT:
       usbh_ctrl_data_out_wait_handler(uhost, timeout);
       break;
-    
+
     case CONTROL_STATUS_IN:
       usbh_ctrl_status_in_handler(uhost);
       uhost->ctrl.timer = uhost->timer;
       break;
-    
+
     case CONTROL_STATUS_IN_WAIT:
       usbh_ctrl_status_in_wait_handler(uhost, timeout);
       break;
-    
+
     case CONTROL_STATUS_OUT:
       usbh_ctrl_status_out_handler(uhost);
       uhost->ctrl.timer = uhost->timer;
       break;
-    
+
     case CONTROL_STATUS_OUT_WAIT:
       usbh_ctrl_status_out_wait_handler(uhost, timeout);
       break;
@@ -512,11 +512,11 @@ usb_sts_type usbh_ctrl_transfer_loop(usbh_core_type *uhost)
     case CONTROL_COMPLETE:
       status = usbh_ctrl_complete_handler(uhost);
       break;
-    
+
     default:
       break;
   }
-  
+
   return status;
 }
 
@@ -550,7 +550,7 @@ usb_sts_type usbh_ctrl_request(usbh_core_type *uhost, uint8_t *buffer, uint16_t 
   * @retval status: usb_sts_type status
   */
 usb_sts_type usbh_get_descriptor(usbh_core_type *uhost, uint16_t length,
-                            uint8_t req_type, uint16_t wvalue, 
+                            uint8_t req_type, uint16_t wvalue,
                             uint8_t *buffer)
 {
   usb_sts_type status;
@@ -558,16 +558,16 @@ usb_sts_type usbh_get_descriptor(usbh_core_type *uhost, uint16_t length,
   uhost->ctrl.setup.bRequest = USB_STD_REQ_GET_DESCRIPTOR;
   uhost->ctrl.setup.wValue = wvalue;
   uhost->ctrl.setup.wLength = length;
-  
+
   if((wvalue & 0xFF00) == ((USB_DESCIPTOR_TYPE_STRING << 8) & 0xFF00))
   {
     uhost->ctrl.setup.wIndex = 0x0409;
   }
-  else  
+  else
   {
     uhost->ctrl.setup.wIndex = 0;
   }
-  
+
   status = usbh_ctrl_request(uhost, buffer, length);
   return status;
 }
@@ -582,7 +582,7 @@ usb_sts_type usbh_get_descriptor(usbh_core_type *uhost, uint16_t length,
 void usbh_parse_dev_desc(usbh_core_type *uhost, uint8_t *buffer, uint16_t length)
 {
   usbh_dev_desc_type *desc = &(uhost->dev);
-  
+
   desc->dev_desc.bLength = *(uint8_t *)(buffer + 0);
   desc->dev_desc.bDescriptorType = *(uint8_t *)(buffer + 1);
   desc->dev_desc.bcdUSB = SWAPBYTE(buffer + 2);
@@ -590,7 +590,7 @@ void usbh_parse_dev_desc(usbh_core_type *uhost, uint8_t *buffer, uint16_t length
   desc->dev_desc.bDeviceSubClass = *(uint8_t *)(buffer + 5);
   desc->dev_desc.bDeviceProtocol = *(uint8_t *)(buffer + 6);
   desc->dev_desc.bMaxPacketSize0 = *(uint8_t *)(buffer + 7);
-  
+
   if(length > 8)
   {
     desc->dev_desc.idVendor = SWAPBYTE(buffer + 8);
@@ -658,7 +658,7 @@ void usbh_parse_endpoint_desc(usb_endpoint_desc_type *ept_desc, uint8_t *buf)
   * @param  length: configure length
   * @retval status: usb_sts_type status
   */
-usb_sts_type usbh_parse_configure_desc(usbh_core_type *uhost, 
+usb_sts_type usbh_parse_configure_desc(usbh_core_type *uhost,
                                   uint8_t *buffer, uint16_t length)
 {
   usb_cfg_desc_type *cfg_desc = &(uhost->dev.cfg_desc);
@@ -668,7 +668,7 @@ usb_sts_type usbh_parse_configure_desc(usbh_core_type *uhost,
   uint16_t index_len;
   uint8_t index_intf = 0;
   uint8_t index_ept = 0;
-  
+
   desc = (usb_header_desc_type *)buffer;
   cfg_desc->cfg.bLength                      = *(uint8_t *)buffer;
   cfg_desc->cfg.bDescriptorType              = *(uint8_t *)(buffer + 1);
@@ -678,11 +678,11 @@ usb_sts_type usbh_parse_configure_desc(usbh_core_type *uhost,
   cfg_desc->cfg.iConfiguration               = *(uint8_t *)(buffer + 6);
   cfg_desc->cfg.bmAttributes                 = *(uint8_t *)(buffer + 7);
   cfg_desc->cfg.bMaxPower                    = *(uint8_t *)(buffer + 8);
-  
+
   if(length > USB_DEVICE_CFG_DESC_LEN)
   {
     index_len = USB_DEVICE_CFG_DESC_LEN;
-    
+
     while((index_intf < USBH_MAX_INTERFACE) && index_len < cfg_desc->cfg.wTotalLength)
     {
       desc = usbh_get_next_header((uint8_t *)desc, &index_len);
@@ -691,7 +691,7 @@ usb_sts_type usbh_parse_configure_desc(usbh_core_type *uhost,
         index_ept = 0;
         intf_desc = &cfg_desc->interface[index_intf].interface;
         usbh_parse_interface_desc(intf_desc, (uint8_t *)desc);
-        
+
         while(index_ept < intf_desc->bNumEndpoints && index_len < cfg_desc->cfg.wTotalLength)
         {
           desc = usbh_get_next_header((uint8_t *)desc, &index_len);
@@ -746,7 +746,7 @@ void usbh_parse_string_desc(uint8_t *src, uint8_t *dest, uint16_t length)
 {
   uint16_t len;
   uint16_t i_index;
-  
+
   if(src[1] == USB_DESCIPTOR_TYPE_STRING)
   {
     len = ((src[0] - 2) <= length ? (src[0] - 2) : length);
@@ -771,11 +771,11 @@ usb_sts_type usbh_get_device_descriptor(usbh_core_type *uhost, uint16_t length)
   usb_sts_type status = USB_WAIT;
   uint8_t bm_req;
   uint16_t wvalue;
-  
+
   bm_req = USB_REQ_RECIPIENT_DEVICE | USB_REQ_TYPE_STANDARD;
   wvalue = (USB_DESCIPTOR_TYPE_DEVICE << 8) & 0xFF00;
-  
-  status = usbh_get_descriptor(uhost, length, bm_req, 
+
+  status = usbh_get_descriptor(uhost, length, bm_req,
                                wvalue, uhost->rx_buffer);
   return status;
 }
@@ -791,13 +791,13 @@ usb_sts_type usbh_get_configure_descriptor(usbh_core_type *uhost, uint16_t lengt
   usb_sts_type status = USB_WAIT;
   uint8_t bm_req;
   uint16_t wvalue;
-  
+
   bm_req = USB_REQ_RECIPIENT_DEVICE | USB_REQ_TYPE_STANDARD;
   wvalue = (USB_DESCIPTOR_TYPE_CONFIGURATION << 8) & 0xFF00;
-  
-  status = usbh_get_descriptor(uhost, length, bm_req, 
+
+  status = usbh_get_descriptor(uhost, length, bm_req,
                                wvalue, uhost->rx_buffer);
-  
+
   return status;
 }
 
@@ -815,11 +815,11 @@ usb_sts_type usbh_get_sting_descriptor(usbh_core_type *uhost, uint8_t string_id,
   usb_sts_type status = USB_WAIT;
   uint8_t bm_req;
   uint16_t wvalue;
-  
+
   bm_req = USB_REQ_RECIPIENT_DEVICE | USB_REQ_TYPE_STANDARD;
   wvalue = (USB_DESCIPTOR_TYPE_STRING << 8) | string_id;
-  
-  status = usbh_get_descriptor(uhost, length, bm_req, 
+
+  status = usbh_get_descriptor(uhost, length, bm_req,
                                wvalue, uhost->rx_buffer);
 
   return status;
@@ -836,7 +836,7 @@ usb_sts_type usbh_set_configuration(usbh_core_type *uhost, uint16_t config)
   usb_sts_type status = USB_WAIT;
   uint8_t bm_req;
   bm_req = USB_REQ_RECIPIENT_DEVICE | USB_REQ_TYPE_STANDARD;
-  
+
   uhost->ctrl.setup.bmRequestType = USB_DIR_H2D | bm_req;
   uhost->ctrl.setup.bRequest = USB_STD_REQ_SET_CONFIGURATION;
   uhost->ctrl.setup.wValue = config;
@@ -857,7 +857,7 @@ usb_sts_type usbh_set_address(usbh_core_type *uhost, uint8_t address)
   usb_sts_type status = USB_WAIT;
   uint8_t bm_req;
   bm_req = USB_REQ_RECIPIENT_DEVICE | USB_REQ_TYPE_STANDARD;
-  
+
   uhost->ctrl.setup.bmRequestType = USB_DIR_H2D | bm_req;
   uhost->ctrl.setup.bRequest = USB_STD_REQ_SET_ADDRESS;
   uhost->ctrl.setup.wValue = (uint16_t)address;
@@ -879,7 +879,7 @@ usb_sts_type usbh_set_interface(usbh_core_type *uhost, uint8_t ept_num, uint8_t 
   usb_sts_type status = USB_WAIT;
   uint8_t bm_req;
   bm_req = USB_REQ_RECIPIENT_INTERFACE | USB_REQ_TYPE_STANDARD;
-  
+
   uhost->ctrl.setup.bmRequestType = USB_DIR_H2D | bm_req;
   uhost->ctrl.setup.bRequest = USB_STD_REQ_SET_INTERFACE;
   uhost->ctrl.setup.wValue = (uint16_t)altsetting;
@@ -901,7 +901,7 @@ usb_sts_type usbh_set_feature(usbh_core_type *uhost, uint8_t feature, uint16_t i
   usb_sts_type status = USB_WAIT;
   uint8_t bm_req;
   bm_req = USB_REQ_RECIPIENT_DEVICE | USB_REQ_TYPE_STANDARD;
-  
+
   uhost->ctrl.setup.bmRequestType = USB_DIR_H2D | bm_req;
   uhost->ctrl.setup.bRequest = USB_STD_REQ_SET_FEATURE;
   uhost->ctrl.setup.wValue = (uint16_t)feature;
@@ -924,7 +924,7 @@ usb_sts_type usbh_clear_dev_feature(usbh_core_type *uhost, uint8_t feature, uint
   usb_sts_type status = USB_WAIT;
   uint8_t bm_req;
   bm_req = USB_REQ_RECIPIENT_DEVICE | USB_REQ_TYPE_STANDARD;
-  
+
   uhost->ctrl.setup.bmRequestType = USB_DIR_H2D | bm_req;
   uhost->ctrl.setup.bRequest = USB_STD_REQ_CLEAR_FEATURE;
   uhost->ctrl.setup.wValue = (uint16_t)feature;
@@ -948,7 +948,7 @@ usb_sts_type usbh_clear_ept_feature(usbh_core_type *uhost, uint8_t ept_num, uint
   if(uhost->ctrl.state == CONTROL_IDLE )
   {
     bm_req = USB_REQ_RECIPIENT_ENDPOINT | USB_REQ_TYPE_STANDARD;
-    
+
     uhost->ctrl.setup.bmRequestType = USB_DIR_H2D | bm_req;
     uhost->ctrl.setup.bRequest = USB_STD_REQ_CLEAR_FEATURE;
     uhost->ctrl.setup.wValue = USB_FEATURE_EPT_HALT;
@@ -965,7 +965,7 @@ usb_sts_type usbh_clear_ept_feature(usbh_core_type *uhost, uint8_t ept_num, uint
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}

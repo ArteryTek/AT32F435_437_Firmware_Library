@@ -1,17 +1,17 @@
 /**
   ******************************************************************************
   * @file     xmc_nor.h
-  * @version  v2.0.5
-  * @date     2022-02-11
-  * @brief    header file for the nor configuration.    
+  * @version  v2.0.7
+  * @date     2022-04-02
+  * @brief    header file for the nor configuration.
   ******************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -22,28 +22,28 @@
   * FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
   *
   **************************************************************************
-  */ 
-  
+  */
+
 #include "xmc_nor.h"
 
 /** @addtogroup AT32F435_periph_examples
   * @{
   */
-  
+
 /** @addtogroup 435_XMC_nor_flash
   * @{
   */
 
 #define BANK1_NOR2_ADDR                  ((uint32_t)0x64000000)
 
-/* delay definition */   
+/* delay definition */
 #define BLOCKERASE_TIMEOUT               ((uint32_t)0x00A00000)
-#define CHIPERASE_TIMEOUT                ((uint32_t)0x30000000) 
-#define PROGRAM_TIMEOUT                  ((uint32_t)0x00001400)  
+#define CHIPERASE_TIMEOUT                ((uint32_t)0x30000000)
+#define PROGRAM_TIMEOUT                  ((uint32_t)0x00001400)
 
 #define ADDR_SHIFT(A)                    (BANK1_NOR2_ADDR + (2 * (A)))
-#define NOR_WRITE(address, data)         (*(__IO uint16_t *)(address) = (data))  
-/** 
+#define NOR_WRITE(address, data)         (*(__IO uint16_t *)(address) = (data))
+/**
   * @brief  init nor flash interface
   * @param  none
   * @retval none
@@ -53,17 +53,17 @@ void nor_init(void)
   gpio_init_type  gpio_init_struct = {0};
   xmc_norsram_init_type  xmc_norsram_init_struct;
   xmc_norsram_timing_init_type rw_timing_struct, w_timing_struct;
-  
+
   /* enable the gpio clock */
   crm_periph_clock_enable(CRM_GPIOF_PERIPH_CLOCK, TRUE);
   crm_periph_clock_enable(CRM_GPIOD_PERIPH_CLOCK, TRUE);
   crm_periph_clock_enable(CRM_GPIOE_PERIPH_CLOCK, TRUE);
   crm_periph_clock_enable(CRM_GPIOG_PERIPH_CLOCK, TRUE);
   crm_periph_clock_enable(CRM_GPIOB_PERIPH_CLOCK, TRUE);
-  
+
   /* enable the xmc clock */
   crm_periph_clock_enable(CRM_XMC_PERIPH_CLOCK, TRUE);
-  
+
   /*-- gpio configuration ------------------------------------------------------*/
   gpio_pin_mux_config(GPIOF, GPIO_PINS_SOURCE0, GPIO_MUX_12);
   gpio_pin_mux_config(GPIOF, GPIO_PINS_SOURCE1, GPIO_MUX_12);
@@ -122,28 +122,28 @@ void nor_init(void)
   gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
   gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
   gpio_init(GPIOF, &gpio_init_struct);
-  
+
   gpio_init_struct.gpio_pins = GPIO_PINS_0 | GPIO_PINS_1 | GPIO_PINS_2 | GPIO_PINS_3 | GPIO_PINS_4 | GPIO_PINS_5 | GPIO_PINS_13 | GPIO_PINS_14;
   gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
   gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
   gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
   gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
   gpio_init(GPIOG, &gpio_init_struct);
-  
+
   gpio_init_struct.gpio_pins = GPIO_PINS_11 | GPIO_PINS_12 | GPIO_PINS_13;
   gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
   gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
   gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
   gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
   gpio_init(GPIOD, &gpio_init_struct);
-  
+
   gpio_init_struct.gpio_pins = GPIO_PINS_3 | GPIO_PINS_4 | GPIO_PINS_5 | GPIO_PINS_6 | GPIO_PINS_2;
   gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
   gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
   gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
   gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
   gpio_init(GPIOE, &gpio_init_struct);
-  
+
   /* data lines configuration */
   gpio_init_struct.gpio_pins = GPIO_PINS_0 | GPIO_PINS_1 | GPIO_PINS_8 | GPIO_PINS_9 | GPIO_PINS_10 | GPIO_PINS_14 | GPIO_PINS_15;
   gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
@@ -151,14 +151,14 @@ void nor_init(void)
   gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
   gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
   gpio_init(GPIOD, &gpio_init_struct);
-  
+
   gpio_init_struct.gpio_pins = GPIO_PINS_7 | GPIO_PINS_8 | GPIO_PINS_9 | GPIO_PINS_10 | GPIO_PINS_11 | GPIO_PINS_12 | GPIO_PINS_13 | GPIO_PINS_14 | GPIO_PINS_15;
   gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
   gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
   gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
   gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
   gpio_init(GPIOE, &gpio_init_struct);
-  
+
   /* ne/noe/nwe/nbl0/nbl1/nwait lines configuration */
   gpio_init_struct.gpio_pins = GPIO_PINS_0 | GPIO_PINS_1;
   gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
@@ -166,28 +166,28 @@ void nor_init(void)
   gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
   gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
   gpio_init(GPIOE, &gpio_init_struct);
-  
+
   gpio_init_struct.gpio_pins = GPIO_PINS_4 | GPIO_PINS_5;
   gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
   gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
   gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
   gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
   gpio_init(GPIOD, &gpio_init_struct);
-  
+
   gpio_init_struct.gpio_pins = GPIO_PINS_9;
   gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
   gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
   gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
   gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
   gpio_init(GPIOG, &gpio_init_struct);
-  
+
   gpio_init_struct.gpio_pins = GPIO_PINS_6;
   gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
   gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
   gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
   gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
   gpio_init(GPIOD, &gpio_init_struct);
-  
+
   gpio_init_struct.gpio_pins = GPIO_PINS_7;
   gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
   gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
@@ -212,7 +212,7 @@ void nor_init(void)
   xmc_norsram_init_struct.write_timing_enable = XMC_WRITE_TIMING_DISABLE;
   xmc_norsram_init_struct.write_burst_syn = XMC_WRITE_BURST_SYN_DISABLE;
   xmc_nor_sram_init(&xmc_norsram_init_struct);
-  
+
   /* timing configuration */
   xmc_norsram_timing_default_para_init(&rw_timing_struct, &w_timing_struct);
   rw_timing_struct.subbank = XMC_BANK1_NOR_SRAM2;
@@ -232,17 +232,17 @@ void nor_init(void)
   w_timing_struct.bus_latency_time = 0x0;
   w_timing_struct.clk_psc = 0x0;
   w_timing_struct.data_latency_time = 0x0;
-  w_timing_struct.mode = XMC_ACCESS_MODE_B;  
+  w_timing_struct.mode = XMC_ACCESS_MODE_B;
   xmc_nor_sram_timing_config(&rw_timing_struct, &w_timing_struct);
-  
+
   /* enable xmc_bank1_nor_sram2 */
   xmc_nor_sram_enable(XMC_BANK1_NOR_SRAM2, TRUE);
 }
 
 /**
   * @brief  reads nor memory's manufacturer and device code.
-  * @param  nor_id: pointer to a nor_idtypedef structure which will hold the 
-  *         manufacturer and device code.  
+  * @param  nor_id: pointer to a nor_idtypedef structure which will hold the
+  *         manufacturer and device code.
   * @retval none
   */
 void nor_readid(nor_idtype* nor_id)
@@ -277,7 +277,7 @@ nor_status nor_eraseblock(uint32_t blockaddr)
 
 /**
   * @brief  erases the entire chip.
-  * @param  none                      
+  * @param  none
   * @retval nor_status: the returned value can be: nor_success, nor_error
   *         or nor_timeout
   */
@@ -296,7 +296,7 @@ nor_status nor_erasechip(void)
 /**
   * @brief  writes a half-word to the nor memory.
   * @param  writeaddr: nor memory internal address to write to.
-  * @param  data: data to write. 
+  * @param  data: data to write.
   * @retval nor_status: the returned value can be: nor_success, nor_error
   *         or nor_timeout
   */
@@ -311,17 +311,17 @@ nor_status nor_writehalfword(uint32_t writeaddr, uint16_t data)
 }
 
 /**
-  * @brief  writes a half-word buffer to the xmc nor memory. 
-  * @param  pbuffer: pointer to buffer. 
-  * @param  writeaddr: nor memory internal address from which the data will be 
+  * @brief  writes a half-word buffer to the xmc nor memory.
+  * @param  pbuffer: pointer to buffer.
+  * @param  writeaddr: nor memory internal address from which the data will be
   *         written.
-  * @param  numhalfwordtowrite: number of half words to write. 
+  * @param  numhalfwordtowrite: number of half words to write.
   * @retval nor_status: the returned value can be: nor_success, nor_error
   *         or nor_timeout
   */
 nor_status nor_writebuffer(uint16_t* pbuffer, uint32_t writeaddr, uint32_t numhalfwordtowrite)
 {
-    nor_status status = NOR_ONGOING; 
+    nor_status status = NOR_ONGOING;
 
     do
     {
@@ -331,15 +331,15 @@ nor_status nor_writebuffer(uint16_t* pbuffer, uint32_t writeaddr, uint32_t numha
         numhalfwordtowrite--;
     }
     while((status == NOR_SUCCESS) && (numhalfwordtowrite != 0));
-  
-    return (status); 
+
+    return (status);
 }
 
 /**
-  * @brief  writes a half-word buffer to the xmc nor memory. this function 
+  * @brief  writes a half-word buffer to the xmc nor memory. this function
   *         must be used only with s29gl128p nor memory.
-  * @param  pbuffer: pointer to buffer. 
-  * @param  writeaddr: nor memory internal address from which the data will be 
+  * @param  pbuffer: pointer to buffer.
+  * @param  writeaddr: nor memory internal address from which the data will be
   *         written.
   * @param  numhalfwordtowrite: number of half words to write.
   *         the maximum allowed value is 32 half words (64 bytes).
@@ -360,7 +360,7 @@ nor_status nor_programbuffer(uint16_t* pbuffer, uint32_t writeaddr, uint32_t num
     /*!< Issue unlock command sequence */
     NOR_WRITE(ADDR_SHIFT(0x00555), 0x00AA);
 
-    NOR_WRITE(ADDR_SHIFT(0x02AA), 0x0055);  
+    NOR_WRITE(ADDR_SHIFT(0x02AA), 0x0055);
 
     /*!< Write Write Buffer Load Command */
     NOR_WRITE(ADDR_SHIFT(writeaddr), 0x0025);
@@ -371,25 +371,25 @@ nor_status nor_programbuffer(uint16_t* pbuffer, uint32_t writeaddr, uint32_t num
     {
         /*!< Store last loaded address & data value (for polling) */
         lastloadedaddress = currentaddress;
- 
+
         NOR_WRITE(ADDR_SHIFT(currentaddress), *pbuffer++);
-        currentaddress += 1; 
+        currentaddress += 1;
     }
 
     NOR_WRITE(ADDR_SHIFT(lastloadedaddress), 0x29);
-  
+
     return(nor_getstatus(PROGRAM_TIMEOUT));
 }
 
 /**
-  * @brief  reads a half-word from the nor memory. 
+  * @brief  reads a half-word from the nor memory.
   * @param  readaddr: nor memory internal address to read from.
   * @retval half-word read from the nor memory
   */
 uint16_t nor_readhalfword(uint32_t readaddr)
 {
-    NOR_WRITE(ADDR_SHIFT(0x00555), 0x00AA); 
-    NOR_WRITE(ADDR_SHIFT(0x002AA), 0x0055);  
+    NOR_WRITE(ADDR_SHIFT(0x00555), 0x00AA);
+    NOR_WRITE(ADDR_SHIFT(0x002AA), 0x0055);
     NOR_WRITE((BANK1_NOR2_ADDR + readaddr), 0x00F0 );
 
     return (*(__IO uint16_t *)((BANK1_NOR2_ADDR + readaddr)));
@@ -397,7 +397,7 @@ uint16_t nor_readhalfword(uint32_t readaddr)
 
 /**
   * @brief  reads a block of data from the xmc nor memory.
-  * @param  pbuffer: pointer to the buffer that receives the data read from the 
+  * @param  pbuffer: pointer to the buffer that receives the data read from the
   *         nor memory.
   * @param  readaddr: nor memory internal address to read from.
   * @param  numhalfwordtoread : number of half word to read.
@@ -413,8 +413,8 @@ void nor_readbuffer(uint16_t* pbuffer, uint32_t readaddr, uint32_t numhalfwordto
     {
         /*!< read a halfword from the nor */
         *pbuffer++ = *(__IO uint16_t *)((BANK1_NOR2_ADDR + readaddr));
-        readaddr = readaddr + 2; 
-    }  
+        readaddr = readaddr + 2;
+    }
 }
 
 /**
@@ -430,16 +430,16 @@ nor_status nor_returntoreadmode(void)
 }
 
 /**
-  * @brief  returns the nor memory to read mode and resets the errors in the nor 
-  *         memory status register.  
+  * @brief  returns the nor memory to read mode and resets the errors in the nor
+  *         memory status register.
   * @param  none
   * @retval nor_success
   */
 nor_status nor_reset(void)
 {
-    NOR_WRITE(ADDR_SHIFT(0x00555), 0x00AA); 
-    NOR_WRITE(ADDR_SHIFT(0x002AA), 0x0055); 
-    NOR_WRITE(BANK1_NOR2_ADDR, 0x00F0); 
+    NOR_WRITE(ADDR_SHIFT(0x00555), 0x00AA);
+    NOR_WRITE(ADDR_SHIFT(0x002AA), 0x0055);
+    NOR_WRITE(BANK1_NOR2_ADDR, 0x00F0);
 
     return (NOR_SUCCESS);
 }
@@ -451,24 +451,24 @@ nor_status nor_reset(void)
   *         or nor_timeout
   */
 nor_status nor_getstatus(uint32_t timeout)
-{ 
+{
     uint16_t val1 = 0x00, val2 = 0x00;
-    nor_status status = NOR_ONGOING; 
+    nor_status status = NOR_ONGOING;
     uint32_t timeout1 = timeout;
 
     /*!< poll on nor memory ready/busy signal ----------------------------------*/
-    while((gpio_input_data_bit_read(GPIOD, GPIO_PINS_6) != RESET) && (timeout1 > 0)) 
+    while((gpio_input_data_bit_read(GPIOD, GPIO_PINS_6) != RESET) && (timeout1 > 0))
     {
         timeout1--;
     }
 
     timeout1 = timeout;
-  
-    while((gpio_input_data_bit_read(GPIOD, GPIO_PINS_6) == RESET) && (timeout1 > 0))   
+
+    while((gpio_input_data_bit_read(GPIOD, GPIO_PINS_6) == RESET) && (timeout1 > 0))
     {
         timeout1--;
     }
-  
+
     /*!< get the nor memory operation status -----------------------------------*/
     while((timeout != 0x00) && (status != NOR_SUCCESS))
     {
@@ -479,10 +479,10 @@ nor_status nor_getstatus(uint32_t timeout)
         val2 = *(__IO uint16_t *)(BANK1_NOR2_ADDR);
 
         /*!< if dq6 did not toggle between the two reads then return nor_success */
-        if((val1 & 0x0040) == (val2 & 0x0040)) 
+        if((val1 & 0x0040) == (val2 & 0x0040))
         {
             return NOR_SUCCESS;
-        }   
+        }
 
         if((val1 & 0x0020) != 0x0020)
         {
@@ -491,8 +491,8 @@ nor_status nor_getstatus(uint32_t timeout)
 
         val1 = *(__IO uint16_t *)(BANK1_NOR2_ADDR);
         val2 = *(__IO uint16_t *)(BANK1_NOR2_ADDR);
-    
-        if((val1 & 0x0040) == (val2 & 0x0040)) 
+
+        if((val1 & 0x0040) == (val2 & 0x0040))
         {
             return NOR_SUCCESS;
         }
@@ -505,7 +505,7 @@ nor_status nor_getstatus(uint32_t timeout)
     if(timeout == 0x00)
     {
         status = NOR_TIMEOUT;
-    } 
+    }
 
     /*!< return the operation status */
     return (status);
@@ -530,8 +530,8 @@ void fill_buffer(uint16_t *pbuffer, uint16_t bufferlenght, uint32_t offset)
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */

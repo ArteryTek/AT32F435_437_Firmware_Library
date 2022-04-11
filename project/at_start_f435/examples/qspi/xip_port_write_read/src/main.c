@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -116,6 +116,19 @@ int main(void)
   }
   /* qspi config */
   qspi_config();
+
+  /* switch to cmd port */
+  qspi_xip_enable(QSPI1, FALSE);
+
+  /* set sclk */
+  qspi_clk_division_set(QSPI1, QSPI_CLK_DIV_4);
+
+  /* set sck idle mode 0 */
+  qspi_sck_mode_set(QSPI1, QSPI_SCK_MODE_0);
+
+  /* set wip in bit 0 */
+  qspi_busy_config(QSPI1, QSPI_BUSY_OFFSET_0);
+
   qspi_xip_init_ly68l6400();
 
   qspi1_mem_addr = (uint8_t*)QSPI1_MEM_BASE;

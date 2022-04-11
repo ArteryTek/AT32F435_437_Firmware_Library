@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -30,7 +30,7 @@
 /** @addtogroup AT32F437_periph_examples
   * @{
   */
-  
+
 /** @addtogroup 437_DMAMUX_synchronization_exint DMAMUX_synchronization_exint
   * @{
   */
@@ -40,11 +40,11 @@ dma_init_type dma_init_struct;
 dmamux_sync_init_type  dmamux_sync_init_struct;
 exint_init_type exint_init_struct;
 #define BUFFER_SIZE                      16
-uint16_t src_buffer[BUFFER_SIZE] = {0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007, 0x0008, 
+uint16_t src_buffer[BUFFER_SIZE] = {0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007, 0x0008,
                                     0x0009, 0x000a, 0x000b, 0x000c, 0x000d, 0x000e, 0x000f, 0x0010};
 
-uint16_t  dst_buffer[BUFFER_SIZE];  
-                                    
+uint16_t  dst_buffer[BUFFER_SIZE];
+
 
 /**
   * @brief  exint1 interrupt handler
@@ -66,9 +66,9 @@ void EXINT1_IRQHandler(void)
   */
 int main(void)
 {
-  /* initial system clock */  
-  system_clock_config();  
-  
+  /* initial system clock */
+  system_clock_config();
+
   /* at board initial */
   at32_board_init();
 
@@ -76,7 +76,7 @@ int main(void)
   crm_periph_clock_enable(CRM_DMA2_PERIPH_CLOCK, TRUE);
   crm_periph_clock_enable(CRM_GPIOA_PERIPH_CLOCK, TRUE);
   crm_periph_clock_enable(CRM_TMR1_PERIPH_CLOCK, TRUE);
-  
+
   /* config pa1 for input mode */
   gpio_init_struct.gpio_pins = GPIO_PINS_1;
   gpio_init_struct.gpio_mode = GPIO_MODE_INPUT;
@@ -84,7 +84,7 @@ int main(void)
   gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
   gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
   gpio_init(GPIOA, &gpio_init_struct);
-  
+
   scfg_exint_line_config(SCFG_PORT_SOURCE_GPIOA, SCFG_PINS_SOURCE1);
 
   exint_default_para_init(&exint_init_struct);
@@ -93,11 +93,11 @@ int main(void)
   exint_init_struct.line_select = EXINT_LINE_1;
   exint_init_struct.line_polarity = EXINT_TRIGGER_RISING_EDGE;
   exint_init(&exint_init_struct);
-  
+
   /* exint line1 interrupt nvic init */
   nvic_priority_group_config(NVIC_PRIORITY_GROUP_4);
   nvic_irq_enable(EXINT1_IRQn, 1, 0);
-  
+
   /* dma2 channel4 configuration */
   dma_reset(DMA2_CHANNEL4);
   dma_init_struct.buffer_size = BUFFER_SIZE;
@@ -119,28 +119,28 @@ int main(void)
   dmamux_sync_init_struct.sync_event_enable = TRUE;
   dmamux_sync_init_struct.sync_enable = TRUE;
   dmamux_sync_config(DMA2MUX_CHANNEL4, &dmamux_sync_init_struct);
-  
+
   /* enable transfer full data intterrupt */
   dma_interrupt_enable(DMA2_CHANNEL4, DMA_FDT_INT, TRUE);
-  
+
   /* dma2 channel4 interrupt nvic init */
   nvic_priority_group_config(NVIC_PRIORITY_GROUP_4);
   nvic_irq_enable(DMA2_Channel4_IRQn, 1, 0);
-  
+
   /* dmamux function enable */
   dmamux_enable(DMA2, TRUE);
   dmamux_init(DMA2MUX_CHANNEL4, DMAMUX_DMAREQ_ID_TMR1_OVERFLOW);
-  
+
   /* enable dma channe4 */
   dma_channel_enable(DMA2_CHANNEL4, TRUE);
-  
+
   /* tmr1 configuration */
   tmr_base_init(TMR1, 5000, 0);
   tmr_cnt_dir_set(TMR1, TMR_COUNT_UP);
-  
+
   /* enable tmr1 overflow edam request */
   tmr_dma_request_enable(TMR1, TMR_OVERFLOW_DMA_REQUEST, TRUE);
-  
+
   /* enable tmr1 */
   tmr_counter_enable(TMR1, TRUE);
   while(1)
@@ -150,9 +150,9 @@ int main(void)
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 

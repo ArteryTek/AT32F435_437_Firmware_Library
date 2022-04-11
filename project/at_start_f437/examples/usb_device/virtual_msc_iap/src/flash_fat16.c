@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     flash_fat16.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    fat16 file system
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -29,7 +29,7 @@
 /** @addtogroup AT32F437_periph_examples
   * @{
   */
-  
+
 /** @addtogroup 437_USB_device_virtual_msc_iap
   * @{
   */
@@ -77,7 +77,7 @@ static uint8_t fat16_sector[FAT16_SECTOR_SIZE] =
 };
 
 
-const uint8_t fat16_root_dir_sector[FAT16_DIR_SIZE]= 
+const uint8_t fat16_root_dir_sector[FAT16_DIR_SIZE]=
 {
   0x20,                                  /*11 - Archive Attribute set */
   0x00,                                  /*12 - Reserved */
@@ -118,7 +118,7 @@ const uint8_t fat16_root_dir_sector[FAT16_DIR_SIZE]=
   0x38,                                  /*57 - Write Date */
 };
 
-const uint8_t fat16_table_sector0[FAT16_TABLE_SIZE] = 
+const uint8_t fat16_table_sector0[FAT16_TABLE_SIZE] =
 {
   0xF8,
   0xFF,
@@ -126,7 +126,7 @@ const uint8_t fat16_table_sector0[FAT16_TABLE_SIZE] =
   0xFF
 };
 
-uint8_t fat16_file_name[FAT16_FILENAME_SIZE] = 
+uint8_t fat16_file_name[FAT16_FILENAME_SIZE] =
 {
   'R',
   'e',
@@ -168,7 +168,7 @@ void flash_fat16_set_upgrade_flag(void);
   * @param  dst: dest buffer pointer
   * @param  src: src buffer pointer
   * @param  len: copy length
-  * @retval nubmer of data copy                            
+  * @retval nubmer of data copy
   */
 uint32_t fat16_memory_copy(uint8_t *dst, const uint8_t *src, uint32_t len)
 {
@@ -185,7 +185,7 @@ uint32_t fat16_memory_copy(uint8_t *dst, const uint8_t *src, uint32_t len)
   * @param  dst: dest buffer pointer
   * @param  set: set value
   * @param  len: set length
-  * @retval nubmer of data set                            
+  * @retval nubmer of data set
   */
 uint32_t fat16_memory_memset(uint8_t *dst, uint32_t set,  uint32_t len)
 {
@@ -202,7 +202,7 @@ uint32_t fat16_memory_memset(uint8_t *dst, uint32_t set,  uint32_t len)
   * @param  dst: dest buffer pointer
   * @param  src: src buffer pointer
   * @param  len: compare length
-  * @retval compare result                            
+  * @retval compare result
   */
 uint32_t fat16_memory_cmp(uint8_t *dst, uint8_t *src,  uint32_t len)
 {
@@ -218,32 +218,32 @@ uint32_t fat16_memory_cmp(uint8_t *dst, uint8_t *src,  uint32_t len)
 /**
   * @brief  clear iap upgrade flag
   * @param  none
-  * @retval none                            
+  * @retval none
   */
 void flash_fat16_clear_upgrade_flag(void)
 {
   flash_unlock();
   flash_sector_erase(flash_iap.flash_app_addr - flash_iap.sector_size);
-  flash_lock(); 
+  flash_lock();
 }
 
 /**
   * @brief  set iap upgrade complete flag
   * @param  none
-  * @retval none                            
+  * @retval none
   */
 void flash_fat16_set_upgrade_flag(void)
 {
   flash_unlock();
-  flash_word_program(flash_iap.flash_app_addr - flash_iap.sector_size, 
+  flash_word_program(flash_iap.flash_app_addr - flash_iap.sector_size,
                       IAP_UPGRADE_COMPLETE_FLAG);
-  flash_lock();  
+  flash_lock();
 }
 
 /**
   * @brief  get iap upgrade complete flag
   * @param  none
-  * @retval the iap flag                            
+  * @retval the iap flag
   */
 uint8_t flash_fat16_get_upgrade_flag(void)
 {
@@ -262,8 +262,8 @@ uint8_t flash_fat16_get_upgrade_flag(void)
 /**
   * @brief  read a logical block address
   * @param  fat_lbk: logical block address to read
-  * @param  data: pointer to array to store data read  
-  * @param  len: data length  
+  * @param  data: pointer to array to store data read
+  * @param  len: data length
   * @retval read length
   */
 uint32_t flash_fat16_read(uint32_t fat_lbk, uint8_t *data, uint32_t len)
@@ -273,21 +273,21 @@ uint32_t flash_fat16_read(uint32_t fat_lbk, uint8_t *data, uint32_t len)
   {
     i_index += fat16_memory_copy(data, fat16_sector, FAT16_SECTOR_SIZE);
     i_index += 2;
-    
+
     fat16_memory_memset(data+i_index, 0, FAT16_BYTE_PER_SIZE-i_index);
   }
-  else if((fat_lbk == flash_fat16_1_addr) || 
+  else if((fat_lbk == flash_fat16_1_addr) ||
           (fat_lbk == flash_fat16_2_addr))
   {
     i_index += fat16_memory_copy(data, fat16_table_sector0, FAT16_TABLE_SIZE);
-    
+
     fat16_memory_memset(data+i_index, 0, FAT16_BYTE_PER_SIZE-i_index);
   }
   else if(fat_lbk == flash_fat16_root_addr)
   {
     i_index += fat16_memory_copy(data, fat16_file_name, FAT16_FILENAME_SIZE);
     i_index += fat16_memory_copy(data + i_index, fat16_root_dir_sector, FAT16_DIR_SIZE);
-    
+
     fat16_memory_memset(data+i_index, 0, FAT16_BYTE_PER_SIZE-i_index);
   }
   else
@@ -301,8 +301,8 @@ uint32_t flash_fat16_read(uint32_t fat_lbk, uint8_t *data, uint32_t len)
 /**
   * @brief  write a logical block address
   * @param  fat_lbk: logical block address to read
-  * @param  data: pointer to array to store data read  
-  * @param  len: data length  
+  * @param  data: pointer to array to store data read
+  * @param  len: data length
   * @retval read length
   */
 uint32_t flash_fat16_write(uint32_t fat_lbk, uint8_t *data, uint32_t len)
@@ -318,7 +318,7 @@ uint32_t flash_fat16_write(uint32_t fat_lbk, uint8_t *data, uint32_t len)
       flash_fat16_sector_write(fat_lbk, data, len);
     }
   }
-  
+
   return len;
 }
 
@@ -326,7 +326,7 @@ uint32_t flash_fat16_write(uint32_t fat_lbk, uint8_t *data, uint32_t len)
   * @brief  set file name
   * @param  file_name: file name
   * @param  len: filename length
-  * @retval filename length                            
+  * @retval filename length
   */
 uint32_t flash_fat16_set_name(const uint8_t *file_name, uint8_t len)
 {
@@ -335,30 +335,30 @@ uint32_t flash_fat16_set_name(const uint8_t *file_name, uint8_t len)
   {
     fat16_file_name[i_index] = file_name[i_index];
   }
-  
+
   for(; i_index < 8; i_index ++)
   {
     fat16_file_name[i_index] = ' ';
-  }  
+  }
   return i_index;
 }
 
 /**
   * @brief  boot dir write
   * @param  fat_lbk: logical block address
-  * @param  data: pointer to array to store data 
+  * @param  data: pointer to array to store data
   * @param  len: data length
-  * @retval nubmer of data                            
+  * @retval nubmer of data
   */
 uint32_t flash_fat16_boot_dir_write(uint32_t fat_lbk, uint8_t *data, uint32_t len)
 {
   fat_dir_type *pdir = (fat_dir_type *)data;
   uint32_t i_index = 2, loop_len = 0;
-  
+
   pdir ++;
   pdir ++;
   loop_len += 64;
-  
+
   while(i_index ++ < 512 && loop_len < len)
   {
     if((pdir->attr == 0x20) && ((pdir + 1)->attr == 0x00))
@@ -371,7 +371,7 @@ uint32_t flash_fat16_boot_dir_write(uint32_t fat_lbk, uint8_t *data, uint32_t le
     }
     loop_len += 32;
   }
-  
+
   if(i_index <= 512 && loop_len < len)
   {
     fat16_memory_copy((uint8_t *)&g_file_attr, (const uint8_t *)pdir, 32);
@@ -383,26 +383,26 @@ uint32_t flash_fat16_boot_dir_write(uint32_t fat_lbk, uint8_t *data, uint32_t le
   {
     fat16_memory_memset((uint8_t *)&g_file_attr, 0, 32);
   }
-  return len; 
+  return len;
 }
 
 /**
   * @brief  get offset address
   * @param  file_name: file name
-  * @retval offset address                            
+  * @retval offset address
   */
 uint32_t flash_fat16_addr_offset(uint8_t *file_name)
 {
   uint8_t i_index = 0, offset_shift = 20;
   uint32_t offset = 0;
   uint8_t *pfile = file_name;
-  
+
   if(*pfile != 'A')
   {
     return INVAILD_OFFSET_ADDR;
   }
   pfile += 1;
-  
+
   for(i_index = 0; i_index < 6; i_index ++)
   {
     if(*pfile >= '0' && *pfile <= '9')
@@ -424,7 +424,7 @@ uint32_t flash_fat16_addr_offset(uint8_t *file_name)
     pfile ++;
     offset_shift -= 4;
   }
-  
+
   if((offset < (flash_iap.flash_app_addr - flash_iap.flash_base_addr)) ||
       (offset > flash_iap.flash_size ))
   {
@@ -436,20 +436,20 @@ uint32_t flash_fat16_addr_offset(uint8_t *file_name)
 /**
   * @brief  write sector
   * @param  fat_lbk: logical block address
-  * @param  data: pointer to array to store data 
+  * @param  data: pointer to array to store data
   * @param  len: data length
-  * @retval nubmer of data                            
+  * @retval nubmer of data
   */
 uint32_t flash_fat16_sector_write(uint32_t fat_lbk, uint8_t *data, uint32_t len)
 {
   uint32_t file_size = g_file_attr.file_size;
   uint32_t flash_offset = 0;
   uint32_t status;
-  
+
   /* check the suffix is .bin or .BIN*/
-  if((fat16_memory_cmp((uint8_t *)&g_file_attr.file_name[8], 
+  if((fat16_memory_cmp((uint8_t *)&g_file_attr.file_name[8],
      (uint8_t *)FILE_SUFFIX1_NAME, FILE_SUFFIX1_LEN) == 0) ||
-     (fat16_memory_cmp((uint8_t *)&g_file_attr.file_name[8], 
+     (fat16_memory_cmp((uint8_t *)&g_file_attr.file_name[8],
      (uint8_t *)FILE_SUFFIX2_NAME, FILE_SUFFIX2_LEN) == 0))
   {
     /* check the upgrade status */
@@ -457,12 +457,12 @@ uint32_t flash_fat16_sector_write(uint32_t fat_lbk, uint8_t *data, uint32_t len)
     {
       return 0;
     }
-    
+
     if(flash_iap.msc_up_status ==  UPGRADE_READY)
     {
       /* get offset address from filename */
       flash_offset = flash_fat16_addr_offset(g_file_attr.file_name);
-      
+
       if(flash_offset == INVAILD_OFFSET_ADDR)
       {
         /* use default app address */
@@ -474,10 +474,10 @@ uint32_t flash_fat16_sector_write(uint32_t fat_lbk, uint8_t *data, uint32_t len)
       }
       /* clear upgrade flag */
       flash_fat16_clear_upgrade_flag();
-      
+
       flash_iap.msc_up_status = UPGRAGE_ONGOING;
     }
-    
+
     if(flash_iap.flash_app_size >= g_file_attr.file_size)
     {
       if((flash_iap.file_write_nr + len) >= file_size)
@@ -486,9 +486,9 @@ uint32_t flash_fat16_sector_write(uint32_t fat_lbk, uint8_t *data, uint32_t len)
       }
       /* write data to flash and check crc */
       status = flash_write_data(flash_iap.write_addr + flash_iap.file_write_nr, data, len);
-      
+
       flash_iap.file_write_nr += len;
-      
+
       if(status == 0)
       {
         if(flash_iap.file_write_nr >= file_size)
@@ -496,7 +496,7 @@ uint32_t flash_fat16_sector_write(uint32_t fat_lbk, uint8_t *data, uint32_t len)
           /* upgrade finish */
           flash_iap.file_write_nr = 0;
           flash_iap.msc_up_status = UPGRADE_SUCCESS;
-          
+
           /* set the upgrade done flag to flash */
           flash_fat16_set_upgrade_flag();
         }
@@ -513,9 +513,9 @@ uint32_t flash_fat16_sector_write(uint32_t fat_lbk, uint8_t *data, uint32_t len)
       /* upgrade file is large than flash size */
       flash_iap.msc_up_status = UPGRADE_LARGE;
     }
-    
+
   }
-  else if((fat16_memory_cmp((uint8_t *)&g_file_attr.file_name[0], 
+  else if((fat16_memory_cmp((uint8_t *)&g_file_attr.file_name[0],
      (uint8_t *)"JUMP", 4) == 0))
   {
     /* receive jump command file */
@@ -525,17 +525,17 @@ uint32_t flash_fat16_sector_write(uint32_t fat_lbk, uint8_t *data, uint32_t len)
   {
     /* unkonw upgrade status */
     flash_iap.msc_up_status = UPGRADE_UNKNOWN;
-  }    
-  
+  }
+
   return len;
 }
 
 /**
   * @brief  crc check
   * @param  address: flash address
-  * @param  data: pointer to array to store data 
+  * @param  data: pointer to array to store data
   * @param  len: data length
-  * @retval crc result                      
+  * @retval crc result
   */
 uint32_t flash_crc_check(uint32_t address, uint8_t *data, uint32_t len)
 {
@@ -546,10 +546,10 @@ uint32_t flash_crc_check(uint32_t address, uint8_t *data, uint32_t len)
   uint32_t remain_len = len % sizeof(uint32_t);
   uint32_t *u32data = (uint32_t *)data;
   uint32_t *flash_addr = (uint32_t *)address;
-  
+
   /* enable crc clock */
   crm_periph_clock_enable(CRM_CRC_PERIPH_CLOCK, TRUE);
-  
+
   if(remain_len)
   {
     wlen += 1;
@@ -558,14 +558,14 @@ uint32_t flash_crc_check(uint32_t address, uint8_t *data, uint32_t len)
       data[len+i_index] = 0xFF;
     }
   }
-  
+
   /* calculate write buffer */
   crc_data_reset();
   for(i_index = 0; i_index < wlen; i_index ++)
   {
     data_crc = crc_one_word_calculate(u32data[i_index]);
   }
-  
+
   /* calculate flash data */
   crc_data_reset();
   for(i_index = 0; i_index < wlen; i_index ++)
@@ -573,20 +573,20 @@ uint32_t flash_crc_check(uint32_t address, uint8_t *data, uint32_t len)
     flash_crc = crc_one_word_calculate(*flash_addr++);
   }
   crm_periph_clock_enable(CRM_CRC_PERIPH_CLOCK, FALSE);
-  
+
   if(data_crc != flash_crc)
     return 1;
-  
+
   return 0;
-  
+
 }
 
 /**
   * @brief  read data from flash
   * @param  address: flash address
-  * @param  data: pointer to array to store data 
+  * @param  data: pointer to array to store data
   * @param  len: data length
-  * @retval read length                      
+  * @retval read length
   */
 uint32_t flash_read_data(uint32_t address, uint8_t *data, uint32_t len)
 {
@@ -603,9 +603,9 @@ uint32_t flash_read_data(uint32_t address, uint8_t *data, uint32_t len)
 /**
   * @brief  write data to flash
   * @param  address: flash address
-  * @param  data: pointer to array to store data 
+  * @param  data: pointer to array to store data
   * @param  len: data length
-  * @retval write status                      
+  * @retval write status
   */
 uint32_t flash_write_data(uint32_t address, uint8_t *data, uint32_t len)
 {
@@ -616,7 +616,7 @@ uint32_t flash_write_data(uint32_t address, uint8_t *data, uint32_t len)
   {
     return 1;
   }
-  
+
   if((waddr & flash_iap.sector_mask) == 0)
   {
     flash_unlock();
@@ -636,10 +636,10 @@ uint32_t flash_write_data(uint32_t address, uint8_t *data, uint32_t len)
     {
       flash_sector_erase(waddr);
     }
-    
+
     flash_lock();
   }
-  
+
   waddr = address;
   flash_unlock();
   for(i_index = 0; i_index < len; i_index ++)
@@ -647,20 +647,20 @@ uint32_t flash_write_data(uint32_t address, uint8_t *data, uint32_t len)
     flash_byte_program(waddr+i_index, data[i_index]);
   }
   flash_lock();
-  
+
   return flash_crc_check(address, data, len);
 }
 
 /**
   * @brief  flash fat16 iap init
   * @param  none
-  * @retval none                      
+  * @retval none
   */
 void flash_fat16_init(void)
 {
   uint32_t flash_size = *(uint32_t *)0x1FFFF7E0;
   uint32_t devid = (*((uint32_t *)DEBUG_BASE) & 0x00007000) >> 12;
- 
+
   switch(devid)
   {
     case 2:
@@ -680,32 +680,32 @@ void flash_fat16_init(void)
       flash_iap.sector_mask = FLASH_SECTOR_2K_ALLGNED;
       break;
   }
-  
+
   flash_iap.flash_base_addr = FLASH_BASE;
   flash_iap.flash_app_addr = FLASH_APP_START_ADDR;
   flash_iap.write_addr = FLASH_APP_START_ADDR;
   flash_iap.flash_size = flash_size << 10;
-  
-  flash_iap.flash_app_size = flash_iap.flash_size - 
-                           (flash_iap.flash_app_addr - 
+
+  flash_iap.flash_app_size = flash_iap.flash_size -
+                           (flash_iap.flash_app_addr -
                             flash_iap.flash_base_addr);
-  
+
   flash_fat16_1_addr = flash_iap.sector_size * 2;
   flash_fat16_2_addr = flash_iap.sector_size * 15;
   flash_fat16_root_addr = flash_iap.sector_size * 28;
   flash_fat16_file_start_addr =  flash_iap.sector_size * 32;
-  
+
   fat16_sector[11] = (uint8_t)(flash_iap.sector_size & 0xFF);
   fat16_sector[12] = (uint8_t)((flash_iap.sector_size >> 8) & 0xFF);
-  
+
 }
 
 
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */

@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -139,9 +139,9 @@ static void spi_config(void)
 
   spi_init_struct.master_slave_mode = SPI_MODE_SLAVE;
   spi_init(SPI2, &spi_init_struct);
-  
+
   spi_hardware_cs_output_enable(SPI3, TRUE);
-  
+
   spi_i2s_dma_transmitter_enable(SPI2,TRUE);
   spi_i2s_dma_transmitter_enable(SPI3,TRUE);
   spi_i2s_dma_receiver_enable(SPI2,TRUE);
@@ -164,7 +164,7 @@ static void gpio_config(void)
   crm_periph_clock_enable(CRM_GPIOC_PERIPH_CLOCK, TRUE);
   crm_periph_clock_enable(CRM_GPIOD_PERIPH_CLOCK, TRUE);
   gpio_default_para_init(&gpio_initstructure);
-  
+
   /* spi3 cs pin */
   gpio_initstructure.gpio_out_type       = GPIO_OUTPUT_PUSH_PULL;
   gpio_initstructure.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
@@ -173,7 +173,7 @@ static void gpio_config(void)
   gpio_initstructure.gpio_pins           = GPIO_PINS_15;
   gpio_init(GPIOA, &gpio_initstructure);
   gpio_pin_mux_config(GPIOA, GPIO_PINS_SOURCE15, GPIO_MUX_6);
-  
+
   /* spi3 sck pin */
   gpio_initstructure.gpio_pull           = GPIO_PULL_DOWN;
   gpio_initstructure.gpio_pins           = GPIO_PINS_3;
@@ -197,7 +197,7 @@ static void gpio_config(void)
   gpio_initstructure.gpio_pins           = GPIO_PINS_0;
   gpio_init(GPIOD, &gpio_initstructure);
   gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE0, GPIO_MUX_7);
-  
+
   /* spi2 sck pin */
   gpio_initstructure.gpio_pull           = GPIO_PULL_DOWN;
   gpio_initstructure.gpio_pins           = GPIO_PINS_1;
@@ -232,7 +232,7 @@ int main(void)
 
   dma_channel_enable(DMA1_CHANNEL1, TRUE);
   dma_channel_enable(DMA1_CHANNEL2, TRUE);
-  
+
   dma_channel_enable(DMA1_CHANNEL4, TRUE);
   dma_channel_enable(DMA1_CHANNEL3, TRUE);
   while(dma_flag_get(DMA1_FDT2_FLAG) == RESET);

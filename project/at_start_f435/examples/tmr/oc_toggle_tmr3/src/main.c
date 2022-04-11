@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -131,7 +131,7 @@ void gpio_configuration(void)
   gpio_default_para_init(&gpio_init_struct);
   gpio_init_struct.gpio_pins = GPIO_PINS_6 | GPIO_PINS_7;
   gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
-  gpio_init_struct.gpio_pull = GPIO_PULL_NONE;  
+  gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
   gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
   gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
 

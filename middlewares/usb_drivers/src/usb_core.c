@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     usb_core.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    usb driver
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -28,11 +28,11 @@
 /** @addtogroup AT32F435_437_middlewares_usb_drivers
   * @{
   */
-  
+
 /** @defgroup USB_drivers_core
   * @brief usb global drivers core
   * @{
-  */  
+  */
 
 /** @defgroup USB_core_private_functions
   * @{
@@ -41,24 +41,24 @@
 usb_sts_type usb_core_config(otg_core_type *udev, uint8_t core_id);
 
 /**
-  * @brief  usb core config 
+  * @brief  usb core config
   * @param  otgdev: to the structure of otg_core_type
   * @param  core_id: usb core id number (USB_FULL_SPEED_CORE_ID)
   * @retval usb_sts_type
   */
-usb_sts_type usb_core_config(otg_core_type *otgdev, uint8_t core_id) 
+usb_sts_type usb_core_config(otg_core_type *otgdev, uint8_t core_id)
 {
   /* set usb speed and core id */
   otgdev->cfg.speed = core_id;
   otgdev->cfg.core_id = core_id;
-  
+
   /* default sof out and vbus ignore */
   otgdev->cfg.sof_out = FALSE;
   otgdev->cfg.vbusig = FALSE;
-  
+
   /* set max size */
   otgdev->cfg.max_size = 64;
-  
+
   /* set support number of channel and endpoint */
 #ifdef USE_OTG_HOST_MODE
   otgdev->cfg.hc_num = USB_HOST_CHANNEL_NUM;
@@ -77,7 +77,7 @@ usb_sts_type usb_core_config(otg_core_type *otgdev, uint8_t core_id)
 
 #ifdef USB_VBUS_IGNORE
   otgdev->cfg.vbusig = TRUE;
-#endif  
+#endif
 
   return USB_OK;
 }
@@ -95,35 +95,35 @@ usb_sts_type usb_core_config(otg_core_type *otgdev, uint8_t core_id)
   * @param  desc_handler: device config callback handler
   * @retval usb_sts_type
   */
-usb_sts_type usbd_init(otg_core_type *otgdev, 
-                  uint8_t core_id, uint8_t usb_id, 
+usb_sts_type usbd_init(otg_core_type *otgdev,
+                  uint8_t core_id, uint8_t usb_id,
                   usbd_class_handler *class_handler,
                   usbd_desc_handler *desc_handler)
 {
   usb_sts_type usb_sts = USB_OK;
-  
+
   /* select use OTG1 or OTG2 */
   otgdev->usb_reg = usb_global_select_core(usb_id);
-  
+
   /* usb device core config */
   usb_core_config(otgdev, core_id);
-  
+
   if(otgdev->cfg.sof_out)
   {
     otgdev->usb_reg->gccfg_bit.sofouten = TRUE;
   }
-  
+
   if(otgdev->cfg.vbusig)
   {
     otgdev->usb_reg->gccfg_bit.vbusig = TRUE;
   }
-  
+
   /* usb device core init */
-  usbd_core_init(&(otgdev->dev), otgdev->usb_reg, 
+  usbd_core_init(&(otgdev->dev), otgdev->usb_reg,
                 class_handler,
-                desc_handler, 
+                desc_handler,
                 core_id);
-  
+
   return usb_sts;
 }
 #endif
@@ -142,8 +142,8 @@ usb_sts_type usbd_init(otg_core_type *otgdev,
   * @param  user_handler: user callback handler
   * @retval usb_sts_type
   */
-usb_sts_type usbh_init(otg_core_type *otgdev, 
-                  uint8_t core_id, uint8_t usb_id, 
+usb_sts_type usbh_init(otg_core_type *otgdev,
+                  uint8_t core_id, uint8_t usb_id,
                   usbh_class_handler_type *class_handler,
                   usbh_user_handler_type *user_handler)
 {
@@ -151,33 +151,29 @@ usb_sts_type usbh_init(otg_core_type *otgdev,
 
   /* select use otg1 or otg2 */
   otgdev->usb_reg = usb_global_select_core(usb_id);
-  
+
   /* usb core config */
   usb_core_config(otgdev, core_id);
-  
+
   if(otgdev->cfg.sof_out)
   {
     otgdev->usb_reg->gccfg_bit.sofouten = TRUE;
   }
-  
+
   if(otgdev->cfg.vbusig)
   {
     otgdev->usb_reg->gccfg_bit.vbusig = TRUE;
   }
-  
+
   /* usb host core init */
   usbh_core_init(&otgdev->host, otgdev->usb_reg,
                 class_handler,
                 user_handler,
                 core_id);
-    
+
   return status;
 }
 #endif
-
-/**
-  * @}
-  */ 
 
 /**
   * @}
@@ -185,4 +181,8 @@ usb_sts_type usbh_init(otg_core_type *otgdev,
 
 /**
   * @}
-  */ 
+  */
+
+/**
+  * @}
+  */

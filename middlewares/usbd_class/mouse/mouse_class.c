@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     mouse_class.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    usb hid mouse class type
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -30,11 +30,11 @@
 /** @addtogroup AT32F435_437_middlewares_usbd_class
   * @{
   */
-  
+
 /** @defgroup USB_mouse_class
   * @brief usb device mouse demo
   * @{
-  */  
+  */
 
 /** @defgroup USB_mouse_class_private_functions
   * @{
@@ -53,7 +53,7 @@ static usb_sts_type class_event_handler(void *udev, usbd_event_type event);
 mouse_type mouse_struct;
 
 /* usb device class handler */
-usbd_class_handler mouse_class_handler = 
+usbd_class_handler mouse_class_handler =
 {
   class_init_handler,
   class_clear_handler,
@@ -70,32 +70,32 @@ usbd_class_handler mouse_class_handler =
 /**
   * @brief  initialize usb endpoint
   * @param  udev: to the structure of usbd_core_type
-  * @retval status of usb_sts_type                            
+  * @retval status of usb_sts_type
   */
 static usb_sts_type class_init_handler(void *udev)
 {
   usb_sts_type status = USB_OK;
   usbd_core_type *pudev = (usbd_core_type *)udev;
-  
+
   /* open hid in endpoint */
   usbd_ept_open(pudev, USBD_MOUSE_IN_EPT, EPT_INT_TYPE, USBD_MOUSE_IN_MAXPACKET_SIZE);
-  
+
   return status;
 }
 
 /**
   * @brief  clear endpoint or other state
   * @param  udev: to the structure of usbd_core_type
-  * @retval status of usb_sts_type                            
+  * @retval status of usb_sts_type
   */
 static usb_sts_type class_clear_handler(void *udev)
 {
   usb_sts_type status = USB_OK;
   usbd_core_type *pudev = (usbd_core_type *)udev;
-  
+
   /* close hid in endpoint */
   usbd_ept_close(pudev, USBD_MOUSE_IN_EPT);
-  
+
   return status;
 }
 
@@ -103,7 +103,7 @@ static usb_sts_type class_clear_handler(void *udev)
   * @brief  usb device class setup request handler
   * @param  udev: to the structure of usbd_core_type
   * @param  setup: setup packet
-  * @retval status of usb_sts_type                            
+  * @retval status of usb_sts_type
   */
 static usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup)
 {
@@ -175,21 +175,21 @@ static usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup)
 /**
   * @brief  usb device class endpoint 0 in status stage complete
   * @param  udev: to the structure of usbd_core_type
-  * @retval status of usb_sts_type                            
+  * @retval status of usb_sts_type
   */
 static usb_sts_type class_ept0_tx_handler(void *udev)
 {
   usb_sts_type status = USB_OK;
-  
+
   /* ...user code... */
-  
+
   return status;
 }
 
 /**
   * @brief  usb device class endpoint 0 out status stage complete
   * @param  udev: to the structure of usbd_core_type
-  * @retval status of usb_sts_type                            
+  * @retval status of usb_sts_type
   */
 static usb_sts_type class_ept0_rx_handler(void *udev)
 {
@@ -203,7 +203,7 @@ static usb_sts_type class_ept0_rx_handler(void *udev)
     /* hid buffer process */
     pmouse->hid_state = 0;
   }
-  
+
   return status;
 }
 
@@ -211,16 +211,16 @@ static usb_sts_type class_ept0_rx_handler(void *udev)
   * @brief  usb device class transmision complete handler
   * @param  udev: to the structure of usbd_core_type
   * @param  ept_num: endpoint number
-  * @retval status of usb_sts_type                            
+  * @retval status of usb_sts_type
   */
 static usb_sts_type class_in_handler(void *udev, uint8_t ept_num)
 {
   usb_sts_type status = USB_OK;
-  
+
   /* ...user code...
     trans next packet data
   */
-  
+
   return status;
 }
 
@@ -228,26 +228,26 @@ static usb_sts_type class_in_handler(void *udev, uint8_t ept_num)
   * @brief  usb device class endpoint receive data
   * @param  udev: to the structure of usbd_core_type
   * @param  ept_num: endpoint number
-  * @retval status of usb_sts_type                            
+  * @retval status of usb_sts_type
   */
 static usb_sts_type class_out_handler(void *udev, uint8_t ept_num)
 {
   usb_sts_type status = USB_OK;
-  
+
   return status;
 }
 
 /**
   * @brief  usb device class sof handler
   * @param  udev: to the structure of usbd_core_type
-  * @retval status of usb_sts_type                            
+  * @retval status of usb_sts_type
   */
 static usb_sts_type class_sof_handler(void *udev)
 {
   usb_sts_type status = USB_OK;
-  
+
   /* ...user code... */
-  
+
   return status;
 }
 
@@ -255,7 +255,7 @@ static usb_sts_type class_sof_handler(void *udev)
   * @brief  usb device class event handler
   * @param  udev: to the structure of usbd_core_type
   * @param  event: usb device event
-  * @retval status of usb_sts_type                            
+  * @retval status of usb_sts_type
   */
 static usb_sts_type class_event_handler(void *udev, usbd_event_type event)
 {
@@ -265,18 +265,18 @@ static usb_sts_type class_event_handler(void *udev, usbd_event_type event)
   switch(event)
   {
     case USBD_RESET_EVENT:
-      
+
       /* ...user code... */
-    
+
       break;
     case USBD_SUSPEND_EVENT:
       pmouse->hid_suspend_flag = 1;
       /* ...user code... */
-    
+
       break;
     case USBD_WAKEUP_EVENT:
       /* ...user code... */
-    
+
       break;
     default:
       break;
@@ -289,7 +289,7 @@ static usb_sts_type class_event_handler(void *udev, usbd_event_type event)
   * @param  udev: to the structure of usbd_core_type
   * @param  report: report buffer
   * @param  len: report length
-  * @retval status of usb_sts_type                            
+  * @retval status of usb_sts_type
   */
 usb_sts_type usb_mouse_class_send_report(void *udev, uint8_t *report, uint16_t len)
 {
@@ -301,7 +301,7 @@ usb_sts_type usb_mouse_class_send_report(void *udev, uint8_t *report, uint16_t l
     usbd_flush_tx_fifo(pudev, USBD_MOUSE_IN_EPT);
     usbd_ept_send(pudev, USBD_MOUSE_IN_EPT, report, len);
   }
-  
+
   return status;
 }
 
@@ -309,7 +309,7 @@ usb_sts_type usb_mouse_class_send_report(void *udev, uint8_t *report, uint16_t l
   * @brief  usb device class report function
   * @param  udev: to the structure of usbd_core_type
   * @param  op: operation
-  * @retval none                            
+  * @retval none
   */
 void usb_hid_mouse_send(void *udev, uint8_t op)
 {
@@ -321,40 +321,40 @@ void usb_hid_mouse_send(void *udev, uint8_t op)
     case LEFT_BUTTON:
       button = 0x01;
       break;
-    
+
     case RIGHT_BUTTON:
       button = 0x2;
       break;
-    
+
     case UP_MOVE:
       posy -= MOVE_STEP;
       break;
-    
+
     case DOWN_MOVE:
       posy += MOVE_STEP;
       break;
-    
+
     case LEFT_MOVE:
-      posx -= MOVE_STEP;  
+      posx -= MOVE_STEP;
       break;
-    
+
     case RIGHT_MOVE:
       posx += MOVE_STEP;
       break;
-    
+
     default:
       break;
   }
   pmouse->mouse_buffer[0] = button;
   pmouse->mouse_buffer[1] = posx;
   pmouse->mouse_buffer[2] = posy;
-  
+
   usb_mouse_class_send_report(udev, pmouse->mouse_buffer, 4);
 }
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}

@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -30,12 +30,12 @@
 /** @addtogroup AT32F437_periph_examples
   * @{
   */
-  
+
 /** @addtogroup 437_ERTC_tamper ERTC_tamper
   * @{
   */
-  
-#define ERTC_BPR_DT_NUMBER              20 
+
+#define ERTC_BPR_DT_NUMBER              20
 
 ertc_dt_type bpr_addr_tab[ERTC_BPR_DT_NUMBER] =
 {
@@ -58,37 +58,37 @@ void ertc_tamper_config(void);
   */
 int main(void)
 {
-  /* initial system clock */  
-  system_clock_config();  
-  
-  /* initial the nvic priority group */    
+  /* initial system clock */
+  system_clock_config();
+
+  /* initial the nvic priority group */
   nvic_priority_group_config(NVIC_PRIORITY_GROUP_4);
-  
+
   /* at board initial */
   at32_board_init();
 
   /* initialize uart */
   uart_print_init(115200);
-    
+
   /* ertc configuration */
   ertc_config();
-  
+
   /* ertc tamper configuration */
   ertc_tamper_config();
-  
+
   /* write to ertc bpr data registers */
   bpr_reg_write();
 
   /* check if the written data are correct */
   if(bpr_reg_check() == TRUE)
   {
-    printf("init: bpr data registers are not reset\r\n");    
+    printf("init: bpr data registers are not reset\r\n");
   }
   else
   {
     printf("init: bpr data registers are cleared\r\n");
   }
-  
+
   while(1)
   {
   }
@@ -121,28 +121,28 @@ void ertc_config(void)
 
   /* select the ertc clock source */
   crm_ertc_clock_select(CRM_ERTC_CLOCK_LEXT);
-  
+
   /* enable the ertc clock */
   crm_ertc_clock_enable(TRUE);
 
-  /* deinitializes the ertc registers */  
-  ertc_reset(); 
-  
+  /* deinitializes the ertc registers */
+  ertc_reset();
+
   /* wait for ertc apb registers update */
   ertc_wait_update();
 
   /* configure the ertc divider */
   /* ertc second(1hz) = ertc_clk / (div_a + 1) * (div_b + 1) */
   ertc_divider_set(127, 255);
-  
+
   /* configure the ertc hour mode */
-  ertc_hour_mode_set(ERTC_HOUR_MODE_24);  
-  
+  ertc_hour_mode_set(ERTC_HOUR_MODE_24);
+
   /* set date: 2021-05-01 */
   ertc_date_set(21, 5, 1, 5);
-  
+
   /* set time: 12:00:00 */
-  ertc_time_set(12, 0, 0, ERTC_AM); 
+  ertc_time_set(12, 0, 0, ERTC_AM);
 }
 
 /**

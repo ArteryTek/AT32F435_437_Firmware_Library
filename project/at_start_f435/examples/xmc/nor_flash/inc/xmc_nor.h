@@ -1,17 +1,17 @@
 /**
   ******************************************************************************
   * @file     xmc_sram.h
-  * @version  v2.0.5
-  * @date     2022-02-11
-  * @brief    header file for the nand configuration.    
+  * @version  v2.0.7
+  * @date     2022-04-02
+  * @brief    header file for the nand configuration.
   ******************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -22,7 +22,7 @@
   * FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
   *
   **************************************************************************
-  */ 
+  */
 
 #ifndef __XMC_SRAM_H
 #define __XMC_SRAM_H
@@ -44,7 +44,7 @@ typedef enum
   NOR_ONGOING,
   NOR_ERROR,
   NOR_TIMEOUT
-}nor_status;  
+}nor_status;
 
 void nor_init(void);
 void nor_readid(nor_idtype* nor_id);

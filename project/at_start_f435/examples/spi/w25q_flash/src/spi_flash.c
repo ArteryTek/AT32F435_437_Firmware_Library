@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     spi_flash.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    spi_flash source code
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -46,36 +46,36 @@ void spiflash_init(void)
 {
   gpio_init_type gpio_initstructure;
   spi_init_type spi_init_struct;
-  
+
   crm_periph_clock_enable(CRM_GPIOA_PERIPH_CLOCK, TRUE);
   crm_periph_clock_enable(CRM_DMA1_PERIPH_CLOCK, TRUE);
   /* software cs, pa4 as a general io to control flash cs */
-  gpio_initstructure.gpio_out_type       = GPIO_OUTPUT_PUSH_PULL;  
-  gpio_initstructure.gpio_pull           = GPIO_PULL_UP;  
-  gpio_initstructure.gpio_mode           = GPIO_MODE_OUTPUT;  
+  gpio_initstructure.gpio_out_type       = GPIO_OUTPUT_PUSH_PULL;
+  gpio_initstructure.gpio_pull           = GPIO_PULL_UP;
+  gpio_initstructure.gpio_mode           = GPIO_MODE_OUTPUT;
   gpio_initstructure.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
   gpio_initstructure.gpio_pins = GPIO_PINS_4;
   gpio_init(GPIOA, &gpio_initstructure);
-  
+
   /* sck */
-  gpio_initstructure.gpio_pull           = GPIO_PULL_UP;  
-  gpio_initstructure.gpio_mode           = GPIO_MODE_MUX;  
+  gpio_initstructure.gpio_pull           = GPIO_PULL_UP;
+  gpio_initstructure.gpio_mode           = GPIO_MODE_MUX;
   gpio_initstructure.gpio_pins = GPIO_PINS_5;
   gpio_init(GPIOA, &gpio_initstructure);
   gpio_pin_mux_config(GPIOA, GPIO_PINS_SOURCE5, GPIO_MUX_5);
-  
+
   /* miso */
-  gpio_initstructure.gpio_pull           = GPIO_PULL_UP;   
+  gpio_initstructure.gpio_pull           = GPIO_PULL_UP;
   gpio_initstructure.gpio_pins = GPIO_PINS_6;
   gpio_init(GPIOA, &gpio_initstructure);
   gpio_pin_mux_config(GPIOA, GPIO_PINS_SOURCE6, GPIO_MUX_5);
-  
+
   /* mosi */
-  gpio_initstructure.gpio_pull           = GPIO_PULL_UP;   
+  gpio_initstructure.gpio_pull           = GPIO_PULL_UP;
   gpio_initstructure.gpio_pins = GPIO_PINS_7;
   gpio_init(GPIOA, &gpio_initstructure);
   gpio_pin_mux_config(GPIOA, GPIO_PINS_SOURCE7, GPIO_MUX_5);
-  
+
   FLASH_CS_HIGH();
   crm_periph_clock_enable(CRM_SPI1_PERIPH_CLOCK, TRUE);
   spi_default_para_init(&spi_init_struct);
@@ -94,18 +94,18 @@ void spiflash_init(void)
 
 /**
   * @brief  write data to flash
-  * @param  pbuffer: the pointer for data buffer 
-  * @param  write_addr: the address where the data is written 
-  * @param  length: buffer length 
+  * @param  pbuffer: the pointer for data buffer
+  * @param  write_addr: the address where the data is written
+  * @param  length: buffer length
   * @retval none
   */
 void spiflash_write(uint8_t *pbuffer, uint32_t write_addr, uint32_t length)
 {
   uint32_t sector_pos;
   uint16_t sector_offset;
-  uint16_t sector_remain;     
-  uint16_t index;    
-  uint8_t *spiflash_buf;    
+  uint16_t sector_remain;
+  uint16_t index;
+  uint8_t *spiflash_buf;
   spiflash_buf = spiflash_sector_buf;
 
   /* sector address */
@@ -121,7 +121,7 @@ void spiflash_write(uint8_t *pbuffer, uint32_t write_addr, uint32_t length)
     /* smaller than a sector size */
     sector_remain = length;
   }
-  while(1) 
+  while(1)
   {
     /* read a sector */
     spiflash_read(spiflash_buf, sector_pos * SPIF_SECTOR_SIZE, SPIF_SECTOR_SIZE);
@@ -139,15 +139,15 @@ void spiflash_write(uint8_t *pbuffer, uint32_t write_addr, uint32_t length)
     {
       /* erase the sector */
       spiflash_sector_erase(sector_pos);
-      
+
       /* copy the write data */
       for(index = 0; index < sector_remain; index++)
       {
-        spiflash_buf[index + sector_offset] = pbuffer[index];    
+        spiflash_buf[index + sector_offset] = pbuffer[index];
       }
       spiflash_write_nocheck(spiflash_buf, sector_pos * SPIF_SECTOR_SIZE, SPIF_SECTOR_SIZE); /* program the sector */
     }
-    else 
+    else
     {
       /* write directly in the erased area */
       spiflash_write_nocheck(pbuffer, write_addr, sector_remain);
@@ -161,11 +161,11 @@ void spiflash_write(uint8_t *pbuffer, uint32_t write_addr, uint32_t length)
     {
       /* go on writing */
       sector_pos++;
-      sector_offset = 0;   
+      sector_offset = 0;
 
-      pbuffer += sector_remain;          
-      write_addr += sector_remain;           
-      length -= sector_remain;      
+      pbuffer += sector_remain;
+      write_addr += sector_remain;
+      length -= sector_remain;
       if(length > SPIF_SECTOR_SIZE)
       {
         /* could not write the remain data in the next sector */
@@ -176,15 +176,15 @@ void spiflash_write(uint8_t *pbuffer, uint32_t write_addr, uint32_t length)
         /* could write the remain data in the next sector */
         sector_remain = length;
       }
-    }   
+    }
   }
 }
 
 /**
   * @brief  read data from flash
-  * @param  pbuffer: the pointer for data buffer 
-  * @param  read_addr: the address where the data is read 
-  * @param  length: buffer length 
+  * @param  pbuffer: the pointer for data buffer
+  * @param  read_addr: the address where the data is read
+  * @param  length: buffer length
   * @retval none
   */
 void spiflash_read(uint8_t *pbuffer, uint32_t read_addr, uint32_t length)
@@ -218,16 +218,16 @@ void spiflash_sector_erase(uint32_t erase_addr)
 }
 
 /**
-  * @brief  write data without check 
-  * @param  pbuffer: the pointer for data buffer 
-  * @param  write_addr: the address where the data is written 
-  * @param  length: buffer length 
+  * @brief  write data without check
+  * @param  pbuffer: the pointer for data buffer
+  * @param  write_addr: the address where the data is written
+  * @param  length: buffer length
   * @retval none
   */
-void spiflash_write_nocheck(uint8_t *pbuffer, uint32_t write_addr, uint32_t length)   
+void spiflash_write_nocheck(uint8_t *pbuffer, uint32_t write_addr, uint32_t length)
 {
   uint16_t page_remain;
-  
+
   /* remain bytes in a page */
   page_remain = SPIF_PAGE_SIZE - write_addr % SPIF_PAGE_SIZE;
   if(length <= page_remain)
@@ -248,7 +248,7 @@ void spiflash_write_nocheck(uint8_t *pbuffer, uint32_t write_addr, uint32_t leng
       /* length > page_remain */
       pbuffer += page_remain;
       write_addr += page_remain;
-      
+
       /* the remain bytes to be prorammed */
       length -= page_remain;
       if(length > SPIF_PAGE_SIZE)
@@ -267,9 +267,9 @@ void spiflash_write_nocheck(uint8_t *pbuffer, uint32_t write_addr, uint32_t leng
 
 /**
   * @brief  write a page data
-  * @param  pbuffer: the pointer for data buffer 
-  * @param  write_addr: the address where the data is written 
-  * @param  length: buffer length 
+  * @param  pbuffer: the pointer for data buffer
+  * @param  write_addr: the address where the data is written
+  * @param  length: buffer length
   * @retval none
   */
 void spiflash_page_write(uint8_t *pbuffer, uint32_t write_addr, uint32_t length)
@@ -278,20 +278,20 @@ void spiflash_page_write(uint8_t *pbuffer, uint32_t write_addr, uint32_t length)
   {
     /* set write enable */
     spiflash_write_enable();
-   
+
     FLASH_CS_LOW();
-    
+
     /* send instruction */
     spi_byte_write(SPIF_PAGEPROGRAM);
-    
+
     /* send 24-bit address */
     spi_byte_write((uint8_t)((write_addr) >> 16));
     spi_byte_write((uint8_t)((write_addr) >> 8));
     spi_byte_write((uint8_t)write_addr);
     spi_bytes_write(pbuffer,length);
-   
+
     FLASH_CS_HIGH();
-    
+
     /* wait for program end */
     spiflash_wait_busy();
   }
@@ -299,8 +299,8 @@ void spiflash_page_write(uint8_t *pbuffer, uint32_t write_addr, uint32_t length)
 
 /**
   * @brief  write data continuously
-  * @param  pbuffer: the pointer for data buffer 
-  * @param  length: buffer length 
+  * @param  pbuffer: the pointer for data buffer
+  * @param  length: buffer length
   * @retval none
   */
 void spi_bytes_write(uint8_t *pbuffer, uint32_t length)
@@ -341,16 +341,16 @@ void spi_bytes_write(uint8_t *pbuffer, uint32_t length)
 
   spi_i2s_dma_transmitter_enable(SPI1, TRUE);
   spi_i2s_dma_receiver_enable(SPI1, TRUE);
-  
+
   dma_channel_enable(DMA1_CHANNEL2, TRUE);
   dma_channel_enable(DMA1_CHANNEL3, TRUE);
-  
+
   while(dma_flag_get(DMA1_FDT2_FLAG) == RESET);
   dma_flag_clear(DMA1_FDT2_FLAG);
-  
+
   dma_channel_enable(DMA1_CHANNEL2, FALSE);
   dma_channel_enable(DMA1_CHANNEL3, FALSE);
-  
+
   spi_i2s_dma_transmitter_enable(SPI1, FALSE);
   spi_i2s_dma_receiver_enable(SPI1, FALSE);
 #else
@@ -411,13 +411,13 @@ void spi_bytes_read(uint8_t *pbuffer, uint32_t length)
   spi_i2s_dma_receiver_enable(SPI1, TRUE);
   dma_channel_enable(DMA1_CHANNEL2, TRUE);
   dma_channel_enable(DMA1_CHANNEL3, TRUE);
-  
+
   while(dma_flag_get(DMA1_FDT2_FLAG) == RESET);
   dma_flag_clear(DMA1_FDT2_FLAG);
-  
+
   dma_channel_enable(DMA1_CHANNEL2, FALSE);
   dma_channel_enable(DMA1_CHANNEL3, FALSE);
-  
+
   spi_i2s_dma_transmitter_enable(SPI1, FALSE);
   spi_i2s_dma_receiver_enable(SPI1, FALSE);
 #else
@@ -462,7 +462,7 @@ uint8_t spiflash_read_sr1(void)
   * @param  none
   * @retval none
   */
-void spiflash_write_enable(void)   
+void spiflash_write_enable(void)
 {
   FLASH_CS_LOW();
   spi_byte_write(SPIF_WRITEENABLE);
@@ -486,7 +486,7 @@ uint16_t spiflash_read_id(void)
   wreceivedata |= spi_byte_read();
   FLASH_CS_HIGH();
   return wreceivedata;
-} 
+}
 
 /**
   * @brief  write a byte to flash
@@ -509,7 +509,7 @@ uint8_t spi_byte_write(uint8_t data)
   * @brief  read a byte to flash
   * @param  none
   * @retval flash return data
-  */ 
+  */
 uint8_t spi_byte_read(void)
 {
   return (spi_byte_write(FLASH_SPI_DUMMY_BYTE));
@@ -517,9 +517,9 @@ uint8_t spi_byte_read(void)
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 

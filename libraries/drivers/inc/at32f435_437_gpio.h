@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_gpio.h
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    at32f435_437 gpio header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -47,7 +47,7 @@ extern "C" {
 /** @defgroup GPIO_pins_number_definition
   * @{
   */
-  
+
 #define GPIO_PINS_0                      0x0001 /*!< gpio pins number 0 */
 #define GPIO_PINS_1                      0x0002 /*!< gpio pins number 1 */
 #define GPIO_PINS_2                      0x0004 /*!< gpio pins number 2 */

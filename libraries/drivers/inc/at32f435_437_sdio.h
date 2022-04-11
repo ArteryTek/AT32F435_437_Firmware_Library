@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_sdio.h
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    at32f435_437 sdio header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -45,7 +45,7 @@ extern "C" {
   */
 
 /** @defgroup SDIO_interrupts_definition
-  * @brief sdio interrupt  
+  * @brief sdio interrupt
   * @{
   */
 
@@ -76,8 +76,8 @@ extern "C" {
 /**
   * @}
   */
- 
-/** @defgroup SDIO_flags_definition 
+
+/** @defgroup SDIO_flags_definition
   * @brief sdio flag
   * @{
   */
@@ -109,11 +109,11 @@ extern "C" {
 /**
   * @}
   */
- 
+
 /** @defgroup SDIO_exported_types
   * @{
   */
-  
+
 /**
   * @brief sdio power state
   */

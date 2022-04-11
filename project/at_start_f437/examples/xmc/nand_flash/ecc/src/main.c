@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -31,11 +31,11 @@
 /** @addtogroup AT32F437_periph_examples
   * @{
   */
-  
+
 /** @addtogroup 437_XMC_nand_ecc XMC_nand_ecc
   * @{
   */
-  
+
 crm_clocks_freq_type crm_clocks_freq_struct = {0};
 nand_id_type nand_id_struct;
 nand_address_type write_read_addr_struct;
@@ -65,7 +65,7 @@ void fill_buffer(uint8_t *pbuffer, uint16_t bufferlenght, uint32_t offset)
 
 /**
   * @brief  ecc correct 1 bit error
-  * @param  pbuffer: pointer on the buffer to correct 
+  * @param  pbuffer: pointer on the buffer to correct
   * @param  tx_ecc_value: ecc value for transmiting to nand flash
   * @param  rx_ecc_value: ecc value for receiving from nand flash
   */
@@ -73,7 +73,7 @@ void nand_ecc_correction(uint8_t *pbuffer,uint32_t tx_ecc_value ,uint32_t rx_ecc
 {
   uint32_t ecc_value=0, position=0 ,byte_position=0;
   uint8_t i,compare_data;
-  
+
   /* check ecc value */
   if(tx_ecc_value!=rx_ecc_value)
   {
@@ -82,7 +82,7 @@ void nand_ecc_correction(uint8_t *pbuffer,uint32_t tx_ecc_value ,uint32_t rx_ecc
     ecc_value =(tx_ecc_value^rx_ecc_value) & (uint32_t)0x0FFFFFFF;
 #elif defined K9GAG08U0E
     ecc_value =(tx_ecc_value^rx_ecc_value) & (uint32_t)0xFFFFFFFF;
-#endif    
+#endif
     /* 1 bit error correction */
 #ifdef H27U1G8F2CTR
     for(i=0;i<(28/2);i++)
@@ -91,7 +91,7 @@ void nand_ecc_correction(uint8_t *pbuffer,uint32_t tx_ecc_value ,uint32_t rx_ecc
 #endif
     {
       compare_data = (ecc_value>>(i*2))&0x3;
-      
+
       /* find position */
       if(compare_data == 0x2)
       {
@@ -103,7 +103,7 @@ void nand_ecc_correction(uint8_t *pbuffer,uint32_t tx_ecc_value ,uint32_t rx_ecc
         return;
       }
     }
-    
+
     /* correct receive value */
     byte_position = (uint32_t)(position/8);
     pbuffer[byte_position] ^= 1 << (position % 8);
@@ -119,31 +119,31 @@ int main(void)
 {
   /* configure the system clock */
   system_clock_config();
-    
+
   /* led initalization */
-  at32_board_init();    
-  
+  at32_board_init();
+
   /* usart1 initalization */
   uart_print_init(115200);
-  
+
   /* get system clock */
   crm_clocks_freq_get(&crm_clocks_freq_struct);
-  
+
   /* xmc initialization */
   nand_init();
 
   /* nand reset command */
   nand_reset();
   delay_us(10);
-  
+
   /* nand read id command */
   nand_read_id(&nand_id_struct);
 
   /* verify the nand id */
   /* nand support:samsung:k9gag08u0e        hynix:h27u1g8f2ctr
                   id     :0xecd58472        id   :0xadf1801d
-  */  
-  if((nand_id_struct.maker_id == NAND_AT_MakerID) && (nand_id_struct.device_id == NAND_AT_DeviceID))    
+  */
+  if((nand_id_struct.maker_id == NAND_AT_MakerID) && (nand_id_struct.device_id == NAND_AT_DeviceID))
   {
     /* nand memory address to write to */
     write_read_addr_struct.zone  = 0x00;
@@ -157,43 +157,43 @@ int main(void)
     /* write data to xmc nand memory */
     /* fill the buffer to send */
     fill_buffer(tx_buffer, BUFFER_SIZE , 0x0);
- 
+
     /* change the regular to make ecc value isn't 0 */
     tx_buffer[10]=0x03;
-    
+
      /* calculate ecc value while transmiting */
     xmc_nand_ecc_enable(XMC_BANK2_NAND, TRUE);
     status = nand_write_small_page(tx_buffer, write_read_addr_struct, page_number);
-    
+
     /* save the right ecc_value (in this case ,we suppose it as the true value) */
     ecc_value_write_last = ecc_value_write;
 
     /* change the 85 data like there is a 1 bit error happened */
     status = nand_erase_block(write_read_addr_struct);
-    tx_buffer[10]=0x23;    
-    status = nand_write_small_page(tx_buffer, write_read_addr_struct, page_number); 
-    
+    tx_buffer[10]=0x23;
+    status = nand_write_small_page(tx_buffer, write_read_addr_struct, page_number);
+
     /* calculate ecc value while transmiting */
     xmc_nand_ecc_enable(XMC_BANK2_NAND, TRUE);
-    
+
     /* read back the written data */
     status = nand_read_small_page (rx_buffer, write_read_addr_struct, page_number);
-    
+
     /* ecc check and correct 1 bit error */
     nand_ecc_correction(rx_buffer ,ecc_value_write_last ,ecc_value_read);
-   
+
     if(rx_buffer[10]==0x03)
     {
       /* pass : printf "ecc is work" */
-      printf("ecc is work\r\n");  
+      printf("ecc is work\r\n");
     }
     else
     {
       /* fail: printf "ecc is not work" */
-      printf("ecc is not work\r\n");   
+      printf("ecc is not work\r\n");
     }
   }
-  
+
   /* printf to indicate that whether there is an device error (id not correct) */
   else
   {
@@ -207,8 +207,8 @@ int main(void)
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */

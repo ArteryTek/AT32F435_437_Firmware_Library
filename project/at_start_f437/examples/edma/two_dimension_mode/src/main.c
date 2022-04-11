@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -77,9 +77,9 @@ int main(void)
   system_clock_config();
 
   at32_board_init();
-  
+
   uart_print_init(115200);
-  
+
   /* enable dma1 clock */
   crm_periph_clock_enable(CRM_EDMA_PERIPH_CLOCK, TRUE);
 
@@ -143,7 +143,7 @@ int main(void)
       index = 0;
     }
   }
-  
+
   while(1)
   {
   }

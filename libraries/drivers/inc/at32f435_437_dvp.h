@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_dvp.h
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    at32f435_437 dvp header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -44,8 +44,8 @@ extern "C" {
   * @{
   */
 
-/** @defgroup DVP_event_flags_definition 
-  * @brief dvp event flag 
+/** @defgroup DVP_event_flags_definition
+  * @brief dvp event flag
   * @{
   */
 
@@ -59,8 +59,8 @@ extern "C" {
   * @}
   */
 
-/** @defgroup DVP_interrupt_flags_definition 
-  * @brief dvp interrupt flag 
+/** @defgroup DVP_interrupt_flags_definition
+  * @brief dvp interrupt flag
   * @{
   */
 
@@ -72,10 +72,10 @@ extern "C" {
 
 /**
   * @}
-  */  
-  
-/** @defgroup DVP_interrupts_definition 
-  * @brief dvp interrupt 
+  */
+
+/** @defgroup DVP_interrupts_definition
+  * @brief dvp interrupt
   * @{
   */
 

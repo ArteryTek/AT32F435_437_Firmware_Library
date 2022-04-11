@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -55,8 +55,8 @@ static void can_gpio_config(void)
 {
   gpio_init_type gpio_init_struct;
   /* enable the gpio clock */
-  crm_periph_clock_enable(CRM_GPIOB_PERIPH_CLOCK, TRUE); 
- 
+  crm_periph_clock_enable(CRM_GPIOB_PERIPH_CLOCK, TRUE);
+
   gpio_default_para_init(&gpio_init_struct);
 
   /* configure the can tx, rx pin */
@@ -66,9 +66,9 @@ static void can_gpio_config(void)
   gpio_init_struct.gpio_pins = GPIO_PINS_9 | GPIO_PINS_8;
   gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
   gpio_init(GPIOB, &gpio_init_struct);
- 
-  gpio_pin_mux_config(GPIOB, GPIO_PINS_SOURCE9, GPIO_MUX_9);  
-  gpio_pin_mux_config(GPIOB, GPIO_PINS_SOURCE8, GPIO_MUX_9);  
+
+  gpio_pin_mux_config(GPIOB, GPIO_PINS_SOURCE9, GPIO_MUX_9);
+  gpio_pin_mux_config(GPIOB, GPIO_PINS_SOURCE8, GPIO_MUX_9);
 }
 
 /**
@@ -282,7 +282,7 @@ void CAN1_RX0_IRQHandler(void)
   */
 void CAN1_SE_IRQHandler(void)
 {
-  __IO uint32_t err_index = 0; 
+  __IO uint32_t err_index = 0;
   if(can_flag_get(CAN1,CAN_ETR_FLAG) != RESET)
   {
     err_index = CAN1->ests & 0x70;

@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     usbh_hid_mouse.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    usb host hid mouse type
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -28,11 +28,11 @@
 /** @addtogroup AT32F435_437_middlewares_usbh_class
   * @{
   */
-  
+
 /** @defgroup USBH_hid_class_mouse
   * @brief usb host class hid mouse
   * @{
-  */  
+  */
 
 /** @defgroup USBH_hid_class_mouse_private_functions
   * @{
@@ -53,7 +53,7 @@ void usbh_hid_mouse_position(uint8_t x, uint8_t y)
   {
     x_pos += x / 2;
     y_pos += y / 2;
-    
+
     if(x_pos > MOUSE_WINDOW_WIDTH - 12)
     {
       x_pos = MOUSE_WINDOW_WIDTH - 12;
@@ -62,7 +62,7 @@ void usbh_hid_mouse_position(uint8_t x, uint8_t y)
     {
       y_pos = MOUSE_WINDOW_HEIGHT - 12;
     }
-    
+
     if(x_pos < 2)
     {
       x_pos = 2;
@@ -73,7 +73,7 @@ void usbh_hid_mouse_position(uint8_t x, uint8_t y)
     }
     USBH_DEBUG("Moving Mouse");
   }
-  
+
 }
 
 /**
@@ -137,7 +137,7 @@ void usbh_hid_mouse_process(usb_hid_mouse_type *mouse)
   {
     usbh_hid_mouse_position(mouse->x, mouse->y);
   }
-  
+
   for(idx = 0; idx < 3; idx ++)
   {
     if(mouse->button & 1 << idx)
@@ -170,7 +170,7 @@ void usbh_hid_mouse_decode(uint8_t *mouse_data)
   hid_mouse.x = mouse_data[1];
   hid_mouse.y = mouse_data[2];
   hid_mouse.z = mouse_data[3];
-  
+
   usbh_hid_mouse_process(&hid_mouse);
 }
 
@@ -181,7 +181,7 @@ void usbh_hid_mouse_decode(uint8_t *mouse_data)
 /**
   * @}
   */
-  
+
 /**
   * @}
   */

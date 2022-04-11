@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -30,7 +30,7 @@
 /** @addtogroup AT32F437_periph_examples
   * @{
   */
-  
+
 /** @addtogroup 437_PWC_sleep_usart1 PWC_sleep_usart1
   * @{
   */
@@ -58,7 +58,7 @@ void usart1_config(uint32_t baudrate)
   gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
   gpio_init(GPIOA, &gpio_init_struct);
   gpio_pin_mux_config(GPIOA, GPIO_PINS_SOURCE9, GPIO_MUX_7);
-  
+
   /* configure the uart1 rx pin */
   gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
   gpio_init_struct.gpio_out_type  = GPIO_OUTPUT_PUSH_PULL;
@@ -69,7 +69,7 @@ void usart1_config(uint32_t baudrate)
   gpio_pin_mux_config(GPIOA, GPIO_PINS_SOURCE10, GPIO_MUX_7);
 
   nvic_irq_enable(USART1_IRQn, 0, 0);
-  
+
   /* configure uart param */
   usart_init(USART1, baudrate, USART_DATA_8BITS, USART_STOP_1_BIT);
   usart_parity_selection_config(USART1, USART_PARITY_NONE);
@@ -141,8 +141,8 @@ int main(void)
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */

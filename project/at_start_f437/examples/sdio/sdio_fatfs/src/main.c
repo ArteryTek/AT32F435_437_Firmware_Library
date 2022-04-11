@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -29,7 +29,7 @@
 #include "at32_sdio.h"
 #include "at32f435_437_board.h"
 #include "at32f435_437_clock.h"
-#include "ff.h" 
+#include "ff.h"
 
 /** @addtogroup AT32F437_periph_examples
   * @{
@@ -109,7 +109,7 @@ static void nvic_configuration(void)
   */
 static test_result_type fatfs_test(void)
 {
-  FRESULT ret; 
+  FRESULT ret;
   char filename[] = "1:/test1.txt";
   const char wbuf[] = "this is my file for test fatfs!\r\n";
   char rbuf[50];
@@ -117,7 +117,7 @@ static test_result_type fatfs_test(void)
   UINT bytes_read = 0;
   DWORD fre_clust, fre_sect, tot_sect;
   FATFS* pt_fs;
-  
+
   ret = f_mount(&fs, "1:", 1);
   if(ret){
     printf("fs mount err:%d.\r\n", ret);
@@ -148,7 +148,7 @@ static test_result_type fatfs_test(void)
   else{
     printf("fs mount ok.\r\n");
   }
-  
+
   ret = f_open(&file, filename, FA_READ | FA_WRITE | FA_CREATE_ALWAYS);
   if(ret){
     printf("open file err:%d.\r\n", ret);
@@ -178,7 +178,7 @@ static test_result_type fatfs_test(void)
   else{
     printf("close file ok.\r\n");
   }
-  
+
   pt_fs = &fs;
   /* get volume information and free clusters of drive 1 */
   ret = f_getfree("1:", &fre_clust, &pt_fs);
@@ -191,9 +191,9 @@ static test_result_type fatfs_test(void)
     /* print the free space (assuming 512 bytes/sector) */
     printf("%10u KiB total drive space.\r\n%10u KiB available.\r\n", tot_sect / 2, fre_sect / 2);
   }
-  
+
   ret = f_mount(NULL, "1:", 1);
-  
+
   if(1 == buffer_compare((uint8_t*)rbuf, (uint8_t*)wbuf, sizeof(wbuf))){
     printf("r/w file data test ok.\r\n");
   }
@@ -201,7 +201,7 @@ static test_result_type fatfs_test(void)
     printf("r/w file data test fail.\r\n");
     return TEST_FAIL;
   }
-  
+
   return TEST_SUCCESS;
 }
 
@@ -218,10 +218,10 @@ int main(void)
   at32_board_init();
 
   nvic_configuration();
-  
+
   uart_print_init(115200);
   printf("start test fatfs r0.14b..\r\n");
-  
+
   if(TEST_SUCCESS != fatfs_test())
   {
     while(1)
@@ -229,7 +229,7 @@ int main(void)
       sd_test_error();
     }
   }
-  
+
   /* all tests pass, led3 and led4 fresh */
   while(1)
   {
@@ -241,8 +241,8 @@ int main(void)
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */

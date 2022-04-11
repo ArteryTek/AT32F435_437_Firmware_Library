@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     cdc_class.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    usb cdc class type
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -30,11 +30,11 @@
 /** @addtogroup AT32F435_437_middlewares_usbd_class
   * @{
   */
-  
+
 /** @defgroup USB_cdc_class
   * @brief usb device class cdc demo
   * @{
-  */  
+  */
 
 /** @defgroup USB_cdc_class_private_functions
   * @{
@@ -54,7 +54,7 @@ static usb_sts_type cdc_struct_init(cdc_struct_type *pcdc);
 extern void usb_usart_config( linecoding_type linecoding);
 static void usb_vcp_cmd_process(void *udev, uint8_t cmd, uint8_t *buff, uint16_t len);
 
-linecoding_type linecoding = 
+linecoding_type linecoding =
 {
   115200,
   0,
@@ -66,7 +66,7 @@ linecoding_type linecoding =
 cdc_struct_type cdc_struct;
 
 /* usb device class handler */
-usbd_class_handler cdc_class_handler = 
+usbd_class_handler cdc_class_handler =
 {
   class_init_handler,
   class_clear_handler,
@@ -82,51 +82,51 @@ usbd_class_handler cdc_class_handler =
 /**
   * @brief  initialize usb custom hid endpoint
   * @param  udev: to the structure of usbd_core_type
-  * @retval status of usb_sts_type                            
+  * @retval status of usb_sts_type
   */
 static usb_sts_type class_init_handler(void *udev)
 {
   usb_sts_type status = USB_OK;
   usbd_core_type *pudev = (usbd_core_type *)udev;
   cdc_struct_type *pcdc = (cdc_struct_type *)pudev->class_handler->pdata;
-  
+
   /* init cdc struct */
   cdc_struct_init(pcdc);
-  
+
   /* open in endpoint */
   usbd_ept_open(pudev, USBD_CDC_INT_EPT, EPT_INT_TYPE, USBD_CDC_CMD_MAXPACKET_SIZE);
-  
+
   /* open in endpoint */
   usbd_ept_open(pudev, USBD_CDC_BULK_IN_EPT, EPT_BULK_TYPE, USBD_CDC_IN_MAXPACKET_SIZE);
-  
+
   /* open out endpoint */
   usbd_ept_open(pudev, USBD_CDC_BULK_OUT_EPT, EPT_BULK_TYPE, USBD_CDC_OUT_MAXPACKET_SIZE);
-  
+
   /* set out endpoint to receive status */
   usbd_ept_recv(pudev, USBD_CDC_BULK_OUT_EPT, pcdc->g_rx_buff, USBD_CDC_OUT_MAXPACKET_SIZE);
-  
+
   return status;
 }
 
 /**
   * @brief  clear endpoint or other state
   * @param  udev: to the structure of usbd_core_type
-  * @retval status of usb_sts_type                            
+  * @retval status of usb_sts_type
   */
 static usb_sts_type class_clear_handler(void *udev)
 {
   usb_sts_type status = USB_OK;
   usbd_core_type *pudev = (usbd_core_type *)udev;
-  
+
   /* close in endpoint */
   usbd_ept_close(pudev, USBD_CDC_INT_EPT);
-  
+
   /* close in endpoint */
   usbd_ept_close(pudev, USBD_CDC_BULK_IN_EPT);
-  
+
   /* close out endpoint */
   usbd_ept_close(pudev, USBD_CDC_BULK_OUT_EPT);
-  
+
   return status;
 }
 
@@ -134,7 +134,7 @@ static usb_sts_type class_clear_handler(void *udev)
   * @brief  usb device class setup request handler
   * @param  udev: to the structure of usbd_core_type
   * @param  setup: setup packet
-  * @retval status of usb_sts_type                            
+  * @retval status of usb_sts_type
   */
 static usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup)
 {
@@ -158,7 +158,7 @@ static usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup)
           pcdc->g_req = setup->bRequest;
           pcdc->g_len = setup->wLength;
           usbd_ctrl_recv(pudev, pcdc->g_cmd, pcdc->g_len);
-          
+
         }
       }
       break;
@@ -189,21 +189,21 @@ static usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup)
 /**
   * @brief  usb device endpoint 0 in status stage complete
   * @param  udev: to the structure of usbd_core_type
-  * @retval status of usb_sts_type                            
+  * @retval status of usb_sts_type
   */
 static usb_sts_type class_ept0_tx_handler(void *udev)
 {
   usb_sts_type status = USB_OK;
-  
+
   /* ...user code... */
-  
+
   return status;
 }
 
 /**
   * @brief  usb device endpoint 0 out status stage complete
   * @param  udev: usb device core handler type
-  * @retval status of usb_sts_type                            
+  * @retval status of usb_sts_type
   */
 static usb_sts_type class_ept0_rx_handler(void *udev)
 {
@@ -217,7 +217,7 @@ static usb_sts_type class_ept0_rx_handler(void *udev)
     /* class process */
     usb_vcp_cmd_process(udev, pcdc->g_req, pcdc->g_cmd, recv_len);
   }
-  
+
   return status;
 }
 
@@ -225,20 +225,20 @@ static usb_sts_type class_ept0_rx_handler(void *udev)
   * @brief  usb device transmision complete handler
   * @param  udev: to the structure of usbd_core_type
   * @param  ept_num: endpoint number
-  * @retval status of usb_sts_type                            
+  * @retval status of usb_sts_type
   */
 static usb_sts_type class_in_handler(void *udev, uint8_t ept_num)
 {
   usbd_core_type *pudev = (usbd_core_type *)udev;
   cdc_struct_type *pcdc = (cdc_struct_type *)pudev->class_handler->pdata;
   usb_sts_type status = USB_OK;
-  
+
   /* ...user code...
     trans next packet data
   */
   usbd_flush_tx_fifo(pudev, ept_num);
   pcdc->g_tx_completed = 1;
-  
+
   return status;
 }
 
@@ -246,34 +246,34 @@ static usb_sts_type class_in_handler(void *udev, uint8_t ept_num)
   * @brief  usb device endpoint receive data
   * @param  udev: to the structure of usbd_core_type
   * @param  ept_num: endpoint number
-  * @retval status of usb_sts_type                            
+  * @retval status of usb_sts_type
   */
 static usb_sts_type class_out_handler(void *udev, uint8_t ept_num)
 {
   usb_sts_type status = USB_OK;
   usbd_core_type *pudev = (usbd_core_type *)udev;
   cdc_struct_type *pcdc = (cdc_struct_type *)pudev->class_handler->pdata;
-  
+
   /* get endpoint receive data length  */
   pcdc->g_rxlen = usbd_get_recv_len(pudev, ept_num);
-  
+
   /*set recv flag*/
   pcdc->g_rx_completed = 1;
-  
+
   return status;
 }
 
 /**
   * @brief  usb device sof handler
   * @param  udev: to the structure of usbd_core_type
-  * @retval status of usb_sts_type                            
+  * @retval status of usb_sts_type
   */
 static usb_sts_type class_sof_handler(void *udev)
 {
   usb_sts_type status = USB_OK;
-  
+
   /* ...user code... */
-  
+
   return status;
 }
 
@@ -281,7 +281,7 @@ static usb_sts_type class_sof_handler(void *udev)
   * @brief  usb device event handler
   * @param  udev: to the structure of usbd_core_type
   * @param  event: usb device event
-  * @retval status of usb_sts_type                            
+  * @retval status of usb_sts_type
   */
 static usb_sts_type class_event_handler(void *udev, usbd_event_type event)
 {
@@ -289,24 +289,24 @@ static usb_sts_type class_event_handler(void *udev, usbd_event_type event)
   switch(event)
   {
     case USBD_RESET_EVENT:
-      
+
       /* ...user code... */
-    
+
       break;
     case USBD_SUSPEND_EVENT:
-      
+
       /* ...user code... */
-    
+
       break;
     case USBD_WAKEUP_EVENT:
       /* ...user code... */
-    
+
       break;
     case USBD_INISOINCOM_EVENT:
       break;
     case USBD_OUTISOINCOM_EVENT:
       break;
-    
+
     default:
       break;
   }
@@ -316,7 +316,7 @@ static usb_sts_type class_event_handler(void *udev, usbd_event_type event)
 /**
   * @brief  usb device cdc init
   * @param  pcdc: to the structure of cdc_struct
-  * @retval status of usb_sts_type                             
+  * @retval status of usb_sts_type
   */
 static usb_sts_type cdc_struct_init(cdc_struct_type *pcdc)
 {
@@ -334,7 +334,7 @@ static usb_sts_type cdc_struct_init(cdc_struct_type *pcdc)
   * @brief  usb device class rx data process
   * @param  udev: to the structure of usbd_core_type
   * @param  recv_data: receive buffer
-  * @retval receive data len                            
+  * @retval receive data len
   */
 uint16_t usb_vcp_get_rxdata(void *udev, uint8_t *recv_data)
 {
@@ -342,7 +342,7 @@ uint16_t usb_vcp_get_rxdata(void *udev, uint8_t *recv_data)
   uint16_t tmp_len = 0;
   usbd_core_type *pudev = (usbd_core_type *)udev;
   cdc_struct_type *pcdc = (cdc_struct_type *)pudev->class_handler->pdata;
-  
+
   if(pcdc->g_rx_completed == 0)
   {
     return 0;
@@ -353,9 +353,9 @@ uint16_t usb_vcp_get_rxdata(void *udev, uint8_t *recv_data)
   {
     recv_data[i_index] = pcdc->g_rx_buff[i_index];
   }
-  
+
   usbd_ept_recv(pudev, USBD_CDC_BULK_OUT_EPT, pcdc->g_rx_buff, USBD_CDC_OUT_MAXPACKET_SIZE);
-  
+
   return tmp_len;
 }
 
@@ -364,7 +364,7 @@ uint16_t usb_vcp_get_rxdata(void *udev, uint8_t *recv_data)
   * @param  udev: to the structure of usbd_core_type
   * @param  send_data: send data buffer
   * @param  len: send length
-  * @retval error status                            
+  * @retval error status
   */
 error_status usb_vcp_send_data(void *udev, uint8_t *send_data, uint16_t len)
 {
@@ -389,7 +389,7 @@ error_status usb_vcp_send_data(void *udev, uint8_t *send_data, uint16_t len)
   * @param  cmd: request number
   * @param  buff: request buffer
   * @param  len: buffer length
-  * @retval none                            
+  * @retval none
   */
 static void usb_vcp_cmd_process(void *udev, uint8_t cmd, uint8_t *buff, uint16_t len)
 {
@@ -407,7 +407,7 @@ static void usb_vcp_cmd_process(void *udev, uint8_t cmd, uint8_t *buff, uint16_t
       usb_usart_config(pcdc->linecoding);
 #endif
       break;
-    
+
     case GET_LINE_CODING:
       buff[0] = (uint8_t)pcdc->linecoding.bitrate;
       buff[1] = (uint8_t)(pcdc->linecoding.bitrate >> 8);
@@ -417,7 +417,7 @@ static void usb_vcp_cmd_process(void *udev, uint8_t cmd, uint8_t *buff, uint16_t
       buff[5] = (uint8_t)(pcdc->linecoding.parity);
       buff[6] = (uint8_t)(pcdc->linecoding.data);
       break;
-    
+
     default:
       break;
   }
@@ -425,7 +425,7 @@ static void usb_vcp_cmd_process(void *udev, uint8_t cmd, uint8_t *buff, uint16_t
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}

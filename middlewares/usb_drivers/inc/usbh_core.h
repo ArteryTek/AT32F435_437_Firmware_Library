@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     usbh_core.h
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    usb host core header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -38,7 +38,7 @@ extern "C" {
 /** @addtogroup AT32F435_437_middlewares_usbh_drivers
   * @{
   */
-  
+
 /** @addtogroup USBH_drivers_core
   * @{
   */
@@ -234,7 +234,7 @@ typedef struct
 /**
   * @brief usb host control struct type
   */
-typedef struct 
+typedef struct
 {
   uint8_t                                hch_in;                         /*!< in channel number */
   uint8_t                                hch_out;                        /*!< out channel number */
@@ -285,24 +285,24 @@ typedef struct
 typedef struct
 {
   usb_reg_type                           *usb_reg;                       /*!< usb register pointer */
-  
+
   uint8_t                                global_state;                   /*!< usb host global state machine */
   uint8_t                                enum_state;                     /*!< usb host enumeration state machine */
   uint8_t                                req_state;                      /*!< usb host request state machine */
-  
+
   usbh_dev_desc_type                     dev;                            /*!< usb device descriptor */
   usbh_ctrl_type                         ctrl;                           /*!< usb host control transfer struct */
-  
+
   usbh_class_handler_type                *class_handler;                 /*!< usb host class handler pointer */
   usbh_user_handler_type                 *user_handler;                  /*!< usb host user handler pointer */
-  
+
   usb_hch_type                           hch[USB_HOST_CHANNEL_NUM];      /*!< usb host channel array */
   uint8_t                                rx_buffer[USB_MAX_DATA_LENGTH]; /*!< usb host rx buffer */
-  
-  uint32_t                               conn_sts;                       /*!< connect status */      
+
+  uint32_t                               conn_sts;                       /*!< connect status */
   uint32_t                               port_enable;                    /*!< port enable status */
   uint32_t                               timer;                          /*!< sof timer */
-  
+
   uint32_t                               err_cnt[USB_HOST_CHANNEL_NUM];  /*!< error counter */
   uint32_t                               xfer_cnt[USB_HOST_CHANNEL_NUM]; /*!< xfer counter */
   hch_sts_type                           hch_state[USB_HOST_CHANNEL_NUM];/*!< channel state */
@@ -333,8 +333,8 @@ void usbh_resume(usbh_core_type *uhost);
 
 uint16_t usbh_alloc_channel(usbh_core_type *uhost, uint8_t ept_addr);
 urb_sts_type usbh_get_urb_status(usbh_core_type *uhost, uint8_t ch_num);
-usb_sts_type usbh_ctrl_result_check(usbh_core_type *uhost, 
-                                    ctrl_ept0_sts_type next_ctrl_state, 
+usb_sts_type usbh_ctrl_result_check(usbh_core_type *uhost,
+                                    ctrl_ept0_sts_type next_ctrl_state,
                                     uint8_t next_enum_state);
 uint8_t usbh_alloc_address(void);
 void usbh_reset_port(usbh_core_type *uhost);
@@ -342,10 +342,10 @@ usb_sts_type usbh_loop_handler(usbh_core_type *uhost);
 void usbh_ch_disable(usbh_core_type *uhost, uint8_t chn);
 void usbh_hc_open(usbh_core_type *uhost,
                    uint8_t chn,
-                   uint8_t ept_num, 
+                   uint8_t ept_num,
                    uint8_t dev_address,
-                   uint8_t type, 
-                   uint16_t maxpacket, 
+                   uint8_t type,
+                   uint16_t maxpacket,
                    uint8_t speed);
 void usbh_active_vbus(usbh_core_type *uhost, confirm_state state);
 
@@ -359,11 +359,11 @@ usb_sts_type usbh_core_init(usbh_core_type *uhost,
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}

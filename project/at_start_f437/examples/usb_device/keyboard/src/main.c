@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -84,7 +84,7 @@ void keyboard_send_string(void *udev, uint8_t *string, uint8_t len)
       }
     }
   }
-  
+
 }
 
 

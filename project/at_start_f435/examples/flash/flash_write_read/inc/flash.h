@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     flash.h
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    flash header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -28,12 +28,12 @@
 #ifndef __FLASH_H__
 #define __FLASH_H__
 
-#include "at32f435_437_board.h"    
+#include "at32f435_437_board.h"
 
 /** @addtogroup AT32F435_periph_examples
   * @{
   */
-  
+
 /** @addtogroup 435_FLASH_write_read
   * @{
   */
@@ -45,19 +45,19 @@
 
 void flash_read(uint32_t read_addr, uint16_t *p_buffer, uint16_t num_read);
 void flash_write_nocheck(uint32_t write_addr, uint16_t *p_buffer, uint16_t num_write);
-void flash_write(uint32_t write_addr,uint16_t *p_Buffer, uint16_t num_write);          
+void flash_write(uint32_t write_addr,uint16_t *p_Buffer, uint16_t num_write);
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 
 #endif

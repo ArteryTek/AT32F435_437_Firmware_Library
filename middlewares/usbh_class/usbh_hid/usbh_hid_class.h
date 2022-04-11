@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     usbh_hid_class.h
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    usb host hid class header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -30,19 +30,19 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
- 
+
 #include "usbh_core.h"
 #include "usb_conf.h"
 
 /** @addtogroup AT32F435_437_middlewares_usbh_class
   * @{
   */
-  
+
 /** @addtogroup USBH_hid_class
   * @{
   */
 
-/** @defgroup USBH_hid_class_definition 
+/** @defgroup USBH_hid_class_definition
   * @{
   */
 
@@ -112,13 +112,13 @@ typedef struct
   uint8_t                                eptin;
   uint16_t                               in_maxpacket;
   uint8_t                                in_poll;
-  
+
   uint8_t                                chout;
   uint8_t                                eptout;
   uint16_t                               out_maxpacket;
   uint8_t                                out_poll;
   uint8_t                                protocol;
-  
+
 
   usb_hid_desc_type                      hid_desc;
   usb_hid_ctrl_state_type                ctrl_state;
@@ -137,7 +137,7 @@ extern usbh_class_handler_type uhost_hid_class_handler;
 /**
   * @}
   */
-  
+
 /**
   * @}
   */

@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -90,7 +90,7 @@ static void spi_config(void)
   dma_reset(DMA1_CHANNEL3);
   dma_reset(DMA1_CHANNEL4);
   dmamux_enable(DMA1, TRUE);
-  
+
   dmamux_init(DMA1MUX_CHANNEL1, DMAMUX_DMAREQ_ID_SPI2_TX);
   dmamux_init(DMA1MUX_CHANNEL2, DMAMUX_DMAREQ_ID_SPI2_RX);
   dmamux_init(DMA1MUX_CHANNEL3, DMAMUX_DMAREQ_ID_SPI3_TX);
@@ -140,12 +140,12 @@ static void spi_config(void)
 
   spi_init_struct.master_slave_mode = SPI_MODE_SLAVE;
   spi_init(SPI2, &spi_init_struct);
-  
+
   spi_i2s_dma_transmitter_enable(SPI2,TRUE);
   spi_i2s_dma_transmitter_enable(SPI3,TRUE);
   spi_i2s_dma_receiver_enable(SPI2,TRUE);
   spi_i2s_dma_receiver_enable(SPI3,TRUE);
-  
+
   /* enable ti mode,at this time,the setting in clock_polarity/clock_phase/cs_mode_selection invalid */
   spi_ti_mode_enable(SPI3, TRUE);
   spi_ti_mode_enable(SPI2, TRUE);

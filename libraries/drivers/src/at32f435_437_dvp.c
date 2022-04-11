@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     at32f435_437_dvp.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    contains all the functions for the dvp firmware library
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -56,7 +56,7 @@ void dvp_capture_enable(confirm_state new_state)
   * @param  cap_mode
   *         this parameter can be one of the following values:
   *         - DVP_CAP_FUNC_MODE_CONTINUOUS
-  *         - DVP_CAP_FUNC_MODE_SINGLE    
+  *         - DVP_CAP_FUNC_MODE_SINGLE
   * @retval none
   */
 void dvp_capture_mode_set(dvp_cfm_type cap_mode)
@@ -103,7 +103,7 @@ void dvp_jpeg_enable(confirm_state new_state)
   * @param  sync_mode
   *         this parameter can be one of the following values:
   *         - DVP_SYNC_MODE_HARDWARE
-  *         - DVP_SYNC_MODE_EMBEDDED 
+  *         - DVP_SYNC_MODE_EMBEDDED
   * @retval none
   */
 void dvp_sync_mode_set(dvp_sm_type sync_mode)
@@ -141,7 +141,7 @@ void dvp_sync_unmask_set(uint8_t fmsu, uint8_t fmeu, uint8_t lnsu, uint8_t lneu)
   * @brief  set dvp pixel clock polarity
   * @param  edge
   *         this parameter can be one of the following values:
-  *         - DVP_CLK_POLARITY_RISING 
+  *         - DVP_CLK_POLARITY_RISING
   *         - DVP_CLK_POLARITY_FALLING
   * @retval none
   */
@@ -155,7 +155,7 @@ void dvp_pclk_polarity_set(dvp_ckp_type edge)
   * @param  hsync_pol
   *         this parameter can be one of the following values:
   *         - DVP_HSYNC_POLARITY_HIGH
-  *         - DVP_HSYNC_POLARITY_LOW 
+  *         - DVP_HSYNC_POLARITY_LOW
   * @retval none
   */
 void dvp_hsync_polarity_set(dvp_hsp_type hsync_pol)
@@ -167,7 +167,7 @@ void dvp_hsync_polarity_set(dvp_hsp_type hsync_pol)
   * @brief  set dvp vertical synchronization polarity
   * @param  vsync_pol
   *         this parameter can be one of the following values:
-  *         - DVP_VSYNC_POLARITY_LOW 
+  *         - DVP_VSYNC_POLARITY_LOW
   *         - DVP_VSYNC_POLARITY_HIGH
   * @retval none
   */
@@ -195,7 +195,7 @@ void dvp_basic_frame_rate_control_set(dvp_bfrc_type dvp_bfrc)
   * @brief  config dvp pixel data length
   * @param  dvp_pdl
   *         this parameter can be one of the following values:
-  *         - DVP_PIXEL_DATA_LENGTH_8 
+  *         - DVP_PIXEL_DATA_LENGTH_8
   *         - DVP_PIXEL_DATA_LENGTH_10
   *         - DVP_PIXEL_DATA_LENGTH_12
   *         - DVP_PIXEL_DATA_LENGTH_14
@@ -261,7 +261,7 @@ void dvp_zoomout_set(dvp_pcdc_type dvp_pcdc, dvp_pcds_type dvp_pcds, dvp_lcdc_ty
 
 /**
   * @brief  get dvp basic status
-  * @param  dvp_status_basic_type: 
+  * @param  dvp_status_basic_type:
   *         this parameter can be one of the following values:
   *         - DVP_STATUS_HSYN
   *         - DVP_STATUS_VSYN
@@ -272,7 +272,7 @@ flag_status dvp_basic_status_get(dvp_status_basic_type dvp_status_basic)
 {
   flag_status status = RESET;
 
-  if ((DVP->sts & (0x1 << dvp_status_basic)) != (uint16_t)RESET)    
+  if ((DVP->sts & (0x1 << dvp_status_basic)) != (uint16_t)RESET)
   {
     status = SET;
   }
@@ -291,8 +291,8 @@ flag_status dvp_basic_status_get(dvp_status_basic_type dvp_status_basic)
   *         - DVP_CFD_INT
   *         - DVP_OVR_INT
   *         - DVP_ESE_INT
-  *         - DVP_VS_INT 
-  *         - DVP_HS_INT 
+  *         - DVP_VS_INT
+  *         - DVP_HS_INT
   * @param  new_state (TRUE or FALSE)
   * @retval none
   */
@@ -316,14 +316,14 @@ void dvp_interrupt_enable(uint32_t dvp_int, confirm_state new_state)
   *         - DVP_CFD_EVT_FLAG
   *         - DVP_OVR_EVT_FLAG
   *         - DVP_ESE_EVT_FLAG
-  *         - DVP_VS_EVT_FLAG 
-  *         - DVP_HS_EVT_FLAG 
+  *         - DVP_VS_EVT_FLAG
+  *         - DVP_HS_EVT_FLAG
   *         interrupt flag:
   *         - DVP_CFD_INT_FLAG
   *         - DVP_OVR_INT_FLAG
   *         - DVP_ESE_INT_FLAG
-  *         - DVP_VS_INT_FLAG 
-  *         - DVP_HS_INT_FLAG 
+  *         - DVP_VS_INT_FLAG
+  *         - DVP_HS_INT_FLAG
   * @retval flag_status (SET or RESET)
   */
 flag_status dvp_flag_get(uint32_t flag)
@@ -331,7 +331,7 @@ flag_status dvp_flag_get(uint32_t flag)
   flag_status status = RESET;
   if(flag & 0x80000000)
   {
-    if((DVP->ists & flag) != RESET)    
+    if((DVP->ists & flag) != RESET)
     {
       status = SET;
     }
@@ -342,7 +342,7 @@ flag_status dvp_flag_get(uint32_t flag)
   }
   else
   {
-    if((DVP->ests & flag) != RESET)    
+    if((DVP->ests & flag) != RESET)
     {
       status = SET;
     }
@@ -362,14 +362,14 @@ flag_status dvp_flag_get(uint32_t flag)
   *         - DVP_CFD_EVT_FLAG
   *         - DVP_OVR_EVT_FLAG
   *         - DVP_ESE_EVT_FLAG
-  *         - DVP_VS_EVT_FLAG 
-  *         - DVP_HS_EVT_FLAG 
+  *         - DVP_VS_EVT_FLAG
+  *         - DVP_HS_EVT_FLAG
   *         interrupt flag:
   *         - DVP_CFD_INT_FLAG
   *         - DVP_OVR_INT_FLAG
   *         - DVP_ESE_INT_FLAG
-  *         - DVP_VS_INT_FLAG 
-  *         - DVP_HS_INT_FLAG 
+  *         - DVP_VS_INT_FLAG
+  *         - DVP_HS_INT_FLAG
   * @retval none
   */
 void dvp_flag_clear(uint32_t flag)
@@ -417,7 +417,7 @@ void dvp_enhanced_framerate_set(uint16_t efrcfm, uint16_t efrcfn, confirm_state 
   {
     DVP->frf = (efrcfm | (efrcfn << 8));
   }
-  
+
   DVP->actrl_bit.efrce = new_state;
 }
 

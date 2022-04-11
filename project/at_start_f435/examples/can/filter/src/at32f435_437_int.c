@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_int.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main interrupt service routines.
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -30,7 +30,7 @@
 /** @addtogroup AT32F435_periph_examples
   * @{
   */
-  
+
 /** @addtogroup 435_CAN_filter
   * @{
   */
@@ -134,9 +134,9 @@ void SysTick_Handler(void)
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 

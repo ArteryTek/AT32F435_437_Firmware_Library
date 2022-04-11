@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     xmc_lcd.h
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    xmc_lcd program header
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -22,7 +22,7 @@
   * FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
   *
   **************************************************************************
-  */  
+  */
 #ifndef __XMC_LCD_H
 #define __XMC_LCD_H
 
@@ -31,7 +31,7 @@
 /** @addtogroup AT32F435_periph_examples
   * @{
   */
-  
+
 /** @addtogroup 435_XMC_lcd_touch_16bit
   * @{
   */
@@ -39,14 +39,14 @@
 /** @defgroup LCD_device_type
   * @{
   */
-   
+
 typedef struct
 {
   uint16_t lcd_id;                                                                        /*!< lcd device id define */
   void (*xmc_init)(void);                                                                 /*!< function for xmc and gpios init */
   void (*lcd_init)(void);                                                                 /*!< function for configures the lcd */
   void (*lcd_setblock)(uint16_t xstart, uint16_t ystart, uint16_t xend, uint16_t yend);   /*!< lcd function to set block or set window */
-  void (*draw_point)(uint16_t x, uint16_t y, uint16_t color);                             /*!< lcd function to drawpoint */      
+  void (*draw_point)(uint16_t x, uint16_t y, uint16_t color);                             /*!< lcd function to drawpoint */
   void (*lcd_clear)(uint16_t color);                                                      /*!< lcd function to clear */
 } lcd_dev_type;
 
@@ -71,17 +71,17 @@ extern lcd_dev_type *lcd_struct;
 /** @defgroup LCD_reset_line
   * @{
   */
- 
+
 /**
   * @}
   */
-  
+
 #define LCD_BL_HIGH                      gpio_bits_set(GPIOC,GPIO_PINS_0)
 #define LCD_BL_LOW                       gpio_bits_reset(GPIOC,GPIO_PINS_0)
 static uint16_t LCD_ID;
 #define WHITE                            0xFFFF
-#define BLACK                            0x0000    
-#define BLUE                             0x001F  
+#define BLACK                            0x0000
+#define BLUE                             0x001F
 #define BRED                             0xF81F
 #define GRED                             0xFFE0
 #define GBLUE                            0x07FF
@@ -110,16 +110,16 @@ void lcd_clear(uint16_t color);
 
 /**
   * @}
-  */ 
-  
-/**
-  * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
-  
+  */
+
+/**
+  * @}
+  */
+
 #endif
 
 

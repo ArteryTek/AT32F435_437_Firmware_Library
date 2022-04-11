@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -91,7 +91,7 @@ int main(void)
      - the tmr1 ti2fp2 is used as trigger input
      - rising edge is used to start and stop the tmr1: hang mode.
 
-    * the timxclk is fixed to apb2_freq*2, the three timers are running at: 
+    * the timxclk is fixed to apb2_freq*2, the three timers are running at:
       tmrx frequency = tmrx clock counter/ (timx_period + 1) = 500 khz.
   */
   /* tmr2 and tmr3 counter mode configuration */

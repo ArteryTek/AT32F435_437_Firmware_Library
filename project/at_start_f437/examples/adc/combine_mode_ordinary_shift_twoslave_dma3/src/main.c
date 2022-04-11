@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -115,7 +115,7 @@ static void dma_config(void)
   dma_init_struct.priority = DMA_PRIORITY_HIGH;
   dma_init_struct.loop_mode_enable = FALSE;
   dma_init(DMA1_CHANNEL1, &dma_init_struct);
-  
+
   dmamux_enable(DMA1, TRUE);
   dmamux_init(DMA1MUX_CHANNEL1, DMAMUX_DMAREQ_ID_ADC1);
 
@@ -169,7 +169,7 @@ static void adc_config(void)
   adc_base_struct.data_align = ADC_RIGHT_ALIGNMENT;
   adc_base_struct.ordinary_channel_length = 1;
   adc_base_config(ADC1, &adc_base_struct);
-  
+
   adc_resolution_set(ADC1, ADC_RESOLUTION_12B);
 
   /* config ordinary channel */

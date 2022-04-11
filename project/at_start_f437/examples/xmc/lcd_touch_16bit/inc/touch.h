@@ -1,18 +1,18 @@
 /**
   **************************************************************************
   * @file     touch.h
-  * @version  v2.0.5
-  * @date     2022-02-11
-  * @brief    this file contains all the functions prototypes for the 
+  * @version  v2.0.7
+  * @date     2022-04-02
+  * @brief    this file contains all the functions prototypes for the
   *           touch firmware driver.
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -23,8 +23,8 @@
   * FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
   *
   **************************************************************************
-  */  
-  
+  */
+
 
 #ifndef __TOUCH_H
 #define __TOUCH_H
@@ -34,7 +34,7 @@
 /** @addtogroup AT32F437_periph_examples
   * @{
   */
-  
+
 /** @addtogroup 437_XMC_lcd_touch_16bit
   * @{
   */
@@ -42,7 +42,7 @@
 /** @defgroup TOUCH_device_type
   * @{
   */
-  
+
 typedef struct
 {
   void (*init)(void);                                   /*!< pin init */
@@ -55,7 +55,7 @@ typedef struct
 
 /**
   * @}
-  */ 
+  */
 
 extern touch_dev_type touch_dev_struct;
 extern touch_dev_type *touch_struct;
@@ -84,23 +84,23 @@ uint16_t touch_read_x_or_y(uint8_t xy);
 uint16_t touch_read_ad(uint8_t xy);
 void touch_write_1byte(uint8_t cmd);
 uint8_t touch_read_1byte(void);
-error_status touch_adjust(void); 
+error_status touch_adjust(void);
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
-  
-/**
-  * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
+
+/**
+  * @}
+  */
 #endif
 
 

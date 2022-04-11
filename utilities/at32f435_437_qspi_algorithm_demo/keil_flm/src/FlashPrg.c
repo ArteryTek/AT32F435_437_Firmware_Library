@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     FlashPrg.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    device algorithm for new device flash
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -23,14 +23,14 @@
   *
   **************************************************************************
   */
-  
+
 #include "FlashOS.H"        // FlashOS Structures
 #include "at32f435_437.h"
 
 /** @addtogroup UTILITIES_examples
   * @{
   */
-  
+
 /** @addtogroup QSPI_flash_algorithm_for_keil
   * @{
   */
@@ -67,14 +67,14 @@ void custom_xip_enable_config(void)
 {
   uint32_t xc0_val = 0, xc1_val = 0, xc2_val = 0;
   qspi_xip_type *custom_xip_config;
- 
-  custom_xip_config->read_instruction_code = 0xEB;      
-  custom_xip_config->read_address_length = QSPI_XIP_ADDRLEN_3_BYTE;           
-  custom_xip_config->read_operation_mode = QSPI_OPERATE_MODE_144;           
-  custom_xip_config->read_second_dummy_cycle_num = 6;            
-  custom_xip_config->read_select_mode = QSPI_XIPR_SEL_MODED;              
-  custom_xip_config->read_time_counter = 0xF;             
-  custom_xip_config->read_data_counter = 32; 
+
+  custom_xip_config->read_instruction_code = 0xEB;
+  custom_xip_config->read_address_length = QSPI_XIP_ADDRLEN_3_BYTE;
+  custom_xip_config->read_operation_mode = QSPI_OPERATE_MODE_144;
+  custom_xip_config->read_second_dummy_cycle_num = 6;
+  custom_xip_config->read_select_mode = QSPI_XIPR_SEL_MODED;
+  custom_xip_config->read_time_counter = 0xF;
+  custom_xip_config->read_data_counter = 32;
 
   /* config analyse xip_cmd_w0 register */
   xc0_val = (uint32_t)custom_xip_config->read_second_dummy_cycle_num;
@@ -98,8 +98,8 @@ void custom_xip_enable_config(void)
   xc2_val |= (uint32_t)(custom_xip_config->write_time_counter << 24);
   xc2_val |= (uint32_t)(custom_xip_config->write_select_mode << 31);
   QSPI1->xip_cmd_w2 = xc2_val;
-  
-  custom_qspi_xip_enable(TRUE); 
+
+  custom_qspi_xip_enable(TRUE);
 }
 
 /**
@@ -216,7 +216,7 @@ void init_clk(void)
 {
  /* pll configuration: 96 mhz */
   CRM->pllcfg = 0x00031801;
- 
+
   /* enable pll */
   CRM->ctrl_bit.pllen = TRUE;
 
@@ -225,7 +225,7 @@ void init_clk(void)
 
   /* select pll as system clock source */
   CRM->cfg_bit.sclksel = CRM_SCLK_PLL;
-  
+
   /* wait till pll is used as system clock source */
   while (CRM->cfg_bit.sclksts != CRM_SCLK_PLL);
 }
@@ -251,16 +251,16 @@ void qspi_gpio_init(void)
 {
   /* enable the qspi clock */
   CRM->ahben3 |= 0x02;
- 
+
   /* enable the gpio pin clock */
-  CRM->ahben1 |= 0x60; 
- 
+  CRM->ahben1 |= 0x60;
+
   /* configure the gpio */
   GPIOF->cfgr = 0x002AA000;
   GPIOF->odrvr = 0x00155000;
   GPIOF->muxl = 0x99000000;
   GPIOF->muxh = 0x000009AA;
- 
+
   GPIOG->cfgr = 0x00002000;
   GPIOG->odrvr = 0x00001000;
   GPIOG->muxl = 0x0A000000;
@@ -272,7 +272,7 @@ void qspi_gpio_init(void)
   * @retval none
   */
 void qspi_cmd_init(void)
-{  
+{
   __IO uint32_t num;
   /* xip disable */
   custom_qspi_xip_enable(FALSE);
@@ -285,18 +285,18 @@ void qspi_cmd_init(void)
 
   /* clk div2 */
   QSPI1->ctrl_bit.clkdiv = QSPI_CLK_DIV_2;
- 
+
   /* reset qpi mode and reset the device */
   custom_qspi_rstqpi();
   custom_qspi_rsten();
   custom_qspi_rst();
- 
+
   /* wait about 30us */
   num = 600;
   while(num--)
   {
     __NOP();
-  }   
+  }
 }
 
 /**
@@ -333,13 +333,13 @@ int EraseChip (void)
 
   /* qspi write enable */
   custom_qspi_write_enable();
- 
+
   /* qspi chip erase */
   custom_qspi_chip_erase();
-  
+
   /* qspi check busy */
   custom_qspi_busy_check();
-  
+
   custom_xip_enable_config();
   return (0);
 }
@@ -349,17 +349,17 @@ int EraseChip (void)
   * @param  adr: sector address
   * @retval 0 if success, 1 if failed
   */
-int EraseSector (unsigned long adr) 
+int EraseSector (unsigned long adr)
 {
   adr -= QSPI1_MEM_BASE;
   custom_qspi_xip_enable(FALSE);
 
   /* qspi write enable */
   custom_qspi_write_enable();
- 
+
   /* qspi sector erase */
   custom_qspi_sector_erase(adr);
-  
+
   /* qspi check busy */
   custom_qspi_busy_check();
 
@@ -374,10 +374,10 @@ int EraseSector (unsigned long adr)
             buf: page data
   * @retval 0 if success, 1 if failed
   */
-int ProgramPage (unsigned long adr, unsigned long sz, unsigned char *buf) 
+int ProgramPage (unsigned long adr, unsigned long sz, unsigned char *buf)
 {
   uint32_t i;
-  adr -= QSPI1_MEM_BASE; 
+  adr -= QSPI1_MEM_BASE;
   custom_qspi_xip_enable(FALSE);
   /* qspi write enable */
   custom_qspi_write_enable();
@@ -394,17 +394,17 @@ int ProgramPage (unsigned long adr, unsigned long sz, unsigned char *buf)
   }
   while((flag_status)(QSPI1->cmdsts_bit.cmdsts) == RESET);
   QSPI1->cmdsts_bit.cmdsts = TRUE;
- 
+
   /* qspi check busy */
   custom_qspi_busy_check();
-  
+
   custom_xip_enable_config();
   return 0;
 }
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}

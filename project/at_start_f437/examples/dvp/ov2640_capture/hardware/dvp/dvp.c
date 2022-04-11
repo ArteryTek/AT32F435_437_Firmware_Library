@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     dvp.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    dvp program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -49,7 +49,7 @@ typedef struct
   uint32_t PA;
   uint32_t M0A;
   uint32_t LLP;
-  
+
 }Descriptors_Format_def;
 
 /**
@@ -147,7 +147,7 @@ void dvp_dma_init(uint32_t mem0addr, uint32_t mem1addr, uint16_t memsize)
 
   edma_reset(EDMA_STREAM4);
   edma_init(EDMA_STREAM4, &edma_init_struct);
-  
+
   edmamux_enable(TRUE);
   edmamux_init(EDMAMUX_CHANNEL4, EDMAMUX_DMAREQ_ID_DVP);
 

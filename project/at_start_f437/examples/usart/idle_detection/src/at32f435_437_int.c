@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     at32f435_437_int.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main interrupt service routines.
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -31,7 +31,7 @@
 /** @addtogroup AT32F437_periph_examples
   * @{
   */
-  
+
 /** @addtogroup 437_USART_idle_detection
   * @{
   */
@@ -140,19 +140,19 @@ void SysTick_Handler(void)
   */
 void USART2_IRQHandler(void)
 {
-  if(usart_flag_get(USART2, USART_IDLEF_FLAG)) 
+  if(usart_flag_get(USART2, USART_IDLEF_FLAG))
   {
     usart_data_receive(USART2);
     at32_led_on(LED2);
     at32_led_on(LED3);
     at32_led_on(LED4);
-  }    
+  }
 }
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */

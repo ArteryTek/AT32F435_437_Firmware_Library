@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -31,7 +31,7 @@
 /** @addtogroup AT32F437_periph_examples
   * @{
   */
-  
+
 /** @addtogroup 437_XMC_sdram_basic XMC_sdram_basic
   * @{
   */
@@ -54,19 +54,19 @@ int main(void)
   system_clock_config();
 
   at32_board_init();
-  
+
   /* sdram interface config */
   sdram_init();
-  
+
   /* write data to xmc sdram memory */
   /* fill the buffer to send */
   fill_buffer(txbuffer, buffer_size, 0x3212);
   sdram_writebuffer(txbuffer, write_read_addr, buffer_size);
 
   /* read data from xmc sdram memory */
-  sdram_readbuffer(rxbuffer, write_read_addr, buffer_size);  
+  sdram_readbuffer(rxbuffer, write_read_addr, buffer_size);
 
-  /* read back sdram memory and check content correctness */   
+  /* read back sdram memory and check content correctness */
   for(number = 0x00; (number < buffer_size) && (writereadstatus == 0); number++)
   {
     if(rxbuffer[number] != txbuffer[number])
@@ -80,14 +80,14 @@ int main(void)
     /* pass :turn led2/led3/led4 on */
     at32_led_on(LED2);
     at32_led_on(LED3);
-    at32_led_on(LED4);    
+    at32_led_on(LED4);
   }
   else
   {
     /* fail: turn led2/led3/led4 off */
     at32_led_off(LED2);
     at32_led_off(LED3);
-    at32_led_off(LED4); 
+    at32_led_off(LED4);
   }
   while(1)
   {
@@ -96,9 +96,9 @@ int main(void)
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 

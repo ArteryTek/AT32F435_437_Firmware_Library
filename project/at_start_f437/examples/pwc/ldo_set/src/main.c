@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -30,7 +30,7 @@
 /** @addtogroup AT32F437_periph_examples
   * @{
   */
-  
+
 /** @addtogroup 437_PWC_ldo_set PWC_ldo_set
   * @{
   */
@@ -44,14 +44,14 @@ void ertc_config(void)
 {
   /* enable the pwc clock interface */
   crm_periph_clock_enable(CRM_PWC_PERIPH_CLOCK, TRUE);
-  
+
   /* allow access to ertc */
   pwc_battery_powered_domain_access(TRUE);
 
   /* reset ertc domain */
   crm_battery_powered_domain_reset(TRUE);
   crm_battery_powered_domain_reset(FALSE);
-  
+
   /* enable the lext osc */
   crm_clock_source_enable(CRM_CLOCK_SOURCE_LEXT, TRUE);
 
@@ -83,7 +83,7 @@ void ertc_tamper_config(void)
   exint_init_struct.line_mode     = EXINT_LINE_INTERRUPUT;
   exint_init_struct.line_polarity = EXINT_TRIGGER_RISING_EDGE;
   exint_init(&exint_init_struct);
-  
+
   /* enable tamper irqchannel */
   nvic_irq_enable(TAMP_STAMP_IRQn, 0, 0);
 
@@ -112,22 +112,22 @@ void system_clock_recover(void)
 {
   /* enable external high-speed crystal oscillator - hext */
   crm_clock_source_enable(CRM_CLOCK_SOURCE_HEXT, TRUE);
-  
+
   /* wait till hext is ready */
   while(crm_hext_stable_wait() == ERROR);
-  
+
   /* enable pll */
   crm_clock_source_enable(CRM_CLOCK_SOURCE_PLL, TRUE);
-  
+
   /* wait till pll is ready */
   while(crm_flag_get(CRM_PLL_STABLE_FLAG) == RESET);
-  
+
   /* enable auto step mode */
   crm_auto_step_mode_enable(TRUE);
-  
+
   /* select pll as system clock source */
   crm_sysclk_switch(CRM_SCLK_PLL);
-  
+
   /* wait till pll is used as system clock source */
   while(crm_sysclk_switch_status_get() != CRM_SCLK_PLL);
 }
@@ -142,14 +142,14 @@ int main(void)
 {
   __IO uint32_t systick_index = 0;
   __IO uint32_t delay_index = 0;
-  
+
   /* congfig the system clock */
-  system_clock_config();  
+  system_clock_config();
 
   /* init at start board */
   at32_board_init();
-  
-  /* config priority group */  
+
+  /* config priority group */
   nvic_priority_group_config(NVIC_PRIORITY_GROUP_4);
 
   /* turn on the led light */
@@ -159,62 +159,62 @@ int main(void)
 
   /* enable pwc clock */
   crm_periph_clock_enable(CRM_PWC_PERIPH_CLOCK, TRUE);
-  
+
   /* config ertc */
   ertc_config();
-  
+
   /* set the wakeup time: 06h:20min:5s */
   ertc_tamper_config();
 
   while(1)
   {
     at32_led_toggle(LED3);
-    
+
     /* save systick register configuration */
     systick_index = SysTick->CTRL;
     systick_index &= ~((uint32_t)0xFFFFFFFE);
-    
+
     /* disable systick */
     SysTick->CTRL &= (uint32_t)0xFFFFFFFE;
-    
+
     /* select system clock source as hick before ldo set */
     crm_sysclk_switch(CRM_SCLK_HICK);
-    
+
     /* wait till hick is used as system clock source */
     while(crm_sysclk_switch_status_get() != CRM_SCLK_HICK)
     {
     }
-    
+
     pwc_ldo_output_voltage_set(PWC_LDO_OUTPUT_1V0);
-    
+
     /* congfig the voltage regulator mode */
     pwc_voltage_regulate_set(PWC_REGULATOR_LOW_POWER);
-    
+
     /* enter deep sleep mode */
     pwc_deep_sleep_mode_enter(PWC_DEEP_SLEEP_ENTER_WFI);
-    
+
     /* wake up from deep sleep mode, restore systick register configuration */
     SysTick->CTRL |= systick_index;
-    
-    /* wait clock stable */ 
+
+    /* wait clock stable */
     for(delay_index = 0; delay_index < 600; delay_index++)
     {
       __NOP();
     }
-    
+
     /* resume ldo before system clock source enhance */
     pwc_ldo_output_voltage_set(PWC_LDO_OUTPUT_1V3);
-    
+
     /* congfig the system clock */
     system_clock_recover();
-    
+
   }
 }
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */

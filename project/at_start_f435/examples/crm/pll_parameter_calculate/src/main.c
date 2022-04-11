@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -92,7 +92,7 @@ void system_clock_config_200mhz(void)
 
   /* config ldo voltage */
   pwc_ldo_output_voltage_set(PWC_LDO_OUTPUT_1V3);
- 
+
   /* set the flash clock divider */
   flash_clock_divider_set(FLASH_CLOCK_DIV_3);
 
@@ -108,7 +108,7 @@ void system_clock_config_200mhz(void)
 
   /* calculate pll parameter according to the function */
   calculate_status = crm_pll_parameter_calculate(CRM_PLL_SOURCE_HEXT, 200000000, &pll_ms, &pll_ns, &pll_fr);
-  
+
   /* config pll clock resource */
   crm_pll_config(CRM_PLL_SOURCE_HEXT, pll_ns, pll_ms, (crm_pll_fr_type)pll_fr);
 
@@ -176,7 +176,7 @@ int main(void)
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}

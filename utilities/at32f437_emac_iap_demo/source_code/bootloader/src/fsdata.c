@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     fsdata.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    fsdata
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -25,7 +25,7 @@
   */
 
 #include "at32f435_437_board.h"
-#include "fsdata.h" 
+#include "fsdata.h"
 
 static const char data_index_html[] = {
 	0x2f,0x69,0x6e,0x64,0x65,0x78,0x2e,0x68,

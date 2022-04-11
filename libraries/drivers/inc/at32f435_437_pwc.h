@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_pwc.h
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    at32f435_437 pwr header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -44,8 +44,8 @@ extern "C" {
   * @{
   */
 
-/** @defgroup PWC_flags_definition 
-  * @brief pwc flag  
+/** @defgroup PWC_flags_definition
+  * @brief pwc flag
   * @{
   */
 
@@ -77,7 +77,7 @@ extern "C" {
 /** @defgroup PWC_exported_types
   * @{
   */
-  
+
 /**
   * @brief pwc pvm voltage type
   */
@@ -188,12 +188,12 @@ typedef struct
   };
 
 } pwc_type;
-  
+
 /**
   * @}
   */
 
-#define PWC                              ((pwc_type *) PWC_BASE) 
+#define PWC                              ((pwc_type *) PWC_BASE)
 
 /** @defgroup PWC_exported_functions
   * @{

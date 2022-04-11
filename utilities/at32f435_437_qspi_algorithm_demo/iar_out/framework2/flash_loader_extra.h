@@ -17,7 +17,7 @@ typedef struct {
   uint32_t block_size;
 } FlashParamsHolder;
 
-typedef struct { 
+typedef struct {
   uint32_t start;
   uint32_t length;
 } FlashEraseData;

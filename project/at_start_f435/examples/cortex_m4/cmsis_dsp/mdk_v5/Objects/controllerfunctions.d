@@ -1,0 +1,22 @@
+./objects/controllerfunctions.o: \
+  ..\..\..\..\..\..\libraries\cmsis\dsp\source\ControllerFunctions\ControllerFunctions.c \
+  ..\..\..\..\..\..\libraries\cmsis\dsp\source\ControllerFunctions\arm_pid_init_f32.c \
+  ..\..\..\..\..\..\libraries\cmsis\cm4\core_support\arm_math.h \
+  ..\..\..\..\..\..\libraries\cmsis\cm4\core_support\cmsis_compiler.h \
+  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdint.h \
+  ..\..\..\..\..\..\libraries\cmsis\cm4\core_support\cmsis_armclang.h \
+  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\arm_compat.h \
+  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\arm_acle.h \
+  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h \
+  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\math.h \
+  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\float.h \
+  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\limits.h \
+  ..\..\..\..\..\..\libraries\cmsis\dsp\source\ControllerFunctions\arm_pid_init_q15.c \
+  ..\..\..\..\..\..\libraries\cmsis\dsp\source\ControllerFunctions\arm_pid_init_q31.c \
+  ..\..\..\..\..\..\libraries\cmsis\dsp\source\ControllerFunctions\arm_pid_reset_f32.c \
+  ..\..\..\..\..\..\libraries\cmsis\dsp\source\ControllerFunctions\arm_pid_reset_q15.c \
+  ..\..\..\..\..\..\libraries\cmsis\dsp\source\ControllerFunctions\arm_pid_reset_q31.c \
+  ..\..\..\..\..\..\libraries\cmsis\dsp\source\ControllerFunctions\arm_sin_cos_f32.c \
+  ..\..\..\..\..\..\libraries\cmsis\cm4\core_support\arm_common_tables.h \
+  ..\..\..\..\..\..\libraries\cmsis\cm4\core_support\arm_math.h \
+  ..\..\..\..\..\..\libraries\cmsis\dsp\source\ControllerFunctions\arm_sin_cos_q31.c

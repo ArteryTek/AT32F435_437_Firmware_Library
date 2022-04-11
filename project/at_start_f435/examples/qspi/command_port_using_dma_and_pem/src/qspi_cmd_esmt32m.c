@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     qspi_cmd_esmt32m.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    qspi_cmd_esmt32m program
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -23,13 +23,13 @@
   *
   **************************************************************************
   */
-  
+
 #include "at32f435_437_board.h"
 
 /** @addtogroup AT32F435_periph_examples
   * @{
   */
-  
+
 /** @addtogroup 435_QSPI_command_port_using_dma_and_pem
   * @{
   */
@@ -54,21 +54,21 @@ void qspi_write_enable(void);
   * @brief  esmt32m cmd read pem begin config
   * @param  qspi_cmd_struct: the pointer for qspi_cmd_type parameter
   * @param  addr: read start address
-  * @param  counter: read data counter  
+  * @param  counter: read data counter
   * @retval none
   */
 void esmt32m_cmd_read_pem_begin_config(qspi_cmd_type *qspi_cmd_struct, uint32_t addr, uint32_t counter)
 {
   qspi_cmd_struct->pe_mode_enable = TRUE;
-  qspi_cmd_struct->pe_mode_operate_code = PEMOPC_SET; 
-  qspi_cmd_struct->instruction_code = 0xEB;       
+  qspi_cmd_struct->pe_mode_operate_code = PEMOPC_SET;
+  qspi_cmd_struct->instruction_code = 0xEB;
   qspi_cmd_struct->instruction_length = QSPI_CMD_INSLEN_1_BYTE;
   qspi_cmd_struct->address_code = addr;
-  qspi_cmd_struct->address_length = QSPI_CMD_ADRLEN_3_BYTE;  
+  qspi_cmd_struct->address_length = QSPI_CMD_ADRLEN_3_BYTE;
   qspi_cmd_struct->data_counter = counter;
   qspi_cmd_struct->second_dummy_cycle_num = 4;
-  qspi_cmd_struct->operation_mode = QSPI_OPERATE_MODE_144;       
-  qspi_cmd_struct->read_status_config = QSPI_RSTSC_HW_AUTO;  
+  qspi_cmd_struct->operation_mode = QSPI_OPERATE_MODE_144;
+  qspi_cmd_struct->read_status_config = QSPI_RSTSC_HW_AUTO;
   qspi_cmd_struct->read_status_enable = FALSE;
   qspi_cmd_struct->write_data_enable = FALSE;
 }
@@ -77,21 +77,21 @@ void esmt32m_cmd_read_pem_begin_config(qspi_cmd_type *qspi_cmd_struct, uint32_t 
   * @brief  esmt32m cmd read pem keep config
   * @param  qspi_cmd_struct: the pointer for qspi_cmd_type parameter
   * @param  addr: read start address
-  * @param  counter: read data counter  
+  * @param  counter: read data counter
   * @retval none
   */
 void esmt32m_cmd_read_pem_keep_config(qspi_cmd_type *qspi_cmd_struct, uint32_t addr, uint32_t counter)
 {
   qspi_cmd_struct->pe_mode_enable = TRUE;
   qspi_cmd_struct->pe_mode_operate_code = PEMOPC_SET;
-  qspi_cmd_struct->instruction_code = 0xEB;      
-  qspi_cmd_struct->instruction_length = QSPI_CMD_INSLEN_0_BYTE;   
+  qspi_cmd_struct->instruction_code = 0xEB;
+  qspi_cmd_struct->instruction_length = QSPI_CMD_INSLEN_0_BYTE;
   qspi_cmd_struct->address_code = addr;
-  qspi_cmd_struct->address_length = QSPI_CMD_ADRLEN_3_BYTE;  
+  qspi_cmd_struct->address_length = QSPI_CMD_ADRLEN_3_BYTE;
   qspi_cmd_struct->data_counter = counter;
   qspi_cmd_struct->second_dummy_cycle_num = 4;
-  qspi_cmd_struct->operation_mode = QSPI_OPERATE_MODE_144;       
-  qspi_cmd_struct->read_status_config = QSPI_RSTSC_HW_AUTO;  
+  qspi_cmd_struct->operation_mode = QSPI_OPERATE_MODE_144;
+  qspi_cmd_struct->read_status_config = QSPI_RSTSC_HW_AUTO;
   qspi_cmd_struct->read_status_enable = FALSE;
   qspi_cmd_struct->write_data_enable = FALSE;
 }
@@ -100,21 +100,21 @@ void esmt32m_cmd_read_pem_keep_config(qspi_cmd_type *qspi_cmd_struct, uint32_t a
   * @brief  esmt32m cmd read pem end config
   * @param  qspi_cmd_struct: the pointer for qspi_cmd_type parameter
   * @param  addr: read start address
-  * @param  counter: read data counter  
+  * @param  counter: read data counter
   * @retval none
   */
 void esmt32m_cmd_read_pem_end_config(qspi_cmd_type *qspi_cmd_struct, uint32_t addr, uint32_t counter)
 {
   qspi_cmd_struct->pe_mode_enable = TRUE;
   qspi_cmd_struct->pe_mode_operate_code = PEMOPC_RESET;
-  qspi_cmd_struct->instruction_code = 0xEB;      
-  qspi_cmd_struct->instruction_length = QSPI_CMD_INSLEN_0_BYTE;   
+  qspi_cmd_struct->instruction_code = 0xEB;
+  qspi_cmd_struct->instruction_length = QSPI_CMD_INSLEN_0_BYTE;
   qspi_cmd_struct->address_code = addr;
-  qspi_cmd_struct->address_length = QSPI_CMD_ADRLEN_3_BYTE;  
+  qspi_cmd_struct->address_length = QSPI_CMD_ADRLEN_3_BYTE;
   qspi_cmd_struct->data_counter = counter;
   qspi_cmd_struct->second_dummy_cycle_num = 4;
-  qspi_cmd_struct->operation_mode = QSPI_OPERATE_MODE_144;       
-  qspi_cmd_struct->read_status_config = QSPI_RSTSC_HW_AUTO;  
+  qspi_cmd_struct->operation_mode = QSPI_OPERATE_MODE_144;
+  qspi_cmd_struct->read_status_config = QSPI_RSTSC_HW_AUTO;
   qspi_cmd_struct->read_status_enable = FALSE;
   qspi_cmd_struct->write_data_enable = FALSE;
 }
@@ -130,11 +130,11 @@ void esmt32m_cmd_write_config(qspi_cmd_type *qspi_cmd_struct, uint32_t addr, uin
 {
   qspi_cmd_struct->pe_mode_enable = FALSE;
   qspi_cmd_struct->pe_mode_operate_code = 0;
-  qspi_cmd_struct->instruction_code = 0x32; 
+  qspi_cmd_struct->instruction_code = 0x32;
   qspi_cmd_struct->instruction_length = QSPI_CMD_INSLEN_1_BYTE;
-  qspi_cmd_struct->address_code = addr; 
+  qspi_cmd_struct->address_code = addr;
   qspi_cmd_struct->address_length = QSPI_CMD_ADRLEN_3_BYTE;
-  qspi_cmd_struct->data_counter = counter;   
+  qspi_cmd_struct->data_counter = counter;
   qspi_cmd_struct->second_dummy_cycle_num = 0;
   qspi_cmd_struct->operation_mode = QSPI_OPERATE_MODE_114;
   qspi_cmd_struct->read_status_config = QSPI_RSTSC_HW_AUTO;
@@ -153,7 +153,7 @@ void esmt32m_cmd_erase_config(qspi_cmd_type *qspi_cmd_struct, uint32_t addr)
   qspi_cmd_struct->pe_mode_enable = FALSE;
   qspi_cmd_struct->pe_mode_operate_code = 0;
   qspi_cmd_struct->instruction_code = 0x20;
-  qspi_cmd_struct->instruction_length = QSPI_CMD_INSLEN_1_BYTE; 
+  qspi_cmd_struct->instruction_length = QSPI_CMD_INSLEN_1_BYTE;
   qspi_cmd_struct->address_code = addr;
   qspi_cmd_struct->address_length = QSPI_CMD_ADRLEN_3_BYTE;
   qspi_cmd_struct->data_counter = 0;
@@ -172,12 +172,12 @@ void esmt32m_cmd_erase_config(qspi_cmd_type *qspi_cmd_struct, uint32_t addr)
 void esmt32m_cmd_wren_config(qspi_cmd_type *qspi_cmd_struct)
 {
   qspi_cmd_struct->pe_mode_enable = FALSE;
-  qspi_cmd_struct->pe_mode_operate_code = 0; 
+  qspi_cmd_struct->pe_mode_operate_code = 0;
   qspi_cmd_struct->instruction_code = 0x06;
   qspi_cmd_struct->instruction_length = QSPI_CMD_INSLEN_1_BYTE;
-  qspi_cmd_struct->address_code = 0; 
+  qspi_cmd_struct->address_code = 0;
   qspi_cmd_struct->address_length = QSPI_CMD_ADRLEN_0_BYTE;
-  qspi_cmd_struct->data_counter = 0; 
+  qspi_cmd_struct->data_counter = 0;
   qspi_cmd_struct->second_dummy_cycle_num = 0;
   qspi_cmd_struct->operation_mode = QSPI_OPERATE_MODE_111;
   qspi_cmd_struct->read_status_config = QSPI_RSTSC_HW_AUTO;
@@ -196,9 +196,9 @@ void esmt32m_cmd_rdsr_config(qspi_cmd_type *qspi_cmd_struct)
   qspi_cmd_struct->pe_mode_operate_code = 0;
   qspi_cmd_struct->instruction_code = 0x05;
   qspi_cmd_struct->instruction_length = QSPI_CMD_INSLEN_1_BYTE;
-  qspi_cmd_struct->address_code = 0; 
+  qspi_cmd_struct->address_code = 0;
   qspi_cmd_struct->address_length = QSPI_CMD_ADRLEN_0_BYTE;
-  qspi_cmd_struct->data_counter = 0; 
+  qspi_cmd_struct->data_counter = 0;
   qspi_cmd_struct->second_dummy_cycle_num = 0;
   qspi_cmd_struct->operation_mode = QSPI_OPERATE_MODE_111;
   qspi_cmd_struct->read_status_config = QSPI_RSTSC_HW_AUTO;
@@ -228,12 +228,12 @@ void qspi_dma_set(dma_dir_type dir, uint8_t* buf, uint32_t length)
   dma_init_struct.peripheral_data_width = DMA_PERIPHERAL_DATA_WIDTH_WORD;
   dma_init_struct.peripheral_inc_enable = FALSE;
   dma_init_struct.priority = DMA_PRIORITY_HIGH;
-  
+
   dma_init(DMA2_CHANNEL1, &dma_init_struct);
-  
+
   dmamux_init(DMA2MUX_CHANNEL1, DMAMUX_DMAREQ_ID_QSPI1);
   dmamux_enable(DMA2, TRUE);
-  
+
   dma_channel_enable(DMA2_CHANNEL1, TRUE);
 }
 
@@ -248,7 +248,7 @@ void qspi_dma_set(dma_dir_type dir, uint8_t* buf, uint32_t length)
 void qspi_read_data_using_pem(pem_step_type pem_step, uint32_t addr, uint32_t total_len, uint8_t* buf)
 {
   qspi_dma_enable(QSPI1, TRUE);
-  qspi_dma_rx_threshold_set(QSPI1, QSPI_DMA_FIFO_THOD_WORD08); 
+  qspi_dma_rx_threshold_set(QSPI1, QSPI_DMA_FIFO_THOD_WORD08);
   /* config dma */
   qspi_dma_set(DMA_DIR_PERIPHERAL_TO_MEMORY, buf, total_len);
   /* kick command */
@@ -274,7 +274,7 @@ void qspi_read_data_using_pem(pem_step_type pem_step, uint32_t addr, uint32_t to
 
   /* wait dma completed */
   while(dma_flag_get(DMA2_FDT1_FLAG) == RESET);
-  dma_flag_clear(DMA2_FDT1_FLAG);  
+  dma_flag_clear(DMA2_FDT1_FLAG);
   qspi_dma_enable(QSPI1, FALSE);
 }
 
@@ -293,13 +293,13 @@ void qspi_data_read(uint32_t addr, uint32_t total_len, uint8_t* buf)
   addr += rdsz;
   buf += rdsz;
   total_len -= rdsz;
-  
+
   /* keep phase */
   qspi_read_data_using_pem(PEM_STEP_KEEP, addr, rdsz, buf);
   addr += rdsz;
   buf += rdsz;
   total_len -= rdsz;
-  
+
   /* last phase */
   qspi_read_data_using_pem(PEM_STEP_END, addr, total_len, buf);
 }
@@ -314,7 +314,7 @@ void qspi_data_read(uint32_t addr, uint32_t total_len, uint8_t* buf)
 static void qspi_data_once_write(uint32_t addr, uint32_t sz, uint8_t* buf)
 {
   qspi_write_enable();
- 
+
   /* config qspi's dma mode */
   qspi_dma_enable(QSPI1, TRUE);
   qspi_dma_tx_threshold_set(QSPI1, QSPI_DMA_FIFO_THOD_WORD08);
@@ -332,9 +332,9 @@ static void qspi_data_once_write(uint32_t addr, uint32_t sz, uint8_t* buf)
 
   /* wait dma completed */
   while(dma_flag_get(DMA2_FDT1_FLAG) == RESET);
-  dma_flag_clear(DMA2_FDT1_FLAG);  
+  dma_flag_clear(DMA2_FDT1_FLAG);
   qspi_dma_enable(QSPI1, FALSE);
-  
+
   qspi_busy_check();
 }
 
@@ -393,7 +393,7 @@ void qspi_busy_check(void)
 {
   esmt32m_cmd_rdsr_config(&esmt32m_cmd_config);
   qspi_cmd_operation_kick(QSPI1, &esmt32m_cmd_config);
-  
+
   /* wait command completed */
   while(qspi_flag_get(QSPI1, QSPI_CMDSTS_FLAG) == RESET);
   qspi_flag_clear(QSPI1, QSPI_CMDSTS_FLAG);
@@ -408,7 +408,7 @@ void qspi_write_enable(void)
 {
   esmt32m_cmd_wren_config(&esmt32m_cmd_config);
   qspi_cmd_operation_kick(QSPI1, &esmt32m_cmd_config);
-  
+
   /* wait command completed */
   while(qspi_flag_get(QSPI1, QSPI_CMDSTS_FLAG) == RESET);
   qspi_flag_clear(QSPI1, QSPI_CMDSTS_FLAG);
@@ -416,8 +416,8 @@ void qspi_write_enable(void)
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */

@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_clock.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    system clock config program
   **************************************************************************
   */
@@ -36,10 +36,10 @@ void system_clock_config(void)
 
   /* config ldo voltage */
   pwc_ldo_output_voltage_set(PWC_LDO_OUTPUT_1V3);
- 
+
   /* set the flash clock divider */
   flash_clock_divider_set(FLASH_CLOCK_DIV_3);
- 
+
   /* reset crm */
   crm_reset();
 

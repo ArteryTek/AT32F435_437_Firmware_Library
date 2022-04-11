@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     ov5640.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    ov5640 program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -40,21 +40,21 @@
   */
 
 #define I2C_TIMEOUT                      0x2FFFFFF
-                                         
+
 #define I2Cx_CLKCTRL                     0x30F05292
 #define I2Cx_ADDRESS                     0xA0
-                                         
+
 #define I2Cx_PORT                        I2C1
 #define I2Cx_CLK                         CRM_I2C1_PERIPH_CLOCK
 #define I2Cx_DMA                         DMA1
 #define I2Cx_DMA_CLK                     CRM_DMA1_PERIPH_CLOCK
-                                         
+
 #define I2Cx_SCL_GPIO_CLK                CRM_GPIOB_PERIPH_CLOCK
 #define I2Cx_SCL_GPIO_PIN                GPIO_PINS_6
 #define I2Cx_SCL_GPIO_PinsSource         GPIO_PINS_SOURCE6
 #define I2Cx_SCL_GPIO_PORT               GPIOB
 #define I2Cx_SCL_GPIO_AF                 GPIO_MUX_4
-                                         
+
 #define I2Cx_SDA_GPIO_CLK                CRM_GPIOB_PERIPH_CLOCK
 #define I2Cx_SDA_GPIO_PIN                GPIO_PINS_7
 #define I2Cx_SDA_GPIO_PinsSource         GPIO_PINS_SOURCE7
@@ -148,7 +148,7 @@ error_status ov5640_reg_read(uint16_t reg, uint8_t *data)
   {
     return ERROR;
   }
-  
+
   return SUCCESS;
 }
 
@@ -184,7 +184,7 @@ error_status ov5640_init(void)
   reg  = (uint16_t)temp << 8;
   ov5640_reg_read(OV5640_CHIPIDL, &temp);
   reg |= temp;
-  
+
   if(reg != OV5640_ID)
   {
     return ERROR;
@@ -204,7 +204,7 @@ error_status ov5640_init(void)
 	delay_ms(500);
 	ov5640_flash_ctrl(0);
 #endif
-  
+
   return SUCCESS;
 }
 
@@ -664,7 +664,7 @@ void i2c_lowlevel_init(i2c_handle_type* hi2c)
   gpio_init_structure.gpio_pull           = GPIO_PULL_UP;
   gpio_init_structure.gpio_pins           = GPIO_PINS_2;
   gpio_init(GPIOH, &gpio_init_structure);
-  
+
   gpio_init_structure.gpio_pins           = GPIO_PINS_3;
   gpio_init(GPIOH, &gpio_init_structure);
 

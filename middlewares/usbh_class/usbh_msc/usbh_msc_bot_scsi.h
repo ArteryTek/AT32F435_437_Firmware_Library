@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     usbh_msc_bot_scsi.h
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    usb host msc bulk-only transfer and scsi header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -30,19 +30,19 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
- 
+
 #include "usbh_core.h"
 #include "usb_conf.h"
 
 /** @addtogroup AT32F435_437_middlewares_usbh_class
   * @{
   */
-  
+
 /** @addtogroup USBH_msc_bot_scsi_class
   * @{
   */
 
-/** @defgroup USBH_msc_bot_scsi_class_definition 
+/** @defgroup USBH_msc_bot_scsi_class_definition
   * @{
   */
 
@@ -201,16 +201,16 @@ typedef struct
 
 usb_sts_type usb_bot_request(void *uhost, msc_bot_trans_type *bot_trans);
 
-usb_sts_type usbh_msc_bot_scsi_get_inquiry(void *uhost,  msc_bot_trans_type *bot_trans, 
+usb_sts_type usbh_msc_bot_scsi_get_inquiry(void *uhost,  msc_bot_trans_type *bot_trans,
                                             uint8_t lun, msc_scsi_data_inquiry *inquiry);
 
-usb_sts_type usbh_msc_bot_scsi_capacity(void *uhost, msc_bot_trans_type *bot_trans, 
+usb_sts_type usbh_msc_bot_scsi_capacity(void *uhost, msc_bot_trans_type *bot_trans,
                                             uint8_t lun, msc_scsi_data_capacity *capacity);
 
-usb_sts_type usbh_msc_bot_scsi_test_unit_ready(void *uhost, msc_bot_trans_type *bot_trans, 
+usb_sts_type usbh_msc_bot_scsi_test_unit_ready(void *uhost, msc_bot_trans_type *bot_trans,
                                             uint8_t lun);
 
-usb_sts_type usbh_msc_bot_scsi_request_sense(void *uhost, msc_bot_trans_type *bot_trans, 
+usb_sts_type usbh_msc_bot_scsi_request_sense(void *uhost, msc_bot_trans_type *bot_trans,
                                             uint8_t lun);
 
 usb_sts_type usbh_msc_bot_scsi_write(void *uhost, msc_bot_trans_type *bot_trans,
@@ -227,7 +227,7 @@ usb_sts_type usbh_msc_bot_scsi_read(void *uhost, msc_bot_trans_type *bot_trans,
 /**
   * @}
   */
-  
+
 /**
   * @}
   */

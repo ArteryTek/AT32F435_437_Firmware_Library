@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -51,7 +51,7 @@
 int main(void)
 {
   error_status status;
-  uint32_t useraddr;
+  uint32_t useraddr, sector_size;
   system_clock_config();
   at32_board_init();
 
@@ -85,10 +85,19 @@ int main(void)
   /* init flash */
   flash_unlock();
 
-  for(useraddr = APP_START_SECTOR_ADDR; useraddr <= APP_LAST_SECTOR_ADDR; useraddr += 2048)
+  if(SECTOR_SIZE_INDEX == 0x04) /* 4kb/sector size */
+  {
+    sector_size = 4096;
+  }
+  else /* 2kb/sector size */
+  {
+    sector_size = 2048;
+  }
+
+  for(useraddr = APP_START_SECTOR_ADDR; useraddr <= APP_LAST_SECTOR_ADDR; useraddr += sector_size)
   {
     flash_sector_erase(useraddr);
-	 }
+  }
 #ifdef USE_IAP_HTTP
   /* initialize the http server */
   iap_httpd_init();

@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     at32f435_437_int.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main interrupt service routines.
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -36,7 +36,7 @@
   * @{
   */
 
-extern uint32_t card_inserted; 
+extern uint32_t card_inserted;
 
 /**
   * @brief  this function handles nmi exception.
@@ -142,15 +142,15 @@ void SysTick_Handler(void)
   */
 void EXINT9_5_IRQHandler(void)
 {
-  /* reset smart card cmdvcc */  
+  /* reset smart card cmdvcc */
   gpio_bits_reset(SC_CMDVCC_PORT, SC_CMDVCC_PIN);
 
-  /* rst low */  
+  /* rst low */
   gpio_bits_reset(SC_RESET_PORT, SC_RESET_PIN);
 
-  /* rst high */  
+  /* rst high */
   gpio_bits_set(SC_RESET_PORT, SC_RESET_PIN);
-    
+
   /* clear sc exint line pending bit */
   exint_flag_clear(SC_OFF_EXINT);
 
@@ -173,7 +173,7 @@ void SC_USART_IRQHandler(void)
     /* flush the sc_usart dr register */
     usart_data_receive(SC_USART);
   }
-  
+
   if(usart_flag_get(SC_USART, USART_RDBF_FLAG) != RESET)
   {
     /* disable sc_usart rdbf interrupt */
@@ -184,8 +184,8 @@ void SC_USART_IRQHandler(void)
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */

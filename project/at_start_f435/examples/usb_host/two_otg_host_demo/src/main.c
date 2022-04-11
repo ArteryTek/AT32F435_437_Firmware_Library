@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -88,7 +88,7 @@ int main(void)
             USB_ID,
             &uhost_msc_class_handler,
             &usbh_user_handle);
-  /* init otg2 host */         
+  /* init otg2 host */
   usbh_init(&otg2_core_struct,
             USB_FULL_SPEED_CORE_ID,
             USB2_ID,

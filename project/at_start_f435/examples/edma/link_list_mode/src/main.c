@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -30,7 +30,7 @@
 /** @addtogroup AT32F435_periph_examples
   * @{
   */
-  
+
 /** @addtogroup 435_EDMA_link_list_mode EDMA_link_list_mode
   * @{
   */
@@ -106,24 +106,24 @@ int main(void)
   /* edma link list descriptor init */
   edma_ll_descriptors_init();
 
-  /* edma stream1 link list mode configuration */ 
+  /* edma stream1 link list mode configuration */
   edma_link_list_enable(EDMA_STREAM1_LL, TRUE);
   edma_link_list_init(EDMA_STREAM1_LL, (uint32_t)edma_ll_descriptors_tx);
-  
+
   /* edmamux configuration */
   edmamux_enable(TRUE);
   edmamux_init(EDMAMUX_CHANNEL1, EDMAMUX_DMAREQ_ID_USART1_TX);
-  
+
   /* enable transfer full data intterrupt */
   edma_interrupt_enable(EDMA_STREAM1, EDMA_FDT_INT, TRUE);
-  
+
   /* edma stream1 interrupt nvic init */
   nvic_priority_group_config(NVIC_PRIORITY_GROUP_4);
   nvic_irq_enable(EDMA_Stream1_IRQn, 1, 0);
-  
+
   /* enable edma stream1 */
   edma_stream_enable(EDMA_STREAM1, TRUE);
-  
+
   while(1)
   {
   }
@@ -188,8 +188,8 @@ void EDMA_Stream1_IRQHandler(void)
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */

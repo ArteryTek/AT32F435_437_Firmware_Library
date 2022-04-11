@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     at32f435_437_clock.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    system clock config program
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -34,7 +34,7 @@
 /** @addtogroup 437_System_clock_configuration System_clock_configuration
   * @{
   */
-  
+
 /**
   * @brief  system clock config program
   * @note   the system clock is configured as follow:
@@ -61,10 +61,10 @@ void system_clock_config(void)
 
   /* config ldo voltage */
   pwc_ldo_output_voltage_set(PWC_LDO_OUTPUT_1V3);
- 
+
   /* set the flash clock divider */
   flash_clock_divider_set(FLASH_CLOCK_DIV_3);
- 
+
   /* reset crm */
   crm_reset();
 
@@ -75,7 +75,22 @@ void system_clock_config(void)
   {
   }
 
-  /* config pll clock resource */
+  /* config pll clock resource
+  common frequency config list: pll source selected  hick or hext(8mhz)
+  _______________________________________________________________________________________
+  |        |         |         |         |         |         |         |        |        |
+  |pll(mhz)|   288   |   252   |   216   |   180   |   144   |   108   |   72   |   36   |
+  |________|_________|_________|_________|_________|_________|_________|_________________|
+  |        |         |         |         |         |         |         |        |        |
+  |pll_ns  |   72    |   63    |   108   |   90    |   72    |   108   |   72   |   72   |
+  |        |         |         |         |         |         |         |        |        |
+  |pll_ms  |   1     |   1     |   1     |   1     |   1     |   1     |   1    |   1    |
+  |        |         |         |         |         |         |         |        |        |
+  |pll_fr  |   FR_2  |   FR_2  |   FR_4  |   FR_4  |   FR_4  |   FR_8  |   FR_8 |   FR_16|
+  |________|_________|_________|_________|_________|_________|_________|________|________|
+
+  if pll clock source selects hext with other frequency values, or configure pll to other
+  frequency values, please use the at32 new clock  configuration tool for configuration.  */
   crm_pll_config(CRM_PLL_SOURCE_HEXT, 72, 1, CRM_PLL_FR_2);
 
   /* enable pll */
@@ -115,9 +130,9 @@ void system_clock_config(void)
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 

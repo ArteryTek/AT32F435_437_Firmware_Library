@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_ertc.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    contains all the functions for the ertc firmware library
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -335,7 +335,7 @@ error_status ertc_date_set(uint8_t year, uint8_t month, uint8_t date, uint8_t we
   ERTC->date = reg.date;
 
   /* exit init mode */
-  ertc_init_mode_exit(); 
+  ertc_init_mode_exit();
 
   if(ERTC->ctrl_bit.dren == 0)
   {
@@ -547,7 +547,7 @@ void ertc_alarm_set(ertc_alarm_type alarm_x, uint8_t week_date, uint8_t hour, ui
   {
     reg.ala = ERTC->alb;
   }
-  
+
   reg.ala_bit.d = ertc_num_to_bcd(week_date);
   reg.ala_bit.h = ertc_num_to_bcd(hour);
   reg.ala_bit.m = ertc_num_to_bcd(min);
@@ -779,7 +779,7 @@ error_status ertc_wakeup_enable(confirm_state new_state)
 
   if(new_state == FALSE)
   {
-    if(ertc_wait_flag(ERTC_ALAWF_FLAG, RESET) != SUCCESS)
+    if(ertc_wait_flag(ERTC_WATWF_FLAG, RESET) != SUCCESS)
     {
       return ERROR;
     }

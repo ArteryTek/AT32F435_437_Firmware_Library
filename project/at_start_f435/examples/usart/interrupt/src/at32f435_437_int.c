@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     at32f435_437_int.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main interrupt service routines.
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -30,7 +30,7 @@
 /** @addtogroup AT32F435_periph_examples
   * @{
   */
-  
+
 /** @addtogroup 435_USART_interrupt
   * @{
   */
@@ -41,7 +41,7 @@ extern uint8_t usart2_rx_buffer[];
 extern uint8_t usart3_rx_buffer[];
 extern uint8_t usart2_tx_counter;
 extern uint8_t usart3_tx_counter;
-extern uint8_t usart2_rx_counter; 
+extern uint8_t usart2_rx_counter;
 extern uint8_t usart3_rx_counter;
 extern uint8_t usart2_tx_buffer_size;
 extern uint8_t usart3_tx_buffer_size;
@@ -171,7 +171,7 @@ void USART2_IRQHandler(void)
     {
       /* disable the usart2 transmit interrupt */
       usart_interrupt_enable(USART2, USART_TDBE_INT, FALSE);
-    }    
+    }
   }
 }
 
@@ -203,14 +203,14 @@ void USART3_IRQHandler(void)
     {
       /* disable the usart3 transmit interrupt */
       usart_interrupt_enable(USART3, USART_TDBE_INT, FALSE);
-    }    
+    }
   }
 }
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */

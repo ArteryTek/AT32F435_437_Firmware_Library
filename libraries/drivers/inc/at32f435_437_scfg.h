@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_scfg.h
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    at32f435_437 system config header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -50,7 +50,7 @@ extern "C" {
 /** @defgroup SCFG_exported_types
   * @{
   */
-  
+
 /**
   * @brief scfg xmc addres mapping swap type
   */
@@ -113,7 +113,7 @@ typedef enum
   SCFG_PINS_SOURCE12                     = 0x0C,
   SCFG_PINS_SOURCE13                     = 0x0D,
   SCFG_PINS_SOURCE14                     = 0x0E,
-  SCFG_PINS_SOURCE15                     = 0x0F 
+  SCFG_PINS_SOURCE15                     = 0x0F
 } scfg_pins_source_type;
 
 /**
@@ -128,7 +128,7 @@ typedef enum
   SCFG_PORT_SOURCE_GPIOE                 = 0x04,
   SCFG_PORT_SOURCE_GPIOF                 = 0x05,
   SCFG_PORT_SOURCE_GPIOG                 = 0x06,
-  SCFG_PORT_SOURCE_GPIOH                 = 0x07 
+  SCFG_PORT_SOURCE_GPIOH                 = 0x07
 } scfg_port_source_type;
 
 /**
@@ -319,5 +319,5 @@ void scfg_pins_ultra_driven_enable(scfg_ultra_driven_pins_type value, confirm_st
 #ifdef __cplusplus
 }
 #endif
-  
+
 #endif

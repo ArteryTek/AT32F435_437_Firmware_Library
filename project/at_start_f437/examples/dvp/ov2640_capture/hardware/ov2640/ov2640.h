@@ -44,7 +44,7 @@
 #define OV2640_DSP_MC_AH        0xFB
 #define OV2640_DSP_MC_D         0xFC
 #define OV2640_DSP_P_STATUS     0xFE
-#define OV2640_DSP_RA_DLMT      0xFF 
+#define OV2640_DSP_RA_DLMT      0xFF
 
 #define OV2640_SENSOR_GAIN       0x00
 #define OV2640_SENSOR_COM1       0x03

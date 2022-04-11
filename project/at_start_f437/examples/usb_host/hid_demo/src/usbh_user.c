@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     usbh_user.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    usb user function
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -28,7 +28,7 @@
 /** @addtogroup AT32F437_periph_examples
   * @{
   */
-  
+
 /** @addtogroup 437_USB_host_hid
   * @{
   */
@@ -47,7 +47,7 @@ static usb_sts_type usbh_user_active_vbus(void *uhost, confirm_state state);
 static usb_sts_type usbh_user_not_support(void);
 
 
-usbh_user_handler_type usbh_user_handle = 
+usbh_user_handler_type usbh_user_handle =
 {
   usbh_user_init,
   usbh_user_reset,
@@ -71,7 +71,7 @@ usbh_user_handler_type usbh_user_handle =
 static usb_sts_type usbh_user_init(void)
 {
   usb_sts_type status = USB_OK;
-  
+
   return status;
 }
 
@@ -83,7 +83,7 @@ static usb_sts_type usbh_user_init(void)
 static usb_sts_type usbh_user_reset(void)
 {
   usb_sts_type status = USB_OK;
-  
+
   return status;
 }
 
@@ -96,7 +96,7 @@ static usb_sts_type usbh_user_attached(void)
 {
   usb_sts_type status = USB_OK;
   USBH_DEBUG("USB Device Attached");
-  return status;  
+  return status;
 }
 
 /**
@@ -108,7 +108,7 @@ static usb_sts_type usbh_user_disconnect(void)
 {
   usb_sts_type status = USB_OK;
   USBH_DEBUG("Device Disconnect");
-  return status; 
+  return status;
 }
 
 /**
@@ -127,7 +127,7 @@ static usb_sts_type usbh_user_speed(uint8_t speed)
   {
     USBH_DEBUG("This is a Low-Speed device");
   }
-  return status; 
+  return status;
 }
 
 /**
@@ -139,7 +139,7 @@ static usb_sts_type usbh_user_mfc_string(void *string)
 {
   usb_sts_type status = USB_OK;
   USBH_DEBUG("Manufacturer: %s", (uint8_t *)string);
-  return status;  
+  return status;
 }
 
 /**
@@ -151,7 +151,7 @@ static usb_sts_type usbh_user_product_string(void *string)
 {
   usb_sts_type status = USB_OK;
   USBH_DEBUG("Product: %s", (uint8_t *)string);
-  return status;  
+  return status;
 }
 
 /**
@@ -163,7 +163,7 @@ static usb_sts_type usbh_user_serial_string(void *string)
 {
   usb_sts_type status = USB_OK;
   USBH_DEBUG("Serial: %s", (uint8_t *)string);
-  return status; 
+  return status;
 }
 
 /**
@@ -175,7 +175,7 @@ static usb_sts_type usbh_user_enumeration_done(void)
 {
   usb_sts_type status = USB_OK;
   USBH_DEBUG("Enumeration done");
-  return status; 
+  return status;
 }
 
 /**
@@ -186,8 +186,8 @@ static usb_sts_type usbh_user_enumeration_done(void)
 static usb_sts_type usbh_user_application(void)
 {
   usb_sts_type status = USB_OK;
-  
-  return status;  
+
+  return status;
 }
 
 
@@ -225,8 +225,8 @@ static usb_sts_type usbh_user_active_vbus(void *uhost, confirm_state state)
 static usb_sts_type usbh_user_not_support(void)
 {
   usb_sts_type status = USB_OK;
-  
-  return status;  
+
+  return status;
 }
 
 /**

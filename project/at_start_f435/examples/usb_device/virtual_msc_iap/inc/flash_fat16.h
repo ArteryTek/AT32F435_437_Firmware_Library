@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     flash_fat16.h
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    fat16 file system header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -30,14 +30,14 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
- 
+
 
 #include "usb_conf.h"
 
 /** @addtogroup AT32F435_periph_examples
   * @{
   */
-  
+
 /** @addtogroup 435_USB_device_virtual_msc_iap
   * @{
   */
@@ -116,7 +116,7 @@ typedef struct
   uint32_t firmware_length;
   uint32_t write_crc;
   uint32_t read_crc;
-  
+
   uint32_t write_addr;
   uint32_t file_write_nr;
   upgrade_status_type msc_up_status;
@@ -135,15 +135,15 @@ uint8_t flash_fat16_get_upgrade_flag(void);
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 #ifdef __cplusplus
 }

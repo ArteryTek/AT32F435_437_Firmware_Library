@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_conf.h
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    at32f435_437 config header file
   **************************************************************************
   */
@@ -14,7 +14,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
- 
+
 #if defined (__CC_ARM)
  #pragma anon_unions
 #endif

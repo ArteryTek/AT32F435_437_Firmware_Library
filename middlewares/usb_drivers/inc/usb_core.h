@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     usb_core.h
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    usb core header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -31,12 +31,12 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
- 
+
 
 #include "usb_std.h"
 #include "usb_conf.h"
 
-#ifdef USE_OTG_DEVICE_MODE 
+#ifdef USE_OTG_DEVICE_MODE
 #include "usbd_core.h"
 #endif
 #ifdef USE_OTG_HOST_MODE
@@ -46,7 +46,7 @@ extern "C" {
 /** @addtogroup AT32F435_437_middlewares_usb_drivers
   * @{
   */
-  
+
 /** @addtogroup USB_drivers_core
   * @{
   */
@@ -74,7 +74,7 @@ typedef struct
   uint8_t                                dma_en;                    /*!< dma enable state, not use*/
   uint8_t                                hc_num;                    /*!< the otg host support number of channel */
   uint8_t                                ept_num;                   /*!< the otg device support number of endpoint */
-  
+
   uint16_t                               max_size;                  /*!< support max packet size */
   uint16_t                               fifo_size;                 /*!< the usb otg total file size */
   uint8_t                                phy_itface;                /*!< usb phy select */
@@ -91,43 +91,43 @@ typedef struct
 typedef struct
 {
   usb_reg_type                           *usb_reg;                  /*!< the usb otg register type */
-#ifdef USE_OTG_DEVICE_MODE  
+#ifdef USE_OTG_DEVICE_MODE
   usbd_core_type                         dev;                       /*!< the usb device core type */
 #endif
-  
-#ifdef USE_OTG_HOST_MODE  
+
+#ifdef USE_OTG_HOST_MODE
   usbh_core_type                         host;                      /*!< the usb host core type */
 #endif
-  
+
   usb_core_cfg                           cfg;                       /*!< the usb otg core config type */
-  
+
 } otg_core_type;
 
 usb_sts_type usb_core_config(otg_core_type *otgdev, uint8_t core_id);
-#ifdef USE_OTG_DEVICE_MODE 
-usb_sts_type usbd_init(otg_core_type *udev, 
-                  uint8_t core_id, uint8_t usb_id, 
+#ifdef USE_OTG_DEVICE_MODE
+usb_sts_type usbd_init(otg_core_type *udev,
+                  uint8_t core_id, uint8_t usb_id,
                   usbd_class_handler *class_handler,
                   usbd_desc_handler *desc_handler);
 #endif
 
-#ifdef USE_OTG_HOST_MODE  
-usb_sts_type usbh_init(otg_core_type *hdev, 
-                  uint8_t core_id, uint8_t usb_id, 
+#ifdef USE_OTG_HOST_MODE
+usb_sts_type usbh_init(otg_core_type *hdev,
+                  uint8_t core_id, uint8_t usb_id,
                   usbh_class_handler_type *class_handler,
                   usbh_user_handler_type *user_handler);
 #endif
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
   */
- 
+
 /**
   * @}
-  */ 
+  */
 #ifdef __cplusplus
 }
 #endif

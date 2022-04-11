@@ -33,7 +33,7 @@
 /** @addtogroup AT32F437_periph_examples
   * @{
   */
-  
+
 /** @addtogroup 437_EMAC_http_server
   * @{
   */
@@ -184,10 +184,10 @@ fs_bytes_left(struct fs_file *file)
 
 /**
   * @}
-  */ 
+  */
 /**
   * @}
-  */ 
+  */
 /**
   * @}
-  */ 
+  */

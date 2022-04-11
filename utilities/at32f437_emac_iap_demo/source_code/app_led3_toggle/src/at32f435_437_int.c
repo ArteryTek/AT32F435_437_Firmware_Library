@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_int.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main interrupt service routines.
   **************************************************************************
   */
@@ -116,7 +116,7 @@ void SysTick_Handler(void)
 void EMAC_IRQHandler(void)
 {
   /* handles all the received frames */
-  while(emac_received_packet_size_get() != 0) 
+  while(emac_received_packet_size_get() != 0)
   {
     lwip_pkt_handle();
   }

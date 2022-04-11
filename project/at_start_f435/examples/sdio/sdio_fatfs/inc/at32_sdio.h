@@ -1,18 +1,18 @@
 /**
   **************************************************************************
   * @file     at32_sdio.h
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    this file contains all the functions prototypes for the sd/mmc
   *           card at32_sdio driver firmware library.
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -23,7 +23,7 @@
   * FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
   *
   **************************************************************************
-  */ 
+  */
 
 /* define to prevent recursive inclusion -------------------------------------*/
 #ifndef __AT32_SDIO_H
@@ -33,7 +33,7 @@
 extern "C" {
 #endif
 
-/* includes ------------------------------------------------------------------*/                                                                               
+/* includes ------------------------------------------------------------------*/
 #include "at32f435_437.h"
 
 /** @addtogroup AT32F435_periph_examples
@@ -44,7 +44,7 @@ extern "C" {
   * @{
   */
 
-/** @defgroup SDIO_instance_definition 
+/** @defgroup SDIO_instance_definition
   * @{
   */
 
@@ -72,8 +72,8 @@ typedef enum
   * sdio error defines
   */
 typedef enum
-{    
-  /* sdio specific error defines ------------------------------------------*/   
+{
+  /* sdio specific error defines ------------------------------------------*/
   SD_CMD_FAIL                            = 1,    /*!< command response received (but crc check error) */
   SD_DATA_FAIL                           = 2,    /*!< data bock sent/received (crc check error) */
   SD_CMD_RSP_TIMEOUT                     = 3,    /*!< command response timeout */
@@ -118,7 +118,7 @@ typedef enum
   SD_UNSUPPORTED_HW,                             /*!< unsupported hardware */
   SD_ERROR,                                      /*!< error */
   SD_OK = 0                                      /*!< pass */
-} sd_error_status_type;       
+} sd_error_status_type;
 
 /**
   * card specific data: csd register
@@ -162,7 +162,7 @@ typedef struct
   uint8_t  ecc_code;                             /*!< ecc code */
   uint8_t  csd_crc;                              /*!< csd crc */
   uint8_t  reserved4;                            /*!< always */
-} sd_csd_struct_type;   
+} sd_csd_struct_type;
 
 /**
   * card identification data: cid register
@@ -180,7 +180,7 @@ typedef struct
   uint8_t  cid_crc;                              /*!< cid crc */
   uint8_t  reserved2;                            /*!< always 1 */
 } sd_cid_struct_type;
-     
+
 /**
   * sd card status
   */
@@ -197,7 +197,7 @@ typedef enum
   SD_CARD_ERROR                          = ((uint32_t)0x000000FF)
 } sd_card_state_type;
 
-/** 
+/**
   * supported sd memory cards
   */
 typedef enum
@@ -216,7 +216,7 @@ typedef enum
 /**
   * sd card scr information
   */
-typedef struct 
+typedef struct
 {
   uint32_t sd_spec                       :4;     /* [59:56] */
   uint32_t scr_structure                 :4;     /* [60:63] */
@@ -251,7 +251,7 @@ extern sd_card_info_struct_type sd_card_info;
   * @}
   */
 
-/** @defgroup SDIO_command_index_definition 
+/** @defgroup SDIO_command_index_definition
   * @{
   */
 
@@ -278,8 +278,8 @@ extern sd_card_info_struct_type sd_card_info;
 #define SD_CMD_READ_SINGLE_BLOCK         ((uint8_t)17)
 #define SD_CMD_READ_MULT_BLOCK           ((uint8_t)18)
 #define SD_CMD_HS_BUSTEST_WRITE          ((uint8_t)19)
-#define SD_CMD_WRITE_DAT_UNTIL_STOP      ((uint8_t)20) 
-#define SD_CMD_SET_BLOCK_COUNT           ((uint8_t)23) 
+#define SD_CMD_WRITE_DAT_UNTIL_STOP      ((uint8_t)20)
+#define SD_CMD_SET_BLOCK_COUNT           ((uint8_t)23)
 #define SD_CMD_WRITE_SINGLE_BLOCK        ((uint8_t)24)
 #define SD_CMD_WRITE_MULT_BLOCK          ((uint8_t)25)
 #define SD_CMD_PROG_CID                  ((uint8_t)26)
@@ -299,9 +299,9 @@ extern sd_card_info_struct_type sd_card_info;
 #define SD_CMD_GEN_CMD                   ((uint8_t)56)
 #define SD_CMD_NO_CMD                    ((uint8_t)64)
 
-/** 
-  * following commands are sd card specific commands. 
-  * should be sent before sending these commands. 
+/**
+  * following commands are sd card specific commands.
+  * should be sent before sending these commands.
   */
 #define SD_CMD_APP_SD_SET_BUSWIDTH       ((uint8_t)6)
 #define SD_CMD_SD_APP_STAUS              ((uint8_t)13)
@@ -312,9 +312,9 @@ extern sd_card_info_struct_type sd_card_info;
 #define SD_CMD_SDIO_RW_DIRECT            ((uint8_t)52)
 #define SD_CMD_SDIO_RW_EXTENDED          ((uint8_t)53)
 
-/** 
+/**
   * following commands are sd card specific security commands.
-  * sdio_app_cmd should be sent before sending these commands. 
+  * sdio_app_cmd should be sent before sending these commands.
   */
 #define SD_CMD_SD_APP_GET_MKB            ((uint8_t)43)
 #define SD_CMD_SD_APP_GET_MID            ((uint8_t)44)
@@ -332,7 +332,7 @@ extern sd_card_info_struct_type sd_card_info;
   * @}
   */
 
-/** @defgroup SDIO_paremeters_definition 
+/** @defgroup SDIO_paremeters_definition
   * @{
   */
 
@@ -341,21 +341,21 @@ extern sd_card_info_struct_type sd_card_info;
   */
 #define NULL                             0
 #define SDIO_STATIC_FLAGS                ((uint32_t)0x000005FF)
-#define SDIO_CMD0TIMEOUT                 ((uint32_t)0x00010000)     
-#define SDIO_DATATIMEOUT                 ((uint32_t)0xFFFFFFFF)     
+#define SDIO_CMD0TIMEOUT                 ((uint32_t)0x00010000)
+#define SDIO_DATATIMEOUT                 ((uint32_t)0xFFFFFFFF)
 #define SDIO_FIFO_Address                ((uint32_t)0x40018080)
 
 /**
   * @}
   */
 
-/** @defgroup SDIO_response_definition 
+/** @defgroup SDIO_response_definition
   * @{
   */
 
 /**
   * mask for errors card status r1 (ocr register)
-  */  
+  */
 #define SD_OCR_ADDR_OUT_OF_RANGE         ((uint32_t)0x80000000)
 #define SD_OCR_ADDR_MISALIGNED           ((uint32_t)0x40000000)
 #define SD_OCR_BLK_LEN_ERR               ((uint32_t)0x20000000)
@@ -416,13 +416,13 @@ extern sd_card_info_struct_type sd_card_info;
   * @}
   */
 
-/** @defgroup SDIO_command_class_definition 
+/** @defgroup SDIO_command_class_definition
   * @{
   */
 
-/** 
+/**
   * command class supported
-  */ 
+  */
 #define SD_CCCC_LOCK_UNLOCK              ((uint32_t)0x00000080)
 #define SD_CCCC_WRITE_PROT               ((uint32_t)0x00000040)
 #define SD_CCCC_ERASE                    ((uint32_t)0x00000020)
@@ -431,11 +431,11 @@ extern sd_card_info_struct_type sd_card_info;
   * @}
   */
 
-/** @defgroup SDIO_cmd8_definition 
+/** @defgroup SDIO_cmd8_definition
   * @{
   */
 
-/** 
+/**
   * cmd8
   */
 #define SDIO_SEND_IF_COND                ((uint32_t)0x00000008)
@@ -444,7 +444,7 @@ extern sd_card_info_struct_type sd_card_info;
   * @}
   */
 
-/** @defgroup SDIO_mmc_extend_definition 
+/** @defgroup SDIO_mmc_extend_definition
   * @{
   */
 
@@ -460,7 +460,7 @@ extern sd_card_info_struct_type sd_card_info;
 #define EXT_CSD_CMD_SET_SECURE           (1<<1)
 #define EXT_CSD_CMD_SET_CPSECURE         (1<<2)
 
-/** 
+/**
   * mmc ext_csd offset
   */
 #define EXT_CSD_BUS_WIDTH                183
@@ -470,7 +470,7 @@ extern sd_card_info_struct_type sd_card_info;
   * @}
   */
 
-/** @defgroup SDIO_interrupt_flags_definition 
+/** @defgroup SDIO_interrupt_flags_definition
   * @{
   */
 
@@ -492,21 +492,21 @@ void sdio_clock_set(uint32_t clkdiv);
 sd_error_status_type sd_power_on(void);
 sd_error_status_type sd_power_off(void);
 sd_error_status_type sd_card_init(void);
-sd_error_status_type sd_card_info_get(sd_card_info_struct_type *card_info);       
+sd_error_status_type sd_card_info_get(sd_card_info_struct_type *card_info);
 sd_error_status_type sd_wide_bus_operation_config(sdio_bus_width_type mode);
 sd_error_status_type sd_device_mode_set(uint32_t mode);
-sd_error_status_type sd_deselect_select(uint32_t addr); 
+sd_error_status_type sd_deselect_select(uint32_t addr);
 sd_error_status_type sd_status_send(uint32_t *p_card_status);
 sd_card_state_type sd_state_get(void);
 sd_error_status_type sd_blocks_erase(long long addr, uint32_t nblks);
-sd_error_status_type sd_block_read(uint8_t *buf, long long addr, uint16_t blk_size);  
-sd_error_status_type sd_mult_blocks_read(uint8_t *buf, long long addr, uint16_t blk_size, uint32_t nblks);  
+sd_error_status_type sd_block_read(uint8_t *buf, long long addr, uint16_t blk_size);
+sd_error_status_type sd_mult_blocks_read(uint8_t *buf, long long addr, uint16_t blk_size, uint32_t nblks);
 sd_error_status_type sd_block_write(const uint8_t *buf, long long addr, uint16_t blk_size);
 sd_error_status_type sd_mult_blocks_write(const uint8_t *buf, long long addr, uint16_t blk_size, uint32_t nblks);
 sd_error_status_type mmc_stream_read(uint8_t *buf, long long addr, uint32_t len);
 sd_error_status_type mmc_stream_write(uint8_t *buf, long long addr, uint32_t len);
 sd_error_status_type sd_irq_service(void);
-void sd_dma_config(uint32_t *mbuf, uint32_t buf_size, dma_dir_type dir); 
+void sd_dma_config(uint32_t *mbuf, uint32_t buf_size, dma_dir_type dir);
 
 /**
   * @}

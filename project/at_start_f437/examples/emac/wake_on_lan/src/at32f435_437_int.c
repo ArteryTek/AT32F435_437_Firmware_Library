@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     at32f435_437_int.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main interrupt service routines.
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -32,7 +32,7 @@
 /** @addtogroup AT32F437_periph_examples
   * @{
   */
-  
+
 /** @addtogroup 437_EMAC_wake_on_lan
   * @{
   */
@@ -132,6 +132,8 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
+  /* Update the local_time by adding SYSTEMTICK_PERIOD_MS each SysTick interrupt */
+  time_update();
 }
 
 /**
@@ -142,7 +144,7 @@ void SysTick_Handler(void)
 void EMAC_IRQHandler(void)
 {
   /* handles all the received frames */
-  while(emac_received_packet_size_get() != 0) 
+  while(emac_received_packet_size_get() != 0)
   {
     lwip_pkt_handle();
   }
@@ -160,14 +162,14 @@ void EMAC_IRQHandler(void)
 void EMAC_WKUP_IRQHandler(void)
 {
   volatile uint32_t reg_val;
-  
+
   emac_power_down_set(FALSE);
   reg_val = EMAC->pmtctrlsts;
-  
+
   emac_trasmitter_enable(TRUE);
   emac_dma_operations_set(EMAC_DMA_OPS_START_STOP_TRANSMIT, TRUE);
   emac_dma_operations_set(EMAC_DMA_OPS_START_STOP_RECEIVE, TRUE);
-  
+
   EMAC_DMA->sts = 0x10000000;
   exint_flag_clear(EXINT_LINE_19);
   system_clock_config();
@@ -175,8 +177,8 @@ void EMAC_WKUP_IRQHandler(void)
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */

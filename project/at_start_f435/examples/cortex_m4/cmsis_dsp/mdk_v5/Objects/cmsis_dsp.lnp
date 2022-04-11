@@ -1,0 +1,28 @@
+--cpu=Cortex-M4.fp.sp
+".\objects\main.o"
+".\objects\at32f435_437_int.o"
+".\objects\at32f435_437_clock.o"
+".\objects\at32f435_437_board.o"
+".\objects\system_at32f435_437.o"
+".\objects\startup_at32f435_437.o"
+".\objects\at32f435_437_crm.o"
+".\objects\at32f435_437_gpio.o"
+".\objects\at32f435_437_misc.o"
+".\objects\at32f435_437_usart.o"
+".\objects\basicmathfunctions.o"
+".\objects\bayesfunctions.o"
+".\objects\commontables.o"
+".\objects\complexmathfunctions.o"
+".\objects\controllerfunctions.o"
+".\objects\distancefunctions.o"
+".\objects\fastmathfunctions.o"
+".\objects\filteringfunctions.o"
+".\objects\matrixfunctions.o"
+".\objects\svmfunctions.o"
+".\objects\statisticsfunctions.o"
+".\objects\supportfunctions.o"
+".\objects\transformfunctions.o"
+--strict --scatter ".\Objects\cmsis_dsp.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Listings\cmsis_dsp.map" -o .\Objects\cmsis_dsp.axf

@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     usbd_core.h
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    usb device core header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -39,7 +39,7 @@ extern "C" {
 /** @addtogroup AT32F435_437_middlewares_usbd_drivers
   * @{
   */
-  
+
 /** @addtogroup USBD_drivers_core
   * @{
   */
@@ -66,7 +66,7 @@ typedef enum
 }usbd_event_type;
 
 /**
-  * @brief usb device descriptor struct 
+  * @brief usb device descriptor struct
   */
 typedef struct
 {
@@ -75,7 +75,7 @@ typedef struct
 }usbd_desc_t;
 
 /**
-  * @brief usb device descriptor handler 
+  * @brief usb device descriptor handler
   */
 typedef struct
 {
@@ -114,23 +114,23 @@ typedef struct
 typedef struct
 {
   usb_reg_type                           *usb_reg;                   /*!< usb register pointer */
-  
+
   usbd_class_handler                     *class_handler;             /*!< usb device class handler pointer */
   usbd_desc_handler                      *desc_handler;              /*!< usb device descriptor handler pointer */
-  
+
   usb_ept_info                           ept_in[USB_EPT_MAX_NUM];    /*!< usb in endpoint infomation struct */
   usb_ept_info                           ept_out[USB_EPT_MAX_NUM];   /*!< usb out endpoint infomation struct */
-  
+
   usb_setup_type                         setup;                      /*!< usb setup type struct */
   uint8_t                                setup_buffer[12];           /*!< usb setup request buffer */
-  
+
   uint8_t                                ept0_sts;                   /*!< usb control endpoint 0 state */
   uint8_t                                speed;                      /*!< usb speed */
   uint16_t                               ept0_wlength;               /*!< usb endpoint 0 transfer length */
 
   usbd_conn_state                        conn_state;                 /*!< usb current connect state */
   usbd_conn_state                        old_conn_state;             /*!< usb save the previous connect state */
-  
+
   uint8_t                                device_addr;                /*!< device address */
   uint8_t                                remote_wakup;               /*!< remote wakeup state */
   uint8_t                                default_config;             /*!< usb default config state */
@@ -162,20 +162,20 @@ void usbd_remote_wakeup(usbd_core_type *udev);
 void usbd_enter_suspend(usbd_core_type *udev);
 void usbd_flush_tx_fifo(usbd_core_type *udev, uint8_t ept_num);
 void usbd_fifo_alloc(usbd_core_type *udev);
-usb_sts_type usbd_core_init(usbd_core_type *udev, 
+usb_sts_type usbd_core_init(usbd_core_type *udev,
                             usb_reg_type *usb_reg,
                             usbd_class_handler *class_handler,
-                            usbd_desc_handler *desc_handler, 
+                            usbd_desc_handler *desc_handler,
                             uint8_t core_id);
 #endif
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}

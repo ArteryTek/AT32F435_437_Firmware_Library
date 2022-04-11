@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -167,7 +167,7 @@ void ACC_IRQHandler(void)
 int main(void)
 {
   uint16_t data_len;
-  
+
   uint8_t send_zero_packet = 0;
 
   uint32_t timeout;
@@ -177,7 +177,7 @@ int main(void)
   system_clock_config();
 
   at32_board_init();
-  
+
   usb_gpio_config();
 #ifdef USB_LOW_POWER_WAKUP
   usb_low_power_wakeup_config();
@@ -223,7 +223,7 @@ int main(void)
   acc_write_c2(acc_c2_value);
   acc_write_c3(acc_c2_value + 10);
   #endif
-  
+
   #if (USB_ID == 0)
     acc_sof_select(ACC_SOF_OTG1);
 #else

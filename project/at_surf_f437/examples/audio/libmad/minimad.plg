@@ -1,0 +1,35 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: minimad - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP1EC.tmp" with contents
+[
+/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /Fp"Debug/minimad.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"F:\test\libmad-0.15.1b\minimad.c"
+]
+Creating command line "cl.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP1EC.tmp" 
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP1ED.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /incremental:yes /pdb:"Debug/minimad.pdb" /debug /machine:I386 /out:"Debug/minimad.exe" /pdbtype:sept 
+".\Debug\minimad.obj"
+]
+Creating command line "link.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP1ED.tmp"
+<h3>Output Window</h3>
+Compiling...
+minimad.c
+F:\test\libmad-0.15.1b\minimad.c(61) : error C2065: 'mad_stream' : undeclared identifier
+F:\test\libmad-0.15.1b\minimad.c(61) : error C2065: 'stream' : undeclared identifier
+F:\test\libmad-0.15.1b\minimad.c(61) : warning C4552: '*' : operator has no effect; expected operator with side-effect
+Error executing cl.exe.
+
+
+
+<h3>Results</h3>
+minimad.exe - 2 error(s), 1 warning(s)
+</pre>
+</body>
+</html>

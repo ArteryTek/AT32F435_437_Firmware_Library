@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -67,12 +67,12 @@ int main(void)
   system_clock_config();
 
   at32_board_init();
-  
+
   button_exint_init();
 
   /* usb gpio config */
   usb_gpio_config();
-  
+
   uart_print_init(115200);
 
 #ifdef USB_LOW_POWER_WAKUP
@@ -96,7 +96,7 @@ int main(void)
             USB_ID,
             &uhost_hid_class_handler,
             &usbh_user_handle);
-            
+
   /* init otg2 device */
   usbd_init(&otg2_core_struct,
             USB_FULL_SPEED_CORE_ID,
@@ -186,7 +186,7 @@ void usb_clock48m_select(usb_clk48_s clk_s)
     acc_write_c3(8020);
 
     acc_sof_select(ACC_SOF_OTG2);
-    
+
     /* open acc calibration */
     acc_calibration_mode_enable(ACC_CAL_HICKTRIM, TRUE);
   }
@@ -353,7 +353,7 @@ void usb_low_power_wakeup_config(void)
 
   crm_periph_clock_enable(CRM_SCFG_PERIPH_CLOCK, TRUE);
   exint_default_para_init(&exint_init_struct);
-  
+
   /*otg1*/
   exint_init_struct.line_enable = TRUE;
   exint_init_struct.line_mode = EXINT_LINE_INTERRUPUT;

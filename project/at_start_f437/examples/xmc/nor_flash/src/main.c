@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -31,7 +31,7 @@
 /** @addtogroup AT32F437_periph_examples
   * @{
   */
-  
+
 /** @addtogroup 437_XMC_nor_flash XMC_nor_flash
   * @{
   */
@@ -54,12 +54,12 @@ int main(void)
   system_clock_config();
 
   at32_board_init();
-  
+
   uart_print_init(115200);
-  
+
   /* nor flash interface confoig */
   nor_init();
- 
+
   /* read nor memory id */
   nor_readid(&nor_id);
 
@@ -76,7 +76,7 @@ int main(void)
   /* read data from xmc nor memory */
   nor_readbuffer(rxbuffer, write_read_addr, buffer_size);
 
-  /* read back sram memory and check content correctness */   
+  /* read back sram memory and check content correctness */
   for(number = 0x00; (number < buffer_size) && (writereadstatus == 0); number++)
   {
     if (rxbuffer[number] != txbuffer[number])
@@ -88,12 +88,12 @@ int main(void)
   if(writereadstatus == 0)
   {
     /* pass : printf "data is right" */
-    printf("data is right\r\n");  
+    printf("data is right\r\n");
   }
   else
   {
     /* fail: printf "data is error" */
-    printf("data is error\r\n");   
+    printf("data is error\r\n");
   }
   while(1)
   {
@@ -102,9 +102,9 @@ int main(void)
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 

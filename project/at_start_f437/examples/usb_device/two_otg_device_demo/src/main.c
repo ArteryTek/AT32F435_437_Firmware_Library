@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -73,7 +73,7 @@ int main(void)
   system_clock_config();
 
   at32_board_init();
-  
+
   button_exint_init();
 
   /* usb gpio config */
@@ -100,7 +100,7 @@ int main(void)
             USB_ID,
             &cdc_class_handler,
             &cdc_desc_handler);
-            
+
   /* init otg2 device */
   usbd_init(&otg2_core_struct,
             USB_FULL_SPEED_CORE_ID,
@@ -135,7 +135,7 @@ int main(void)
         }
       }while(timeout --);
     }
-    
+
     /* otg2 custom hid */
     if(button_press == 1)
     {
@@ -373,7 +373,7 @@ void usb_low_power_wakeup_config(void)
 
   crm_periph_clock_enable(CRM_SCFG_PERIPH_CLOCK, TRUE);
   exint_default_para_init(&exint_init_struct);
-  
+
   /*otg1*/
   exint_init_struct.line_enable = TRUE;
   exint_init_struct.line_mode = EXINT_LINE_INTERRUPUT;

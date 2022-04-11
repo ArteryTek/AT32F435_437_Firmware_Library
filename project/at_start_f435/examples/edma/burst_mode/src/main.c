@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -94,14 +94,14 @@ int main(void)
   edma_init_struct.priority = EDMA_PRIORITY_HIGH;
   edma_init_struct.loop_mode_enable = TRUE;
   edma_init(EDMA_STREAM1, &edma_init_struct);
-  
+
   /* edmamux init */
   edmamux_enable(TRUE);
   edmamux_init(EDMAMUX_CHANNEL1, EDMAMUX_DMAREQ_ID_TMR1_OVERFLOW);
-  
+
   /* enable stream */
   edma_stream_enable(EDMA_STREAM1, TRUE);
-  
+
   /* tmr1 configuration */
   tmr_base_init(TMR1, 500, 0);
   tmr_cnt_dir_set(TMR1, TMR_COUNT_UP);
@@ -137,10 +137,10 @@ int main(void)
 
   /* enable tmr1 overflow edam request */
   tmr_dma_request_enable(TMR1, TMR_OVERFLOW_DMA_REQUEST, TRUE);
-  
+
   /* overflow interrupt enable */
   tmr_interrupt_enable(TMR1, TMR_OVF_INT, TRUE);
-  
+
   /* tmr1 overflow interrupt nvic init */
   nvic_priority_group_config(NVIC_PRIORITY_GROUP_4);
   nvic_irq_enable(TMR1_OVF_TMR10_IRQn, 1, 0);
@@ -167,7 +167,7 @@ void TMR1_OVF_TMR10_IRQHandler(void)
     duty_buffer[1] += 10;
     duty_buffer[2] += 10;
     duty_buffer[3] += 10;
-    
+
     if(duty_buffer[0] >= 500)
     {
       duty_buffer[0] = 10;
@@ -175,7 +175,7 @@ void TMR1_OVF_TMR10_IRQHandler(void)
       duty_buffer[2] = 10;
       duty_buffer[3] = 10;
     }
-    
+
     /* clear tmr1 overflow flag */
     tmr_flag_clear(TMR1, TMR_OVF_FLAG);
   }

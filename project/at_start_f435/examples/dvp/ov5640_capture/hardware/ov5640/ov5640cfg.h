@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     ov5640cfg.h
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    header file of ov5640cfg program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -136,7 +136,7 @@ const uint16_t ov5640_rgb565_reg_tbl[][2] =
   0x3824, 0x04, /* pclk manual divider */
   0x5001, 0xA3, /* sde on, scale on, uv average off, color matrix on, awb on */
   0x3503, 0x00, /* aec/agc on */
-  
+
 #ifdef EMBEDDED_MODE
   /* embedded code configer */
   0x471b, 0x00, /* hsync mode enable */

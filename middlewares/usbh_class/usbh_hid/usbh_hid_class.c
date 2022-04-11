@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     usbh_hid_class.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    usb host hid class type
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -29,27 +29,27 @@
  #include "usbh_ctrl.h"
  #include "usbh_hid_mouse.h"
  #include "usbh_hid_keyboard.h"
- 
+
  /** @addtogroup AT32F435_437_middlewares_usbh_class
   * @{
   */
-  
+
 /** @defgroup USBH_hid_class
   * @brief usb host class hid demo
   * @{
-  */  
+  */
 
 /** @defgroup USBH_hid_class_private_functions
   * @{
   */
- 
+
  static usb_sts_type uhost_init_handler(void *uhost);
  static usb_sts_type uhost_reset_handler(void *uhost);
  static usb_sts_type uhost_request_handler(void *uhost);
  static usb_sts_type uhost_process_handler(void *uhost);
- 
+
  usbh_hid_type usbh_hid;
- usbh_class_handler_type uhost_hid_class_handler = 
+ usbh_class_handler_type uhost_hid_class_handler =
  {
    uhost_init_handler,
    uhost_reset_handler,
@@ -69,9 +69,9 @@ static usb_sts_type uhost_init_handler(void *uhost)
   usb_sts_type status = USB_OK;
   uint8_t hidx, eptidx = 0;
   usbh_hid_type *phid =  &usbh_hid;
-  
+
   puhost->class_handler->pdata = &usbh_hid;
-  
+
   /* get hid interface */
   hidx = usbh_find_interface(puhost, USB_CLASS_CODE_HID, 0x01, 0xFF);
   if(hidx == 0xFF)
@@ -79,10 +79,10 @@ static usb_sts_type uhost_init_handler(void *uhost)
     USBH_DEBUG("Unsupport Device!");
     return USB_NOT_SUPPORT;
   }
-  
+
   /* get hid protocol */
   phid->protocol = puhost->dev.cfg_desc.interface[hidx].interface.bInterfaceProtocol;
-  
+
   if(phid->protocol == USB_HID_MOUSE_PROTOCOL_CODE)
   {
     USBH_DEBUG("Mouse Device!");
@@ -91,7 +91,7 @@ static usb_sts_type uhost_init_handler(void *uhost)
   {
     USBH_DEBUG("Keyboard Device!");
   }
-  
+
   for(eptidx = 0; eptidx < puhost->dev.cfg_desc.interface[hidx].interface.bNumEndpoints; eptidx ++)
   {
     if(puhost->dev.cfg_desc.interface[hidx].endpoint[eptidx].bEndpointAddress & 0x80)
@@ -100,12 +100,12 @@ static usb_sts_type uhost_init_handler(void *uhost)
       phid->eptin = puhost->dev.cfg_desc.interface[hidx].endpoint[eptidx].bEndpointAddress;
       phid->in_maxpacket = puhost->dev.cfg_desc.interface[hidx].endpoint[eptidx].wMaxPacketSize;
       phid->in_poll = puhost->dev.cfg_desc.interface[hidx].endpoint[eptidx].bInterval;
-      
+
       phid->chin = usbh_alloc_channel(puhost, phid->eptin);
       /* enable channel */
       usbh_hc_open(puhost, phid->chin,phid->eptin,
                     puhost->dev.address, EPT_INT_TYPE,
-                    phid->in_maxpacket, 
+                    phid->in_maxpacket,
                     puhost->dev.speed);
       usbh_set_toggle(puhost, phid->chin, 0);
     }
@@ -115,12 +115,12 @@ static usb_sts_type uhost_init_handler(void *uhost)
       phid->eptout = puhost->dev.cfg_desc.interface[hidx].endpoint[eptidx].bEndpointAddress;
       phid->out_maxpacket = puhost->dev.cfg_desc.interface[hidx].endpoint[eptidx].wMaxPacketSize;
       phid->out_poll = puhost->dev.cfg_desc.interface[hidx].endpoint[eptidx].bInterval;
-      
+
       phid->chout = usbh_alloc_channel(puhost, usbh_hid.eptout);
       /* enable channel */
       usbh_hc_open(puhost, phid->chout, phid->eptout,
                     puhost->dev.address, EPT_INT_TYPE,
-                    phid->out_maxpacket, 
+                    phid->out_maxpacket,
                     puhost->dev.speed);
       usbh_set_toggle(puhost, phid->chout, 0);
     }
@@ -143,7 +143,7 @@ static usb_sts_type uhost_reset_handler(void *uhost)
   {
     return status;
   }
-  
+
   if(phid->chin != 0)
   {
     /* free in channel */
@@ -151,7 +151,7 @@ static usb_sts_type uhost_reset_handler(void *uhost)
     usbh_ch_disable(puhost, phid->chin);
     phid->chin = 0;
   }
-  
+
   if(phid->chout != 0)
   {
     /* free out channel */
@@ -180,8 +180,8 @@ usb_sts_type usbh_hid_get_desc(void *uhost, uint16_t length)
   {
     bm_req = USB_REQ_RECIPIENT_INTERFACE | USB_REQ_TYPE_STANDARD;
     wvalue = (0x21 << 8) & 0xFF00;
-    
-    usbh_get_descriptor(puhost, length, bm_req, 
+
+    usbh_get_descriptor(puhost, length, bm_req,
                                  wvalue, puhost->rx_buffer);
   }
   else
@@ -218,14 +218,14 @@ usb_sts_type usbh_hid_get_report(void *uhost, uint16_t length)
   {
     bm_req = USB_REQ_RECIPIENT_INTERFACE | USB_REQ_TYPE_STANDARD;
     wvalue = (0x22 << 8) & 0xFF00;
-    
-    usbh_get_descriptor(puhost, length, bm_req, 
+
+    usbh_get_descriptor(puhost, length, bm_req,
                                  wvalue, puhost->rx_buffer);
   }
   else
   {
     if(usbh_ctrl_result_check(puhost, CONTROL_IDLE, ENUM_IDLE) == USB_OK)
-    {   
+    {
       status = USB_OK;
     }
   }
@@ -340,7 +340,7 @@ static usb_sts_type uhost_request_handler(void *uhost)
   usb_sts_type status = USB_WAIT;
   usbh_core_type *puhost = (usbh_core_type *)uhost;
   usbh_hid_type *phid =  (usbh_hid_type *)puhost->class_handler->pdata;
-  
+
   switch(phid->ctrl_state)
   {
     case USB_HID_STATE_IDLE:
@@ -375,9 +375,9 @@ static usb_sts_type uhost_request_handler(void *uhost)
       status = USB_OK;
       break;
     default:
-      break;  
+      break;
   }
-  
+
   return status;
 }
 
@@ -396,13 +396,13 @@ static usb_sts_type uhost_process_handler(void *uhost)
     case USB_HID_INIT:
       phid->state = USB_HID_GET;
       break;
-    
+
     case USB_HID_GET:
       usbh_interrupt_recv(puhost, phid->chin, (uint8_t *)phid->buffer, phid->in_maxpacket);
       phid->state = USB_HID_POLL;
       phid->poll_timer = usbh_get_frame(puhost->usb_reg);
       break;
-    
+
     case USB_HID_POLL:
       if((usbh_get_frame(puhost->usb_reg) - phid->poll_timer) >= phid->in_poll )
       {
@@ -422,7 +422,7 @@ static usb_sts_type uhost_process_handler(void *uhost)
           {
             usbh_hid_keyboard_decode((uint8_t *)phid->buffer);
           }
-            
+
         }
         else if(urb_status == URB_STALL)
         {
@@ -433,7 +433,7 @@ static usb_sts_type uhost_process_handler(void *uhost)
         }
       }
       break;
-      
+
     default:
       break;
   }
@@ -442,7 +442,7 @@ static usb_sts_type uhost_process_handler(void *uhost)
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}

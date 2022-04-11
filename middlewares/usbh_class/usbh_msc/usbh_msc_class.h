@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     usbh_msc_class.h
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    usb host msc class header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -30,7 +30,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
- 
+
 #include "usbh_core.h"
 #include "usb_conf.h"
 #include "usbh_msc_bot_scsi.h"
@@ -38,12 +38,12 @@ extern "C" {
 /** @addtogroup AT32F435_437_middlewares_usbh_class
   * @{
   */
-  
+
 /** @addtogroup USBH_msc_class
   * @{
   */
 
-/** @defgroup USBH_msc_class_definition 
+/** @defgroup USBH_msc_class_definition
   * @{
   */
 
@@ -96,17 +96,17 @@ typedef struct
   uint8_t                                eptin;
   uint16_t                               in_maxpacket;
   uint8_t                                in_poll;
-  
+
   uint8_t                                chout;
   uint8_t                                eptout;
   uint16_t                               out_maxpacket;
   uint8_t                                out_poll;
   uint8_t                                protocol;
-  
+
   uint32_t                               max_lun;
   uint32_t                               cur_lun;
   uint32_t                               use_lun;
-  
+
 
   usbh_msc_ctrl_state_type               ctrl_state;
   msc_state_type                         state;
@@ -132,7 +132,7 @@ usb_sts_type msc_bot_scsi_init(usbh_msc_type *msc_struct);
 /**
   * @}
   */
-  
+
 /**
   * @}
   */

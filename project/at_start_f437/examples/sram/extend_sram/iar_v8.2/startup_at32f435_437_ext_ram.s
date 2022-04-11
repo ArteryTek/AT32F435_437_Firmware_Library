@@ -1,7 +1,7 @@
 ;**************************************************************************
 ;* @file     startup_at32f435_437.s
-;* @version  v2.0.5
-;* @date     2022-02-11
+;* @version  v2.0.7
+;* @date     2022-04-02
 ;* @brief    at32f435_437 startup file for IAR Systems
 ;**************************************************************************
 ;
@@ -65,8 +65,8 @@ __vector_table
         DCD     EDMA_Stream7_IRQHandler             ; EDMA Stream 7
         DCD     ADC1_2_3_IRQHandler                 ; ADC1 & ADC2 & ADC3
         DCD     CAN1_TX_IRQHandler                  ; CAN1 TX
-        DCD     CAN1_RX0_IRQHandler                 ; CAN1 RX0 
-        DCD     CAN1_RX1_IRQHandler                 ; CAN1 RX1 
+        DCD     CAN1_RX0_IRQHandler                 ; CAN1 RX0
+        DCD     CAN1_RX1_IRQHandler                 ; CAN1 RX1
         DCD     CAN1_SE_IRQHandler                  ; CAN1 SE
         DCD     EXINT9_5_IRQHandler                 ; EXINT Line [9:5]
         DCD     TMR1_BRK_TMR9_IRQHandler            ; TMR1 Brake and TMR9
@@ -109,8 +109,8 @@ __vector_table
         DCD     EMAC_IRQHandler                     ; EMAC
         DCD     EMAC_WKUP_IRQHandler                ; EMAC Wakeup
         DCD     CAN2_TX_IRQHandler                  ; CAN2 TX
-        DCD     CAN2_RX0_IRQHandler                 ; CAN2 RX0 
-        DCD     CAN2_RX1_IRQHandler                 ; CAN2 RX1 
+        DCD     CAN2_RX0_IRQHandler                 ; CAN2 RX0
+        DCD     CAN2_RX1_IRQHandler                 ; CAN2 RX1
         DCD     CAN2_SE_IRQHandler                  ; CAN2 SE
         DCD     OTGFS1_IRQHandler                   ; OTGFS1
         DCD     DMA1_Channel6_IRQHandler            ; DMA1 Channel 6
@@ -158,8 +158,8 @@ __vector_table
         DCD     DMA2_Channel3_IRQHandler            ; DMA2 Channel 3
         DCD     DMA2_Channel4_IRQHandler            ; DMA2 Channel 4
         DCD     DMA2_Channel5_IRQHandler            ; DMA2 Channel 5
-        DCD     DMA2_Channel6_IRQHandler            ; DMA2 Channel 6	
-        DCD     DMA2_Channel7_IRQHandler            ; DMA2 Channel 7					
+        DCD     DMA2_Channel6_IRQHandler            ; DMA2 Channel 6
+        DCD     DMA2_Channel7_IRQHandler            ; DMA2 Channel 7
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -170,14 +170,14 @@ __vector_table
         PUBWEAK Reset_Handler
         SECTION .text:CODE:REORDER:NOROOT(2)
 Reset_Handler
-; add for extend sram            
+; add for extend sram
         MOV32   R0, #0x20001000
         MOV     SP, R0
         LDR     R0, =extend_sram
         BLX     R0
         MOV32   R0, #0x08000000
         LDR     SP, [R0]
-        
+
         LDR     R0, =SystemInit
         BLX     R0
         LDR     R0, =__iar_program_start
@@ -328,15 +328,15 @@ ADC1_2_3_IRQHandler
 CAN1_TX_IRQHandler
         B CAN1_TX_IRQHandler
 
-        PUBWEAK CAN1_RX0_IRQHandler 
+        PUBWEAK CAN1_RX0_IRQHandler
         SECTION .text:CODE:REORDER:NOROOT(1)
-CAN1_RX0_IRQHandler 
-        B CAN1_RX0_IRQHandler 
+CAN1_RX0_IRQHandler
+        B CAN1_RX0_IRQHandler
 
-        PUBWEAK CAN1_RX1_IRQHandler 
+        PUBWEAK CAN1_RX1_IRQHandler
         SECTION .text:CODE:REORDER:NOROOT(1)
-CAN1_RX1_IRQHandler 
-        B CAN1_RX1_IRQHandler 
+CAN1_RX1_IRQHandler
+        B CAN1_RX1_IRQHandler
 
         PUBWEAK CAN1_SE_IRQHandler
         SECTION .text:CODE:REORDER:NOROOT(1)
@@ -548,15 +548,15 @@ EMAC_WKUP_IRQHandler
 CAN2_TX_IRQHandler
         B CAN2_TX_IRQHandler
 
-        PUBWEAK CAN2_RX0_IRQHandler 
+        PUBWEAK CAN2_RX0_IRQHandler
         SECTION .text:CODE:REORDER:NOROOT(1)
-CAN2_RX0_IRQHandler 
-        B CAN2_RX0_IRQHandler 
+CAN2_RX0_IRQHandler
+        B CAN2_RX0_IRQHandler
 
-        PUBWEAK CAN2_RX1_IRQHandler 
+        PUBWEAK CAN2_RX1_IRQHandler
         SECTION .text:CODE:REORDER:NOROOT(1)
-CAN2_RX1_IRQHandler 
-        B CAN2_RX1_IRQHandler 
+CAN2_RX1_IRQHandler
+        B CAN2_RX1_IRQHandler
 
         PUBWEAK CAN2_SE_IRQHandler
         SECTION .text:CODE:REORDER:NOROOT(1)

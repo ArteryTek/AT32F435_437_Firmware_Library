@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     usbh_msc_class.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    usb host msc class type
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -31,11 +31,11 @@
 /** @addtogroup AT32F435_437_middlewares_usbh_class
   * @{
   */
-  
+
 /** @defgroup USBH_msc_class
   * @brief usb host class msc demo
   * @{
-  */  
+  */
 
 /** @defgroup USBH_msc_class_private_functions
   * @{
@@ -52,7 +52,7 @@ static usb_sts_type usbh_msc_clear_feature(void *uhost, uint8_t ept_num);
 
 usbh_msc_type usbh_msc;
 
-usbh_class_handler_type uhost_msc_class_handler = 
+usbh_class_handler_type uhost_msc_class_handler =
 {
  uhost_init_handler,
  uhost_reset_handler,
@@ -75,7 +75,7 @@ static usb_sts_type uhost_init_handler(void *uhost)
   uint8_t if_x, eptidx = 0;
   usbh_msc_type *pmsc = &usbh_msc;
   puhost->class_handler->pdata = &usbh_msc;
-  
+
   if_x = usbh_find_interface(puhost, USB_CLASS_CODE_MSC, MSC_SUBCLASS_SCSI_TRANS, MSC_PROTOCOL_BBB);
   if(if_x == 0xFF)
   {
@@ -83,7 +83,7 @@ static usb_sts_type uhost_init_handler(void *uhost)
     return USB_NOT_SUPPORT;
   }
   pmsc->protocol = puhost->dev.cfg_desc.interface[if_x].interface.bInterfaceProtocol;
-  
+
   for(eptidx = 0; eptidx < puhost->dev.cfg_desc.interface[if_x].interface.bNumEndpoints; eptidx ++)
   {
     if(puhost->dev.cfg_desc.interface[if_x].endpoint[eptidx].bEndpointAddress & 0x80)
@@ -91,12 +91,12 @@ static usb_sts_type uhost_init_handler(void *uhost)
       pmsc->eptin = puhost->dev.cfg_desc.interface[if_x].endpoint[eptidx].bEndpointAddress;
       pmsc->in_maxpacket = puhost->dev.cfg_desc.interface[if_x].endpoint[eptidx].wMaxPacketSize;
       pmsc->in_poll = puhost->dev.cfg_desc.interface[if_x].endpoint[eptidx].bInterval;
-      
+
       pmsc->chin = usbh_alloc_channel(puhost, pmsc->eptin);
       /* enable channel */
       usbh_hc_open(puhost, pmsc->chin, pmsc->eptin,
                     puhost->dev.address, EPT_BULK_TYPE,
-                    pmsc->in_maxpacket, 
+                    pmsc->in_maxpacket,
                     puhost->dev.speed);
     }
     else
@@ -104,16 +104,16 @@ static usb_sts_type uhost_init_handler(void *uhost)
       pmsc->eptout = puhost->dev.cfg_desc.interface[if_x].endpoint[eptidx].bEndpointAddress;
       pmsc->out_maxpacket = puhost->dev.cfg_desc.interface[if_x].endpoint[eptidx].wMaxPacketSize;
       pmsc->out_poll = puhost->dev.cfg_desc.interface[if_x].endpoint[eptidx].bInterval;
-      
+
       pmsc->chout = usbh_alloc_channel(puhost, pmsc->eptout);
       /* enable channel */
       usbh_hc_open(puhost, pmsc->chout,pmsc->eptout,
                     puhost->dev.address, EPT_BULK_TYPE,
-                    pmsc->out_maxpacket, 
+                    pmsc->out_maxpacket,
                     puhost->dev.speed);
     }
   }
-  
+
   msc_bot_scsi_init(pmsc);
   usbh_set_toggle(puhost, pmsc->chout, 0);
   usbh_set_toggle(puhost, pmsc->chin, 0);
@@ -136,7 +136,7 @@ static usb_sts_type uhost_reset_handler(void *uhost)
   {
     return status;
   }
-  
+
   for(i_index = 0; i_index < pmsc->max_lun ; i_index ++)
   {
     pmsc->l_unit_n[i_index].pre_state = USB_FAIL;
@@ -144,14 +144,14 @@ static usb_sts_type uhost_reset_handler(void *uhost)
     pmsc->l_unit_n[i_index].state = USBH_MSC_INIT;
     pmsc->l_unit_n[i_index].ready = MSC_NOT_READY;
   }
-  
+
   if(pmsc->chin != 0 )
   {
     usbh_free_channel(puhost, pmsc->chin);
     usbh_ch_disable(puhost, pmsc->chin);
     pmsc->chin = 0;
   }
-  
+
   if(pmsc->chout != 0 )
   {
     usbh_free_channel(puhost, pmsc->chout);
@@ -173,7 +173,7 @@ static usb_sts_type uhost_request_handler(void *uhost)
   usbh_msc_type *pmsc = (usbh_msc_type *)puhost->class_handler->pdata;
   usb_sts_type status = USB_WAIT;
   uint8_t i_index = 0;
-  
+
   switch(pmsc->ctrl_state)
   {
     case USBH_MSC_STATE_IDLE:
@@ -201,7 +201,7 @@ static usb_sts_type uhost_request_handler(void *uhost)
     default:
       break;
   }
-  
+
   return status;
 }
 
@@ -251,7 +251,7 @@ static usb_sts_type uhost_process_handler(void *uhost)
               pmsc->l_unit_n[pmsc->cur_lun].ready = MSC_NOT_READY;
             }
             break;
-          
+
           case USBH_MSC_READ_CAPACITY10:
             status = usbh_msc_bot_scsi_capacity(uhost, &pmsc->bot_trans, pmsc->cur_lun, &pmsc->l_unit_n[pmsc->cur_lun].capacity);
             if(status == USB_OK)
@@ -281,7 +281,7 @@ static usb_sts_type uhost_process_handler(void *uhost)
               pmsc->l_unit_n[pmsc->cur_lun].state = USBH_MSC_ERROR;
             }
             break;
- 
+
           case USBH_MSC_BUSY:
             break;
           case USBH_MSC_ERROR:
@@ -456,9 +456,9 @@ usb_sts_type usbh_msc_read(void *uhost, uint32_t address, uint32_t len, uint8_t 
   pmsc->bot_trans.msc_struct = &usbh_msc;
   pmsc->l_unit_n[lun].state = USBH_MSC_READ10;
   pmsc->use_lun = lun;
-  
+
   timeout = puhost->timer;
-  
+
   while(usbh_msc_rw_handle(uhost, address, len, buffer, lun) == USB_WAIT)
   {
     if(puhost->conn_sts == 0 || (puhost->timer - timeout) > (len * 10000))
@@ -489,11 +489,11 @@ usb_sts_type usbh_msc_write(void *uhost, uint32_t address, uint32_t len, uint8_t
   {
     return USB_FAIL;
   }
-  
+
   pmsc->bot_trans.msc_struct = &usbh_msc;
   pmsc->l_unit_n[lun].state = USBH_MSC_WRITE;
   pmsc->use_lun = lun;
-  
+
   timeout = puhost->timer;
   while(usbh_msc_rw_handle(uhost, address, len, buffer, lun) == USB_WAIT)
   {
@@ -508,7 +508,7 @@ usb_sts_type usbh_msc_write(void *uhost, uint32_t address, uint32_t len, uint8_t
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}

@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -81,9 +81,9 @@ error_status buffer_compare(const uint32_t* pbuffer, uint32_t* pbuffer1, uint16_
   */
 int main(void)
 {
-  /* initial system clock */  
-  system_clock_config();  
-  
+  /* initial system clock */
+  system_clock_config();
+
   /* at board initial */
   at32_board_init();
 

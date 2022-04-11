@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     audio_class.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    usb audio class type
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -31,11 +31,11 @@
 /** @addtogroup AT32F435_437_middlewares_usbd_class
   * @{
   */
-  
+
 /** @defgroup USB_audio_class
   * @brief usb device class audio demo
   * @{
-  */  
+  */
 
 /** @defgroup USB_audio_class_private_functions
   * @{
@@ -63,7 +63,7 @@ static void audio_set_interface(void *udev, usb_setup_type *setup);
 usb_audio_type audio_struct = {0, 0, 0, 0, 0, 0x1400, 0, 0, 0, {0x0000, 0x1400, 0x33}, {0x0000, 0x1400, 0x33}, 0, 0};
 
 /* usb device class handler */
-usbd_class_handler audio_class_handler = 
+usbd_class_handler audio_class_handler =
 {
   class_init_handler,
   class_clear_handler,
@@ -80,50 +80,50 @@ usbd_class_handler audio_class_handler =
 /**
   * @brief  initialize usb custom hid endpoint
   * @param  udev: usb device core handler type
-  * @retval status of usb_sts_type                            
+  * @retval status of usb_sts_type
   */
 static usb_sts_type class_init_handler(void *udev)
 {
   usb_sts_type status = USB_OK;
   usbd_core_type *pudev = (usbd_core_type *)udev;
   usb_audio_type *paudio = (usb_audio_type *)pudev->class_handler->pdata;
-  
+
   /* open microphone in endpoint */
   usbd_ept_open(pudev, USBD_AUDIO_MIC_IN_EPT, EPT_ISO_TYPE, AUDIO_MIC_IN_MAXPACKET_SIZE);
-  
+
   /* open speaker out endpoint */
   usbd_ept_open(pudev, USBD_AUDIO_SPK_OUT_EPT, EPT_ISO_TYPE, AUDIO_SPK_OUT_MAXPACKET_SIZE);
-#if AUDIO_SUPPORT_FEEDBACK  
+#if AUDIO_SUPPORT_FEEDBACK
   /* open speaker feedback endpoint */
   usbd_ept_open(pudev, USBD_AUDIO_FEEDBACK_EPT, EPT_ISO_TYPE, AUDIO_FEEDBACK_MAXPACKET_SIZE);
-#endif 
+#endif
   /* start receive speaker out data */
   usbd_ept_recv(pudev, USBD_AUDIO_SPK_OUT_EPT, paudio->audio_spk_data, AUDIO_SPK_OUT_MAXPACKET_SIZE);
-  
+
   return status;
 }
 
 /**
   * @brief  clear endpoint or other state
   * @param  udev: usb device core handler type
-  * @retval status of usb_sts_type                            
+  * @retval status of usb_sts_type
   */
 static usb_sts_type class_clear_handler(void *udev)
 {
   usb_sts_type status = USB_OK;
   usbd_core_type *pudev = (usbd_core_type *)udev;
-  
+
   /* close in endpoint */
   usbd_ept_close(pudev, USBD_AUDIO_MIC_IN_EPT);
-  
-#if AUDIO_SUPPORT_FEEDBACK  
+
+#if AUDIO_SUPPORT_FEEDBACK
   /* close in endpoint */
   usbd_ept_close(pudev, USBD_AUDIO_FEEDBACK_EPT);
 #endif
-  
+
   /* close out endpoint */
   usbd_ept_close(pudev, USBD_AUDIO_SPK_OUT_EPT);
- 
+
   return status;
 }
 
@@ -131,7 +131,7 @@ static usb_sts_type class_clear_handler(void *udev)
   * @brief  usb device class setup request handler
   * @param  udev: usb device core handler type
   * @param  setup: setup packet
-  * @retval status of usb_sts_type                            
+  * @retval status of usb_sts_type
   */
 static usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup)
 {
@@ -148,23 +148,23 @@ static usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup)
         case AUDIO_REQ_GET_CUR:
           audio_req_get_cur(pudev, setup);
           break;
-        
+
         case AUDIO_REQ_SET_CUR:
           audio_req_set_cur(pudev, setup);
           break;
-        
+
         case AUDIO_REQ_GET_MIN:
           audio_req_get_min(pudev, setup);
           break;
-        
+
         case AUDIO_REQ_GET_MAX:
           audio_req_get_max(pudev, setup);
           break;
-        
+
         case AUDIO_REQ_GET_RES:
           audio_req_get_res(pudev, setup);
           break;
-        
+
         default:
           usbd_ctrl_unsupport(pudev);
           break;
@@ -189,17 +189,17 @@ static usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup)
         case USB_STD_REQ_GET_INTERFACE:
           audio_get_interface(udev, setup);
           break;
-        
+
         case USB_STD_REQ_SET_INTERFACE:
           audio_set_interface(udev, setup);
           usbd_ctrl_send_status(pudev);
           break;
-        
+
         default:
           break;
       }
       break;
-      
+
     default:
       usbd_ctrl_unsupport(pudev);
       break;
@@ -210,21 +210,21 @@ static usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup)
 /**
   * @brief  usb device endpoint 0 in status stage complete
   * @param  udev: usb device core handler type
-  * @retval status of usb_sts_type                            
+  * @retval status of usb_sts_type
   */
 static usb_sts_type class_ept0_tx_handler(void *udev)
 {
   usb_sts_type status = USB_OK;
-  
+
   /* ...user code... */
-  
+
   return status;
 }
 
 /**
   * @brief  usb device endpoint 0 out status stage complete
   * @param  udev: usb device core handler type
-  * @retval status of usb_sts_type                            
+  * @retval status of usb_sts_type
   */
 static usb_sts_type class_ept0_rx_handler(void *udev)
 {
@@ -241,16 +241,16 @@ static usb_sts_type class_ept0_rx_handler(void *udev)
       case AUDIO_VOLUME_CONTROL:
         if( paudio->interface == AUDIO_SPK_FEATURE_UNIT_ID)
         {
-           paudio->spk_volume = (uint16_t)( paudio->g_audio_cur[0] | 
+           paudio->spk_volume = (uint16_t)( paudio->g_audio_cur[0] |
                                                ( paudio->g_audio_cur[1] << 8));
           /* set volume */
           audio_codec_set_spk_volume(paudio->spk_volume*100/paudio->spk_volume_limits[1]);
         }
         else
         {
-          paudio->mic_volume = (uint16_t)(paudio->g_audio_cur[0] | 
+          paudio->mic_volume = (uint16_t)(paudio->g_audio_cur[0] |
                                                (paudio->g_audio_cur[1] << 8));
-          
+
           audio_codec_set_mic_volume(paudio->mic_volume*256/paudio->mic_volume_limits[1]);
         }
         break;
@@ -265,19 +265,19 @@ static usb_sts_type class_ept0_rx_handler(void *udev)
           paudio->mic_mute = paudio->g_audio_cur[0];
           audio_codec_set_mic_mute(paudio->mic_mute);
         }
-        
+
         break;
       case AUDIO_FREQ_SET_CONTROL:
         if(paudio->enpd == USBD_AUDIO_MIC_IN_EPT)
         {
-         paudio->mic_freq = (paudio->g_audio_cur[0] | 
+         paudio->mic_freq = (paudio->g_audio_cur[0] |
                             (paudio->g_audio_cur[1] << 8) |
                             (paudio->g_audio_cur[2] << 16));
           audio_codec_set_mic_freq(paudio->mic_freq);
         }
         else
         {
-          paudio->spk_freq = (paudio->g_audio_cur[0] | 
+          paudio->spk_freq = (paudio->g_audio_cur[0] |
                             (paudio->g_audio_cur[1] << 8) |
                             (paudio->g_audio_cur[2] << 16));
           audio_codec_set_spk_freq(paudio->spk_freq);
@@ -287,7 +287,7 @@ static usb_sts_type class_ept0_rx_handler(void *udev)
         break;
     }
   }
-  
+
   return status;
 }
 
@@ -295,7 +295,7 @@ static usb_sts_type class_ept0_rx_handler(void *udev)
   * @brief  usb device transmision complete handler
   * @param  udev: usb device core handler type
   * @param  ept_num: endpoint number
-  * @retval status of usb_sts_type                            
+  * @retval status of usb_sts_type
   */
 static usb_sts_type class_in_handler(void *udev, uint8_t ept_num)
 {
@@ -303,7 +303,7 @@ static usb_sts_type class_in_handler(void *udev, uint8_t ept_num)
   usbd_core_type *pudev = (usbd_core_type *)udev;
   usb_audio_type *paudio = (usb_audio_type *)pudev->class_handler->pdata;
   uint32_t len = 0;
-  
+
   /* ...user code...
     trans next packet data
   */
@@ -313,12 +313,12 @@ static usb_sts_type class_in_handler(void *udev, uint8_t ept_num)
     usbd_flush_tx_fifo(udev, USBD_AUDIO_MIC_IN_EPT);
     usbd_ept_send(udev, USBD_AUDIO_MIC_IN_EPT, paudio->audio_mic_data, len);
   }
-  
+
   else if((ept_num & 0x7F) == (USBD_AUDIO_FEEDBACK_EPT & 0x7F))
   {
     paudio->audio_feedback_state = 0;
   }
-  
+
   return status;
 }
 
@@ -326,7 +326,7 @@ static usb_sts_type class_in_handler(void *udev, uint8_t ept_num)
   * @brief  usb device endpoint receive data
   * @param  udev: usb device core handler type
   * @param  ept_num: endpoint number
-  * @retval status of usb_sts_type                            
+  * @retval status of usb_sts_type
   */
 static usb_sts_type class_out_handler(void *udev, uint8_t ept_num)
 {
@@ -334,10 +334,10 @@ static usb_sts_type class_out_handler(void *udev, uint8_t ept_num)
   usbd_core_type *pudev = (usbd_core_type *)udev;
   usb_audio_type *paudio = (usb_audio_type *)pudev->class_handler->pdata;
   uint16_t g_rxlen;
-  
+
   /* get endpoint receive data length  */
   g_rxlen = usbd_get_recv_len(pudev, ept_num);
-  
+
   if((ept_num & 0x7F) == (USBD_AUDIO_SPK_OUT_EPT & 0x7F))
   {
     /* speaker data*/
@@ -353,7 +353,7 @@ static usb_sts_type class_out_handler(void *udev, uint8_t ept_num)
 /**
   * @brief  usb device sof handler
   * @param  udev: usb device core handler type
-  * @retval status of usb_sts_type                            
+  * @retval status of usb_sts_type
   */
 static usb_sts_type class_sof_handler(void *udev)
 {
@@ -361,7 +361,7 @@ static usb_sts_type class_sof_handler(void *udev)
   usbd_core_type *pudev = (usbd_core_type *)udev;
   usb_audio_type *paudio = (usb_audio_type *)pudev->class_handler->pdata;
 
-#if AUDIO_SUPPORT_FEEDBACK  
+#if AUDIO_SUPPORT_FEEDBACK
   if(paudio->audio_spk_out_stage & 2)
   {
     paudio->audio_spk_out_stage = 0;
@@ -369,7 +369,7 @@ static usb_sts_type class_sof_handler(void *udev)
   else if( paudio->audio_spk_out_stage )
   {
     paudio->audio_spk_out_stage |= 2;
-    
+
     if( 0 == paudio->audio_feedback_state )
     {
       usbd_core_type *pudev = (usbd_core_type *)udev;
@@ -386,9 +386,9 @@ static usb_sts_type class_sof_handler(void *udev)
         paudio->audio_feedback_state = 1;
       }
   }
-#endif  
+#endif
   /* ...user code... */
-  
+
   return status;
 }
 
@@ -396,7 +396,7 @@ static usb_sts_type class_sof_handler(void *udev)
   * @brief  usb device event handler
   * @param  udev: usb device core handler type
   * @param  event: usb device event
-  * @retval status of usb_sts_type                            
+  * @retval status of usb_sts_type
   */
 static usb_sts_type class_event_handler(void *udev, usbd_event_type event)
 {
@@ -406,9 +406,9 @@ static usb_sts_type class_event_handler(void *udev, usbd_event_type event)
   switch(event)
   {
     case USBD_RESET_EVENT:
-      
+
       /* ...user code... */
-    
+
       break;
     case USBD_SUSPEND_EVENT:
       paudio->spk_alt_setting = 0;
@@ -416,16 +416,16 @@ static usb_sts_type class_event_handler(void *udev, usbd_event_type event)
       paudio->mic_alt_setting = 0;
       audio_codec_mic_alt_setting(paudio->spk_alt_setting);
       /* ...user code... */
-    
+
       break;
     case USBD_WAKEUP_EVENT:
       /* ...user code... */
-    
+
       break;
     case USBD_INISOINCOM_EVENT:
       audio_inisoincom_event(udev);
       break;
-    
+
     default:
       break;
   }
@@ -435,44 +435,44 @@ static usb_sts_type class_event_handler(void *udev, usbd_event_type event)
 /**
   * @brief  usb audio in iso incom event
   * @param  udev: usb device core handler type
-  * @retval none                           
+  * @retval none
   */
 static void audio_inisoincom_event(void *udev)
 {
-#if  0  
+#if  0
   usbd_core_type *pudev = (usbd_core_type *)udev;
   usb_audio_type *paudio = (usb_audio_type *)pudev->class_handler->pdata;
   uint32_t fnsof = OTG_DEVICE(pudev->usb_reg)->dsts_bit.soffn;
   uint32_t epctl_fb = USB_INEPT(pudev->usb_reg, (USBD_AUDIO_FEEDBACK_EPT&0x7F))->diepctl_bit.dpid;
   uint32_t epctl_in = USB_INEPT(pudev->usb_reg, (USBD_AUDIO_MIC_IN_EPT&0x7F))->diepctl_bit.dpid;
   uint32_t len = 0;
-  
+
   if((fnsof & 0x1) == epctl_fb)
   {
     USB_INEPT(pudev->usb_reg, (USBD_AUDIO_FEEDBACK_EPT&0x7F))->diepctl_bit.eptdis = 1;
     USB_INEPT(pudev->usb_reg, (USBD_AUDIO_FEEDBACK_EPT&0x7F))->diepctl_bit.snak = 1;
     usb_flush_tx_fifo(pudev->usb_reg, USBD_AUDIO_FEEDBACK_EPT&0x7F);
-    
+
     usbd_ept_send(pudev, USBD_AUDIO_FEEDBACK_EPT, paudio->audio_feed_back, 3);
   }
-  
+
   if((fnsof & 0x1) == epctl_in)
   {
     USB_INEPT(pudev->usb_reg, (USBD_AUDIO_MIC_IN_EPT&0x7F))->diepctl_bit.eptdis = 1;
     USB_INEPT(pudev->usb_reg, (USBD_AUDIO_MIC_IN_EPT&0x7F))->diepctl_bit.snak = 1;
     usb_flush_tx_fifo(pudev->usb_reg, USBD_AUDIO_MIC_IN_EPT&0x7F);
-    
+
     len = audio_codec_mic_get_data(paudio->audio_mic_data);
     usbd_ept_send(pudev, USBD_AUDIO_MIC_IN_EPT, paudio->audio_mic_data, len);
   }
-#endif  
+#endif
 }
 
 /**
   * @brief  usb audio request get cur
   * @param  udev: usb device core handler type
   * @param  setup: setup class
-  * @retval none                           
+  * @retval none
   */
 static void audio_req_get_cur(void *udev, usb_setup_type *setup)
 {
@@ -503,7 +503,7 @@ static void audio_req_get_cur(void *udev, usb_setup_type *setup)
       *((uint16_t *)paudio->g_audio_cur) = paudio->mic_volume;
       usbd_ctrl_send(pudev, paudio->g_audio_cur, setup->wLength);
     }
-    
+
   }
 }
 
@@ -511,7 +511,7 @@ static void audio_req_get_cur(void *udev, usb_setup_type *setup)
   * @brief  usb audio request set cur
   * @param  udev: usb device core handler type
   * @param  setup: setup class
-  * @retval none                           
+  * @retval none
   */
 static void audio_req_set_cur(void *udev, usb_setup_type *setup)
 {
@@ -520,10 +520,10 @@ static void audio_req_set_cur(void *udev, usb_setup_type *setup)
   if(setup->wLength > 0)
   {
     usbd_ctrl_recv(pudev, paudio->g_audio_cur, setup->wLength);
-    
+
     paudio->audio_cmd = AUDIO_REQ_SET_CUR;
     paudio->audio_cmd_len = setup->wLength;
-    
+
     switch(setup->bmRequestType & AUDIO_REQ_CONTROL_MASK)
     {
       case AUDIO_REQ_CONTROL_INTERFACE:
@@ -551,7 +551,7 @@ static void audio_req_set_cur(void *udev, usb_setup_type *setup)
   * @brief  usb audio request get min
   * @param  udev: usb device core handler type
   * @param  setup: setup class
-  * @retval none                           
+  * @retval none
   */
 static void audio_req_get_min(void *udev, usb_setup_type *setup)
 {
@@ -573,7 +573,7 @@ static void audio_req_get_min(void *udev, usb_setup_type *setup)
   * @brief  usb audio request get max
   * @param  udev: usb device core handler type
   * @param  setup: setup class
-  * @retval none                           
+  * @retval none
   */
 static void audio_req_get_max(void *udev, usb_setup_type *setup)
 {
@@ -595,7 +595,7 @@ static void audio_req_get_max(void *udev, usb_setup_type *setup)
   * @brief  usb audio request get res
   * @param  udev: usb device core handler type
   * @param  setup: setup class
-  * @retval none                           
+  * @retval none
   */
 static void audio_req_get_res(void *udev, usb_setup_type *setup)
 {
@@ -617,7 +617,7 @@ static void audio_req_get_res(void *udev, usb_setup_type *setup)
   * @brief  usb audio set interface
   * @param  udev: usb device core handler type
   * @param  setup: setup class
-  * @retval none                           
+  * @retval none
   */
 static void audio_set_interface(void *udev, usb_setup_type *setup)
 {
@@ -632,7 +632,7 @@ static void audio_set_interface(void *udev, usb_setup_type *setup)
     {
       usbd_ept_recv(pudev, USBD_AUDIO_SPK_OUT_EPT, paudio->audio_spk_data, AUDIO_SPK_OUT_MAXPACKET_SIZE);
     }
-    
+
   }
   else if(LBYTE(setup->wIndex) == AUDIO_MIC_INTERFACE_NUMBER)
   {
@@ -644,7 +644,7 @@ static void audio_set_interface(void *udev, usb_setup_type *setup)
       usbd_ept_send(pudev, USBD_AUDIO_MIC_IN_EPT, paudio->audio_mic_data, len);
     }
   }
-    
+
 }
 
 
@@ -652,7 +652,7 @@ static void audio_set_interface(void *udev, usb_setup_type *setup)
   * @brief  usb audio get interface
   * @param  udev: usb device core handler type
   * @param  setup: setup class
-  * @retval none                           
+  * @retval none
   */
 static void audio_get_interface(void *udev, usb_setup_type *setup)
 {
@@ -666,13 +666,13 @@ static void audio_get_interface(void *udev, usb_setup_type *setup)
   {
     usbd_ctrl_send(pudev, (uint8_t *)&paudio->mic_alt_setting, 1);
   }
-    
+
 }
 
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}

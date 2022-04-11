@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     xmc_lcd.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    xmc_lcd config program
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to 
-  * download from Artery official website is the copyrighted work of Artery. 
-  * Artery authorizes customers to use, copy, and distribute the BSP 
-  * software and its related documentation for the purpose of design and 
-  * development in conjunction with Artery microcontrollers. Use of the 
+  * The software Board Support Package (BSP) that is made available to
+  * download from Artery official website is the copyrighted work of Artery.
+  * Artery authorizes customers to use, copy, and distribute the BSP
+  * software and its related documentation for the purpose of design and
+  * development in conjunction with Artery microcontrollers. Use of the
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -31,7 +31,7 @@
 /** @addtogroup AT32F435_periph_examples
   * @{
   */
-  
+
 /** @addtogroup 435_XMC_lcd_8bit
   * @{
   */
@@ -45,20 +45,20 @@
   */
 void xmc_init(void)
 {
-  gpio_init_type  gpio_init_struct = {0}; 
-  xmc_norsram_init_type  xmc_norsram_init_struct; 
-  xmc_norsram_timing_init_type rw_timing_struct, w_timing_struct; 
-  
+  gpio_init_type  gpio_init_struct = {0};
+  xmc_norsram_init_type  xmc_norsram_init_struct;
+  xmc_norsram_timing_init_type rw_timing_struct, w_timing_struct;
+
   /* enable the gpio clock */
   crm_periph_clock_enable(CRM_GPIOB_PERIPH_CLOCK, TRUE);
   crm_periph_clock_enable(CRM_GPIOC_PERIPH_CLOCK, TRUE);
   crm_periph_clock_enable(CRM_GPIOD_PERIPH_CLOCK, TRUE);
   crm_periph_clock_enable(CRM_GPIOE_PERIPH_CLOCK, TRUE);
   crm_periph_clock_enable(CRM_GPIOF_PERIPH_CLOCK, TRUE);
-  
+
   /* enable the xmc clock */
-  crm_periph_clock_enable(CRM_XMC_PERIPH_CLOCK, TRUE); 
-  
+  crm_periph_clock_enable(CRM_XMC_PERIPH_CLOCK, TRUE);
+
   /*-- gpio configuration ------------------------------------------------------*/
   gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE4, GPIO_MUX_12);
   gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE5, GPIO_MUX_12);
@@ -72,7 +72,7 @@ void xmc_init(void)
   gpio_pin_mux_config(GPIOE, GPIO_PINS_SOURCE9, GPIO_MUX_12);
   gpio_pin_mux_config(GPIOE, GPIO_PINS_SOURCE10, GPIO_MUX_12);
   gpio_pin_mux_config(GPIOF, GPIO_PINS_SOURCE0, GPIO_MUX_12);
-  
+
   /* ne1/nwe/noe lines configuration */
   gpio_init_struct.gpio_pins = GPIO_PINS_4 | GPIO_PINS_5 | GPIO_PINS_7 ;
   gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
@@ -80,7 +80,7 @@ void xmc_init(void)
   gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
   gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
   gpio_init(GPIOD, &gpio_init_struct);
-  
+
   /* a0 lines configuration */
   gpio_init_struct.gpio_pins = GPIO_PINS_0;
   gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
@@ -88,7 +88,7 @@ void xmc_init(void)
   gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
   gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
   gpio_init(GPIOF, &gpio_init_struct);
-  
+
   /* data lines configuration */
   gpio_init_struct.gpio_pins = GPIO_PINS_0 | GPIO_PINS_1 | GPIO_PINS_14 | GPIO_PINS_15;
   gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
@@ -96,14 +96,14 @@ void xmc_init(void)
   gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
   gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
   gpio_init(GPIOD, &gpio_init_struct);
-  
+
   gpio_init_struct.gpio_pins = GPIO_PINS_7 | GPIO_PINS_8 | GPIO_PINS_9 | GPIO_PINS_10;
   gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
   gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
   gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
   gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
   gpio_init(GPIOE, &gpio_init_struct);
-  
+
   /* lcd reset lines configuration */
   gpio_init_struct.gpio_pins = GPIO_PINS_9;
   gpio_init_struct.gpio_mode = GPIO_MODE_OUTPUT;
@@ -113,140 +113,143 @@ void xmc_init(void)
   gpio_init(GPIOB, &gpio_init_struct);
 
   /*-- xmc configuration ------------------------------------------------------*/
-  xmc_norsram_default_para_init(&xmc_norsram_init_struct); 
-  xmc_norsram_init_struct.subbank = XMC_BANK1_NOR_SRAM1; 
-  xmc_norsram_init_struct.data_addr_multiplex = XMC_DATA_ADDR_MUX_DISABLE; 
-  xmc_norsram_init_struct.device = XMC_DEVICE_SRAM; 
-  xmc_norsram_init_struct.bus_type = XMC_BUSTYPE_8_BITS; 
-  xmc_norsram_init_struct.burst_mode_enable = XMC_BURST_MODE_DISABLE; 
-  xmc_norsram_init_struct.asynwait_enable = XMC_ASYN_WAIT_DISABLE; 
-  xmc_norsram_init_struct.wait_signal_lv = XMC_WAIT_SIGNAL_LEVEL_LOW; 
-  xmc_norsram_init_struct.wrapped_mode_enable = XMC_WRAPPED_MODE_DISABLE; 
-  xmc_norsram_init_struct.wait_signal_config = XMC_WAIT_SIGNAL_SYN_BEFORE; 
-  xmc_norsram_init_struct.write_enable = XMC_WRITE_OPERATION_ENABLE; 
-  xmc_norsram_init_struct.wait_signal_enable = XMC_WAIT_SIGNAL_DISABLE; 
-  xmc_norsram_init_struct.write_timing_enable = XMC_WRITE_TIMING_ENABLE; 
-  xmc_norsram_init_struct.write_burst_syn = XMC_WRITE_BURST_SYN_DISABLE; 
-  xmc_nor_sram_init(&xmc_norsram_init_struct); 
-  
+  xmc_norsram_default_para_init(&xmc_norsram_init_struct);
+  xmc_norsram_init_struct.subbank = XMC_BANK1_NOR_SRAM1;
+  xmc_norsram_init_struct.data_addr_multiplex = XMC_DATA_ADDR_MUX_DISABLE;
+  xmc_norsram_init_struct.device = XMC_DEVICE_SRAM;
+  xmc_norsram_init_struct.bus_type = XMC_BUSTYPE_8_BITS;
+  xmc_norsram_init_struct.burst_mode_enable = XMC_BURST_MODE_DISABLE;
+  xmc_norsram_init_struct.asynwait_enable = XMC_ASYN_WAIT_DISABLE;
+  xmc_norsram_init_struct.wait_signal_lv = XMC_WAIT_SIGNAL_LEVEL_LOW;
+  xmc_norsram_init_struct.wrapped_mode_enable = XMC_WRAPPED_MODE_DISABLE;
+  xmc_norsram_init_struct.wait_signal_config = XMC_WAIT_SIGNAL_SYN_BEFORE;
+  xmc_norsram_init_struct.write_enable = XMC_WRITE_OPERATION_ENABLE;
+  xmc_norsram_init_struct.wait_signal_enable = XMC_WAIT_SIGNAL_DISABLE;
+  xmc_norsram_init_struct.write_timing_enable = XMC_WRITE_TIMING_ENABLE;
+  xmc_norsram_init_struct.write_burst_syn = XMC_WRITE_BURST_SYN_DISABLE;
+  xmc_nor_sram_init(&xmc_norsram_init_struct);
+
   /* timing configuration */
-  xmc_norsram_timing_default_para_init(&rw_timing_struct, &w_timing_struct); 
-  rw_timing_struct.subbank = XMC_BANK1_NOR_SRAM1; 
-  rw_timing_struct.write_timing_enable = XMC_WRITE_TIMING_ENABLE; 
-  rw_timing_struct.addr_setup_time = 0x2; 
-  rw_timing_struct.addr_hold_time = 0x0; 
-  rw_timing_struct.data_setup_time = 0x2; 
-  rw_timing_struct.bus_latency_time = 0x0; 
-  rw_timing_struct.clk_psc = 0x0; 
-  rw_timing_struct.data_latency_time = 0x0; 
-  rw_timing_struct.mode = XMC_ACCESS_MODE_A; 
-  w_timing_struct.subbank = XMC_BANK1_NOR_SRAM1; 
-  w_timing_struct.write_timing_enable = XMC_WRITE_TIMING_ENABLE; 
-  w_timing_struct.addr_setup_time = 0x2; 
-  w_timing_struct.addr_hold_time = 0x0; 
-  w_timing_struct.data_setup_time = 0x2; 
-  w_timing_struct.bus_latency_time = 0x0; 
-  w_timing_struct.clk_psc = 0x0; 
-  w_timing_struct.data_latency_time = 0x0; 
-  w_timing_struct.mode = XMC_ACCESS_MODE_A;  
-  xmc_nor_sram_timing_config(&rw_timing_struct, &w_timing_struct); 
-  
+  xmc_norsram_timing_default_para_init(&rw_timing_struct, &w_timing_struct);
+  rw_timing_struct.subbank = XMC_BANK1_NOR_SRAM1;
+  rw_timing_struct.write_timing_enable = XMC_WRITE_TIMING_ENABLE;
+  rw_timing_struct.addr_setup_time = 0x2;
+  rw_timing_struct.addr_hold_time = 0x0;
+  rw_timing_struct.data_setup_time = 0x2;
+  rw_timing_struct.bus_latency_time = 0x0;
+  rw_timing_struct.clk_psc = 0x0;
+  rw_timing_struct.data_latency_time = 0x0;
+  rw_timing_struct.mode = XMC_ACCESS_MODE_A;
+  w_timing_struct.subbank = XMC_BANK1_NOR_SRAM1;
+  w_timing_struct.write_timing_enable = XMC_WRITE_TIMING_ENABLE;
+  w_timing_struct.addr_setup_time = 0x2;
+  w_timing_struct.addr_hold_time = 0x0;
+  w_timing_struct.data_setup_time = 0x2;
+  w_timing_struct.bus_latency_time = 0x0;
+  w_timing_struct.clk_psc = 0x0;
+  w_timing_struct.data_latency_time = 0x0;
+  w_timing_struct.mode = XMC_ACCESS_MODE_A;
+  xmc_nor_sram_timing_config(&rw_timing_struct, &w_timing_struct);
+
+  /* bus turnaround phase for consecutive read duration and consecutive write duration */
+  xmc_ext_timing_config(XMC_BANK1_NOR_SRAM1, 0x08, 0x08);
+
   /* enable xmc_bank1_nor_sram4 */
-  xmc_nor_sram_enable(XMC_BANK1_NOR_SRAM1, TRUE); 
+  xmc_nor_sram_enable(XMC_BANK1_NOR_SRAM1, TRUE);
 }
 
 /**
   * @brief  configures the lcd.
   *         this function must be called before any write/read operation
   *         on the lcd.
-  * @param  none 
+  * @param  none
   * @retval none
   */
 void lcd_init(void)
 {
   /* init xmc */
-  xmc_init(); 
-  delay_ms(50); 
-  
+  xmc_init();
+  delay_ms(50);
+
   /* reset lcd */
-  LCD_RESET_HIGH; 
-  delay_ms(1); 
-  LCD_RESET_LOW; 
-  delay_ms(10); 
-  LCD_RESET_HIGH; 
-  delay_ms(120); 
-  lcd_wr_command(0x36); 
-  lcd_wr_data(0x00); 
-  lcd_wr_command(0x3a); 
-  lcd_wr_data(0x55); 
-  
+  LCD_RESET_HIGH;
+  delay_ms(1);
+  LCD_RESET_LOW;
+  delay_ms(10);
+  LCD_RESET_HIGH;
+  delay_ms(120);
+  lcd_wr_command(0x36);
+  lcd_wr_data(0x00);
+  lcd_wr_command(0x3a);
+  lcd_wr_data(0x55);
+
   /* 320*240 */
-  lcd_wr_command(0x2a); 
-  lcd_wr_data(0x00); 
-  lcd_wr_data(0x00); 
-  lcd_wr_data(0x01); 
-  lcd_wr_data(0x3f); 
-  lcd_wr_command(0x2b); 
-  lcd_wr_data(0x00); 
-  lcd_wr_data(0x00); 
-  lcd_wr_data(0x00); 
-  lcd_wr_data(0xef); 
-  lcd_wr_command(0xb2); 
-  lcd_wr_data(0x0c); 
-  lcd_wr_data(0x0c); 
-  lcd_wr_data(0x00); 
-  lcd_wr_data(0x33); 
-  lcd_wr_data(0x33); 
-  lcd_wr_command(0xb7); 
-  lcd_wr_data(0x35); 
-  lcd_wr_command(0xbb); 
-  lcd_wr_data(0x30); 
-  lcd_wr_command(0xc3); 
-  lcd_wr_data(0x1c); 
-  lcd_wr_command(0xc4); 
-  lcd_wr_data(0x18); 
-  lcd_wr_command(0xc6); 
-  lcd_wr_data(0x0f); 
-  lcd_wr_command(0xd0); 
-  lcd_wr_data(0xa4); 
-  lcd_wr_data(0xa2); 
-  lcd_wr_command(0xe0); 
-  lcd_wr_data(0xf0); 
-  lcd_wr_data(0x00); 
-  lcd_wr_data(0x0a); 
-  lcd_wr_data(0x10); 
-  lcd_wr_data(0x12); 
-  lcd_wr_data(0x1b); 
-  lcd_wr_data(0x39); 
-  lcd_wr_data(0x44); 
-  lcd_wr_data(0x47); 
-  lcd_wr_data(0x28); 
-  lcd_wr_data(0x12); 
-  lcd_wr_data(0x10); 
-  lcd_wr_data(0x16); 
-  lcd_wr_data(0x1b); 
-  lcd_wr_command(0xe1); 
-  lcd_wr_data(0xf0); 
-  lcd_wr_data(0x00); 
-  lcd_wr_data(0x0a); 
-  lcd_wr_data(0x10); 
-  lcd_wr_data(0x11); 
-  lcd_wr_data(0x1a); 
-  lcd_wr_data(0x3b); 
-  lcd_wr_data(0x34); 
-  lcd_wr_data(0x4e); 
-  lcd_wr_data(0x3a); 
-  lcd_wr_data(0x17); 
-  lcd_wr_data(0x16); 
-  lcd_wr_data(0x21); 
-  lcd_wr_data(0x22);  
-  lcd_wr_command(0x3a); 
-  lcd_wr_data(0x55); 
-  lcd_wr_command(0x11); 
-  delay_ms(120); 
-  
+  lcd_wr_command(0x2a);
+  lcd_wr_data(0x00);
+  lcd_wr_data(0x00);
+  lcd_wr_data(0x01);
+  lcd_wr_data(0x3f);
+  lcd_wr_command(0x2b);
+  lcd_wr_data(0x00);
+  lcd_wr_data(0x00);
+  lcd_wr_data(0x00);
+  lcd_wr_data(0xef);
+  lcd_wr_command(0xb2);
+  lcd_wr_data(0x0c);
+  lcd_wr_data(0x0c);
+  lcd_wr_data(0x00);
+  lcd_wr_data(0x33);
+  lcd_wr_data(0x33);
+  lcd_wr_command(0xb7);
+  lcd_wr_data(0x35);
+  lcd_wr_command(0xbb);
+  lcd_wr_data(0x30);
+  lcd_wr_command(0xc3);
+  lcd_wr_data(0x1c);
+  lcd_wr_command(0xc4);
+  lcd_wr_data(0x18);
+  lcd_wr_command(0xc6);
+  lcd_wr_data(0x0f);
+  lcd_wr_command(0xd0);
+  lcd_wr_data(0xa4);
+  lcd_wr_data(0xa2);
+  lcd_wr_command(0xe0);
+  lcd_wr_data(0xf0);
+  lcd_wr_data(0x00);
+  lcd_wr_data(0x0a);
+  lcd_wr_data(0x10);
+  lcd_wr_data(0x12);
+  lcd_wr_data(0x1b);
+  lcd_wr_data(0x39);
+  lcd_wr_data(0x44);
+  lcd_wr_data(0x47);
+  lcd_wr_data(0x28);
+  lcd_wr_data(0x12);
+  lcd_wr_data(0x10);
+  lcd_wr_data(0x16);
+  lcd_wr_data(0x1b);
+  lcd_wr_command(0xe1);
+  lcd_wr_data(0xf0);
+  lcd_wr_data(0x00);
+  lcd_wr_data(0x0a);
+  lcd_wr_data(0x10);
+  lcd_wr_data(0x11);
+  lcd_wr_data(0x1a);
+  lcd_wr_data(0x3b);
+  lcd_wr_data(0x34);
+  lcd_wr_data(0x4e);
+  lcd_wr_data(0x3a);
+  lcd_wr_data(0x17);
+  lcd_wr_data(0x16);
+  lcd_wr_data(0x21);
+  lcd_wr_data(0x22);
+  lcd_wr_command(0x3a);
+  lcd_wr_data(0x55);
+  lcd_wr_command(0x11);
+  delay_ms(120);
+
   /* display on */
-  lcd_wr_command(0x29); 
+  lcd_wr_command(0x29);
 }
 
 /**
@@ -256,7 +259,7 @@ void lcd_init(void)
   */
 void lcd_wr_command(uint8_t command)
 {
-  *(__IO uint8_t *) XMC_LCD_COMMAND = command; 
+  *(__IO uint8_t *) XMC_LCD_COMMAND = command;
 }
 
 /**
@@ -266,7 +269,7 @@ void lcd_wr_command(uint8_t command)
   */
 void lcd_wr_data(uint8_t data)
 {
-  *(__IO uint8_t *) XMC_LCD_DATA = data; 
+  *(__IO uint8_t *) XMC_LCD_DATA = data;
 }
 
 /**
@@ -280,20 +283,20 @@ void lcd_wr_data(uint8_t data)
 void lcd_setblock(uint16_t xstart, uint16_t ystart, uint16_t xend, uint16_t yend)
 {
   /* set row coordinates */
-  lcd_wr_command(0x2a); 
-  lcd_wr_data(xstart >> 8); 
-  lcd_wr_data(xstart); 
-  lcd_wr_data(xend >> 8); 
-  lcd_wr_data(xend); 
-  
+  lcd_wr_command(0x2a);
+  lcd_wr_data(xstart >> 8);
+  lcd_wr_data(xstart);
+  lcd_wr_data(xend >> 8);
+  lcd_wr_data(xend);
+
   /* set column coordinates */
-  lcd_wr_command(0x2b); 
-  lcd_wr_data(ystart >> 8); 
-  lcd_wr_data(ystart); 
-  lcd_wr_data(yend >> 8); 
-  lcd_wr_data(yend); 
+  lcd_wr_command(0x2b);
+  lcd_wr_data(ystart >> 8);
+  lcd_wr_data(ystart);
+  lcd_wr_data(yend >> 8);
+  lcd_wr_data(yend);
   /* enable write menory */
-  lcd_wr_command(0x2c); 
+  lcd_wr_command(0x2c);
 }
 
 /**
@@ -303,8 +306,8 @@ void lcd_setblock(uint16_t xstart, uint16_t ystart, uint16_t xend, uint16_t yend
   */
 void lcd_writeonepoint(uint16_t color)
 {
-  lcd_wr_data(color >> 8); 
-  lcd_wr_data(color); 
+  lcd_wr_data(color >> 8);
+  lcd_wr_data(color);
 }
 
 /**
@@ -314,9 +317,9 @@ void lcd_writeonepoint(uint16_t color)
   */
 void lcd_drawpoint(uint16_t x, uint16_t y, uint16_t color)
 {
-  lcd_setblock(x, y, x, y); 
-  
-  lcd_writeonepoint(color); 
+  lcd_setblock(x, y, x, y);
+
+  lcd_writeonepoint(color);
 }
 
 /**
@@ -326,13 +329,13 @@ void lcd_drawpoint(uint16_t x, uint16_t y, uint16_t color)
   */
 void lcd_clear(uint16_t color)
 {
-  uint32_t i; 
-  
-  lcd_setblock(0, 0, 240, 320); 
-  
+  uint32_t i;
+
+  lcd_setblock(0, 0, 240, 320);
+
   for(i = 0; i < 76800; i++)
   {
-    lcd_writeonepoint(color);     
+    lcd_writeonepoint(color);
   }
 }
 
@@ -343,55 +346,55 @@ void lcd_clear(uint16_t color)
   */
 void lcd_display_number(void)
 {
-  int i; 
-  
-  lcd_setblock(50, 50, 199, 219); 
-  
+  int i;
+
+  lcd_setblock(50, 50, 199, 219);
+
   for(i=0; i<sizeof(gimage_8); i++)
   {
-    lcd_wr_data(gimage_8[i]); 
+    lcd_wr_data(gimage_8[i]);
   }
-  
-  delay_ms(1000); 
-  lcd_setblock(50, 50, 199, 219); 
-  
+
+  delay_ms(1000);
+  lcd_setblock(50, 50, 199, 219);
+
   for(i=0; i<sizeof(gimage_3); i++)
   {
-    lcd_wr_data(gimage_3[i]); 
-  }   
-  
-  delay_ms(1000); 
-  lcd_setblock(50, 50, 199, 219); 
-  
+    lcd_wr_data(gimage_3[i]);
+  }
+
+  delay_ms(1000);
+  lcd_setblock(50, 50, 199, 219);
+
   for(i=0; i<sizeof(gimage_5); i++)
   {
-    lcd_wr_data(gimage_5[i]); 
-  }  
-  
-  delay_ms(1000); 
-  lcd_setblock(50, 50, 199, 219); 
-  
+    lcd_wr_data(gimage_5[i]);
+  }
+
+  delay_ms(1000);
+  lcd_setblock(50, 50, 199, 219);
+
   for(i=0; i<sizeof(gimage_9); i++)
   {
-    lcd_wr_data(gimage_9[i]); 
-  }  
-  
-  delay_ms(1000); 
-  lcd_setblock(50, 50, 199, 219); 
-  
+    lcd_wr_data(gimage_9[i]);
+  }
+
+  delay_ms(1000);
+  lcd_setblock(50, 50, 199, 219);
+
   for(i=0; i<sizeof(gimage_0); i++)
   {
-    lcd_wr_data(gimage_0[i]); 
-  }  
-  
-  delay_ms(1000); 
+    lcd_wr_data(gimage_0[i]);
+  }
+
+  delay_ms(1000);
 }
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 

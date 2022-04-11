@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.5
-  * @date     2022-02-11
+  * @version  v2.0.7
+  * @date     2022-04-02
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -95,7 +95,7 @@ static void spi_config(void)
   spi_init_struct.transmission_mode = SPI_TRANSMIT_HALF_DUPLEX_RX;
   spi_init_struct.master_slave_mode =SPI_MODE_SLAVE;
   spi_init(SPI2, &spi_init_struct);
-  
+
   nvic_irq_enable(SPI3_I2S3EXT_IRQn, 0, 0);
   nvic_irq_enable(SPI2_I2S2EXT_IRQn, 0, 0);
   spi_i2s_interrupt_enable(SPI3, SPI_I2S_TDBE_INT, TRUE);
