@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     readme.txt
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    readme
   **************************************************************************
   */
@@ -14,3 +14,5 @@
   - step 2:
   select target "set_sram_xxxk", download. if everything is ok, the led4 will
   turn on.
+
+  for more detailed information. please refer to the application note document AN0026.

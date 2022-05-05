@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32_sdio.c
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    this file provides a set of functions needed to manage the
   *           sdio/mmc card memory.
   **************************************************************************
@@ -73,6 +73,7 @@ sd_error_status_type sd_init(void)
   uint16_t clkdiv = 0;
   sd_error_status_type status = SD_OK;
   gpio_init_type gpio_init_struct = {0};
+  uint8_t retry = 0;
 
   /* gpioc and gpiod periph clock enable */
   crm_periph_clock_enable(CRM_GPIOC_PERIPH_CLOCK, TRUE);
@@ -100,12 +101,17 @@ sd_error_status_type sd_init(void)
   gpio_pin_mux_config(GPIOC, GPIO_PINS_SOURCE12, GPIO_MUX_12);
   gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE2, GPIO_MUX_12);
 
-  /* reset sdio */
-  sdio_reset(SDIOx);
-
-  /* power on */
-  status = sd_power_on();
-
+  retry = 10;
+  while(retry--){
+    /* reset sdio */
+    sdio_reset(SDIOx);
+    /* power on */
+    status = sd_power_on();
+    
+    if(status == SD_OK)
+      break;
+  }
+  
   if(status == SD_OK)
   {
     /* sdio card initialize */
@@ -145,8 +151,8 @@ sd_error_status_type sd_init(void)
   {
     if(sd_card_info.card_type == SDIO_STD_CAPACITY_SD_CARD_V1_1 || sd_card_info.card_type == SDIO_STD_CAPACITY_SD_CARD_V2_0)
     {
-      /* set sdio_ck to 4MHz */
-      clkdiv = system_core_clock / 4000000;
+      /* set sdio_ck to 12mhz */
+      clkdiv = system_core_clock / 12000000;
 
       if(clkdiv >= 2)
       {
@@ -155,8 +161,8 @@ sd_error_status_type sd_init(void)
     }
     else
     {
-      /* set sdio_ck to 4MHz */
-      clkdiv = system_core_clock / 4000000;
+      /* set sdio_ck to 48mhz */
+      clkdiv = system_core_clock / 48000000;
 
       if(clkdiv >= 2)
       {
@@ -234,21 +240,11 @@ sd_error_status_type sd_power_on(void)
 
     /* sdio command config */
     sdio_command_config(SDIOx, &sdio_command_init_struct);
-    /* enable CCSM */
+    /* enable ccsm */
     sdio_command_state_machine_enable(SDIOx, TRUE);
 
     /* get command status */
     status = command_error();
-
-    if(status == SD_OK)
-    {
-      break;
-    }
-  }
-  /* if any errors occured, return status */
-  if(status != SD_OK)
-  {
-    return status;
   }
 
   /* send cmd8, check card interface feature */
@@ -259,7 +255,7 @@ sd_error_status_type sd_power_on(void)
 
   /* sdio command config */
   sdio_command_config(SDIOx, &sdio_command_init_struct);
-  /* enable CCSM */
+  /* enable ccsm */
   sdio_command_state_machine_enable(SDIOx, TRUE);
 
   /* waiting R7 */
@@ -280,7 +276,7 @@ sd_error_status_type sd_power_on(void)
 
   /* sdio command config */
   sdio_command_config(SDIOx, &sdio_command_init_struct);
-  /* enable CCSM */
+  /* enable ccsm */
   sdio_command_state_machine_enable(SDIOx, TRUE);
 
   /* waiting R1 */
@@ -300,7 +296,7 @@ sd_error_status_type sd_power_on(void)
 
       /* sdio command config */
       sdio_command_config(SDIOx, &sdio_command_init_struct);
-      /* enable CCSM */
+      /* enable ccsm */
       sdio_command_state_machine_enable(SDIOx, TRUE);
 
       /* waiting R1 */
@@ -320,7 +316,7 @@ sd_error_status_type sd_power_on(void)
 
       /* sdio command config */
       sdio_command_config(SDIOx, &sdio_command_init_struct);
-      /* enable CCSM */
+      /* enable ccsm */
       sdio_command_state_machine_enable(SDIOx, TRUE);
 
       /* waiting R3 */
@@ -364,7 +360,7 @@ sd_error_status_type sd_power_on(void)
 
       /* sdio command config */
       sdio_command_config(SDIOx, &sdio_command_init_struct);
-      /* enable CCSM */
+      /* enable ccsm */
       sdio_command_state_machine_enable(SDIOx, TRUE);
 
       /* waiting R3 */
@@ -435,7 +431,7 @@ sd_error_status_type sd_card_init(void)
 
     /* sdio command config */
     sdio_command_config(SDIOx, &sdio_command_init_struct);
-    /* enable CCSM */
+    /* enable ccsm */
     sdio_command_state_machine_enable(SDIOx, TRUE);
 
     status = command_rsp2_error();
@@ -462,7 +458,7 @@ sd_error_status_type sd_card_init(void)
 
     /* sdio command config */
     sdio_command_config(SDIOx, &sdio_command_init_struct);
-    /* enable CCSM */
+    /* enable ccsm */
     sdio_command_state_machine_enable(SDIOx, TRUE);
 
     status = command_rsp6_error(SD_CMD_SET_REL_ADDR, &rca_temp);
@@ -483,7 +479,7 @@ sd_error_status_type sd_card_init(void)
 
     /* sdio command config */
     sdio_command_config(SDIOx, &sdio_command_init_struct);
-    /* enable CCSM */
+    /* enable ccsm */
     sdio_command_state_machine_enable(SDIOx, TRUE);
 
     status = command_rsp2_error();
@@ -504,7 +500,7 @@ sd_error_status_type sd_card_init(void)
 
     /* sdio command config */
     sdio_command_config(SDIOx, &sdio_command_init_struct);
-    /* enable CCSM */
+    /* enable ccsm */
     sdio_command_state_machine_enable(SDIOx, TRUE);
 
     status = command_rsp2_error();
@@ -813,7 +809,7 @@ sd_error_status_type sd_deselect_select(uint32_t addr)
 
   /* sdio command config */
   sdio_command_config(SDIOx, &sdio_command_init_struct);
-  /* enable CCSM */
+  /* enable ccsm */
   sdio_command_state_machine_enable(SDIOx, TRUE);
 
   return command_rsp1_error(SD_CMD_SEL_DESEL_CARD);
@@ -862,7 +858,7 @@ sd_error_status_type sdio_command_data_send(sdio_command_struct_type *sdio_cmd_i
 
   /* sdio command config */
   sdio_command_config(SDIOx, sdio_cmd_init_t);
-  /* enable CCSM */
+  /* enable ccsm */
   sdio_command_state_machine_enable(SDIOx, TRUE);
 
   status = command_rsp1_error(sdio_cmd_init_t->cmd_index);
@@ -971,7 +967,7 @@ sd_error_status_type sdio_command_data_send(sdio_command_struct_type *sdio_cmd_i
 
       /* sdio command config */
       sdio_command_config(SDIOx, sdio_cmd_init_t);
-      /* enable CCSM */
+      /* enable ccsm */
       sdio_command_state_machine_enable(SDIOx, TRUE);
 
       status = command_rsp1_error(SD_CMD_STOP_TRANSMISSION);
@@ -1072,7 +1068,7 @@ sd_error_status_type sd_blocks_erase(long long addr, uint32_t nblks)
 
     /* sdio command config */
     sdio_command_config(SDIOx, &sdio_command_init_struct);
-    /* enable CCSM */
+    /* enable ccsm */
     sdio_command_state_machine_enable(SDIOx, TRUE);
 
     status = command_rsp1_error(SD_CMD_ERASE_GRP_START);
@@ -1088,7 +1084,7 @@ sd_error_status_type sd_blocks_erase(long long addr, uint32_t nblks)
 
     /* sdio command config */
     sdio_command_config(SDIOx, &sdio_command_init_struct);
-    /* enable CCSM */
+    /* enable ccsm */
     sdio_command_state_machine_enable(SDIOx, TRUE);
 
     status = command_rsp1_error(SD_CMD_ERASE_GRP_END);
@@ -1104,7 +1100,7 @@ sd_error_status_type sd_blocks_erase(long long addr, uint32_t nblks)
 
     /* sdio command config */
     sdio_command_config(SDIOx, &sdio_command_init_struct);
-    /* enable CCSM */
+    /* enable ccsm */
     sdio_command_state_machine_enable(SDIOx, TRUE);
 
     status = command_rsp1_error(SD_CMD_ERASE);
@@ -1124,7 +1120,7 @@ sd_error_status_type sd_blocks_erase(long long addr, uint32_t nblks)
 
     /* sdio command config */
     sdio_command_config(SDIOx, &sdio_command_init_struct);
-    /* enable CCSM */
+    /* enable ccsm */
     sdio_command_state_machine_enable(SDIOx, TRUE);
 
     status = command_rsp1_error(SD_CMD_SD_ERASE_GRP_START);
@@ -1140,7 +1136,7 @@ sd_error_status_type sd_blocks_erase(long long addr, uint32_t nblks)
 
     /* sdio command config */
     sdio_command_config(SDIOx, &sdio_command_init_struct);
-    /* enable CCSM */
+    /* enable ccsm */
     sdio_command_state_machine_enable(SDIOx, TRUE);
 
     if(status != SD_OK)
@@ -1154,7 +1150,7 @@ sd_error_status_type sd_blocks_erase(long long addr, uint32_t nblks)
 
     /* sdio command config */
     sdio_command_config(SDIOx, &sdio_command_init_struct);
-    /* enable CCSM */
+    /* enable ccsm */
     sdio_command_state_machine_enable(SDIOx, TRUE);
 
     status = command_rsp1_error(SD_CMD_ERASE);
@@ -1233,7 +1229,7 @@ sd_error_status_type sd_block_read(uint8_t *buf, long long addr, uint16_t blk_si
 
     /* sdio command config */
     sdio_command_config(SDIOx, &sdio_command_init_struct);
-    /* enable CCSM */
+    /* enable ccsm */
     sdio_command_state_machine_enable(SDIOx, TRUE);
 
     status = command_rsp1_error(SD_CMD_SET_BLOCKLEN);
@@ -1273,7 +1269,6 @@ sd_error_status_type sd_block_read(uint8_t *buf, long long addr, uint16_t blk_si
   * @param  nblks: number of blocks to be read.
   * @retval sd_error_status_type: sd card error code.
   */
-uint32_t *tempbuff;
 sd_error_status_type sd_mult_blocks_read(uint8_t *buf, long long addr, uint16_t blk_size, uint32_t nblks)
 {
   sd_error_status_type status = SD_OK;
@@ -1318,7 +1313,7 @@ sd_error_status_type sd_mult_blocks_read(uint8_t *buf, long long addr, uint16_t 
 
     /* sdio command config */
     sdio_command_config(SDIOx, &sdio_command_init_struct);
-    /* enable CCSM */
+    /* enable ccsm */
     sdio_command_state_machine_enable(SDIOx, TRUE);
 
     status = command_rsp1_error(SD_CMD_SET_BLOCKLEN);
@@ -1413,7 +1408,7 @@ sd_error_status_type sd_block_write(const uint8_t *buf, long long addr, uint16_t
 
     /* sdio command config */
     sdio_command_config(SDIOx, &sdio_command_init_struct);
-    /* enable CCSM */
+    /* enable ccsm */
     sdio_command_state_machine_enable(SDIOx, TRUE);
 
     status = command_rsp1_error(SD_CMD_SET_BLOCKLEN);
@@ -1535,7 +1530,7 @@ sd_error_status_type sd_mult_blocks_write(const uint8_t *buf, long long addr, ui
 
     /* sdio command config */
     sdio_command_config(SDIOx, &sdio_command_init_struct);
-    /* enable CCSM */
+    /* enable ccsm */
     sdio_command_state_machine_enable(SDIOx, TRUE);
 
     status = command_rsp1_error(SD_CMD_SET_BLOCKLEN);
@@ -1581,7 +1576,7 @@ sd_error_status_type sd_mult_blocks_write(const uint8_t *buf, long long addr, ui
 
     /* sdio command config */
     sdio_command_config(SDIOx, &sdio_command_init_struct);
-    /* enable CCSM */
+    /* enable ccsm */
     sdio_command_state_machine_enable(SDIOx, TRUE);
 
     status = command_rsp1_error(SD_CMD_APP_CMD);
@@ -1599,7 +1594,7 @@ sd_error_status_type sd_mult_blocks_write(const uint8_t *buf, long long addr, ui
 
     /* sdio command config */
     sdio_command_config(SDIOx, &sdio_command_init_struct);
-    /* enable CCSM */
+    /* enable ccsm */
     sdio_command_state_machine_enable(SDIOx, TRUE);
 
     status = command_rsp1_error(SD_CMD_SET_BLOCK_COUNT);
@@ -1799,7 +1794,7 @@ sd_error_status_type sd_irq_service(void)
       sdio_command_init_struct.wait_type = SDIO_WAIT_FOR_NO;
       /* sdio command config */
       sdio_command_config(SDIOx, &sdio_command_init_struct);
-      /* enable CCSM */
+      /* enable ccsm */
       sdio_command_state_machine_enable(SDIOx, TRUE);
       transfer_error = command_rsp1_error(SD_CMD_STOP_TRANSMISSION);
     }
@@ -2252,7 +2247,7 @@ sd_error_status_type sd_bus_wide_enable(confirm_state new_state)
 
     /* sdio command config */
     sdio_command_config(SDIOx, &sdio_command_init_struct);
-    /* enable CCSM */
+    /* enable ccsm */
     sdio_command_state_machine_enable(SDIOx, TRUE);
 
     status = command_rsp1_error(SD_CMD_APP_CMD);
@@ -2269,7 +2264,7 @@ sd_error_status_type sd_bus_wide_enable(confirm_state new_state)
 
     /* sdio command config */
     sdio_command_config(SDIOx, &sdio_command_init_struct);
-    /* enable CCSM */
+    /* enable ccsm */
     sdio_command_state_machine_enable(SDIOx, TRUE);
 
     status = command_rsp1_error(SD_CMD_APP_SD_SET_BUSWIDTH);
@@ -2300,7 +2295,7 @@ sd_error_status_type mmc_switch(uint8_t set, uint8_t index, uint8_t value)
 
   /* sdio command config */
   sdio_command_config(SDIOx, &sdio_command_init_struct);
-  /* enable CCSM */
+  /* enable ccsm */
   sdio_command_state_machine_enable(SDIOx, TRUE);
 
   status = command_rsp1_error(SD_CMD_HS_SWITCH);
@@ -2362,7 +2357,7 @@ sd_error_status_type sd_switch(uint32_t mode, uint32_t group, uint8_t value, uin
 
   /* sdio command config */
   sdio_command_config(SDIOx, &sdio_command_init_struct);
-  /* enable CCSM */
+  /* enable ccsm */
   sdio_command_state_machine_enable(SDIOx, TRUE);
 
   status = command_rsp1_error(SD_CMD_SET_BLOCKLEN);
@@ -2407,7 +2402,7 @@ sd_error_status_type check_card_programming(uint8_t *p_status)
 
   /* sdio command config */
   sdio_command_config(SDIOx, &sdio_command_init_struct);
-  /* enable CCSM */
+  /* enable ccsm */
   sdio_command_state_machine_enable(SDIOx, TRUE);
 
   sts_reg = SDIOx->sts;
@@ -2466,7 +2461,7 @@ sd_error_status_type sd_status_send(uint32_t *p_card_status)
 
   /* sdio command config */
   sdio_command_config(SDIOx, &sdio_command_init_struct);
-  /* enable CCSM */
+  /* enable ccsm */
   sdio_command_state_machine_enable(SDIOx, TRUE);
 
   status = command_rsp1_error(SD_CMD_SEND_STATUS);
@@ -2520,7 +2515,7 @@ sd_error_status_type scr_find(void)
 
   /* sdio command config */
   sdio_command_config(SDIOx, &sdio_command_init_struct);
-  /* enable CCSM */
+  /* enable ccsm */
   sdio_command_state_machine_enable(SDIOx, TRUE);
 
   status = command_rsp1_error(SD_CMD_SET_BLOCKLEN);
@@ -2538,7 +2533,7 @@ sd_error_status_type scr_find(void)
 
   /* sdio command config */
   sdio_command_config(SDIOx, &sdio_command_init_struct);
-  /* enable CCSM */
+  /* enable ccsm */
   sdio_command_state_machine_enable(SDIOx, TRUE);
 
   status = command_rsp1_error(SD_CMD_APP_CMD);
@@ -2565,7 +2560,7 @@ sd_error_status_type scr_find(void)
 
   /* sdio command config */
   sdio_command_config(SDIOx, &sdio_command_init_struct);
-  /* enable CCSM */
+  /* enable ccsm */
   sdio_command_state_machine_enable(SDIOx, TRUE);
 
   status = command_rsp1_error(SD_CMD_SD_APP_SEND_SCR);

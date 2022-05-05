@@ -1,15 +1,17 @@
 /**
   **************************************************************************
-  * @file_music     at_surf_f437_board_player_wav.c
+  * @file     at_surf_f437_board_player_wav.c
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    wav file decode.
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to
-  * download from Artery official website is the copyrighted work of Artery.
-  * Artery authorizes customers to use, copy, and distribute the BSP
-  * software and its related documentation for the purpose of design and
-  * development in conjunction with Artery microcontrollers. Use of the
+  * The software Board Support Package (BSP) that is made available to 
+  * download from Artery official website is the copyrighted work of Artery. 
+  * Artery authorizes customers to use, copy, and distribute the BSP 
+  * software and its related documentation for the purpose of design and 
+  * development in conjunction with Artery microcontrollers. Use of the 
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -22,16 +24,17 @@
   **************************************************************************
   */
 
-#include "at_surf_f437_board_audio.h"
 #include "at_surf_f437_board_player.h"
 
+#define WAV_READBUF_SIZE                 (1024 * 8)
+#define WAV_DECODE_SIZE                  (1152)  /* single channel */
 /**
   * @brief wav data change
   */
 typedef union
 {
-  uint8_t buf[2];
-  int16_t data;
+  uint8_t buf[4];         
+  int32_t data;
 }wav_data_change_type;
 
 /**
@@ -39,9 +42,9 @@ typedef union
   */
 typedef struct
 {
-  uint32_t id;
-  uint32_t size;
-  uint32_t format;
+  uint32_t id;         
+  uint32_t size;      
+  uint32_t format;           
 }riff_type;
 
 /**
@@ -49,36 +52,36 @@ typedef struct
   */
 typedef struct
 {
-  uint32_t id;
-  uint32_t size;
-  uint16_t audioformat;
-  uint16_t numofchannels;
-  uint32_t samplerate;
-  uint32_t byterate;
-  uint16_t blockalign;
-  uint16_t bitspersample;
-}fmt_type;
+  uint32_t id;         
+  uint32_t size;      
+  uint16_t audioformat;    
+  uint16_t numofchannels;    
+  uint32_t samplerate;    
+  uint32_t byterate;      
+  uint16_t blockalign;    
+  uint16_t bitspersample;    
+}fmt_type;     
 
 /**
   * @brief wav data format
   */
-typedef struct
+typedef struct 
 {
-  uint32_t id;
-  uint32_t size;
+  uint32_t id;       
+  uint32_t size;     
 }data_type;
 
 /**
   * @brief wav file header format
   */
 typedef struct
-{
-	riff_type riff;
-	fmt_type  fmt;
-	data_type data;
-	uint16_t data_size;
-	uint16_t read_size;
-}wav_header_type;
+{ 
+  riff_type riff;  
+  fmt_type  fmt;    
+  data_type data;  
+  uint16_t data_size;
+  uint16_t read_size;
+}wav_header_type; 
 
 wav_header_type wav_header;
 
@@ -95,14 +98,14 @@ int32_t wav_str_find(uint8_t *buf, char *find_str, uint16_t buf_len)
   uint32_t find_len;
 
   find_len = strlen(find_str);
-
+  
   if(buf_len < find_len)
   {
     return -1;
   }
 
   buf_len = buf_len - find_len + 1;
-
+  
   for(i = 0; i < buf_len; i++)
   {
     if(buf_cmp((uint8_t *)&buf[i], (uint8_t *)find_str, find_len) == SUCCESS)
@@ -110,160 +113,172 @@ int32_t wav_str_find(uint8_t *buf, char *find_str, uint16_t buf_len)
       return i;
     }
   }
-
+  
   return -1;
 }
 
 /**
   * @brief  decode wav header.
-  * @param  header: wav file infromation.
+  * @param  audio: audio information structure.
+  *         header: wav file information.
   *         buf: decode data.
   * @retval -1: wav header not found.
   *         x: data start location.
   */
-int32_t wav_header_decode(wav_header_type *header, uint8_t *buf)
+int32_t wav_header_decode(audio_type *audio, wav_header_type *header, uint8_t *buf)
 {
   int32_t riff_start;
   int32_t fmt_start;
   int32_t data_start;
-
+  
   /* riff fmt data location find */
-  riff_start = wav_str_find(buf, (char *)"RIFF", 200);
-  fmt_start  = wav_str_find(buf, (char *)"fmt ", 200);
-  data_start = wav_str_find(buf, (char *)"data", 200);
-
+  riff_start = wav_str_find(buf, (char *)"RIFF", WAV_READBUF_SIZE);
+  fmt_start  = wav_str_find(buf, (char *)"fmt ", WAV_READBUF_SIZE);
+  data_start = wav_str_find(buf, (char *)"data", WAV_READBUF_SIZE);
+  
   if((riff_start >= 0) && (fmt_start > 0) && (data_start > 0))
   {
     memcpy((uint8_t *)&header->riff, &buf[riff_start], sizeof(riff_type));
     memcpy((uint8_t *)&header->fmt, &buf[fmt_start], sizeof(fmt_type));
     memcpy((uint8_t *)&header->data, &buf[data_start], sizeof(data_type));
-
+    
     if((header->fmt.bitspersample != 8) && (header->fmt.bitspersample != 16) && (header->fmt.bitspersample != 24) && (header->fmt.bitspersample != 32))
     {
       return -1;
     }
-
+    
     if((header->fmt.numofchannels != 1) &&  (header->fmt.numofchannels != 2))
     {
       return -1;
     }
-
+    
     header->data_size = (header->fmt.bitspersample / 8) * header->fmt.numofchannels;
-    header->read_size = header->data_size * MP3_DECODE_BUFFER_SIZE / 2;
+    header->read_size = header->data_size * WAV_DECODE_SIZE;
 
+    audio->bps = header->fmt.bitspersample;
+    audio->channel = header->fmt.numofchannels;      
+    audio->samplerate = header->fmt.samplerate;
+    audio->totalsamples = header->data.size / ((audio->bps / 8) * audio->channel);
+    audio->total_sec = audio->totalsamples / audio->samplerate;
+    
+    audio->tx_size = WAV_DECODE_SIZE;
+    
     return data_start + 8;
   }
-
+  
   return -1;
 }
 
 /**
   * @brief  decode wav data.
   * @param  header: wav file information.
-  *         input_buf: raw data.
-  *         output_buf: decode data.
+  *         input_buf: data to be decode.
+  *         decode_left: left channel data.
+  *         decode_right: right channel data.
+  *         read_size: input buffer data size.
+  *         decode_size: decode data size.
   * @retval none.
   */
-void wav_data_decode(wav_header_type *header, int8_t *input_buf, int16_t *output_buf, uint32_t number)
+void wav_data_decode(wav_header_type *header, int8_t *input_buf, int32_t *decode_left, int32_t *decode_right, uint32_t read_size, uint32_t *decode_size)
 {
-  uint32_t  i, data_num;
-  wav_data_change_type left, righ;
-
-  data_num = number / header->data_size;
-
+  uint32_t i, idx = 0;
+  wav_data_change_type temp;
+  
+  (*decode_size) = read_size / header->data_size;
+  
   /* play music */
   switch(header->fmt.bitspersample)
   {
-    /* 8 bits per sample */
+    /* 8 bits per sample */  
     case 8:
-      for(i = 0; i < data_num; i++)
+      for(i = 0; i < (*decode_size); i++)
       {
-        if(header->fmt.numofchannels == 1)
+        temp.buf[0] = input_buf[idx++];
+        temp.buf[1] = 0; 
+        temp.buf[2] = 0; 
+        temp.buf[3] = 0; 
+        
+        decode_left[i] = temp.data; 
+        
+        if(header->fmt.numofchannels == 2)
         {
-          output_buf[i * 2]     = (int16_t)input_buf[i + 0];
-          output_buf[i * 2 + 1] = 0;
-        }
-        else
-        {
-          output_buf[i * 2]     = (int16_t)input_buf[i * 2 + 0];
-          output_buf[i * 2 + 1] = (int16_t)input_buf[i * 2 + 1];
+          temp.buf[0] = input_buf[idx++];
+          temp.buf[1] = 0; 
+          temp.buf[2] = 0; 
+          temp.buf[3] = 0; 
+          
+          decode_right[i] = temp.data; 
         }
       }
       break;
-
-    /* 16 bits per sample */
+      
+    /* 16 bits per sample */   
     case 16:
-      for(i = 0; i < data_num; i++)
+      for(i = 0; i < (*decode_size); i++)
       {
-        if(header->fmt.numofchannels == 1)
+        temp.buf[0] = input_buf[idx++];
+        temp.buf[1] = input_buf[idx++]; 
+        temp.buf[2] = 0; 
+        temp.buf[3] = 0; 
+        
+        decode_left[i] = temp.data; 
+        
+        if(header->fmt.numofchannels == 2)
         {
-          left.buf[0] = input_buf[i * 2 + 0];
-          left.buf[1] = input_buf[i * 2 + 1];
-
-          output_buf[i * 2]     = left.data;
-          output_buf[i * 2 + 1] = 0;
-        }
-        else
-        {
-          left.buf[0] = input_buf[i * 4 + 0];
-          left.buf[1] = input_buf[i * 4 + 1];
-          righ.buf[0] = input_buf[i * 4 + 2];
-          righ.buf[1] = input_buf[i * 4 + 3];
-
-          output_buf[i * 2]     = left.data;
-          output_buf[i * 2 + 1] = righ.data;
+          temp.buf[0] = input_buf[idx++];
+          temp.buf[1] = input_buf[idx++]; 
+          temp.buf[2] = 0; 
+          temp.buf[3] = 0; 
+          
+          decode_right[i] = temp.data; 
         }
       }
       break;
-
-    /* 24 bits per sample */
+      
+    /* 24 bits per sample */  
     case 24:
-      for(i = 0; i < data_num; i++)
+      for(i = 0; i < (*decode_size); i++)
       {
-        if(header->fmt.numofchannels == 1)
+        temp.buf[0] = input_buf[idx++];
+        temp.buf[1] = input_buf[idx++]; 
+        temp.buf[2] = input_buf[idx++]; 
+        temp.buf[3] = 0; 
+        
+        decode_left[i] = temp.data; 
+        
+        if(header->fmt.numofchannels == 2)
         {
-          left.buf[0] = input_buf[i * 3 + 1];
-          left.buf[1] = input_buf[i * 3 + 2];
-
-          output_buf[i * 2]     = left.data;
-          output_buf[i * 2 + 1] = 0;
+          temp.buf[0] = input_buf[idx++];
+          temp.buf[1] = input_buf[idx++]; 
+          temp.buf[2] = input_buf[idx++]; 
+          temp.buf[3] = 0; 
+          
+          decode_right[i] = temp.data; 
         }
-        else
-        {
-          left.buf[0] = input_buf[i * 6 + 1];
-          left.buf[1] = input_buf[i * 6 + 2];
-          righ.buf[0] = input_buf[i * 6 + 4];
-          righ.buf[1] = input_buf[i * 6 + 5];
-
-          output_buf[i * 2]     = left.data;
-          output_buf[i * 2 + 1] = righ.data;
-        }
-      }
+      }     
       break;
-
-    /* 32 bits per sample */
+      
+    /* 32 bits per sample */  
     case 32:
-      for(i = 0; i < data_num; i++)
+      for(i = 0; i < (*decode_size); i++)
       {
-        if(header->fmt.numofchannels == 1)
+        temp.buf[0] = input_buf[idx++];
+        temp.buf[1] = input_buf[idx++]; 
+        temp.buf[2] = input_buf[idx++]; 
+        temp.buf[3] = input_buf[idx++]; 
+        
+        decode_left[i] = temp.data; 
+        
+        if(header->fmt.numofchannels == 2)
         {
-          left.buf[0] = input_buf[i * 4 + 2];
-          left.buf[1] = input_buf[i * 4 + 3];
-
-          output_buf[i * 2]     = left.data;
-          output_buf[i * 2 + 1] = 0;
+          temp.buf[0] = input_buf[idx++];
+          temp.buf[1] = input_buf[idx++]; 
+          temp.buf[2] = input_buf[idx++]; 
+          temp.buf[3] = input_buf[idx++]; 
+          
+          decode_right[i] = temp.data; 
         }
-        else
-        {
-          left.buf[0] = input_buf[i * 8 + 2];
-          left.buf[1] = input_buf[i * 8 + 3];
-          righ.buf[0] = input_buf[i * 8 + 6];
-          righ.buf[1] = input_buf[i * 8 + 7];
-
-          output_buf[i * 2]     = left.data;
-          output_buf[i * 2 + 1] = righ.data;
-        }
-      }
+      }     
       break;
     default:
       break;
@@ -271,150 +286,122 @@ void wav_data_decode(wav_header_type *header, int8_t *input_buf, int16_t *output
 }
 
 /**
-  * @brief  display wav music information.
-  * @param  wav: wav file information.
-  *         info: paly status information.
-  * @retval none.
-  */
-void wav_info_display(wav_header_type *wav, audio_type *info)
-{
-  uint8_t buf[30];
-
-  /* display wav file information */
-  if(info->decode_cnt == 1)
-  {
-    sprintf((char *)buf, "%d bits per sample", wav->fmt.bitspersample);
-    lcd_string_show(10, 270, 300, 24, 24, buf);
-
-    sprintf((char *)buf, "%d Hz sample rate", wav->fmt.samplerate);
-    lcd_string_show(10, 300, 300, 24, 24, buf);
-
-    sprintf((char *)buf, "%d Chanel", wav->fmt.numofchannels);
-    lcd_string_show(10, 330, 300, 24, 24, buf);
-  }
-
-  /* show play progress */
-  sprintf((char *)buf, "%02d:%02d", info->total_time / 60, info->total_time % 60);
-
-  lcd_string_show(100, 110, 200, 24, 24, buf);
-
-  /* show play progress */
-  sprintf((char *)buf, "%02d:%02d", info->current_time / 60, info->current_time % 60);
-
-  lcd_string_show(10, 180, 200, 24, 24, buf);
-
-  /* show volume */
-  sprintf((char *)buf, "Volume:%d  ", volume_value_get());
-
-  lcd_string_show(185, 110, 200, 24, 24, buf);
-}
-
-/**
   * @brief  play wav music files.
-  * @param  pname: music file path.
+  * @param  audio: audio information structure.
+  *         pname: music file path.
   * @retval ERROR: did not play successfully.
   *         SUCCESS: play completed successfully .
   */
-error_status wav_song_play(uint8_t *pname)
-{
-  int32_t ret = 0;
-  UINT br;
-  uint8_t *read_ptr;
+error_status wav_song_play(audio_type *audio, uint8_t *pname)
+{   
+  int32_t ret = 0; 
+  UINT br;   
+  uint8_t *read_ptr;    
+  uint32_t decode_size;
   error_status status = SUCCESS;
 
-  audio_info.key = NO_KEY;
-  audio_info.decode_cnt = 0;
-  audio_info.read_cnt = 0;
-  audio_info.error_cnt = 0;
-  audio_info.file_size = 0;
-  audio_info.decode_size = 0;
-  audio_info.total_time = 0;
-  audio_info.current_time = 0;
-
-  read_ptr = music_read_buffer;
-
+  /* init audio struct */  
+  music_play_init(audio);
+  
+  /* malloc memory */
+  audio->read_buf = at32_malloc(WAV_READBUF_SIZE);
+  audio->decoded0 = at32_malloc(WAV_DECODE_SIZE * 4);
+  audio->decoded1 = at32_malloc(WAV_DECODE_SIZE * 4); 
+  
+  read_ptr = audio->read_buf;
+  
   /* open the specified file */
-  if(f_open(&file_music,(const TCHAR*)pname, FA_READ) != FR_OK)
+  if(f_open(&audio->file,(const TCHAR*)pname, FA_READ) != FR_OK)
   {
     status = ERROR;
-
+    
     goto end;
-  }
-
+  }    
+  
   /* get file size */
-  audio_info.file_size = f_size(&file_music);
-
-  ret = f_read(&file_music, read_ptr, MP3_READBUF_SIZE, &br);
+  audio->file_size = f_size(&audio->file);  
+  
+  /* read file */
+  ret = f_read(&audio->file, read_ptr, WAV_READBUF_SIZE, &br);
 
   if((ret != FR_OK) || (br == 0))
   {
     status = ERROR;
-
+    
     goto end;
   }
+  
+  /* wav file header decode */
+  ret = wav_header_decode(audio, &wav_header, read_ptr);
 
-  ret = wav_header_decode(&wav_header, read_ptr);
-
-  /* wait for i2s to transmit a frame of data */
-  i2s_dma_tx_end = 0;
-
-  while(i2s_dma_tx_end == 0);
-
-  i2s_dma_tx_end = 0;
-
+  /* set sample rate */
+  audio_freq_set(audio->samplerate);
+  
+  /* set i2s transmit counter */
+  audio_dma_counter_set(audio->tx_size);  
+  
+  /* waiting for the completion of the previous frame data transmission */
+  audio_wait_data_tx_end();
+    
   if(ret > 0)
   {
-    f_lseek(&file_music, ret);
+    f_lseek(&audio->file, ret);
 
     while(1)
     {
-      if(f_read(&file_music, read_ptr, wav_header.read_size, &br) != FR_OK)
+      if(f_read(&audio->file, read_ptr, wav_header.read_size, &br) != FR_OK)
       {
         status = ERROR;
-
+        
         goto end;
       }
-
+      
       if(br == 0)
       {
         goto end;
       }
-
-      wav_data_decode(&wav_header, (int8_t *)music_read_buffer, music_output_buffer, br);
-
-      audio_info.decode_cnt++;
-
-      audio_info.decode_size += br;
-
-      audio_info.total_time = audio_info.file_size / wav_header.fmt.byterate;
-      audio_info.current_time = audio_info.decode_size / wav_header.fmt.byterate;
-
+    
+      /* music decode */
+      wav_data_decode(&wav_header, (int8_t *)read_ptr, audio->decoded0, audio->decoded1, br, &decode_size);
+      
+      /* play music */
+      audio_data_convert_to_i2s(audio, audio->decoded0, audio->decoded1, decode_size);
+      
       /* check button status */
-      audio_info.key = key_press();
-
-      if(audio_info.key != NO_KEY)
+      audio->key = key_press();
+      
+      if(audio->key != NO_KEY)
       {
         goto end;
       }
-
+          
       /* set volume */
       volume_value_set();
-
-      wav_info_display(&wav_header, &audio_info);
-
-      while(i2s_dma_tx_end == 0);
-
-      i2s_dma_tx_end = 0;
+      
+      audio->decode_cnt++;
+      
+      audio->decode_size += decode_size;
+      
+      audio->total_sec = audio->totalsamples / audio->samplerate;
+      audio->current_sec = audio->decode_size / audio->samplerate;      
+      
+      /* display music information */
+      music_info_display(audio);
     }
   }
-
+  
   end:
-
+  
   /* clear i2s data buffer */
   memset(music_output_buffer, 0, sizeof(music_output_buffer));
-
+  
   /* close file */
-  f_close(&file_music);
+  f_close(&audio->file);
 
-  return status;
+  /* free memory */
+  at32_free(audio->read_buf);  
+  at32_free(audio->decoded0);  
+  at32_free(audio->decoded1);  
+  
+  return status;  
 }

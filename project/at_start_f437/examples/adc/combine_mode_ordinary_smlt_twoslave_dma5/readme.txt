@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     readme.txt
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    readme
   **************************************************************************
   */
@@ -17,3 +17,5 @@
   - adccom_ordinary_valuetab[n][1][1] ---> adc3_channel_12
   - adccom_ordinary_valuetab[n][2][0] ---> (adc2_channel_9<<16) | adc1_channel_6
   - adccom_ordinary_valuetab[n][2][1] ---> adc3_channel_13
+
+  for more detailed information. please refer to the application note document AN0093.

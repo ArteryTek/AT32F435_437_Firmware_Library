@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     httpserver.c
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    httpserver program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -448,7 +448,10 @@ static err_t http_recv(void *arg, struct tcp_pcb *pcb,  struct pbuf *p, err_t er
 
           /* write data in flash */
           if (len)
+          {
+            delay_ms(10);
             iap_http_writedata(ptr,len);
+          }
 
           dataflag=0;
           htmlpage = UPLOADDONEPAGE;
@@ -467,7 +470,10 @@ static err_t http_recv(void *arg, struct tcp_pcb *pcb,  struct pbuf *p, err_t er
         {
           /* write data in flash */
           if(len)
+          {
+            delay_ms(10);
             iap_http_writedata(ptr,len);
+          }
         }
         pbuf_free(p);
       }

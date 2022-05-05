@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -84,16 +84,16 @@ static void tmr1_config(void)
   gpio_init_type gpio_initstructure;
   tmr_output_config_type tmr_oc_init_structure;
   crm_clocks_freq_type crm_clocks_freq_struct = {0};
-  crm_periph_clock_enable(CRM_GPIOA_PERIPH_CLOCK, TRUE);
+  crm_periph_clock_enable(CRM_GPIOE_PERIPH_CLOCK, TRUE);
+  gpio_pin_mux_config(GPIOE, GPIO_PINS_SOURCE14, GPIO_MUX_1);
 
   gpio_default_para_init(&gpio_initstructure);
   gpio_initstructure.gpio_mode = GPIO_MODE_MUX;
-  gpio_initstructure.gpio_pins = GPIO_PINS_8;
+  gpio_initstructure.gpio_pins = GPIO_PINS_14;
   gpio_initstructure.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
   gpio_initstructure.gpio_pull = GPIO_PULL_NONE;
   gpio_initstructure.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
-  gpio_init(GPIOA, &gpio_initstructure);
-  gpio_pin_mux_config(GPIOA, GPIO_PINS_SOURCE8, GPIO_MUX_1);
+  gpio_init(GPIOE, &gpio_initstructure);
 
   /* get system clock */
   crm_clocks_freq_get(&crm_clocks_freq_struct);

@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_int.c
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    main interrupt service routines.
   **************************************************************************
   */
@@ -106,6 +106,21 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
+}
+
+/**
+  * @brief  this function handles timer6 overflow handler.
+  * @param  none
+  * @retval none
+  */
+void TMR6_DAC_GLOBAL_IRQHandler(void)
+{
+  if(tmr_flag_get(TMR6, TMR_OVF_FLAG) != RESET)
+  {
+    /* Update the local_time by adding SYSTEMTICK_PERIOD_MS each SysTick interrupt */
+    time_update();
+    tmr_flag_clear(TMR6, TMR_OVF_FLAG);
+  }
 }
 
 /**

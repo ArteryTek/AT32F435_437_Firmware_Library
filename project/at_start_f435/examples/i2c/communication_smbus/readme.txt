@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     communication_poll/readme.txt 
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    readme
   **************************************************************************
   */
@@ -19,4 +19,6 @@
 
   pin used:
     1. scl --- pb6
-    2. sda --- pb7
+    2. sda --- pb7
+
+  for more detailed information. please refer to the application note document AN0091.

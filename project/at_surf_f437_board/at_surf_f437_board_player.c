@@ -1,17 +1,17 @@
 /**
   **************************************************************************
   * @file     at_surf_f437_board_player.c
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    music player.
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
-  * The software Board Support Package (BSP) that is made available to
-  * download from Artery official website is the copyrighted work of Artery.
-  * Artery authorizes customers to use, copy, and distribute the BSP
-  * software and its related documentation for the purpose of design and
-  * development in conjunction with Artery microcontrollers. Use of the
+  * The software Board Support Package (BSP) that is made available to 
+  * download from Artery official website is the copyrighted work of Artery. 
+  * Artery authorizes customers to use, copy, and distribute the BSP 
+  * software and its related documentation for the purpose of design and 
+  * development in conjunction with Artery microcontrollers. Use of the 
   * software is governed by this copyright notice and the following disclaimer.
   *
   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
@@ -23,18 +23,14 @@
   *
   **************************************************************************
   */
-
+  
 #include "at_surf_f437_board_audio.h"
 #include "at_surf_f437_board_player.h"
 
-uint8_t music_read_buffer[MP3_READBUF_SIZE];
-int16_t music_output_buffer[MP3_DECODE_BUFFER_SIZE];
+int16_t music_output_buffer[DMA_BUFFER_SIZE];
 
-FILINFO file_music_info;
-FIL file_music;
 uint8_t name_buf[FF_LFN_BUF + 1];
-
-audio_type audio_info;
+audio_type audio_info; 
 
 /**
   * @brief  compare whether the valus of buffer 1 and buffer 2 are equal.
@@ -46,7 +42,7 @@ audio_type audio_info;
 error_status buf_cmp(uint8_t* buffer1, uint8_t* buffer2, uint32_t len)
 {
   uint32_t i;
-
+  
   for(i = 0; i < len; i++)
   {
     if(buffer1[i] != buffer2[i])
@@ -72,14 +68,14 @@ error_status str_find(const char *buf, const char *find_str)
 
   buf_len = strlen(buf);
   find_len = strlen(find_str);
-
+  
   if(buf_len < find_len)
   {
     return ERROR;
   }
 
   buf_len = buf_len - find_len + 1;
-
+  
   for(i = 0; i < buf_len; i++)
   {
     if(buf_cmp((uint8_t *)&buf[i], (uint8_t *)find_str, find_len) == SUCCESS)
@@ -87,24 +83,22 @@ error_status str_find(const char *buf, const char *find_str)
       return SUCCESS;
     }
   }
-
+  
   return ERROR;
 }
 
 /**
-  * @brief  get the number of valid music file_mp3.
-  * @param  path: music file mp3 path.
-  *         info: file_mp3 information.
-  * @retval number of valid music file mp3 found.
+  * @brief  get the type of music file.
+  * @param  name: music name.
+  * @retval music file type.
   */
-music_format_type music_file_format_get(uint8_t *name)
-{
-  /* find files in mp3 format */
+music_file_type music_type_get(uint8_t *name)
+{    
   if((str_find((const char *)name, ".mp3") == SUCCESS) || (str_find((const char *)name, ".MP3") == SUCCESS))
   {
     return MUSIC_MP3;
-  }
-
+  } 
+  
   if((str_find((const char *)name, ".wav") == SUCCESS) || (str_find((const char *)name, ".WAV") == SUCCESS))
   {
     return MUSIC_WAV;
@@ -114,28 +108,28 @@ music_format_type music_file_format_get(uint8_t *name)
   {
     return MUSIC_APE;
   }
-
+  
   if((str_find((const char *)name, ".flac") == SUCCESS) || (str_find((const char *)name, ".FLAC") == SUCCESS))
   {
     return MUSIC_FLAC;
   }
-
+  
   return MUSIC_ERROR;
 }
 
 
 /**
-  * @brief  get the number of valid music file_mp3.
-  * @param  path: music file mp3 path.
-  *         info: file_mp3 information.
-  * @retval number of valid music file mp3 found.
+  * @brief  get the number of valid music file.
+  * @param  path: music file path.
+  *         info: file information.
+  * @retval number of valid music file found.
   */
-uint16_t mp3_file_number_get(uint8_t *path, FILINFO *info)
-{
-  FRESULT ret;
+uint16_t music_file_number_get(uint8_t *path, FILINFO *info)
+{    
+  FRESULT ret; 
   DIR dir;
   uint16_t cnt = 0;
-
+  
   /* open the specified path */
   ret = f_opendir(&dir,(const TCHAR*)path);
 
@@ -143,29 +137,29 @@ uint16_t mp3_file_number_get(uint8_t *path, FILINFO *info)
   {
     while(1)
     {
-      /* read the file infromation under the path */
-      ret = f_readdir(&dir, info);
-
+      /* read the file information under the path */
+      ret = f_readdir(&dir, info); 
+      
       if((ret != FR_OK) || (info->fname[0]==0))
       {
         break;
       }
-
+      
       /* find files in mp3 format */
-      if((str_find(info->fname, ".mp3")  == SUCCESS) ||
-         (str_find(info->fname, ".MP3")  == SUCCESS) ||
-         (str_find(info->fname, ".wav")  == SUCCESS) ||
+      if((str_find(info->fname, ".mp3")  == SUCCESS) || 
+         (str_find(info->fname, ".MP3")  == SUCCESS) || 
+         (str_find(info->fname, ".wav")  == SUCCESS) || 
          (str_find(info->fname, ".WAV")  == SUCCESS) ||
-         (str_find(info->fname, ".ape")  == SUCCESS) ||
-         (str_find(info->fname, ".APE")  == SUCCESS) ||
-         (str_find(info->fname, ".flac") == SUCCESS) ||
+         (str_find(info->fname, ".ape")  == SUCCESS) || 
+         (str_find(info->fname, ".APE")  == SUCCESS) || 
+         (str_find(info->fname, ".flac") == SUCCESS) || 
          (str_find(info->fname, ".FLAC") == SUCCESS))
       {
         cnt++;
       }
     }
   }
-
+  
   /* close path */
   f_closedir(&dir);
 
@@ -173,18 +167,18 @@ uint16_t mp3_file_number_get(uint8_t *path, FILINFO *info)
 }
 
 /**
-  * @brief  get the music file_mp3 names in the specified order.
-  * @param  path: music file_mp3 path.
-  *         info: music file_mp3 infromation.
+  * @brief  get the music file names in the specified order.
+  * @param  path: music file path.
+  *         info: music file information.
   *         id: specified order.
   * @retval ERROR: specified order music not found.
   *         SUCCESS: specified order music found successfull.
   */
-error_status mp3_get_name(uint8_t *path, FILINFO *info, uint16_t id)
-{
+error_status music_name_get(uint8_t *path, FILINFO *info, uint16_t id)
+{    
   uint8_t ret;
   uint16_t cnt = 0;
-  DIR dir;
+  DIR dir;       
 
   /* open the specified path */
   ret = f_opendir(&dir,(const TCHAR*)path);
@@ -193,39 +187,39 @@ error_status mp3_get_name(uint8_t *path, FILINFO *info, uint16_t id)
   {
     while(1)
     {
-      /* read the file infromation under the path */
-      ret = f_readdir(&dir, info);
-
+      /* read the file information under the path */
+      ret = f_readdir(&dir, info); 
+      
       if((ret != FR_OK) || (info->fname[0]==0))
       {
         break;
       }
-
+      
       /* find the corresponding serial number song */
-      if((str_find(info->fname, ".mp3")  == SUCCESS) ||
-         (str_find(info->fname, ".MP3")  == SUCCESS) ||
-         (str_find(info->fname, ".wav")  == SUCCESS) ||
+      if((str_find(info->fname, ".mp3")  == SUCCESS) || 
+         (str_find(info->fname, ".MP3")  == SUCCESS) || 
+         (str_find(info->fname, ".wav")  == SUCCESS) || 
          (str_find(info->fname, ".WAV")  == SUCCESS) ||
-         (str_find(info->fname, ".ape")  == SUCCESS) ||
-         (str_find(info->fname, ".APE")  == SUCCESS) ||
-         (str_find(info->fname, ".flac") == SUCCESS) ||
+         (str_find(info->fname, ".ape")  == SUCCESS) || 
+         (str_find(info->fname, ".APE")  == SUCCESS) || 
+         (str_find(info->fname, ".flac") == SUCCESS) || 
          (str_find(info->fname, ".FLAC") == SUCCESS))
       {
         if(id == cnt)
         {
-          return SUCCESS;
+          return SUCCESS; 
         }
-
+        
         cnt++;
       }
     }
   }
-
+  
   return ERROR;
 }
 
 /**
-  * @brief  get play volume.
+  * @brief  get player volume.
   * @param  none.
   * @retval volume.
   */
@@ -233,22 +227,22 @@ uint16_t volume_value_get(void)
 {
   static uint16_t last = 0;
   uint16_t vol = 0;
-
+  
   /* software filtering */
   last = last * 0.6 + VR_ADC->odt * 0.4;
-
+  
   vol = last / 40.96 + 0.5;
-
+  
   if(vol > 100)
   {
     vol = 100;
   }
-
+  
   return vol;
 }
 
 /**
-  * @brief  calculate play volume.
+  * @brief  set play volume.
   * @param  none.
   * @retval none.
   */
@@ -259,123 +253,260 @@ void volume_value_set(void)
 
   /* calculate play volume */
   vol = volume_value_get() * 1.59 + 96;
-
+  
   /* the volume value changes */
   if(vol_last != vol)
   {
     /* set volume */
     audio_spk_volume_set(vol, vol);
-
+    
     vol_last = vol;
   }
 }
 
-uint16_t index = 0;
+/**
+  * @brief  set the frequency of music playback.
+  * @param  freq: frequency
+  * @retval none.
+  */
+void audio_freq_set(uint32_t freq)
+{
+  static uint32_t freq_last = 0xFFFF;
+  
+  /* the frequency value changes */
+  if(freq_last != freq)
+  {
+    switch(freq)
+    {
+      case 8000:   audio_codec_modify_freq(WM8988_REG_FREQ_8_K     ); break;
+      case 11025:  audio_codec_modify_freq(WM8988_REG_FREQ_11_025_K); break;
+      case 12000:  audio_codec_modify_freq(WM8988_REG_FREQ_12_K    ); break;
+      case 16000:  audio_codec_modify_freq(WM8988_REG_FREQ_16K     ); break;
+      case 22050:  audio_codec_modify_freq(WM8988_REG_FREQ_22_05K  ); break;
+      case 24000:  audio_codec_modify_freq(WM8988_REG_FREQ_24K     ); break;
+      case 32000:  audio_codec_modify_freq(WM8988_REG_FREQ_32_K    ); break;
+      case 44100:  audio_codec_modify_freq(WM8988_REG_FREQ_44_1_K  ); break;
+      case 48000:  audio_codec_modify_freq(WM8988_REG_FREQ_48_K    ); break;
+      case 96000:  audio_codec_modify_freq(WM8988_REG_FREQ_96_K    ); break;
+      default:break;
+    }
+
+    freq_last = freq;
+  }
+}
+
+/**
+  * @brief  audio data conversion.
+  * @param  audio: audio information structure.
+  *         decode_left: left channel data.
+  *         decode_right: right channel data.
+  *         sample: number of data.
+  * @retval none.
+  */
+void audio_data_convert_to_i2s(audio_type *audio, int32_t *decode_left, int32_t *decode_right, uint32_t sample)
+{
+  uint32_t i = 0;
+  int32_t *left_ch, *right_ch;
+  
+  left_ch = decode_left;
+  right_ch = decode_right;
+  
+  /* waiting for the completion of the previous frame data transmission */
+  audio_wait_data_tx_end();
+  
+  while (sample--) 
+  {
+    /* output sample(s) in 16-bit signed little-endian pcm */
+    music_output_buffer[i++] = ((*left_ch++) >> (audio->bps - 16)) & 0xFFFF;
+    
+    if(audio->channel == 2) 
+    {
+      music_output_buffer[i++] = ((*right_ch++) >> (audio->bps - 16)) & 0xFFFF;
+    }
+    else
+    {
+      i++;
+    }
+  }  
+}
+
+/**
+  * @brief  init audio struct.
+  * @param  audio: audio information structure.
+  * @retval none.
+  */
+void music_play_init(audio_type *audio)
+{
+  /* init audio struct */ 
+  audio->key = NO_KEY;
+  
+  audio->decode_cnt = 0;
+  audio->error_cnt = 0;
+  audio->file_size = 0;
+  audio->decode_size = 0;
+  audio->total_sec = 0;
+  audio->current_sec = 0;
+  
+  audio->bps = 0;
+  audio->channel = 0;
+  audio->samplerate = 0;
+  audio->totalsamples = 0;
+
+  audio->tx_size = 0;
+  
+  audio->key = NO_KEY;
+}
+
+/**
+  * @brief  display music information.
+  * @param  audio: audio information structure.
+  * @retval none.
+  */
+void music_info_display(audio_type *audio)
+{
+  uint8_t buf[30];
+  
+  /* display wav file information */
+  if(audio->decode_cnt == 1)
+  {
+    if(audio->music_type == MUSIC_MP3)
+    {
+      sprintf((char *)buf, "%d bit per second", audio->bps);    
+    }
+    else
+    {
+      sprintf((char *)buf, "%d bit per sample", audio->bps);    
+    }
+
+    lcd_string_show(10, 240, 300, 24, 24, buf);  
+
+    sprintf((char *)buf, "%d channel", audio->channel);
+    lcd_string_show(10, 270, 300, 24, 24, buf);   
+    
+    sprintf((char *)buf, "%d hz sample rate", audio->samplerate);
+    lcd_string_show(10, 300, 300, 24, 24, buf); 
+  }
+  
+  /* show play progress */
+  sprintf((char *)buf, "%02d:%02d", audio->total_sec / 60, audio->total_sec % 60);
+
+  lcd_string_show(100, 110, 200, 24, 24, buf);  
+  
+  /* show play progress */
+  sprintf((char *)buf, "%02d:%02d", audio->current_sec / 60, audio->current_sec % 60);
+
+  lcd_string_show(10, 180, 200, 24, 24, buf);  
+  
+  /* show volume */
+  sprintf((char *)buf, "Volume:%d  ", volume_value_get());
+  
+  lcd_string_show(185, 110, 200, 24, 24, buf);  
+}
 
 /**
   * @brief  play music.
-  * @param  none.
+  * @param  audio: audio information structure.
   * @retval none
   */
-void music_play(void)
+void music_play(audio_type *audio)
 {
-  uint16_t mp3_number;
   uint8_t buf[30];
-  DIR mp3dir;
+  DIR music_dir;
+  
+  audio->music_id = 0; 
 
   /* find the music folder */
-  while(f_opendir(&mp3dir, "1:/MUSIC"))
+  while(f_opendir(&music_dir, "1:/MUSIC"))
   {
-    lcd_string_show(10, 55, 300, 24, 24, (uint8_t *)"MUSIC file not find");
+    lcd_string_show(10, 55, 300, 24, 24, (uint8_t *)"MUSIC file not find");  
   }
-
+     
   /* get the number of music files */
-  mp3_number = mp3_file_number_get((uint8_t *)"1:/MUSIC", &file_music_info);
+  audio->music_number = music_file_number_get((uint8_t *)"1:/MUSIC", &audio->file_info);
 
   /* no music files */
-  while(mp3_number == 0)
-  {
-    lcd_string_show(10, 55, 300, 24, 24, (uint8_t *)"music file not found");
+  while(audio->music_number == 0)
+  {      
+    lcd_string_show(10, 55, 300, 24, 24, (uint8_t *)"music file not found");        
   }
 
-  lcd_string_show(10, 55, 300, 24, 24, (uint8_t *)"music file found success");
-
+  lcd_string_show(10, 55, 300, 24, 24, (uint8_t *)"music file found success");        
+  
   /* set volume */
   volume_value_set();
-
+  
   while(1)
   {
-    /* play mp3 */
-    if(mp3_get_name((uint8_t *)"1:/MUSIC", &file_music_info, index) == SUCCESS)
+    /* play music */
+    if(music_name_get((uint8_t *)"1:/MUSIC", &audio->file_info, audio->music_id) == SUCCESS)
     {
       strcpy((char *)name_buf,"1:/MUSIC/");
-      strcat((char *)name_buf,(const char*)file_music_info.fname);
+      strcat((char *)name_buf,(const char*)audio->file_info.fname); 
 
       /* display the number of music files */
-      sprintf((char *)buf, "%02d/%02d", index + 1, mp3_number);
-      lcd_string_show(10, 110, 200, 24, 24, buf);
+      sprintf((char *)buf, "%02d/%02d", audio->music_id + 1, audio->music_number);
+      lcd_string_show(10, 110, 200, 24, 24, buf);    
 
       /* show music name */
       lcd_fill(10, 145, 319, 160 + 24, BLACK);
-      lcd_string_show(10, 145, 319, 24, 24, (uint8_t *)file_music_info.fname);
-
+      lcd_string_show(10, 145, 319, 24, 24, (uint8_t *)audio->file_info.fname);  
+      
       lcd_fill(10, 240, 319, 470, BLACK);
-
-      audio_info.music_type = music_file_format_get((uint8_t *)file_music_info.fname);
-
+      
+      audio->music_type = music_type_get((uint8_t *)audio->file_info.fname);
+      
       /* play music */
-      switch(audio_info.music_type)
+      switch(audio->music_type)
       {
-        /* key 1 down */
         case MUSIC_MP3:
-          mp3_song_play(name_buf);
+          mp3_song_play(audio, name_buf);              
           break;
         case MUSIC_WAV:
-          wav_song_play(name_buf);
+          wav_song_play(audio, name_buf);                
           break;
         case MUSIC_FLAC:
-
+          flac_song_play(audio, name_buf);
           break;
         case MUSIC_APE:
-
+          ape_song_play(audio, name_buf);        
           break;
-
+        
         default:
           break;
       }
-
+      
       /* music switch */
-      switch(audio_info.key)
+      switch(audio->key)
       {
-        /* key 1 down */
+        /* key 1 down */  
         case KEY_1:
-
-          if(index)
+          
+          if(audio->music_id)
           {
-            index--;
+            audio->music_id--;  
           }
           else
           {
-            index = mp3_number - 1;
+            audio->music_id = audio->music_number - 1; 
           }
           break;
 
-        /* key 2 down */
+        /* key 2 down */  
         case KEY_2:
         case NO_KEY:
-
-          index++;
-
-          if(index >= mp3_number)
+          
+          audio->music_id++;
+        
+          if(audio->music_id >= audio->music_number)
           {
-            index = 0;
+            audio->music_id = 0;
           }
           break;
-
+        
         default:
           break;
       }
     }
-  }
+  } 
 }
 

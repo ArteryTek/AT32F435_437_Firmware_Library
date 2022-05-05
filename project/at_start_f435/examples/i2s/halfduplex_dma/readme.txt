@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     readme.txt
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    readme
   **************************************************************************
   */
@@ -15,3 +15,5 @@
 	  pd0(ws)        <--->     pa4 (ws)
 	  pd1(sck)       <--->     pc10(sck)
 	  pd4(sd)        <--->     pc12(sd)
+
+  for more detailed information. please refer to the application note document AN0102.

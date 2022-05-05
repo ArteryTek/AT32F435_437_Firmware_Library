@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -227,6 +227,10 @@ int main(void)
   __IO uint32_t index = 0;
   system_clock_config();
   at32_board_init();
+  
+  /* button press:ensure code canbe download normally */
+  while(at32_button_press() == NO_BUTTON);
+  
   gpio_config();
   spi_config();
 

@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
   * @file     xmc_sdram.h
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    header file for the sdram configuration.
   ******************************************************************************
   *                       Copyright notice & Disclaimer

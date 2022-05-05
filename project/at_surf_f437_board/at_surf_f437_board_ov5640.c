@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at_surf_f437_board_ov5640.c
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    ov5640 program
   **************************************************************************
   *                       Copyright notice  &  Disclaimer
@@ -735,7 +735,7 @@ void ov5640_capture(void)
 
   lcd_clear(BLACK);
 
-  ov5640_outsize_set(0, 0, LCD_W, LCD_H);
+  ov5640_outsize_set(0, 0, DVP_LCD_W, DVP_LCD_H);
 
   ov5640_reg_read(0x4730, &reg_val);
   

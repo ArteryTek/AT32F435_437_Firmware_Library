@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at_surf_f437_board_qspi_sram.h
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    qspi sram application libray header file
   **************************************************************************
   *                       Copyright notice & Disclaimer

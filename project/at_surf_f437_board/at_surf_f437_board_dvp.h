@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     dvp.h
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    header file of dvp program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -34,6 +34,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "at32f435_437.h"
+
+#define DVP_LCD_W                            320
+#define DVP_LCD_H                            240
 
 #define DVP_D0_GPIO_CLK                  CRM_GPIOC_PERIPH_CLOCK
 #define DVP_D0_GPIO_PIN                  GPIO_PINS_6

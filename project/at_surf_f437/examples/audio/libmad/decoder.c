@@ -51,7 +51,7 @@
 # include "frame.h"
 # include "synth.h"
 # include "decoder.h"
-struct sync_t Sync;
+
 /*
  * NAME:	decoder->init()
  * DESCRIPTION:	initialize a decoder object with callback routines
@@ -236,7 +236,7 @@ enum mad_flow receive(int fd, void **message, unsigned int *size)
 
     if (*size > 0) {
       if (*message == 0) {
-	*message = malloc(*size);
+	*message = Malloc(*size);
 	if (*message == 0)
 	  return MAD_FLOW_BREAK;
       }
@@ -286,7 +286,7 @@ enum mad_flow check_message(struct mad_decoder *decoder)
   }
 
   if (message)
-    free(message);
+    Free(message);
 
   return result;
 }
@@ -447,7 +447,7 @@ int run_sync(struct mad_decoder *decoder)
 	  break;
 	}
       }
-        switch (decoder->input_func(decoder->cb_data, stream))
+        switch (decoder->input_func(decoder->cb_data, stream)) 
         {
         case MAD_FLOW_STOP:
           goto done;
@@ -561,14 +561,13 @@ int mad_decoder_run(struct mad_decoder *decoder, enum mad_decoder_mode mode)
   if (run == 0)
     return -1;
 
-//  decoder->sync = malloc(sizeof(*decoder->sync));
-  decoder->sync = &Sync;
+  decoder->sync = Malloc(sizeof(*decoder->sync));
   if (decoder->sync == 0)
     return -1;
 
   result = run(decoder);
 
-//  free(decoder->sync);
+  Free(decoder->sync);
   decoder->sync = 0;
 
   return result;

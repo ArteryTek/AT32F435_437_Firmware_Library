@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_emac.h
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    at32f435_437 eth header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -44,7 +44,7 @@ extern "C" {
   * @{
   */
 
-#define PHY_TIMEOUT                      (0x0FFFFFFF) /*!< timeout for phy response */
+#define PHY_TIMEOUT                      (0x000FFFFF) /*!< timeout for phy response */
 
 /** @defgroup EMAC_smi_clock_border_definition
   * @brief emac smi clock border

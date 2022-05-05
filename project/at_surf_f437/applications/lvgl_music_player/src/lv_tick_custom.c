@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     lv_tick_custom.c
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    main interrupt service routines.
   **************************************************************************
   *                       Copyright notice & Disclaimer

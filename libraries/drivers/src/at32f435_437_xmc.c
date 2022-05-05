@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_xmc.c
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    contains all the functions for the xmc firmware library
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -505,7 +505,7 @@ void xmc_sdram_init(xmc_sdram_init_type *xmc_sdram_init_struct, xmc_sdram_timing
     XMC_SDRAM->ctrl_bit[XMC_SDRAM_BANK2].wrp = xmc_sdram_init_struct->write_protection;
     /* sdctrl2 bstr is not care */
     XMC_SDRAM->ctrl_bit[XMC_SDRAM_BANK1].bstr = xmc_sdram_init_struct->burst_read;
-    XMC_SDRAM->ctrl_bit[XMC_SDRAM_BANK2].rd = xmc_sdram_init_struct->read_delay;
+    XMC_SDRAM->ctrl_bit[XMC_SDRAM_BANK1].rd = xmc_sdram_init_struct->read_delay;
     /* sdctrl2 clkdiv is not care */
     XMC_SDRAM->ctrl_bit[XMC_SDRAM_BANK1].clkdiv = xmc_sdram_init_struct->clkdiv;
 

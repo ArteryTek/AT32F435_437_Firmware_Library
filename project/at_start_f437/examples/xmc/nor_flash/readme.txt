@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     readme.txt
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    readme
   **************************************************************************
   */
@@ -60,11 +60,10 @@
   - xmc_ne2   pg9     --->   norflash_cs
   - xmc_noe   pd4     --->   norflash_rd
   - xmc_nwe   pd5     --->   norflash_wr
-  - xmc_lb    pe0     --->   norflash_nbl0
-  - xmc_ub    pe1     --->   norflash_nbl1
+  -   --      vdd     --->   norflash_byte
   - xmc_nwait pd6     --->   norflash_busy
-  - xmc_nadv  pb7     --->   psram_nadv
-
+  - xmc_nadv  pb7     --->   norflash_nadv
+  for more detailed information. please refer to the application note document AN0106.
 
 
 

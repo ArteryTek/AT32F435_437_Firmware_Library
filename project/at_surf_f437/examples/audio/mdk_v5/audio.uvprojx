@@ -10,7 +10,7 @@
       <TargetName>audio</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060960::V5.06 update 7 (build 960)::ARMCC</pCCUsed>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::.\ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>AT32F437ZMT7,USE_STDPERIPH_DRIVER,HAVE_CONFIG_H</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\..\at_surf_f437_board;..\..\..\..\..\libraries\drivers\inc;..\..\..\..\..\libraries\cmsis\cm4\core_support;..\..\..\..\..\libraries\cmsis\cm4\device_support;..\inc;..\..\..\..\..\middlewares\i2c_application_library;..\..\..\..\at_surf_f437_board;..\..\..\..\..\middlewares\3rd_party\fatfs\source;..\libmad;..\libmad\msvc++;..\wav</IncludePath>
+              <IncludePath>..\..\..\..\at_surf_f437_board;..\..\..\..\..\libraries\drivers\inc;..\..\..\..\..\libraries\cmsis\cm4\core_support;..\..\..\..\..\libraries\cmsis\cm4\device_support;..\inc;..\..\..\..\..\middlewares\i2c_application_library;..\..\..\..\at_surf_f437_board;..\..\..\..\..\middlewares\3rd_party\fatfs\source;..\libmad;..\libmad\msvc++;..\wav;..\flac\include;..\flac\src\libFLAC\include;..\flac\src\libFLAC\include\private;..\ape\apedec</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -461,6 +461,21 @@
               <FileName>at_surf_f437_board_player_mp3.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\at_surf_f437_board\at_surf_f437_board_player_mp3.c</FilePath>
+            </File>
+            <File>
+              <FileName>at_surf_f437_board_malloc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\at_surf_f437_board\at_surf_f437_board_malloc.c</FilePath>
+            </File>
+            <File>
+              <FileName>at_surf_f437_board_player_flac.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\at_surf_f437_board\at_surf_f437_board_player_flac.c</FilePath>
+            </File>
+            <File>
+              <FileName>at_surf_f437_board_player_ape.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\at_surf_f437_board\at_surf_f437_board_player_ape.c</FilePath>
             </File>
             <File>
               <FileName>at_surf_f437_board_variable_resistor.c</FileName>
@@ -641,6 +656,106 @@
               <FileName>version.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\libmad\version.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>flac</GroupName>
+          <Files>
+            <File>
+              <FileName>stream_decoder.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\flac\src\libFLAC\stream_decoder.c</FilePath>
+            </File>
+            <File>
+              <FileName>format.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\flac\src\libFLAC\format.c</FilePath>
+            </File>
+            <File>
+              <FileName>bitreader.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\flac\src\libFLAC\bitreader.c</FilePath>
+            </File>
+            <File>
+              <FileName>lpc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\flac\src\libFLAC\lpc.c</FilePath>
+            </File>
+            <File>
+              <FileName>md5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\flac\src\libFLAC\md5.c</FilePath>
+            </File>
+            <File>
+              <FileName>crc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\flac\src\libFLAC\crc.c</FilePath>
+            </File>
+            <File>
+              <FileName>memory.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\flac\src\libFLAC\memory.c</FilePath>
+            </File>
+            <File>
+              <FileName>fixed1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\flac\src\libFLAC\fixed1.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>ape</GroupName>
+          <Files>
+            <File>
+              <FileName>apedecoder.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ape\apedec\apedecoder.c</FilePath>
+            </File>
+            <File>
+              <FileName>entropy.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ape\apedec\entropy.c</FilePath>
+            </File>
+            <File>
+              <FileName>filter_16_11.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ape\apedec\filter_16_11.c</FilePath>
+            </File>
+            <File>
+              <FileName>filter_32_10.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ape\apedec\filter_32_10.c</FilePath>
+            </File>
+            <File>
+              <FileName>filter_64_11.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ape\apedec\filter_64_11.c</FilePath>
+            </File>
+            <File>
+              <FileName>parser.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ape\apedec\parser.c</FilePath>
+            </File>
+            <File>
+              <FileName>predictor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ape\apedec\predictor.c</FilePath>
+            </File>
+            <File>
+              <FileName>predictor-arm.S</FileName>
+              <FileType>2</FileType>
+              <FilePath>..\ape\apedec\predictor-arm.S</FilePath>
+            </File>
+            <File>
+              <FileName>filter_256_13.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ape\apedec\filter_256_13.c</FilePath>
+            </File>
+            <File>
+              <FileName>filter_1280_15.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ape\apedec\filter_1280_15.c</FilePath>
             </File>
           </Files>
         </Group>

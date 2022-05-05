@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -43,6 +43,8 @@
   * @{
   */
 
+volatile uint32_t local_time = 0;
+
 /**
   * @brief  main function.
   * @param  none
@@ -80,8 +82,6 @@ int main(void)
 
   tcpip_stack_init();
 
-  tmr_init();
-
   /* init flash */
   flash_unlock();
 
@@ -108,7 +108,12 @@ int main(void)
   iap_tftpd_init();
 #endif
 
-  while(1);
+  tmr_init();
+
+  while(1)
+  {
+    lwip_periodic_handle(local_time);
+  }
 }
 
 /**

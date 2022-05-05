@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     readme.txt
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    readme
   **************************************************************************
   */
@@ -17,3 +17,5 @@
     pd1(sck)       <--->     pb3 (sck)
     pc2(miso)      <--->     pa13(miso)
     pd4(mosi)      <--->     pa14(mosi)
+
+  for more detailed information. please refer to the application note document AN0102.

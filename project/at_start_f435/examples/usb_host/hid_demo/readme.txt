@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     readme.txt 
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    readme
   **************************************************************************
   */
@@ -11,4 +11,5 @@
   
   when an usb device is attached to the host port, the device is enumerated and
   checked whether it can support hid device or not,the demo just support keyboard
-  and mouse device.
+  and mouse device.
+  for more detailed information, please refer to the application note document AN0094.

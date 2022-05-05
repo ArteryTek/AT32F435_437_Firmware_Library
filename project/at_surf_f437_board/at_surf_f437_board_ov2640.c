@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at_surf_f437_board_ov2640.c
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    ov2640 program
   **************************************************************************
   *                       Copyright notice  &  Disclaimer
@@ -556,7 +556,7 @@ void ov2640_capture(void)
 
   lcd_clear(BLACK);
 
-  ov2640_outsize_set(LCD_W, LCD_H);
+  ov2640_outsize_set(DVP_LCD_W, DVP_LCD_H);
 
   dvp_start();
 }

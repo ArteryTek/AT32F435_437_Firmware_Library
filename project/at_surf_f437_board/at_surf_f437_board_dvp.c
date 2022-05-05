@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     dvp.c
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    dvp program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -195,7 +195,7 @@ void dvp_dma_init(uint32_t mem0addr, uint32_t mem1addr, uint16_t memsize)
   */
 void dvp_start(void)
 {
-  lcd_windows_set(0, 120, LCD_W, 120+LCD_H);
+  lcd_windows_set(0, 120, DVP_LCD_W, 120+DVP_LCD_H);
   edma_stream_enable(DVP_EDMA_STREAM, TRUE);
   dvp_capture_enable(TRUE);
 }
@@ -221,7 +221,7 @@ void dvp_stop(void)
   */
 void dvp_frame_done(void)
 {
-  lcd_windows_set(0, 120, LCD_W, 120+LCD_H);
+  lcd_windows_set(0, 120, DVP_LCD_W, 120+DVP_LCD_H);
   ov_frame++;
 }
 

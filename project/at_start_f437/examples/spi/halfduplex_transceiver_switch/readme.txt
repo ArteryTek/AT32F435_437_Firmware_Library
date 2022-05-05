@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     readme.txt
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    readme
   **************************************************************************
   */
@@ -14,3 +14,5 @@
   - spi2 slaver              spi3 master
     pd1(sck)       <--->     pc10(sck)
     pc2(miso)      <--->     pc12(mosi)
+
+  for more detailed information. please refer to the application note document AN0102.

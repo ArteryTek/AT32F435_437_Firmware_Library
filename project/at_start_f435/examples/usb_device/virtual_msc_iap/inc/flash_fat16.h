@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     flash_fat16.h
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    fat16 file system header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -52,10 +52,10 @@ extern "C" {
 #define FAT16_DIR_SIZE                   47
 
 #define FLASH_FAT16_BOOT_SECTOR_ADDR     0x00
-#define FLASH_FAT16_1_ADDR               0x1000
-#define FLASH_FAT16_2_ADDR               0x7800
-#define FLASH_FAT16_ROOT_ADDR            0xE000
-#define FLASH_FAT16_FILE_START_ADDR      0x12000
+#define FLASH_FAT16_1_ADDR               0x3000
+#define FLASH_FAT16_2_ADDR               0x3800
+#define FLASH_FAT16_ROOT_ADDR            0x4000
+#define FLASH_FAT16_FILE_START_ADDR      0x8800
 
 #define FLASH_APP_START_ADDR             0x08006000
 
@@ -75,14 +75,14 @@ extern "C" {
 #define INVAILD_OFFSET_ADDR              0xFFFFFFFF
 #define IAP_UPGRADE_COMPLETE_FLAG        0x41544B38
 #define IAP_SUCCESS                      0
-#define IAP_ERROR                       1
+#define IAP_FAILED                       1
 
 typedef enum
 {
   UPGRADE_READY                          = 0,
   UPGRAGE_ONGOING,
   UPGRADE_SUCCESS,
-  UPGRADE_ERROR,
+  UPGRADE_FAILED,
   UPGRADE_LARGE,
   UPGRADE_UNKNOWN,
   UPGRADE_DONE,

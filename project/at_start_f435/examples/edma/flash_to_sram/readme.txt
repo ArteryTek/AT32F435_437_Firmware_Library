@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     readme.txt
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    readme
   **************************************************************************
   */
@@ -12,3 +12,5 @@
   to embedded sram memory. edma stream1 is configured to transfer the contents
   of a 32-word data buffer stored in flash memory to the reception buffer in ram.
   if received data right, the three leds will turn on. 
+
+  for more detailed information. please refer to the application note document AN0090.

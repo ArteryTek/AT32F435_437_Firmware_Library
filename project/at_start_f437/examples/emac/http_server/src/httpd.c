@@ -2047,6 +2047,7 @@ http_recv(void *arg, struct altcp_pcb *pcb, struct pbuf *p, err_t err)
       }
       else if (strncmp(data, "GET /AT32F437LED", 16) == 0)
       {
+        pbuf_free(p);
         fs_open(&file, "/AT32F437LED.html");
         hs->file = file.data;
         hs->left = file.len;

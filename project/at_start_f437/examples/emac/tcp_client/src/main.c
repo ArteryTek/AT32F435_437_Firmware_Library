@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -41,8 +41,6 @@
 #define DELAY                            100
 #define FAST                             1
 #define SLOW                             4
-
-#define TCP_CLIENT_TEST_DATA             "tcp client experiment!\n"
 uint8_t g_speed = FAST;
 volatile uint32_t local_time = 0;
 
@@ -53,7 +51,6 @@ volatile uint32_t local_time = 0;
   */
 int main(void)
 {
-  struct tcp_pcb *pcb;
   error_status status;
 
   system_clock_config();
@@ -74,21 +71,7 @@ int main(void)
 
   while(1)
   {
-    pcb = check_tcp_connect();
-
-    if(pcb != NULL)
-    {
-      tcp_client_send_data(pcb, (unsigned char *)TCP_CLIENT_TEST_DATA, sizeof(TCP_CLIENT_TEST_DATA));      //Send data to TCP server actively
-    }
-
-    at32_led_toggle(LED2);
-    delay_ms(g_speed * DELAY);
-    at32_led_toggle(LED3);
-    delay_ms(g_speed * DELAY);
-    at32_led_toggle(LED4);
-    delay_ms(g_speed * DELAY);
-
-    delay_sec(1);
+    lwip_periodic_handle(local_time);
   }
 }
 

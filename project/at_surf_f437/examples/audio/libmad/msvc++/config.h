@@ -130,5 +130,11 @@
 
 #define OTP_SPEED
 
+#include "at_surf_f437_board_malloc.h"
+
+#define Malloc(a) at32_malloc(a)
+#define Calloc(a, b) at32_calloc(a, b)
+#define Free(a) at32_free(a)
+
 /* Define to `int' if <sys/types.h> does not define. */
 /* #undef pid_t */

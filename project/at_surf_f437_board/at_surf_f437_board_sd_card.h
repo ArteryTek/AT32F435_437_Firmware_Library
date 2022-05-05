@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at_surf_f437_board_sd_card.h
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    this file contains all the functions prototypes for the sd/mmc
   *           card at_surf_f437_board_sd_card driver firmware library.
   **************************************************************************
@@ -435,7 +435,7 @@ extern sd_card_info_struct_type sd_card_info;
 #define SD_STD_CAPACITY                  ((uint32_t)0x00000000)
 #define SD_CHECK_PATTERN                 ((uint32_t)0x000001AA)
 #define SD_VOLTAGE_WINDOW_MMC            ((uint32_t)0x80FF8000)
-#define SD_MAX_VOLT_TRIAL                ((uint32_t)0x0000FFFF)
+#define SD_MAX_VOLT_TRIAL                ((uint32_t)0x000000FF)
 #define SD_ALLZERO                       ((uint32_t)0x00000000)
 #define SD_WIDE_BUS_SUPPORT              ((uint32_t)0x00040000)
 #define SD_SINGLE_BUS_SUPPORT            ((uint32_t)0x00010000)

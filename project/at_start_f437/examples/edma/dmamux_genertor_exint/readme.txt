@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     readme.txt
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    readme
   **************************************************************************
   */
@@ -14,3 +14,5 @@
   pa1 is input trigger signal for dmamux genertor channel1, genertor channel1 will 
   send four dma request when the rising edge of pa1.when all data transfered, the 
   three leds will turn on.
+
+  for more detailed information. please refer to the application note document AN0090.

@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -36,6 +36,7 @@ extern uint8_t local_ip[];
 extern uint8_t local_gw[];
 extern uint8_t local_mask[];
 
+volatile uint32_t local_time = 0;
 
 /**
   * @brief  main program
@@ -106,7 +107,7 @@ int main(void)
 
   while(1)
   {
-
+    lwip_periodic_handle(local_time);
   }
 }
 

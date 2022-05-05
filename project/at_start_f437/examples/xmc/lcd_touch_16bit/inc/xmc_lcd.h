@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     xmc_lcd.h
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    xmc_lcd program header
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -61,7 +61,7 @@ extern lcd_dev_type *lcd_struct;
   * @{
   */
 
-/* the address of write data & command (xmc_a0) */
+/* the address of write data & command (xmc_a10) */
 #define  XMC_LCD_COMMAND                 0x6C000000
 #define  XMC_LCD_DATA                    0x6C000800
 /**

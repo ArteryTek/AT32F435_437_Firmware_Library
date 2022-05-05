@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     readme.txt
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    readme
   **************************************************************************
   */
@@ -20,3 +20,5 @@
   - adc3_preempt_valuetab[n][0] --->  adc3_channel_10
   - adc3_preempt_valuetab[n][1] --->  adc3_channel_12
   - adc3_preempt_valuetab[n][2] --->  adc3_channel_13
+
+  for more detailed information. please refer to the application note document AN0093.

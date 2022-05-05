@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     qspi_cmd_esmt32m.c
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    qspi_cmd_esmt32m program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -125,6 +125,7 @@ void qspi_xip_init_ly68l6400(void)
   /* initial xip */
   xip_init_ly68l6400_config(&ly68l6400_xip_init);
   qspi_xip_init(QSPI1, &ly68l6400_xip_init);
+  qspi_xip_cache_bypass_set(QSPI1,TRUE);
   qspi_xip_enable(QSPI1, TRUE);
 }
 

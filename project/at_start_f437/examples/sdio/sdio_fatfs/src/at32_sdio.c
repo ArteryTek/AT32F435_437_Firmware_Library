@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32_sdio.c
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    this file provides a set of functions needed to manage the
   *           sdio/mmc card memory.
   **************************************************************************
@@ -74,6 +74,7 @@ sd_error_status_type sd_init(void)
   uint16_t clkdiv = 0;
   sd_error_status_type status = SD_OK;
   gpio_init_type gpio_init_struct = {0};
+  uint8_t retry = 0;
 
   /* gpioc and gpiod periph clock enable */
   crm_periph_clock_enable(CRM_GPIOC_PERIPH_CLOCK, TRUE);
@@ -101,12 +102,17 @@ sd_error_status_type sd_init(void)
   gpio_pin_mux_config(GPIOC, GPIO_PINS_SOURCE12, GPIO_MUX_12);
   gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE2, GPIO_MUX_12);
 
-  /* reset sdio */
-  sdio_reset(SDIOx);
-
-  /* power on */
-  status = sd_power_on();
-
+  retry = 10;
+  while(retry--){
+    /* reset sdio */
+    sdio_reset(SDIOx);
+    /* power on */
+    status = sd_power_on();
+    
+    if(status == SD_OK)
+      break;
+  }
+  
   if(status == SD_OK)
   {
     /* sdio card initialize */
@@ -146,8 +152,8 @@ sd_error_status_type sd_init(void)
   {
     if(sd_card_info.card_type == SDIO_STD_CAPACITY_SD_CARD_V1_1 || sd_card_info.card_type == SDIO_STD_CAPACITY_SD_CARD_V2_0)
     {
-      /* set sdio_ck to 4mhz */
-      clkdiv = system_core_clock / 4000000;
+      /* set sdio_ck to 12mhz */
+      clkdiv = system_core_clock / 12000000;
 
       if(clkdiv >= 2)
       {
@@ -156,8 +162,8 @@ sd_error_status_type sd_init(void)
     }
     else
     {
-      /* set sdio_ck to 4mhz */
-      clkdiv = system_core_clock / 4000000;
+      /* set sdio_ck to 48mhz */
+      clkdiv = system_core_clock / 48000000;
 
       if(clkdiv >= 2)
       {
@@ -246,16 +252,6 @@ sd_error_status_type sd_power_on(void)
 
     /* get command status */
     status = command_error();
-
-    if(status == SD_OK)
-    {
-      break;
-    }
-  }
-  /* if any errors occured, return status */
-  if(status != SD_OK)
-  {
-    return status;
   }
 
   /* send cmd8, check card interface feature */

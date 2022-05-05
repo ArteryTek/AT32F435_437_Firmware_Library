@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     readme.txt
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    readme
   **************************************************************************
   */
@@ -14,4 +14,6 @@
   messages will be received, the three leds will toggle.
   set-up
   - can tx      --->   pb9
-  - can rx      --->   pb8
+  - can rx      --->   pb8
+
+  for more detailed information. please refer to the application note document AN0095.

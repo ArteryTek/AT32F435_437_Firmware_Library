@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     readme.txt 
-  * @version  v2.0.7
-  * @date     2022-04-02
+  * @version  v2.0.8
+  * @date     2022-04-25
   * @brief    readme
   **************************************************************************
   */
@@ -17,4 +17,6 @@
   - qspi io2   --->   pf7
   - qspi io3   --->   pf6
   - qspi sck   --->   pf10
-  - qspi cs    --->   pg6
+  - qspi cs    --->   pg6
+
+  for more detailed information. please refer to the application note document AN0088.

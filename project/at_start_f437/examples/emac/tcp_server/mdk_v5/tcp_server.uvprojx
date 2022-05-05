@@ -462,6 +462,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\..\libraries\drivers\src\at32f435_437_scfg.c</FilePath>
             </File>
+            <File>
+              <FileName>at32f435_437_tmr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\libraries\drivers\src\at32f435_437_tmr.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
