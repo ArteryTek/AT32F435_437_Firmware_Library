@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -132,7 +132,7 @@ int main(void)
         if(buffer_compare(can2_tx_message.data, can1_rx_message.data, 8) == SUCCESS)
         {
           /* receive ok */
-          lcd_string_show(10, 160, 310, 24, 24, (uint8_t *)"can 1 receive ok");
+          lcd_string_show(10, 160, 310, 24, 24, (uint8_t *)"can 1 receive ok  ");
         }
         else
         {
@@ -179,7 +179,7 @@ int main(void)
         if(buffer_compare(can1_tx_message.data, can2_rx_message.data, 8) == SUCCESS)
         {
           /* receive ok */
-          lcd_string_show(10, 320, 310, 24, 24, (uint8_t *)"can 2 receive ok");
+          lcd_string_show(10, 320, 310, 24, 24, (uint8_t *)"can 2 receive ok  ");
         }
         else
         {

@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at_surf_f437_board_eeprom.c
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    the driver library of the eeprom
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -41,7 +41,7 @@ i2c_status_type eeprom_ready_check(i2c_handle_type* hi2c, uint16_t address, uint
   hi2c->error_code = I2C_OK;
 
   /* wait for the busy falg to be reset */
-  if (i2c_wait_flag(hi2c, I2C_BUSYF_FLAG, SET, I2C_EVENT_CHECK_NONE, timeout) != I2C_OK)
+  if (i2c_wait_flag(hi2c, I2C_BUSYF_FLAG, I2C_EVENT_CHECK_NONE, timeout) != I2C_OK)
   {
     return I2C_ERR_STEP_1;
   }
@@ -50,10 +50,10 @@ i2c_status_type eeprom_ready_check(i2c_handle_type* hi2c, uint16_t address, uint
   i2c_transmit_set(hi2c->i2cx, address, 0, I2C_SOFT_STOP_MODE, I2C_GEN_START_WRITE);
 
   /* wait for the tdis falg to be set */
-  if(i2c_wait_flag(hi2c, I2C_TDC_FLAG, RESET, I2C_EVENT_CHECK_ACKFAIL, timeout) != I2C_OK)
+  if(i2c_wait_flag(hi2c, I2C_TDC_FLAG, I2C_EVENT_CHECK_ACKFAIL, timeout) != I2C_OK)
   {
     /* wait for the stop falg to be set */
-    if(i2c_wait_flag(hi2c, I2C_STOPF_FLAG, RESET, I2C_EVENT_CHECK_NONE, timeout) != I2C_OK)
+    if(i2c_wait_flag(hi2c, I2C_STOPF_FLAG, I2C_EVENT_CHECK_NONE, timeout) != I2C_OK)
     {
       return I2C_ERR_STEP_2;
     }
@@ -71,7 +71,7 @@ i2c_status_type eeprom_ready_check(i2c_handle_type* hi2c, uint16_t address, uint
   i2c_stop_generate(hi2c->i2cx);
 
   /* wait for the stop falg to be set */
-  if(i2c_wait_flag(hi2c, I2C_STOPF_FLAG, RESET, I2C_EVENT_CHECK_NONE, timeout) != I2C_OK)
+  if(i2c_wait_flag(hi2c, I2C_STOPF_FLAG, I2C_EVENT_CHECK_NONE, timeout) != I2C_OK)
   {
     return I2C_ERR_STEP_4;
   }

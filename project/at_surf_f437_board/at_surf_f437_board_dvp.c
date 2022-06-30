@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     dvp.c
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    dvp program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -53,7 +53,7 @@ void dvp_config(uint16_t id)
   }
   dvp_pclk_polarity_set(DVP_CLK_POLARITY_RISING);
   dvp_zoomout_set(DVP_PCDC_ALL, DVP_PCDS_CAP_FIRST, DVP_LCDC_ALL, DVP_LCDS_CAP_FIRST);
-  dvp_zoomout_select(DVP_PCDSE_CAP_FIRST);
+  dvp_zoomout_select(DVP_PCDES_CAP_FIRST);
   dvp_pixel_data_length_set(DVP_PIXEL_DATA_LENGTH_8);
 	
 	//*(__IO uint32_t *)(0x50050040) = (uint32_t)0x1000;

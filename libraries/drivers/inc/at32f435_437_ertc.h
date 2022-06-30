@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_ertc.h
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    at32f435_437 ertc header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -94,6 +94,16 @@ extern "C" {
   * @}
   */
 
+/**
+  * @brief compatible with older versions
+  */
+#define ERTC_WAT_CLK_CK_A_16BITS         ERTC_WAT_CLK_CK_B_16BITS  
+#define ERTC_WAT_CLK_CK_A_17BITS         ERTC_WAT_CLK_CK_B_17BITS
+
+/**
+  * @}
+  */
+
 /** @defgroup ERTC_exported_types
   * @{
   */
@@ -167,8 +177,8 @@ typedef enum
   ERTC_WAT_CLK_ERTCCLK_DIV8              = 0x01, /*!< the wake up timer clock is ERTC_CLK / 8 */
   ERTC_WAT_CLK_ERTCCLK_DIV4              = 0x02, /*!< the wake up timer clock is ERTC_CLK / 4 */
   ERTC_WAT_CLK_ERTCCLK_DIV2              = 0x03, /*!< the wake up timer clock is ERTC_CLK / 2 */
-  ERTC_WAT_CLK_CK_A_16BITS               = 0x04, /*!< the wake up timer clock is CK_A, wakeup counter = ERTC_WAT */
-  ERTC_WAT_CLK_CK_A_17BITS               = 0x06  /*!< the wake up timer clock is CK_A, wakeup counter = ERTC_WAT + 65535 */
+  ERTC_WAT_CLK_CK_B_16BITS               = 0x04, /*!< the wake up timer clock is CK_B, wakeup counter = ERTC_WAT */
+  ERTC_WAT_CLK_CK_B_17BITS               = 0x06  /*!< the wake up timer clock is CK_B, wakeup counter = ERTC_WAT + 65535 */
 } ertc_wakeup_clock_type;
 
 /**

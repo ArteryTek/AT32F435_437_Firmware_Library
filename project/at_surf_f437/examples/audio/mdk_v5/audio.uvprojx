@@ -482,6 +482,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\..\at_surf_f437_board\at_surf_f437_board_variable_resistor.c</FilePath>
             </File>
+            <File>
+              <FileName>at_surf_f437_board_joystick.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\at_surf_f437_board\at_surf_f437_board_joystick.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     usbh_msc_bot_scsi.c
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    usb host msc bulk-only transfer and scsi type
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -405,6 +405,7 @@ usb_sts_type usbh_msc_bot_scsi_get_inquiry(void *uhost,  msc_bot_trans_type *bot
   {
     case CMD_STATE_SEND:
       usbh_bot_cbw(&bot_trans->cbw, MSC_INQUIRY_DATA_LEN, MSC_INQUIRY_CMD_LEN, MSC_CBW_FLAG_IN);
+      bot_trans->cbw.bCBWLUN = lun;
       usbh_cmd_inquiry(bot_trans, bot_trans->cbw.CBWCB, lun);
       bot_trans->cmd_state = CMD_STATE_WAIT;
       bot_trans->bot_state = BOT_STATE_SEND_CBW;
@@ -443,6 +444,7 @@ usb_sts_type usbh_msc_bot_scsi_capacity(void *uhost, msc_bot_trans_type *bot_tra
   {
     case CMD_STATE_SEND:
       usbh_bot_cbw(&bot_trans->cbw, MSC_CAPACITY10_DATA_LEN, MSC_CAPACITY10_CMD_LEN, MSC_CBW_FLAG_IN);
+      bot_trans->cbw.bCBWLUN = lun;
       usbh_cmd_capacity10(bot_trans, bot_trans->cbw.CBWCB, lun);
       bot_trans->cmd_state = CMD_STATE_WAIT;
       bot_trans->bot_state = BOT_STATE_SEND_CBW;
@@ -484,6 +486,7 @@ usb_sts_type usbh_msc_bot_scsi_test_unit_ready(void *uhost, msc_bot_trans_type *
     case CMD_STATE_SEND:
       usbh_bot_cbw(&bot_trans->cbw, MSC_TEST_UNIT_READY_DATA_LEN,
                    MSC_TEST_UNIT_READY_CMD_LEN, MSC_CBW_FLAG_OUT);
+      bot_trans->cbw.bCBWLUN = lun;
       usbh_cmd_test_unit_ready(bot_trans, bot_trans->cbw.CBWCB, lun);
       bot_trans->cmd_state = CMD_STATE_WAIT;
       bot_trans->bot_state = BOT_STATE_SEND_CBW;
@@ -522,6 +525,7 @@ usb_sts_type usbh_msc_bot_scsi_request_sense(void *uhost, msc_bot_trans_type *bo
     case CMD_STATE_SEND:
       usbh_bot_cbw(&bot_trans->cbw, MSC_REQUEST_SENSE_DATA_LEN,
                    MSC_REQUEST_SENSE_CMD_LEN, MSC_CBW_FLAG_IN);
+      bot_trans->cbw.bCBWLUN = lun;
       usbh_cmd_requset_sense(bot_trans, bot_trans->cbw.CBWCB, lun);
       bot_trans->cmd_state = CMD_STATE_WAIT;
       bot_trans->bot_state = BOT_STATE_SEND_CBW;
@@ -564,6 +568,7 @@ usb_sts_type usbh_msc_bot_scsi_write(void *uhost, msc_bot_trans_type *bot_trans,
     case CMD_STATE_SEND:
       usbh_bot_cbw(&bot_trans->cbw, write_len * 512,
                    MSC_WRITE_CMD_LEN, MSC_CBW_FLAG_OUT);
+      bot_trans->cbw.bCBWLUN = lun;
       usbh_cmd_write(bot_trans, bot_trans->cbw.CBWCB, lun, write_len, address, write_data);
       bot_trans->cmd_state = CMD_STATE_WAIT;
       bot_trans->bot_state = BOT_STATE_SEND_CBW;
@@ -606,6 +611,7 @@ usb_sts_type usbh_msc_bot_scsi_read(void *uhost, msc_bot_trans_type *bot_trans,
     case CMD_STATE_SEND:
       usbh_bot_cbw(&bot_trans->cbw, read_len * 512,
                    MSC_READ_CMD_LEN, MSC_CBW_FLAG_IN);
+      bot_trans->cbw.bCBWLUN = lun;
       usbh_cmd_read(bot_trans, bot_trans->cbw.CBWCB, lun, read_len, address, read_data);
       bot_trans->cmd_state = CMD_STATE_WAIT;
       bot_trans->bot_state = BOT_STATE_SEND_CBW;

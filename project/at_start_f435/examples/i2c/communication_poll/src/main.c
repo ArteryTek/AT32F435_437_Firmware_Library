@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -227,7 +227,7 @@ void i2c_lowlevel_init(i2c_handle_type* hi2c)
     gpio_init(I2Cx_SDA_GPIO_PORT, &gpio_init_structure);
 
     /* config i2c */
-    i2c_init(hi2c->i2cx, 0, I2Cx_CLKCTRL);
+    i2c_init(hi2c->i2cx, 0x0F, I2Cx_CLKCTRL);
 
     i2c_own_address1_set(hi2c->i2cx, I2C_ADDRESS_MODE_7BIT, I2Cx_ADDRESS);
   }

@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32_sdio.c
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    this file provides a set of functions needed to manage the
   *           sdio/mmc card memory.
   **************************************************************************
@@ -26,6 +26,7 @@
   */
 
 #include "at32_sdio.h"
+#include "at32f435_437_board.h"
 
 /** @addtogroup AT32F435_periph_examples
   * @{
@@ -101,7 +102,7 @@ sd_error_status_type sd_init(void)
   gpio_pin_mux_config(GPIOC, GPIO_PINS_SOURCE12, GPIO_MUX_12);
   gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE2, GPIO_MUX_12);
 
-  retry = 10;
+  retry = 3;
   while(retry--){
     /* reset sdio */
     sdio_reset(SDIOx);
@@ -230,7 +231,7 @@ sd_error_status_type sd_power_on(void)
   /* enable to output sdio_ck */
   sdio_clock_enable(SDIOx, TRUE);
 
-  for(retry = 0; retry < 10; retry++)
+  for(retry = 0; retry < 5; retry++)
   {
     /* send cmd0, get in idle stage */
     sdio_command_init_struct.argument = 0x0;
@@ -288,6 +289,8 @@ sd_error_status_type sd_power_on(void)
     /* send acmd41, check voltage operation range */
     while((!valid_voltage) && (count < SD_MAX_VOLT_TRIAL))
     {
+      delay_ms(10);
+      
       /* send cmd55 before acmd41 */
       sdio_command_init_struct.argument = 0x00;
       sdio_command_init_struct.cmd_index = SD_CMD_APP_CMD;
@@ -353,6 +356,8 @@ sd_error_status_type sd_power_on(void)
     /* send cmd1 */
     while((!valid_voltage) && (count < SD_MAX_VOLT_TRIAL))
     {
+      delay_ms(10);
+      
       sdio_command_init_struct.argument = SD_VOLTAGE_WINDOW_MMC;
       sdio_command_init_struct.cmd_index = SD_CMD_SEND_OP_COND;
       sdio_command_init_struct.rsp_type = SDIO_RESPONSE_SHORT;

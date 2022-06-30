@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at_surf_f437_board_player.c
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    header file for at-start board.
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -37,6 +37,7 @@ extern "C" {
 #include "at_surf_f437_board_lcd.h"
 #include "at_surf_f437_board_variable_resistor.h"
 #include "at_surf_f437_board_key.h"
+#include "at_surf_f437_board_joystick.h"
 #include "at_surf_f437_board_malloc.h"
 #include "ff.h" 
 #include "string.h"
@@ -57,7 +58,27 @@ typedef enum
   MUSIC_WAV,
   MUSIC_FLAC,
   MUSIC_APE
-}music_file_type;
+} music_file_type;
+
+/**
+  * @brief define key type
+  */
+typedef enum
+{
+  MUSIC_NO_KEY                           = 0x00,  
+  MUSIC_KEY_PREVIOUS                     = 0x01,
+  MUSIC_KEY_NEXT                         = 0x02,
+  MUSIC_KEY_PAUSE                        = 0x03
+} music_key_type;
+
+/**
+  * @brief define key type
+  */
+typedef enum
+{
+  MUSIC_PLAY_CONTINUE                    = 0x00,  
+  MUSIC_PLAY_STOP                        = 0x01
+} music_play_type;
 
 /**
   * @brief audio type
@@ -67,7 +88,7 @@ typedef struct
   FIL file;
   FILINFO file_info;
   
-  key_type key;   
+  music_key_type key;   
   
   music_file_type music_type;
   uint32_t music_number;
@@ -94,6 +115,8 @@ typedef struct
 extern audio_type audio_info; 
 extern int16_t music_output_buffer[DMA_BUFFER_SIZE];
 
+music_key_type music_key_get(void);
+music_play_type music_play_stop_check(audio_type *audio);
 uint16_t volume_value_get(void);
 void volume_value_set(void);
 void audio_freq_set(uint32_t freq);

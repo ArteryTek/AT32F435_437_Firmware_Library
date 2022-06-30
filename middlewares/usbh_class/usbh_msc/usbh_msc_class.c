@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     usbh_msc_class.c
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    usb host msc class type
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -261,7 +261,6 @@ static usb_sts_type uhost_process_handler(void *uhost)
               USBH_DEBUG("Block num: %d ", pmsc->l_unit_n[pmsc->cur_lun].capacity.blk_nbr);
               USBH_DEBUG("Block size: %d Byte", pmsc->l_unit_n[pmsc->cur_lun].capacity.blk_size);
               pmsc->l_unit_n[pmsc->cur_lun].state = USBH_MSC_IDLE;
-              pmsc->state = USBH_MSC_IDLE;
               pmsc->cur_lun ++;
             }
             else if(status == USB_FAIL)
@@ -289,6 +288,11 @@ static usb_sts_type uhost_process_handler(void *uhost)
           default:
             break;
         }
+        
+      }
+      else
+      {
+        pmsc->state = USBH_MSC_IDLE;
       }
       break;
     case USBH_MSC_IDLE:

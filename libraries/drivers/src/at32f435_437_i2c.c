@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_i2c.c
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    contains all the functions for the i2c firmware library
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -271,11 +271,13 @@ void i2c_transfer_dir_set(i2c_type *i2c_x, i2c_transfer_dir_type i2c_direction)
 }
 
 /**
-  * @brief  get the i2c slave received direction.
+  * @brief  slave get the i2c transfer direction.
   * @param  i2c_x: to select the i2c peripheral.
   *         this parameter can be one of the following values:
   *         I2C1, I2C2, I2C3.
-  * @retval the value of the received direction.
+  * @retval the value of the slave direction
+  *         - I2C_DIR_TRANSMIT: master request a write transfer, slave enters receiver mode.
+  *         - I2C_DIR_RECEIVE: master request a read transfer, slave enters transmitter mode.
   */
 i2c_transfer_dir_type i2c_transfer_dir_get(i2c_type *i2c_x)
 {
@@ -595,14 +597,14 @@ void i2c_dma_enable(i2c_type *i2c_x, i2c_dma_request_type dma_req, confirm_state
   *         - I2C_AUTO_STOP_MODE: auto generate stop mode.
   *         - I2C_SOFT_STOP_MODE: soft generate stop mode.
   *         - I2C_RELOAD_MODE:  reload mode.
-  * @param  start_stop: config gen start condition mode.
+  * @param  start: config gen start condition mode.
   *         this parameter can be one of the following values:
   *         - I2C_WITHOUT_START: transfer data without start condition.
   *         - I2C_GEN_START_READ: read data and generate start.
   *         - I2C_GEN_START_WRITE: send data and generate start.
   * @retval none
   */
-void i2c_transmit_set(i2c_type *i2c_x, uint16_t address, uint8_t cnt, i2c_reload_stop_mode_type rld_stop, i2c_start_stop_mode_type start_stop)
+void i2c_transmit_set(i2c_type *i2c_x, uint16_t address, uint8_t cnt, i2c_reload_stop_mode_type rld_stop, i2c_start_mode_type start)
 {
   uint32_t temp;
 
@@ -613,7 +615,7 @@ void i2c_transmit_set(i2c_type *i2c_x, uint16_t address, uint8_t cnt, i2c_reload
   temp &= ~0x03FF67FF;
 
   /* transfer mode and address set */
-  temp |= address | rld_stop | start_stop;
+  temp |= address | rld_stop | start;
 
   /* transfer counter set */
   temp |= (uint32_t)cnt << 16;

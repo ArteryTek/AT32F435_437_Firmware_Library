@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     system_at32f435_437.h
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    cmsis cortex-m4 system header file.
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -38,6 +38,8 @@ extern "C" {
 /** @addtogroup AT32F435_437_system
   * @{
   */
+
+#define SystemCoreClock                  system_core_clock
 
 /** @defgroup AT32F435_437_system_exported_variables
   * @{

@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_qspi.c
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    contain all the functions for qspi firmware library
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -67,7 +67,7 @@ void qspi_encryption_enable(qspi_type* qspi_x, confirm_state new_state)
   *         - QSPI_SCK_MODE_3
   * @retval none
   */
-void qspi_sck_mode_set( qspi_type* qspi_x, qspi_clk_mode_type new_mode)
+void qspi_sck_mode_set(qspi_type* qspi_x, qspi_clk_mode_type new_mode)
 {
   qspi_x->ctrl_bit.sckmode = new_mode;
 }
@@ -165,7 +165,7 @@ flag_status qspi_flag_get(qspi_type* qspi_x, uint32_t flag)
   *         - QSPI_CMDSTS_FLAG
   * @retval none
   */
-void qspi_flag_clear( qspi_type* qspi_x, uint32_t flag)
+void qspi_flag_clear(qspi_type* qspi_x, uint32_t flag)
 {
   qspi_x->cmdsts = QSPI_CMDSTS_FLAG;
 }

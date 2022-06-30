@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at_surf_f437_board_low_power_mode.h
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    low power mode application libray header file
   **************************************************************************
   *                       Copyright notice & Disclaimer

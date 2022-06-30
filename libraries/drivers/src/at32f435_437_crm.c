@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_crm.c
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    contains all the functions for the crm firmware library
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -61,11 +61,11 @@ void crm_reset(void)
   /* wait sclk switch status */
   while(CRM->cfg_bit.sclksts != CRM_SCLK_HICK);
 
-  /* reset cfg register, include sclk switch, ahbdiv, apb1div, apb2div, adcdiv, clkout bits */
-  CRM->cfg = 0;
-
   /* reset hexten, hextbyps, cfden and pllen bits */
   CRM->ctrl &= ~(0x010D0000U);
+
+  /* reset cfg register, include sclk switch, ahbdiv, apb1div, apb2div, adcdiv, clkout bits */
+  CRM->cfg = 0;
 
   /* reset pllms pllns pllfr pllrcs bits */
   CRM->pllcfg = 0x00033002U;
@@ -367,6 +367,7 @@ void crm_flag_clear(uint32_t flag)
     case CRM_LOWPOWER_RESET_FLAG:
     case CRM_ALL_RESET_FLAG:
       CRM->ctrlsts_bit.rstfc = TRUE;
+      while(CRM->ctrlsts_bit.rstfc == TRUE);
       break;
     case CRM_LICK_READY_INT_FLAG:
       CRM->clkint_bit.lickstblfc = TRUE;

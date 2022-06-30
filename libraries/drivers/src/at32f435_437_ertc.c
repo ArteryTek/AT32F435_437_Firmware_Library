@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_ertc.c
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    contains all the functions for the ertc firmware library
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -406,7 +406,7 @@ void ertc_calendar_get(ertc_time_type* time)
   ertc_reg_time_type reg_tm;
   ertc_reg_date_type reg_dt;
 
-  (void) (ERTC->sts);
+  UNUSED(ERTC->sts);
 
   reg_tm.time = ERTC->time;
   reg_dt.date = ERTC->date;
@@ -724,8 +724,8 @@ uint32_t ertc_alarm_sub_second_get(ertc_alarm_type alarm_x)
   *         - ERTC_WAT_CLK_ERTCCLK_DIV8: ERTC_CLK / 8.
   *         - ERTC_WAT_CLK_ERTCCLK_DIV4: ERTC_CLK / 4.
   *         - ERTC_WAT_CLK_ERTCCLK_DIV2: ERTC_CLK / 2.
-  *         - ERTC_WAT_CLK_CK_A_16BITS: CK_A, wakeup counter = ERTC_WAT
-  *         - ERTC_WAT_CLK_CK_A_17BITS: CK_A, wakeup counter = ERTC_WAT + 65535.
+  *         - ERTC_WAT_CLK_CK_B_16BITS: CK_B, wakeup counter = ERTC_WAT
+  *         - ERTC_WAT_CLK_CK_B_17BITS: CK_B, wakeup counter = ERTC_WAT + 65535.
   * @retval none.
   */
 void ertc_wakeup_clock_set(ertc_wakeup_clock_type clock)

@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -37,6 +37,11 @@ float pitch_buf, roll_buf, yaw_buf;
 float cube[8][3]={{-20*MUL,-20*MUL,-20*MUL},{-20*MUL,20*MUL,-20*MUL},{20*MUL,20*MUL,-20*MUL},{20*MUL,-20*MUL,-20*MUL},{-20*MUL,-20*MUL,20*MUL},{-20*MUL,20*MUL,20*MUL},{20*MUL,20*MUL,20*MUL},{20*MUL,-20*MUL,20*MUL}};
 int lineid[]={1,2,2,3,3,4,4,1,5,6,6,7,7,8,8,5,8,4,7,3,6,2,5,1,1,3,2,4};
 
+#define DRAW_W 150
+#define DRAW_H 150
+
+uint32_t lcd_buf[DRAW_W][DRAW_H];
+  
 /**
   * @brief  math convert
   * @param  a:point to result
@@ -69,6 +74,134 @@ void rotate(float* obj, float x, float y, float z)
   float ry[3][3] = {{1,0,0}, {0,cos(y),-sin(y)}, {0,sin(y),cos(y)}};
   float rx[3][3] = {{cos(x),0,sin(x)}, {0,1,0}, {-sin(x),0,cos(x)}};
   matconv(matconv(matconv(obj,rz), ry), rx);
+}
+
+/**
+  * @brief  write a pixel data at memory
+  * @param  x:the x coordinate of the pixel
+  * @param  y:the y coordinate of the pixel
+  * @param  color:the color of the pixel
+  * @retval none
+  */
+void lcd_point_draw_in_memory(uint16_t x, uint16_t y, uint16_t color)
+{
+  lcd_buf[x][y] = color;
+}
+
+/**
+  * @brief  draw a line at memory
+  * @param  x_start:the x start coordinate of the line
+  * @param  x_end  :the x end   coordinate of the line
+  * @param  y_start:the y start coordinate of the line
+  * @param  y_end  :the x end   coordinate of the line
+  * @param  color  :the color of the line
+  * @retval none
+  */
+void lcd_draw_line_in_memory(uint16_t x_start, uint16_t y_start, uint16_t x_end, uint16_t y_end,uint16_t color)
+{
+  uint16_t t;
+  int xerr = 0, yerr = 0, delta_x, delta_y, distance;
+  int incx, incy, uRow, uCol;
+  
+  delta_x = x_end - x_start;
+  delta_y = y_end - y_start;
+  uRow = x_start;
+  uCol = y_start;
+  
+  if(delta_x > 0)
+  {
+    incx = 1;
+  }
+  else if(delta_x == 0)
+  {
+    incx = 0;
+  }
+  else 
+  { 
+    incx = -1;
+    delta_x = -delta_x;
+  }
+  
+  if(delta_y > 0)
+  {
+    incy = 1;
+  }
+  else if(delta_y == 0)
+  {
+    incy=0;
+  }
+  else
+  {
+    incy = -1;
+    delta_y = -delta_y;
+  }
+  if(delta_x > delta_y)
+  {
+    distance = delta_x;
+  }
+  else 
+  {
+    distance = delta_y;
+  }
+  
+  for(t = 0; t <= distance + 1; t++ )
+  {
+    lcd_point_draw_in_memory(uRow, uCol, color);
+    
+    xerr += delta_x;
+    yerr += delta_y;
+    
+    if(xerr > distance)
+    {
+      xerr -= distance;
+      uRow += incx;
+    }
+    
+    if(yerr > distance)
+    {
+      yerr -= distance;
+      uCol += incy;
+    }
+  }
+}
+
+/**
+  * @brief  refresh memory data to lcd
+  * @param  x_start:the x start coordinate of the line
+  * @param  y_start:the y start coordinate of the line
+  * @retval none
+  */
+void lcd_refresh(uint16_t x_start, uint16_t y_start)
+{
+  uint16_t x, y;
+  
+  for(y = 0; y < DRAW_H; y++)
+  {
+    lcd_windows_set(x_start, y_start + y, x + DRAW_W, y_start + y);
+    
+    for(x = 0; x < DRAW_W; x++)
+    {
+      lcd_data_16bit_write(lcd_buf[x][y]);
+    }
+  }
+}
+
+/**
+  * @brief  clear memory
+  * @param  color:the color of the line
+  * @retval none
+  */
+void lcd_memory_clear(uint16_t color)
+{
+  uint16_t x, y;
+  
+  for(y = 0; y < DRAW_H; y++)
+  {
+    for(x = 0; x < DRAW_W; x++)
+    {
+      lcd_buf[x][y] = color;
+    }
+  }
 }
 
 /**
@@ -151,18 +284,22 @@ int main(void)
       default:
         break;
     }
-
-    lcd_fill(80,80,230,220,BLACK);
-
-    for(i=0; i<8; i++)
-    rotate(cube[i], pitch/360, roll/360, yaw/360);
-    for(i=0; i<28; i+=2)
+    
+    for(i = 0; i < 8; i++)
     {
-      lcd_draw_line(160+cube[lineid[i]-1][0], 150+cube[lineid[i]-1][1], 160+cube[lineid[i+1]-1][0], 150+cube[lineid[i+1]-1][1], WHITE);
+      rotate(cube[i], pitch/360, roll/360, yaw/360);    
     }
 
+    lcd_memory_clear(BLACK);
+    
+    for(i = 0; i < 28; i += 2)
+    {
+      lcd_draw_line_in_memory(75 + cube[lineid[i]-1][0], 75 + cube[lineid[i]-1][1], 75 + cube[lineid[i+1]-1][0], 75 + cube[lineid[i+1]-1][1], WHITE);
+    }
+    
+    lcd_refresh(80, 130);
+    
     delay_ms(10);
-
   }
 }
 

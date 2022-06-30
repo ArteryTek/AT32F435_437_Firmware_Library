@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at_surf_f437_board_player_wav.c
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    wav file decode.
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -199,13 +199,11 @@ FLAC__StreamDecoderWriteStatus write_callback(const FLAC__StreamDecoder *decoder
   }
   
   /* check button status */
-  audio->key = key_press();
-  
-  if(audio->key != NO_KEY)
+  if(music_play_stop_check(audio) == MUSIC_PLAY_STOP)
   {
     return FLAC__STREAM_DECODER_WRITE_STATUS_ABORT;
   }
-  
+
   audio->decode_cnt++;   
   
   audio->current_sec = frame->header.number.sample_number / audio->samplerate;

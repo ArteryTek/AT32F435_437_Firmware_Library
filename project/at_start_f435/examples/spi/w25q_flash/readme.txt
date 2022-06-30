@@ -1,19 +1,19 @@
 /**
   **************************************************************************
   * @file     readme.txt
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    readme
   **************************************************************************
   */
 
-  this demo is based on the at-start board, in this demo, shows how to use
-  only receive mode receive data by polling mode.
+  this demo is based on the at-start board and AT32-Comm-EV board, in this demo, 
+  shows how to use spi access the w25q flash chip.
   the pins connection as follow:
-  - spi1                     w25q128
-    pa4(cs)        <--->     cs pin
-    pa5(sck)       <--->     clk pin
-    pa6(miso)      <--->     di pin
-    pa7(mosi)      <--->     do pin
+  - spi2                     w25qxx
+    pd0(cs)        <--->     cs pin
+    pd1(sck)       <--->     clk pin
+    pc2(miso)      <--->     di pin
+    pd4(mosi)      <--->     do pin
 
   for more detailed information. please refer to the application note document AN0102.

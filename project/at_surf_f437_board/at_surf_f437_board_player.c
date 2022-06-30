@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at_surf_f437_board_player.c
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    music player.
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -23,8 +23,7 @@
   *
   **************************************************************************
   */
-  
-#include "at_surf_f437_board_audio.h"
+
 #include "at_surf_f437_board_player.h"
 
 int16_t music_output_buffer[DMA_BUFFER_SIZE];
@@ -338,8 +337,6 @@ void audio_data_convert_to_i2s(audio_type *audio, int32_t *decode_left, int32_t 
 void music_play_init(audio_type *audio)
 {
   /* init audio struct */ 
-  audio->key = NO_KEY;
-  
   audio->decode_cnt = 0;
   audio->error_cnt = 0;
   audio->file_size = 0;
@@ -354,7 +351,93 @@ void music_play_init(audio_type *audio)
 
   audio->tx_size = 0;
   
-  audio->key = NO_KEY;
+  audio->key = MUSIC_NO_KEY;
+}
+
+/**
+  * @brief  get key status.
+  * @param  none.
+  * @retval key value.
+  *         MUSIC_NO_KEY      
+  *         MUSIC_KEY_PREVIOUS
+  *         MUSIC_KEY_NEXT    
+  *         MUSIC_KEY_PAUSE   
+  */
+music_key_type music_key_get(void)
+{
+  key_type key;
+  joy_type joy_ley;
+  
+  /* check button status */
+  key = key_press();
+  
+  /* read io input status */
+  pca9555_io_scan();
+
+  /* read joystick key value */
+  joy_ley = joystick_press();
+  
+  if(key == KEY_1)
+  {
+    return MUSIC_KEY_PREVIOUS;
+  }
+  
+  if(key == KEY_2)
+  {
+    return MUSIC_KEY_NEXT;
+  }
+  
+  if(joy_ley == JOY_ENTER)
+  {
+    return MUSIC_KEY_PAUSE;
+  }
+  
+  return MUSIC_NO_KEY;
+}
+
+/**
+  * @brief  check key while playing.
+  * @param  audio: audio information structure.
+  * @retval paly status.
+  *         MUSIC_PLAY_CONTINUE
+  *         MUSIC_PLAY_STOP       
+  */
+music_play_type music_play_stop_check(audio_type *audio)
+{
+  /* check button status */
+  audio->key = music_key_get();
+  
+  if(audio->key == MUSIC_KEY_PAUSE)
+  {
+    /* clear i2s data buffer */
+    memset(music_output_buffer, 0, sizeof(music_output_buffer));
+    
+    lcd_string_show(100, 180, 300, 24, 24, (uint8_t *)"暂停"); 
+    
+    while(1)
+    {
+      /* check button status */
+      audio->key = music_key_get();
+      
+      if(audio->key == MUSIC_KEY_PAUSE)
+      {
+        lcd_string_show(100, 180, 300, 24, 24, (uint8_t *)"    "); 
+        break;
+      }
+      
+      if(audio->key != MUSIC_NO_KEY)   
+      {
+        lcd_string_show(100, 180, 300, 24, 24, (uint8_t *)"    "); 
+        return MUSIC_PLAY_STOP;
+      }        
+    }
+  }
+  else if(audio->key != MUSIC_NO_KEY) 
+  {
+    return MUSIC_PLAY_STOP;
+  } 
+
+  return MUSIC_PLAY_CONTINUE;
 }
 
 /**
@@ -412,7 +495,7 @@ void music_play(audio_type *audio)
 {
   uint8_t buf[30];
   DIR music_dir;
-  
+
   audio->music_id = 0; 
 
   /* find the music folder */
@@ -453,6 +536,10 @@ void music_play(audio_type *audio)
       
       lcd_fill(10, 240, 319, 470, BLACK);
       
+      lcd_string_show(10, 380, 300, 24, 24, (uint8_t *)"key1:上一首");     
+      lcd_string_show(10, 410, 300, 24, 24, (uint8_t *)"key2:下一首"); 
+      lcd_string_show(10, 440, 300, 24, 24, (uint8_t *)"joystick:暂停"); 
+      
       audio->music_type = music_type_get((uint8_t *)audio->file_info.fname);
       
       /* play music */
@@ -474,12 +561,12 @@ void music_play(audio_type *audio)
         default:
           break;
       }
-      
+     
       /* music switch */
       switch(audio->key)
       {
         /* key 1 down */  
-        case KEY_1:
+        case MUSIC_KEY_PREVIOUS:
           
           if(audio->music_id)
           {
@@ -492,8 +579,8 @@ void music_play(audio_type *audio)
           break;
 
         /* key 2 down */  
-        case KEY_2:
-        case NO_KEY:
+        case MUSIC_KEY_NEXT:
+        case MUSIC_NO_KEY:
           
           audio->music_id++;
         

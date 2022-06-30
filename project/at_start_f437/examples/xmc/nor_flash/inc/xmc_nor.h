@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
   * @file     xmc_sram.h
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    header file for the nand configuration.
   ******************************************************************************
   *                       Copyright notice & Disclaimer

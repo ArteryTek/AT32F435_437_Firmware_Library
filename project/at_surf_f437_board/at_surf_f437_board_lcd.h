@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at_surf_f437_board_lcd.h
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    header file for at-start board. set of firmware functions to
   *           manage leds and push-button. initialize delay function.
   **************************************************************************

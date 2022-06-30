@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_int.c
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    main interrupt service routines.
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -168,7 +168,7 @@ void SysTick_Handler(void)
       spi_enable(SPI3, TRUE);
       if(rx_index == BUFFERSIZE)
       {
-        spi_i2s_interrupt_enable(SPI3, SPI_I2S_RDBF_FLAG, FALSE);
+        spi_i2s_interrupt_enable(SPI3, SPI_I2S_RDBF_INT, FALSE);
       }
     }
   }

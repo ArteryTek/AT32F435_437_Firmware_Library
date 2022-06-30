@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_i2c.h
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    at32f435_437 i2c header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -176,14 +176,14 @@ typedef enum
 } i2c_reload_stop_mode_type;
 
 /**
-  * @brief i2c start stop mode
+  * @brief i2c start mode
   */
 typedef enum
 {
   I2C_WITHOUT_START                      = 0x00000000, /*!< transfer data without start condition */
   I2C_GEN_START_READ                     = 0x00002400, /*!< read data and generate start */
   I2C_GEN_START_WRITE                    = 0x00002000  /*!< send data and generate start */
-} i2c_start_stop_mode_type;
+} i2c_start_mode_type;
 
 /**
   * @brief type define i2c register all
@@ -452,7 +452,7 @@ void i2c_ext_timeout_enable(i2c_type *i2c_x, confirm_state new_state);
 void i2c_interrupt_enable(i2c_type *i2c_x, uint32_t source, confirm_state new_state);
 flag_status i2c_interrupt_get(i2c_type *i2c_x, uint16_t source);
 void i2c_dma_enable(i2c_type *i2c_x, i2c_dma_request_type dma_req, confirm_state new_state);
-void i2c_transmit_set(i2c_type *i2c_x, uint16_t address, uint8_t cnt, i2c_reload_stop_mode_type rld_stop, i2c_start_stop_mode_type start_stop);
+void i2c_transmit_set(i2c_type *i2c_x, uint16_t address, uint8_t cnt, i2c_reload_stop_mode_type rld_stop, i2c_start_mode_type start);
 void i2c_start_generate(i2c_type *i2c_x);
 void i2c_stop_generate(i2c_type *i2c_x);
 void i2c_data_send(i2c_type *i2c_x, uint8_t data);

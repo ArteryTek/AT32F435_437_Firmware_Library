@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at_surf_f437_board_player_mp3.c
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    mp3 file decode.
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -178,13 +178,11 @@ enum mad_flow output(void *data, struct mad_header const *header, struct mad_pcm
   volume_value_set();
   
   /* check button status */
-  audio->key = key_press();
-  
-  if(audio->key != NO_KEY)
+  if(music_play_stop_check(audio) == MUSIC_PLAY_STOP)
   {
     return MAD_FLOW_STOP;
   }
-  
+
   audio->decode_size += mp3_decoder.sync->stream.next_frame - mp3_decoder.sync->stream.this_frame;
   
   /* calculate total play time */

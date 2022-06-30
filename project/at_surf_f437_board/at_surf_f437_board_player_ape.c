@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at_surf_f437_board_player_ape.c
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    ape file decode.
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -221,13 +221,11 @@ error_status ape_song_play(audio_type *audio, uint8_t *pname)
       music_info_display(audio);
       
       /* check button status */
-      audio->key = key_press();
-      
-      if(audio->key != NO_KEY)
+      if(music_play_stop_check(audio) == MUSIC_PLAY_STOP)
       {
         goto end;
       }
-      
+
       /* read new data into buffer */
       if(bytes_left < APE_READBUF_SIZE)
       {

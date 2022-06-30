@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at_surf_f437_board_touch.c
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    touch application libray header file.
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -309,7 +309,7 @@ i2c_status_type gt_i2c_write(i2c_handle_type* hi2c, uint16_t address, uint16_t m
   gt_error_code = I2C_OK;
 
   /* wait for the busy falg to be reset */
-  if (i2c_wait_flag(hi2c, I2C_BUSYF_FLAG, SET, I2C_EVENT_CHECK_NONE, timeout) != I2C_OK)
+  if (i2c_wait_flag(hi2c, I2C_BUSYF_FLAG, I2C_EVENT_CHECK_NONE, timeout) != I2C_OK)
   {
     return I2C_ERR_STEP_1;
   }
@@ -318,7 +318,7 @@ i2c_status_type gt_i2c_write(i2c_handle_type* hi2c, uint16_t address, uint16_t m
   i2c_transmit_set(hi2c->i2cx, address, gt_psize, I2C_AUTO_STOP_MODE, I2C_GEN_START_WRITE);
 
   /* wait for the tdis falg to be set */
-  if(i2c_wait_flag(hi2c, I2C_TDIS_FLAG, RESET, I2C_EVENT_CHECK_ACKFAIL, timeout) != I2C_OK)
+  if(i2c_wait_flag(hi2c, I2C_TDIS_FLAG, I2C_EVENT_CHECK_ACKFAIL, timeout) != I2C_OK)
   {
     return I2C_ERR_STEP_2;
   }
@@ -328,7 +328,7 @@ i2c_status_type gt_i2c_write(i2c_handle_type* hi2c, uint16_t address, uint16_t m
 
 
   /* wait for the tdis falg to be set */
-  if(i2c_wait_flag(hi2c, I2C_TDIS_FLAG, RESET, I2C_EVENT_CHECK_ACKFAIL, timeout) != I2C_OK)
+  if(i2c_wait_flag(hi2c, I2C_TDIS_FLAG, I2C_EVENT_CHECK_ACKFAIL, timeout) != I2C_OK)
   {
     return I2C_ERR_STEP_2;
   }
@@ -341,7 +341,7 @@ i2c_status_type gt_i2c_write(i2c_handle_type* hi2c, uint16_t address, uint16_t m
   while (gt_psize > 0)
   {
     /* wait for the tdis falg to be set */
-    if(i2c_wait_flag(hi2c, I2C_TDIS_FLAG, RESET, I2C_EVENT_CHECK_ACKFAIL, timeout) != I2C_OK)
+    if(i2c_wait_flag(hi2c, I2C_TDIS_FLAG, I2C_EVENT_CHECK_ACKFAIL, timeout) != I2C_OK)
     {
       return I2C_ERR_STEP_3;
     }
@@ -352,7 +352,7 @@ i2c_status_type gt_i2c_write(i2c_handle_type* hi2c, uint16_t address, uint16_t m
   }
 
   /* wait for the stop falg to be set  */
-  if(i2c_wait_flag(hi2c, I2C_STOPF_FLAG, RESET, I2C_EVENT_CHECK_ACKFAIL, timeout) != I2C_OK)
+  if(i2c_wait_flag(hi2c, I2C_STOPF_FLAG, I2C_EVENT_CHECK_ACKFAIL, timeout) != I2C_OK)
   {
     return I2C_ERR_STEP_5;
   }
@@ -385,7 +385,7 @@ i2c_status_type gt_i2c_read(i2c_handle_type* hi2c, uint16_t address, uint16_t me
   gt_error_code = I2C_OK;
 
   /* wait for the busy falg to be reset */
-  if(i2c_wait_flag(hi2c, I2C_BUSYF_FLAG, SET, I2C_EVENT_CHECK_NONE, timeout) != I2C_OK)
+  if(i2c_wait_flag(hi2c, I2C_BUSYF_FLAG, I2C_EVENT_CHECK_NONE, timeout) != I2C_OK)
   {
     return I2C_ERR_STEP_1;
   }
@@ -394,7 +394,7 @@ i2c_status_type gt_i2c_read(i2c_handle_type* hi2c, uint16_t address, uint16_t me
   i2c_transmit_set(hi2c->i2cx, address, 2, I2C_SOFT_STOP_MODE, I2C_GEN_START_WRITE);
 
   /* wait for the tdis falg to be set */
-  if(i2c_wait_flag(hi2c, I2C_TDIS_FLAG, RESET, I2C_EVENT_CHECK_ACKFAIL, timeout) != I2C_OK)
+  if(i2c_wait_flag(hi2c, I2C_TDIS_FLAG, I2C_EVENT_CHECK_ACKFAIL, timeout) != I2C_OK)
   {
     return I2C_ERR_STEP_2;
   }
@@ -403,7 +403,7 @@ i2c_status_type gt_i2c_read(i2c_handle_type* hi2c, uint16_t address, uint16_t me
   i2c_data_send(hi2c->i2cx, mem_address >> 8);
 
   /* wait for the tdis falg to be set */
-  if(i2c_wait_flag(hi2c, I2C_TDIS_FLAG, RESET, I2C_EVENT_CHECK_ACKFAIL, timeout) != I2C_OK)
+  if(i2c_wait_flag(hi2c, I2C_TDIS_FLAG, I2C_EVENT_CHECK_ACKFAIL, timeout) != I2C_OK)
   {
     return I2C_ERR_STEP_3;
   }
@@ -412,7 +412,7 @@ i2c_status_type gt_i2c_read(i2c_handle_type* hi2c, uint16_t address, uint16_t me
   i2c_data_send(hi2c->i2cx, mem_address & 0xFF);
 
   /* wait for the tdc falg to be set */
-  if (i2c_wait_flag(hi2c, I2C_TDC_FLAG, RESET, I2C_EVENT_CHECK_NONE, timeout) != I2C_OK)
+  if (i2c_wait_flag(hi2c, I2C_TDC_FLAG, I2C_EVENT_CHECK_NONE, timeout) != I2C_OK)
   {
     return I2C_ERR_STEP_4;
   }
@@ -423,7 +423,7 @@ i2c_status_type gt_i2c_read(i2c_handle_type* hi2c, uint16_t address, uint16_t me
   while (gt_psize > 0)
   {
     /* wait for the rdbf falg to be set  */
-    if (i2c_wait_flag(hi2c, I2C_RDBF_FLAG, RESET, I2C_EVENT_CHECK_ACKFAIL, timeout) != I2C_OK)
+    if (i2c_wait_flag(hi2c, I2C_RDBF_FLAG, I2C_EVENT_CHECK_ACKFAIL, timeout) != I2C_OK)
     {
       return I2C_ERR_STEP_5;
     }
@@ -434,7 +434,7 @@ i2c_status_type gt_i2c_read(i2c_handle_type* hi2c, uint16_t address, uint16_t me
   }
 
   /* wait for the stop falg to be set  */
-  if (i2c_wait_flag(hi2c, I2C_STOPF_FLAG, RESET, I2C_EVENT_CHECK_ACKFAIL, timeout) != I2C_OK)
+  if (i2c_wait_flag(hi2c, I2C_STOPF_FLAG, I2C_EVENT_CHECK_ACKFAIL, timeout) != I2C_OK)
   {
     return I2C_ERR_STEP_7;
   }

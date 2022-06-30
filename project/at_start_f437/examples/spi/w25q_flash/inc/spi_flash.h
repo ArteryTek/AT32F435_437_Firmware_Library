@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     spi_flash.h
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    header file of spi_flash
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -45,8 +45,8 @@
   * @{
   */
 
-#define FLASH_CS_HIGH()                  gpio_bits_set(GPIOA, GPIO_PINS_4)
-#define FLASH_CS_LOW()                   gpio_bits_reset(GPIOA, GPIO_PINS_4)
+#define FLASH_CS_HIGH()                  gpio_bits_set(GPIOD, GPIO_PINS_0)
+#define FLASH_CS_LOW()                   gpio_bits_reset(GPIOD, GPIO_PINS_0)
 
 /**
   * @}

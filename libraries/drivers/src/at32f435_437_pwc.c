@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_pwc.c
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    contains all the functions for the pwc firmware library
   **************************************************************************
   *                       Copyright notice & Disclaimer

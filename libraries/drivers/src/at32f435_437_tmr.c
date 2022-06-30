@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_tmr.c
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    contains all the functions for the tmr firmware library
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -1141,15 +1141,15 @@ void tmr_pwm_input_config(tmr_type *tmr_x, tmr_input_config_type *input_struct, 
   * @param  tmr_x: select the tmr peripheral.
   *         this parameter can be one of the following values:
   *         TMR1, TMR2, TMR3, TMR4, TMR5, TMR8, TMR20
-  * @param  ti1_connect
+  * @param  ch1_connect
   *         this parameter can be one of the following values:
   *         - TMR_CHANEL1_CONNECTED_C1IRAW
   *         - TMR_CHANEL1_2_3_CONNECTED_C1IRAW_XOR
   * @retval none
   */
-void tmr_channel1_input_select(tmr_type *tmr_x, tmr_channel1_input_connected_type ti1_connect)
+void tmr_channel1_input_select(tmr_type *tmr_x, tmr_channel1_input_connected_type ch1_connect)
 {
-  tmr_x->ctrl2_bit.c1insel = ti1_connect;
+  tmr_x->ctrl2_bit.c1insel = ch1_connect;
 }
 
 /**
@@ -1411,6 +1411,7 @@ void tmr_interrupt_enable(tmr_type *tmr_x, uint32_t tmr_interrupt, confirm_state
   *         - TMR_C2_FLAG
   *         - TMR_C3_FLAG
   *         - TMR_C4_FLAG
+  *         - TMR_C5_FLAG
   *         - TMR_HALL_FLAG
   *         - TMR_TRIGGER_FLAG
   *         - TMR_BRK_FLAG
@@ -1449,6 +1450,7 @@ flag_status tmr_flag_get(tmr_type *tmr_x, uint32_t tmr_flag)
   *         - TMR_C2_FLAG
   *         - TMR_C3_FLAG
   *         - TMR_C4_FLAG
+  *         - TMR_C5_FLAG
   *         - TMR_HALL_FLAG
   *         - TMR_TRIGGER_FLAG
   *         - TMR_BRK_FLAG
@@ -1509,25 +1511,6 @@ void tmr_output_enable(tmr_type *tmr_x, confirm_state new_state)
 void tmr_internal_clock_set(tmr_type *tmr_x)
 {
   tmr_x->stctrl_bit.smsel = TMR_SUB_MODE_DIABLE;
-}
-
-/**
-  * @brief  set tmr output channel fast
-  * @param  tmr_x: select the tmr peripheral.
-  *         this parameter can be one of the following values:
-  *         TMR1, TMR2, TMR3, TMR4, TMR5, TMR8, TMR9, TMR10,
-  *         TMR11, TMR12, TMR13, TMR14, TMR20
-  * @param  oc_fast
-  *         this parameter can be one of the following values:
-  *         - TMR_CHANNEL1_OUTPUT_FAST
-  *         - TMR_CHANNEL2_OUTPUT_FAST
-  *         - TMR_CHANNEL3_OUTPUT_FAST
-  *         - TMR_CHANNEL4_OUTPUT_FAST
-  * @retval none
-  */
-void tmr_output_channel_fast_set(tmr_type *tmr_x, tmr_channel_output_fast_type oc_fast)
-{
-  PERIPH_REG((uint32_t)(tmr_x), oc_fast) |= PERIPH_REG_BIT(oc_fast);
 }
 
 /**

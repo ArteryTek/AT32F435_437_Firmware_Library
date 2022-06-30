@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at_surf_f437_board_ov5640.c
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    ov5640 program
   **************************************************************************
   *                       Copyright notice  &  Disclaimer
@@ -135,7 +135,7 @@ error_status ov5640_reg_read(uint16_t reg, uint8_t *data)
   if(i2c_master_transmit(&hi2cx, (uint16_t)OV5640_ADDR, (uint8_t*)temp_data, 2, 1000000) != I2C_OK)
   {
     /* wait for the stop falg to be set  */
-    if(i2c_wait_flag(&hi2cx, I2C_STOPF_FLAG, RESET, I2C_EVENT_CHECK_ACKFAIL, 1000000) != I2C_OK)
+    if(i2c_wait_flag(&hi2cx, I2C_STOPF_FLAG, I2C_EVENT_CHECK_ACKFAIL, 1000000) != I2C_OK)
     {
       return ERROR;
     }
@@ -148,7 +148,7 @@ error_status ov5640_reg_read(uint16_t reg, uint8_t *data)
   if(i2c_master_receive(&hi2cx, (uint16_t)OV5640_ADDR, data, 1, 1000000) != I2C_OK)
   {
     /* wait for the stop falg to be set  */
-    if(i2c_wait_flag(&hi2cx, I2C_STOPF_FLAG, RESET, I2C_EVENT_CHECK_ACKFAIL, 1000000) != I2C_OK)
+    if(i2c_wait_flag(&hi2cx, I2C_STOPF_FLAG, I2C_EVENT_CHECK_ACKFAIL, 1000000) != I2C_OK)
     {
       return ERROR;
     }
@@ -704,7 +704,7 @@ void i2c_lowlevel_init(i2c_handle_type* hi2c)
   dmamux_enable(DMA1, TRUE);
 
   /* config i2c */
-  i2c_init(hi2c->i2cx, 0, I2Cx_CLKCTRL);
+  i2c_init(hi2c->i2cx, 0x0F, I2Cx_CLKCTRL);
 
   i2c_own_address1_set(hi2c->i2cx, I2C_ADDRESS_MODE_7BIT, I2Cx_ADDRESS);
 }

@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -146,7 +146,7 @@ void wakeup_timer_config(void)
   exint_init_type exint_init_struct;
 
   /* select the wakeup timer clock source */
-  ertc_wakeup_clock_set(ERTC_WAT_CLK_CK_A_16BITS);
+  ertc_wakeup_clock_set(ERTC_WAT_CLK_CK_B_16BITS);
 
   /* set wakeup time: 5s */
   ertc_wakeup_counter_set(5 - 1);

@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -27,10 +27,8 @@
 #include "at32f435_437.h"
 #include "at32f435_437_clock.h"
 #include "at_surf_f437_board_lcd.h"
-#include "at_surf_f437_board_audio.h"
 #include "at_surf_f437_board_player.h"
 #include "at_surf_f437_board_delay.h"
-#include "ff.h"
 
 FATFS fs;
 BYTE work[FF_MAX_SS];
@@ -116,6 +114,9 @@ int main(void)
   /* initialize key */
   key_init();
 
+  /* initialize joystick */
+  joystick_init();
+  
   /* initialize variable resistor */
   variable_resistor_init();
 

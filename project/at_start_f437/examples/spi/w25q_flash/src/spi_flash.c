@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     spi_flash.c
-  * @version  v2.0.8
-  * @date     2022-04-25
+  * @version  v2.0.9
+  * @date     2022-06-28
   * @brief    spi_flash source code
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -47,48 +47,49 @@ void spiflash_init(void)
   gpio_init_type gpio_initstructure;
   spi_init_type spi_init_struct;
 
-  crm_periph_clock_enable(CRM_GPIOA_PERIPH_CLOCK, TRUE);
+  crm_periph_clock_enable(CRM_GPIOC_PERIPH_CLOCK, TRUE);
+  crm_periph_clock_enable(CRM_GPIOD_PERIPH_CLOCK, TRUE);
   crm_periph_clock_enable(CRM_DMA1_PERIPH_CLOCK, TRUE);
-  /* software cs, pa4 as a general io to control flash cs */
+  /* software cs, pd0 as a general io to control flash cs */
   gpio_initstructure.gpio_out_type       = GPIO_OUTPUT_PUSH_PULL;
   gpio_initstructure.gpio_pull           = GPIO_PULL_UP;
   gpio_initstructure.gpio_mode           = GPIO_MODE_OUTPUT;
   gpio_initstructure.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
-  gpio_initstructure.gpio_pins = GPIO_PINS_4;
-  gpio_init(GPIOA, &gpio_initstructure);
+  gpio_initstructure.gpio_pins           = GPIO_PINS_0;
+  gpio_init(GPIOD, &gpio_initstructure);
 
   /* sck */
   gpio_initstructure.gpio_pull           = GPIO_PULL_UP;
   gpio_initstructure.gpio_mode           = GPIO_MODE_MUX;
-  gpio_initstructure.gpio_pins = GPIO_PINS_5;
-  gpio_init(GPIOA, &gpio_initstructure);
-  gpio_pin_mux_config(GPIOA, GPIO_PINS_SOURCE5, GPIO_MUX_5);
+  gpio_initstructure.gpio_pins           = GPIO_PINS_1;
+  gpio_init(GPIOD, &gpio_initstructure);
+  gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE1, GPIO_MUX_6);
 
   /* miso */
   gpio_initstructure.gpio_pull           = GPIO_PULL_UP;
-  gpio_initstructure.gpio_pins = GPIO_PINS_6;
-  gpio_init(GPIOA, &gpio_initstructure);
-  gpio_pin_mux_config(GPIOA, GPIO_PINS_SOURCE6, GPIO_MUX_5);
+  gpio_initstructure.gpio_pins           = GPIO_PINS_2;
+  gpio_init(GPIOC, &gpio_initstructure);
+  gpio_pin_mux_config(GPIOC, GPIO_PINS_SOURCE2, GPIO_MUX_5);
 
   /* mosi */
   gpio_initstructure.gpio_pull           = GPIO_PULL_UP;
-  gpio_initstructure.gpio_pins = GPIO_PINS_7;
-  gpio_init(GPIOA, &gpio_initstructure);
-  gpio_pin_mux_config(GPIOA, GPIO_PINS_SOURCE7, GPIO_MUX_5);
+  gpio_initstructure.gpio_pins           = GPIO_PINS_4;
+  gpio_init(GPIOD, &gpio_initstructure);
+  gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE4, GPIO_MUX_6);
 
   FLASH_CS_HIGH();
-  crm_periph_clock_enable(CRM_SPI1_PERIPH_CLOCK, TRUE);
+  crm_periph_clock_enable(CRM_SPI2_PERIPH_CLOCK, TRUE);
   spi_default_para_init(&spi_init_struct);
   spi_init_struct.transmission_mode = SPI_TRANSMIT_FULL_DUPLEX;
   spi_init_struct.master_slave_mode = SPI_MODE_MASTER;
-  spi_init_struct.mclk_freq_division = SPI_MCLK_DIV_8;
+  spi_init_struct.mclk_freq_division = SPI_MCLK_DIV_32;
   spi_init_struct.first_bit_transmission = SPI_FIRST_BIT_MSB;
   spi_init_struct.frame_bit_num = SPI_FRAME_8BIT;
   spi_init_struct.clock_polarity = SPI_CLOCK_POLARITY_HIGH;
   spi_init_struct.clock_phase = SPI_CLOCK_PHASE_2EDGE;
   spi_init_struct.cs_mode_selection = SPI_CS_SOFTWARE_MODE;
-  spi_init(SPI1, &spi_init_struct);
-  spi_enable(SPI1, TRUE);
+  spi_init(SPI2, &spi_init_struct);
+  spi_enable(SPI2, TRUE);
 
 }
 
@@ -317,30 +318,30 @@ void spi_bytes_write(uint8_t *pbuffer, uint32_t length)
   dma_init_struct.memory_base_addr = (uint32_t)&dummy_data;
   dma_init_struct.memory_data_width = DMA_MEMORY_DATA_WIDTH_BYTE;
   dma_init_struct.memory_inc_enable = FALSE;
-  dma_init_struct.peripheral_base_addr = (uint32_t)(&SPI1->dt);
+  dma_init_struct.peripheral_base_addr = (uint32_t)(&SPI2->dt);
   dma_init_struct.peripheral_data_width = DMA_PERIPHERAL_DATA_WIDTH_BYTE;
   dma_init_struct.peripheral_inc_enable = FALSE;
   dma_init_struct.priority = DMA_PRIORITY_VERY_HIGH;
   dma_init_struct.loop_mode_enable = FALSE;
   dma_init(DMA1_CHANNEL2, &dma_init_struct);
   dmamux_enable(DMA1, TRUE);
-  dmamux_init(DMA1MUX_CHANNEL2, DMAMUX_DMAREQ_ID_SPI1_RX);
+  dmamux_init(DMA1MUX_CHANNEL2, DMAMUX_DMAREQ_ID_SPI2_RX);
 
   dma_init_struct.buffer_size = length;
   dma_init_struct.direction = DMA_DIR_MEMORY_TO_PERIPHERAL;
   dma_init_struct.memory_base_addr = (uint32_t)pbuffer;
   dma_init_struct.memory_data_width = DMA_MEMORY_DATA_WIDTH_BYTE;
   dma_init_struct.memory_inc_enable = TRUE;
-  dma_init_struct.peripheral_base_addr = (uint32_t)(&SPI1->dt);
+  dma_init_struct.peripheral_base_addr = (uint32_t)(&SPI2->dt);
   dma_init_struct.peripheral_data_width = DMA_PERIPHERAL_DATA_WIDTH_BYTE;
   dma_init_struct.peripheral_inc_enable = FALSE;
   dma_init_struct.priority = DMA_PRIORITY_VERY_HIGH;
   dma_init_struct.loop_mode_enable = FALSE;
   dma_init(DMA1_CHANNEL3, &dma_init_struct);
-  dmamux_init(DMA1MUX_CHANNEL3, DMAMUX_DMAREQ_ID_SPI1_TX);
+  dmamux_init(DMA1MUX_CHANNEL3, DMAMUX_DMAREQ_ID_SPI2_TX);
 
-  spi_i2s_dma_transmitter_enable(SPI1, TRUE);
-  spi_i2s_dma_receiver_enable(SPI1, TRUE);
+  spi_i2s_dma_transmitter_enable(SPI2, TRUE);
+  spi_i2s_dma_receiver_enable(SPI2, TRUE);
 
   dma_channel_enable(DMA1_CHANNEL2, TRUE);
   dma_channel_enable(DMA1_CHANNEL3, TRUE);
@@ -351,15 +352,15 @@ void spi_bytes_write(uint8_t *pbuffer, uint32_t length)
   dma_channel_enable(DMA1_CHANNEL2, FALSE);
   dma_channel_enable(DMA1_CHANNEL3, FALSE);
 
-  spi_i2s_dma_transmitter_enable(SPI1, FALSE);
-  spi_i2s_dma_receiver_enable(SPI1, FALSE);
+  spi_i2s_dma_transmitter_enable(SPI2, FALSE);
+  spi_i2s_dma_receiver_enable(SPI2, FALSE);
 #else
   while(length--)
   {
-    while(spi_i2s_flag_get(SPI1, SPI_I2S_TDBE_FLAG) == RESET);
-    spi_i2s_data_transmit(SPI1, *pbuffer);
-    while(spi_i2s_flag_get(SPI1, SPI_I2S_RDBF_FLAG) == RESET);
-    dummy_data = spi_i2s_data_receive(SPI1);
+    while(spi_i2s_flag_get(SPI2, SPI_I2S_TDBE_FLAG) == RESET);
+    spi_i2s_data_transmit(SPI2, *pbuffer);
+    while(spi_i2s_flag_get(SPI2, SPI_I2S_RDBF_FLAG) == RESET);
+    dummy_data = spi_i2s_data_receive(SPI2);
     pbuffer++;
   }
 #endif
@@ -385,30 +386,30 @@ void spi_bytes_read(uint8_t *pbuffer, uint32_t length)
   dma_init_struct.memory_base_addr = (uint32_t)&write_value;
   dma_init_struct.memory_data_width = DMA_MEMORY_DATA_WIDTH_BYTE;
   dma_init_struct.memory_inc_enable = FALSE;
-  dma_init_struct.peripheral_base_addr = (uint32_t)(&SPI1->dt);
+  dma_init_struct.peripheral_base_addr = (uint32_t)(&SPI2->dt);
   dma_init_struct.peripheral_data_width = DMA_PERIPHERAL_DATA_WIDTH_BYTE;
   dma_init_struct.peripheral_inc_enable = FALSE;
   dma_init_struct.priority = DMA_PRIORITY_VERY_HIGH;
   dma_init_struct.loop_mode_enable = FALSE;
   dma_init(DMA1_CHANNEL3, &dma_init_struct);
   dmamux_enable(DMA1, TRUE);
-  dmamux_init(DMA1MUX_CHANNEL3, DMAMUX_DMAREQ_ID_SPI1_TX);
+  dmamux_init(DMA1MUX_CHANNEL3, DMAMUX_DMAREQ_ID_SPI2_TX);
 
   dma_init_struct.buffer_size = length;
   dma_init_struct.direction = DMA_DIR_PERIPHERAL_TO_MEMORY;
   dma_init_struct.memory_base_addr = (uint32_t)pbuffer;
   dma_init_struct.memory_data_width = DMA_MEMORY_DATA_WIDTH_BYTE;
   dma_init_struct.memory_inc_enable = TRUE;
-  dma_init_struct.peripheral_base_addr = (uint32_t)(&SPI1->dt);
+  dma_init_struct.peripheral_base_addr = (uint32_t)(&SPI2->dt);
   dma_init_struct.peripheral_data_width = DMA_PERIPHERAL_DATA_WIDTH_BYTE;
   dma_init_struct.peripheral_inc_enable = FALSE;
   dma_init_struct.priority = DMA_PRIORITY_VERY_HIGH;
   dma_init_struct.loop_mode_enable = FALSE;
   dma_init(DMA1_CHANNEL2, &dma_init_struct);
-  dmamux_init(DMA1MUX_CHANNEL2, DMAMUX_DMAREQ_ID_SPI1_RX);
+  dmamux_init(DMA1MUX_CHANNEL2, DMAMUX_DMAREQ_ID_SPI2_RX);
 
-  spi_i2s_dma_transmitter_enable(SPI1, TRUE);
-  spi_i2s_dma_receiver_enable(SPI1, TRUE);
+  spi_i2s_dma_transmitter_enable(SPI2, TRUE);
+  spi_i2s_dma_receiver_enable(SPI2, TRUE);
   dma_channel_enable(DMA1_CHANNEL2, TRUE);
   dma_channel_enable(DMA1_CHANNEL3, TRUE);
 
@@ -418,15 +419,15 @@ void spi_bytes_read(uint8_t *pbuffer, uint32_t length)
   dma_channel_enable(DMA1_CHANNEL2, FALSE);
   dma_channel_enable(DMA1_CHANNEL3, FALSE);
 
-  spi_i2s_dma_transmitter_enable(SPI1, FALSE);
-  spi_i2s_dma_receiver_enable(SPI1, FALSE);
+  spi_i2s_dma_transmitter_enable(SPI2, FALSE);
+  spi_i2s_dma_receiver_enable(SPI2, FALSE);
 #else
   while(length--)
   {
-    while(spi_i2s_flag_get(SPI1, SPI_I2S_TDBE_FLAG) == RESET);
-    spi_i2s_data_transmit(SPI1, write_value);
-    while(spi_i2s_flag_get(SPI1, SPI_I2S_RDBF_FLAG) == RESET);
-    *pbuffer = spi_i2s_data_receive(SPI1);
+    while(spi_i2s_flag_get(SPI2, SPI_I2S_TDBE_FLAG) == RESET);
+    spi_i2s_data_transmit(SPI2, write_value);
+    while(spi_i2s_flag_get(SPI2, SPI_I2S_RDBF_FLAG) == RESET);
+    *pbuffer = spi_i2s_data_receive(SPI2);
     pbuffer++;
   }
 #endif
@@ -496,12 +497,12 @@ uint16_t spiflash_read_id(void)
 uint8_t spi_byte_write(uint8_t data)
 {
   uint8_t brxbuff;
-  spi_i2s_dma_transmitter_enable(SPI1, FALSE);
-  spi_i2s_dma_receiver_enable(SPI1, FALSE);
-  spi_i2s_data_transmit(SPI1, data);
-  while(spi_i2s_flag_get(SPI1, SPI_I2S_RDBF_FLAG) == RESET);
-  brxbuff = spi_i2s_data_receive(SPI1);
-  while(spi_i2s_flag_get(SPI1, SPI_I2S_BF_FLAG) != RESET);
+  spi_i2s_dma_transmitter_enable(SPI2, FALSE);
+  spi_i2s_dma_receiver_enable(SPI2, FALSE);
+  spi_i2s_data_transmit(SPI2, data);
+  while(spi_i2s_flag_get(SPI2, SPI_I2S_RDBF_FLAG) == RESET);
+  brxbuff = spi_i2s_data_receive(SPI2);
+  while(spi_i2s_flag_get(SPI2, SPI_I2S_BF_FLAG) != RESET);
   return brxbuff;
 }
 
