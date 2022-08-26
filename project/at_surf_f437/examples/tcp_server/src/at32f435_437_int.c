@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_int.c
-  * @version  v2.0.9
-  * @date     2022-06-28
+  * @version  v2.1.0
+  * @date     2022-08-16
   * @brief    main interrupt service routines.
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -189,22 +189,4 @@ void PCA_I2C_ERR_IRQHandler(void)
 void EXINT3_IRQHandler(void)
 {
   pca9555_irq_handler();
-}
-
-/**
-  * @brief  this function handles emac handler.
-  * @param  none
-  * @retval none
-  */
-void EMAC_IRQHandler(void)
-{
-  /* handles all the received frames */
-  while(emac_received_packet_size_get() != 0)
-  {
-    lwip_pkt_handle();
-  }
-
-  /* clear the emac dma rx it pending bits */
-  emac_dma_flag_clear(EMAC_DMA_RI_FLAG);
-  emac_dma_flag_clear(EMAC_DMA_NIS_FLAG);
 }

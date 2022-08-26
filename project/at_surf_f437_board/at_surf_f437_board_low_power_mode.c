@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at_surf_f437_board_low_power_mode.c
-  * @version  v2.0.9
-  * @date     2022-06-28
+  * @version  v2.1.0
+  * @date     2022-08-16
   * @brief    the driver library of the low power mode
   **************************************************************************
   *                       Copyright notice & Disclaimer

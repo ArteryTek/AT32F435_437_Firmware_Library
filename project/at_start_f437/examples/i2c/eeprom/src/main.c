@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.9
-  * @date     2022-06-28
+  * @version  v2.1.0
+  * @date     2022-08-16
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -153,7 +153,7 @@ int main(void)
     }
 
     /* write data to memory device */
-    if((i2c_status = i2c_memory_write(&hi2cx, I2Cx_ADDRESS, 0, tx_buf1, BUF_SIZE, I2C_TIMEOUT)) != I2C_OK)
+    if((i2c_status = i2c_memory_write(&hi2cx, I2C_MEM_ADDR_WIDIH_8, I2Cx_ADDRESS, 0x00, tx_buf1, BUF_SIZE, I2C_TIMEOUT)) != I2C_OK)
     {
       error_handler(i2c_status);
     }
@@ -161,13 +161,13 @@ int main(void)
     delay_ms(5);
 
     /* read data from memory device */
-    if((i2c_status = i2c_memory_read(&hi2cx, I2Cx_ADDRESS, 0, rx_buf1, BUF_SIZE, I2C_TIMEOUT)) != I2C_OK)
+    if((i2c_status = i2c_memory_read(&hi2cx, I2C_MEM_ADDR_WIDIH_8, I2Cx_ADDRESS, 0x00, rx_buf1, BUF_SIZE, I2C_TIMEOUT)) != I2C_OK)
     {
       error_handler(i2c_status);
     }
 
     /* write data to memory device */
-    if((i2c_status = i2c_memory_write_int(&hi2cx, I2Cx_ADDRESS, 0, tx_buf2, BUF_SIZE, I2C_TIMEOUT)) != I2C_OK)
+    if((i2c_status = i2c_memory_write_int(&hi2cx, I2C_MEM_ADDR_WIDIH_8, I2Cx_ADDRESS, 0x00, tx_buf2, BUF_SIZE, I2C_TIMEOUT)) != I2C_OK)
     {
       error_handler(i2c_status);
     }
@@ -181,7 +181,7 @@ int main(void)
     delay_ms(5);
 
     /* read data from memory device */
-    if((i2c_status = i2c_memory_read_int(&hi2cx, I2Cx_ADDRESS, 0, rx_buf2, BUF_SIZE, I2C_TIMEOUT)) != I2C_OK)
+    if((i2c_status = i2c_memory_read_int(&hi2cx, I2C_MEM_ADDR_WIDIH_8, I2Cx_ADDRESS, 0x00, rx_buf2, BUF_SIZE, I2C_TIMEOUT)) != I2C_OK)
     {
       error_handler(i2c_status);
     }
@@ -193,7 +193,7 @@ int main(void)
     }
 
     /* write data to memory device */
-    if((i2c_status = i2c_memory_write_dma(&hi2cx, I2Cx_ADDRESS, 0, tx_buf3, BUF_SIZE, I2C_TIMEOUT)) != I2C_OK)
+    if((i2c_status = i2c_memory_write_dma(&hi2cx, I2C_MEM_ADDR_WIDIH_8, I2Cx_ADDRESS, 0x00, tx_buf3, BUF_SIZE, I2C_TIMEOUT)) != I2C_OK)
     {
       error_handler(i2c_status);
     }
@@ -207,7 +207,7 @@ int main(void)
     delay_ms(5);
 
     /* read data from memory device */
-    if((i2c_status = i2c_memory_read_dma(&hi2cx, I2Cx_ADDRESS, 0, rx_buf3, BUF_SIZE, I2C_TIMEOUT)) != I2C_OK)
+    if((i2c_status = i2c_memory_read_dma(&hi2cx, I2C_MEM_ADDR_WIDIH_8, I2Cx_ADDRESS, 0x00, rx_buf3, BUF_SIZE, I2C_TIMEOUT)) != I2C_OK)
     {
       error_handler(i2c_status);
     }

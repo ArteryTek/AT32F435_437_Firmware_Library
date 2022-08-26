@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.9
-  * @date     2022-06-28
+  * @version  v2.1.0
+  * @date     2022-08-16
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -193,10 +193,7 @@ int main(void)
   at32_led_on(LED3);
 
   /* wait clock stable */
-  for(delay_index = 0; delay_index < 600; delay_index++)
-  {
-    __NOP();
-  }
+  delay_us(120);
 
   /* resume ldo before system clock source enhance */
   pwc_ldo_output_voltage_set(PWC_LDO_OUTPUT_1V3);

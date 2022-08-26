@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     usbh_ctrl.h
-  * @version  v2.0.9
-  * @date     2022-06-28
+  * @version  v2.1.0
+  * @date     2022-08-16
   * @brief    usb header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -51,9 +51,9 @@ extern "C" {
 
 usb_sts_type usbh_ctrl_send_setup(usbh_core_type *uhost, uint8_t *buffer, uint8_t hc_num);
 usb_sts_type usbh_ctrl_recv_data(usbh_core_type *uhost, uint8_t *buffer,
-                            uint8_t length, uint16_t hc_num);
+                            uint16_t length, uint16_t hc_num);
 usb_sts_type usbh_ctrl_send_data(usbh_core_type *uhost, uint8_t *buffer,
-                            uint8_t length, uint16_t hc_num);
+                            uint16_t length, uint16_t hc_num);
 usb_sts_type usbh_ctrl_setup_handler(usbh_core_type *uhost);
 usb_sts_type usbh_ctrl_setup_wait_handler(usbh_core_type *uhost, uint32_t *timeout);
 usb_sts_type usbh_ctrl_data_in_handler(usbh_core_type *uhost);

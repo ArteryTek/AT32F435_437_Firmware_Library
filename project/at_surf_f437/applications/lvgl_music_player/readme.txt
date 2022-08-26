@@ -1,13 +1,13 @@
 /**
   **************************************************************************
   * @file     templates/readme.txt 
-  * @version  v2.0.9
-  * @date     2022-06-28
+  * @version  v2.1.0
+  * @date     2022-08-16
   * @brief    readme
   **************************************************************************
   */
 
-  this lvgl(v8) music demo is based on the at-start board. 
+  this lvgl(v8) music demo is based on the at-surf board. 
   the  pin to pin with LCD and XMC(16 bits):          
   GPIO        LCD_RESET      NRST
   GPIO        LCD_BL         IO0_0

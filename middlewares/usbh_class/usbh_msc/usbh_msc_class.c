@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     usbh_msc_class.c
-  * @version  v2.0.9
-  * @date     2022-06-28
+  * @version  v2.1.0
+  * @date     2022-08-16
   * @brief    usb host msc class type
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -132,7 +132,7 @@ static usb_sts_type uhost_reset_handler(void *uhost)
   usb_sts_type status = USB_OK;
   uint8_t i_index = 0;
 
-  if(puhost->class_handler->pdata)
+  if(puhost->class_handler->pdata == NULL)
   {
     return status;
   }

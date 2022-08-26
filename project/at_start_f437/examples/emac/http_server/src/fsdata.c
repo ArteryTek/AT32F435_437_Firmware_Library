@@ -174,7 +174,7 @@ static const unsigned char FSDATA_ALIGN_PRE data__404_html[] FSDATA_ALIGN_POST =
 static const unsigned int dummy_align__index_html = 2;
 #endif
 
-static const unsigned char FSDATA_ALIGN_PRE data_AT32F437_html[] FSDATA_ALIGN_POST = " \
+static const unsigned char FSDATA_ALIGN_PRE data_AT32F437_html[] FSDATA_ALIGN_POST = "\
 HTTP/1.0 200 OK\r\n\
 Content-Length: 9811\r\n\
 Content-Type: text/html\r\n\r\n\
@@ -344,7 +344,7 @@ Content-Type: text/html\r\n\r\n\
 "
 ;
 
-static const unsigned char FSDATA_ALIGN_PRE data_AT32F437LED_html[] FSDATA_ALIGN_POST = " \
+static const unsigned char FSDATA_ALIGN_PRE data_AT32F437LED_html[] FSDATA_ALIGN_POST = "\
 HTTP/1.0 200 OK\r\n\
 Content-Length: 4575\r\n\
 Content-Type: text/html\r\n\r\n\
@@ -373,7 +373,7 @@ Content-Type: text/html\r\n\r\n\
         <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color: rgb(255, 255, 255); width: 766px; text-align: left; margin-left: auto; margin-right: auto;\">\
             <tbody></tbody>\
         </table><br>\
-        <span style=\"font-family: Consolas;\"><big><big>On this page, you can control 4 LEDs on developing board:</big></big></span> <span style=\"font-family: Verdana;\"></span>\
+        <span style=\"font-family: Consolas;\"><big><big>On this page, you can control 3 LEDs on developing board:</big></big></span> <span style=\"font-family: Verdana;\"></span>\
         <form action=\"method=get\">\
             <span style=\"font-family: Verdana;\"></span>\
             <div style=\"text-align: center;\">\
@@ -397,7 +397,7 @@ Content-Type: text/html\r\n\r\n\
 "
 ;
 
-static const unsigned char FSDATA_ALIGN_PRE data_AT32F437ADC_html[] FSDATA_ALIGN_POST = " \
+static const unsigned char FSDATA_ALIGN_PRE data_AT32F437ADC_html[] FSDATA_ALIGN_POST = "\
 HTTP/1.0 200 OK\r\n\
 Content-Length: 4614\r\n\
 Content-Type: text/html\r\n\r\n\
@@ -439,7 +439,7 @@ Content-Type: text/html\r\n\r\n\
                 <tr>\
                     <td>\
                         <div>\
-                            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"%d\">\
+                            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"%4d\">\
                                 <tbody>\
                                     <tr>\
                                         <td bgcolor=\"#33FF00\" style=\"text-align: right;\">&nbsp;</td>\

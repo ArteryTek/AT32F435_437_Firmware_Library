@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at_surf_f437_board_variable_resistor.h
-  * @version  v2.0.9
-  * @date     2022-06-28
+  * @version  v2.1.0
+  * @date     2022-08-16
   * @brief    variable resistor application libray header file
   **************************************************************************
   *                       Copyright notice & Disclaimer

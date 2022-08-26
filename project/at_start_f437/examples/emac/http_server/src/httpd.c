@@ -112,13 +112,21 @@ typedef struct {
   uint8_t shtml;
 } default_filename;
 
+volatile static const default_filename httpd_default_filenames[] = {
+  {"/index.shtml", 1 },
+  {"/index.ssi",   1 },
+  {"/index.shtm",  1 },
+  {"/AT32F437.html",   0 },
+  {"/AT32F437LED.html",   0 },
+  {"/AT32F437ADC.html",   0 }
+};
 char html_tmp[4096] = {0};
 
 #define NUM_DEFAULT_FILENAMES LWIP_ARRAYSIZE(httpd_default_filenames)
 
 #if LWIP_HTTPD_SUPPORT_REQUESTLIST
 /** HTTP request is copied here from pbufs for simple parsing */
-//static char httpd_req_buf[LWIP_HTTPD_MAX_REQ_LENGTH + 1];
+volatile static char httpd_req_buf[LWIP_HTTPD_MAX_REQ_LENGTH + 1];
 #endif /* LWIP_HTTPD_SUPPORT_REQUESTLIST */
 
 #if LWIP_HTTPD_SUPPORT_POST

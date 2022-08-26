@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_crm.h
-  * @version  v2.0.9
-  * @date     2022-06-28
+  * @version  v2.1.0
+  * @date     2022-08-16
   * @brief    at32f435_437 crm header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -398,6 +398,9 @@ typedef enum
   CRM_GPIOG_PERIPH_LOWPOWER              = MAKE_VALUE(0x50, 6),  /*!< gpiog sleep mode periph clock */
   CRM_GPIOH_PERIPH_LOWPOWER              = MAKE_VALUE(0x50, 7),  /*!< gpioh sleep mode periph clock */
   CRM_CRC_PERIPH_LOWPOWER                = MAKE_VALUE(0x50, 12), /*!< crc sleep mode periph clock */
+  CRM_FLASH_PERIPH_LOWPOWER              = MAKE_VALUE(0x50, 15), /*!< flash sleep mode periph clock */
+  CRM_SRAM1_PERIPH_LOWPOWER              = MAKE_VALUE(0x50, 16), /*!< sram1 sleep mode periph clock */
+  CRM_SRAM2_PERIPH_LOWPOWER              = MAKE_VALUE(0x50, 17), /*!< sram2 sleep mode periph clock */
   CRM_EDMA_PERIPH_LOWPOWER               = MAKE_VALUE(0x50, 21), /*!< edma sleep mode periph clock */
   CRM_DMA1_PERIPH_LOWPOWER               = MAKE_VALUE(0x50, 22), /*!< dma1 sleep mode periph clock */
   CRM_DMA2_PERIPH_LOWPOWER               = MAKE_VALUE(0x50, 24), /*!< dma2 sleep mode periph clock */
@@ -470,6 +473,9 @@ typedef enum
   CRM_GPIOG_PERIPH_LOWPOWER              = MAKE_VALUE(0x50, 6),  /*!< gpiog sleep mode periph clock */
   CRM_GPIOH_PERIPH_LOWPOWER              = MAKE_VALUE(0x50, 7),  /*!< gpioh sleep mode periph clock */
   CRM_CRC_PERIPH_LOWPOWER                = MAKE_VALUE(0x50, 12), /*!< crc sleep mode periph clock */
+  CRM_FLASH_PERIPH_LOWPOWER              = MAKE_VALUE(0x50, 15), /*!< flash sleep mode periph clock */
+  CRM_SRAM1_PERIPH_LOWPOWER              = MAKE_VALUE(0x50, 16), /*!< sram1 sleep mode periph clock */
+  CRM_SRAM2_PERIPH_LOWPOWER              = MAKE_VALUE(0x50, 17), /*!< sram2 sleep mode periph clock */
   CRM_EDMA_PERIPH_LOWPOWER               = MAKE_VALUE(0x50, 21), /*!< edma sleep mode periph clock */
   CRM_DMA1_PERIPH_LOWPOWER               = MAKE_VALUE(0x50, 22), /*!< dma1 sleep mode periph clock */
   CRM_DMA2_PERIPH_LOWPOWER               = MAKE_VALUE(0x50, 24), /*!< dma2 sleep mode periph clock */

@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     usbh_int.c
-  * @version  v2.0.9
-  * @date     2022-06-28
+  * @version  v2.1.0
+  * @date     2022-08-16
   * @brief    usb host interrupt request
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -71,7 +71,7 @@ void usbh_irq_handler(otg_core_type *otgdev)
       usbh_wakeup_handler(uhost);
       usb_global_clear_interrupt(usbx, USB_OTG_WKUP_FLAG);
     }
-    if(intsts & USB_OTG_RXFLVL_FLAG)
+    while(usbx->gintsts & USB_OTG_RXFLVL_FLAG)
     {
       usbh_rx_qlvl_handler(uhost);
       usb_global_clear_interrupt(usbx, USB_OTG_RXFLVL_FLAG);
@@ -264,8 +264,7 @@ void usbh_hch_in_handler(usbh_core_type *uhost, uint8_t chn)
     {
       uhost->err_cnt[chn] = 0;
       usb_chh->hcintmsk_bit.chhltdmsk = TRUE;
-      usb_chh->hcchar_bit.chdis = FALSE;
-      usb_chh->hcchar_bit.chena = TRUE;
+      usb_hch_halt(usbx, chn);
     }
     uhost->hch[chn].state = HCH_NAK;
     usb_chh->hcint = USB_OTG_HC_NAK_FLAG;

@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_crm.c
-  * @version  v2.0.9
-  * @date     2022-06-28
+  * @version  v2.1.0
+  * @date     2022-08-16
   * @brief    contains all the functions for the crm firmware library
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -282,6 +282,7 @@ void crm_periph_reset(crm_periph_reset_type value, confirm_state new_state)
   *         - CRM_USART6_PERIPH_LOWPOWER    - CRM_ADC1_PERIPH_LOWPOWER      - CRM_ADC2_PERIPH_LOWPOWER     - CRM_ADC3_PERIPH_LOWPOWER
   *         - CRM_SPI1_PERIPH_LOWPOWER      - CRM_SPI4_PERIPH_LOWPOWER      - CRM_SCFG_PERIPH_LOWPOWER     - CRM_TMR9_PERIPH_LOWPOWER
   *         - CRM_TMR10_PERIPH_LOWPOWER     - CRM_TMR11_PERIPH_LOWPOWER     - CRM_TMR20_PERIPH_LOWPOWER    - CRM_ACC_PERIPH_LOWPOWER
+  *         - CRM_FLASH_PERIPH_LOWPOWER     - CRM_SRAM1_PERIPH_LOWPOWER     - CRM_SRAM2_PERIPH_LOWPOWER
   * @param  new_state (TRUE or FALSE)
   * @retval none
   */

@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     netconf.h
-  * @version  v2.0.9
-  * @date     2022-06-28
+  * @version  v2.1.0
+  * @date     2022-08-16
   * @brief    This file contains all the functions prototypes for the netconf.c
   *           file.
   **************************************************************************

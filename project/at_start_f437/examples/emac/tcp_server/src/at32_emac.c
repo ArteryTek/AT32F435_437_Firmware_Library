@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32_emac.c
-  * @version  v2.0.9
-  * @date     2022-06-28
+  * @version  v2.1.0
+  * @date     2022-08-16
   * @brief    emac config program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -69,7 +69,9 @@ error_status emac_system_init(void)
   */
 void emac_nvic_configuration(void)
 {
-  nvic_irq_enable(EMAC_IRQn, 1, 0);
+  /*
+   nvic_irq_enable(EMAC_IRQn, 1, 0);
+  */
 }
 
 /**
@@ -227,6 +229,11 @@ error_status emac_layer2_configuration(void)
   emac_control_para_init(&mac_control_para);
 
   mac_control_para.auto_nego = EMAC_AUTO_NEGOTIATION_ON;
+#ifdef CHECKSUM_BY_HARDWARE
+  mac_control_para.ipv4_checksum_offload = TRUE;
+#else
+  mac_control_para.ipv4_checksum_offload = FALSE;
+#endif
 
   if(emac_phy_init(&mac_control_para) == ERROR)
   {
@@ -263,7 +270,7 @@ void static reset_phy(void)
   gpio_init_type gpio_init_struct = {0};
   crm_periph_clock_enable(CRM_GPIOE_PERIPH_CLOCK, TRUE);
   crm_periph_clock_enable(CRM_GPIOG_PERIPH_CLOCK, TRUE);
-  gpio_pin_mux_config(GPIOC, GPIO_PINS_SOURCE8, GPIO_MUX_0);
+  
   gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
   gpio_init_struct.gpio_mode = GPIO_MODE_OUTPUT;
   gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
@@ -274,7 +281,11 @@ void static reset_phy(void)
   gpio_init_struct.gpio_pins = GPIO_PINS_15;
   gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
   gpio_init(GPIOG, &gpio_init_struct);
+  
+  /* exit power down mode */
   gpio_bits_reset(GPIOG, GPIO_PINS_15);
+  
+  /*reset phy */
   gpio_bits_reset(GPIOE, GPIO_PINS_15);
   delay_ms(2);
   gpio_bits_set(GPIOE, GPIO_PINS_15);

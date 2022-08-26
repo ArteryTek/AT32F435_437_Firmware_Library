@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.9
-  * @date     2022-06-28
+  * @version  v2.1.0
+  * @date     2022-08-16
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -197,8 +197,8 @@ int main(void)
     fre_sect = fre_clust * pt_fs->csize;
 
     /* calculate capacity */
-    tot_sect = tot_sect * 512 / 1024 / 1024;
-    fre_sect = fre_sect * 512 / 1024 / 1024;
+    tot_sect = tot_sect / 2 / 1024;
+    fre_sect = fre_sect / 2 / 1024;
 
     /* display the total capacity */
     lcd_string_show(10, 100, 300, 24, 24, (uint8_t *)"card capacity:      MB");

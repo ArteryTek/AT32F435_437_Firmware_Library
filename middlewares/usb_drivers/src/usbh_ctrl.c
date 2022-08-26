@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     usbh_ctrl.c
-  * @version  v2.0.9
-  * @date     2022-06-28
+  * @version  v2.1.0
+  * @date     2022-08-16
   * @brief    usb host control request
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -69,7 +69,7 @@ usb_sts_type usbh_ctrl_send_setup(usbh_core_type *uhost, uint8_t *buffer, uint8_
   * @retval status: usb_sts_type status
   */
 usb_sts_type usbh_ctrl_recv_data(usbh_core_type *uhost, uint8_t *buffer,
-                            uint8_t length, uint16_t hc_num)
+                            uint16_t length, uint16_t hc_num)
 {
   uhost->hch[hc_num].dir = 1;
   uhost->hch[hc_num].data_pid = HCH_PID_DATA1;
@@ -88,7 +88,7 @@ usb_sts_type usbh_ctrl_recv_data(usbh_core_type *uhost, uint8_t *buffer,
   * @retval status: usb_sts_type status
   */
 usb_sts_type usbh_ctrl_send_data(usbh_core_type *uhost, uint8_t *buffer,
-                            uint8_t length, uint16_t hc_num)
+                            uint16_t length, uint16_t hc_num)
 {
   uhost->hch[hc_num].dir = 0;
   uhost->hch[hc_num].trans_buf = buffer;

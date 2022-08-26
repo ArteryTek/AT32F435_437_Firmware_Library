@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at_surf_f437_board_pca9555.c
-  * @version  v2.0.9
-  * @date     2022-06-28
+  * @version  v2.1.0
+  * @date     2022-08-16
   * @brief    the driver library of the pca9555
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -42,7 +42,7 @@ i2c_handle_type hi2c_pca;
   */
 error_status pca9555_io_input_read(void)
 {
-  pca_i2c_status = i2c_memory_read_dma(&hi2c_pca, PCA_I2C_ADDRESS, PCA_REG_INPUT, (uint8_t *)&pca_io.io, 2, PCA_I2C_TIMEOUT);
+  pca_i2c_status = i2c_memory_read_dma(&hi2c_pca, I2C_MEM_ADDR_WIDIH_8, PCA_I2C_ADDRESS, PCA_REG_INPUT, (uint8_t *)&pca_io.io, 2, PCA_I2C_TIMEOUT);
 
   /* write data to memory device */
   if(pca_i2c_status != I2C_OK)
@@ -123,7 +123,7 @@ error_status pca9555_input_mode_config(uint16_t pins)
 {
   pca_io_mode.io |= pins;
 
-  pca_i2c_status = i2c_memory_write_dma(&hi2c_pca, PCA_I2C_ADDRESS, PCA_REG_CTRL, (uint8_t *)&pca_io_mode.io, 2, PCA_I2C_TIMEOUT);
+  pca_i2c_status = i2c_memory_write_dma(&hi2c_pca, I2C_MEM_ADDR_WIDIH_8, PCA_I2C_ADDRESS, PCA_REG_CTRL, (uint8_t *)&pca_io_mode.io, 2, PCA_I2C_TIMEOUT);
 
   /* write data to memory device */
   if(pca_i2c_status != I2C_OK)
@@ -170,7 +170,7 @@ error_status pca9555_out_mode_config(uint16_t pins)
 {
   pca_io_mode.io &= ~pins;
 
-  pca_i2c_status = i2c_memory_write_dma(&hi2c_pca, PCA_I2C_ADDRESS, PCA_REG_CTRL, (uint8_t *)&pca_io_mode.io, 2, PCA_I2C_TIMEOUT);
+  pca_i2c_status = i2c_memory_write_dma(&hi2c_pca, I2C_MEM_ADDR_WIDIH_8, PCA_I2C_ADDRESS, PCA_REG_CTRL, (uint8_t *)&pca_io_mode.io, 2, PCA_I2C_TIMEOUT);
 
   /* write data to memory device */
   if(pca_i2c_status != I2C_OK)
@@ -258,7 +258,7 @@ error_status pca9555_bits_reset(uint16_t pins)
 {
   pca_io.io &= ~pins;
 
-  pca_i2c_status = i2c_memory_write_dma(&hi2c_pca, PCA_I2C_ADDRESS, PCA_REG_OUTPUT, (uint8_t *)&pca_io.io, 2, PCA_I2C_TIMEOUT);
+  pca_i2c_status = i2c_memory_write_dma(&hi2c_pca, I2C_MEM_ADDR_WIDIH_8, PCA_I2C_ADDRESS, PCA_REG_OUTPUT, (uint8_t *)&pca_io.io, 2, PCA_I2C_TIMEOUT);
 
   /* write data to memory device */
   if(pca_i2c_status != I2C_OK)
@@ -303,7 +303,7 @@ error_status pca9555_bits_set(uint16_t pins)
 {
   pca_io.io |= pins;
 
-  pca_i2c_status = i2c_memory_write_dma(&hi2c_pca, PCA_I2C_ADDRESS, PCA_REG_OUTPUT, (uint8_t *)&pca_io.io, 2, PCA_I2C_TIMEOUT);
+  pca_i2c_status = i2c_memory_write_dma(&hi2c_pca, I2C_MEM_ADDR_WIDIH_8, PCA_I2C_ADDRESS, PCA_REG_OUTPUT, (uint8_t *)&pca_io.io, 2, PCA_I2C_TIMEOUT);
 
   /* write data to memory device */
   if(pca_i2c_status != I2C_OK)

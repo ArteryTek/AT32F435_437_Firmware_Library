@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at_surf_f437_board_lcd.h
-  * @version  v2.0.9
-  * @date     2022-06-28
+  * @version  v2.1.0
+  * @date     2022-08-16
   * @brief    header file for at-start board. set of firmware functions to
   *           manage leds and push-button. initialize delay function.
   **************************************************************************
@@ -76,7 +76,7 @@
 #define LCD_H                            480
 
 /**
-  * @brief the address of write data & command (xmc_a0)
+  * @brief the address of write data & command (xmc_a10)
   */
 #define XMC_LCD_COMMAND                  (0x60000000)
 #define XMC_LCD_DATA                     (0x60000000 | 0x800)

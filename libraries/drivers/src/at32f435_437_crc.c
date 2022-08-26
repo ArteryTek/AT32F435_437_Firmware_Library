@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at32f435_437_crc.c
-  * @version  v2.0.9
-  * @date     2022-06-28
+  * @version  v2.1.0
+  * @date     2022-08-16
   * @brief    contains all the functions for the crc firmware library
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -106,7 +106,7 @@ void crc_common_data_set(uint8_t cdt_value)
   * @param  none
   * @retval 8-bit value of the common data register
   */
-uint8_t crc_common_date_get(void)
+uint8_t crc_common_data_get(void)
 {
   return (CRC->cdt_bit.cdt);
 }

@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     at_surf_f437_board_sd_card.h
-  * @version  v2.0.9
-  * @date     2022-06-28
+  * @version  v2.1.0
+  * @date     2022-08-16
   * @brief    this file contains all the functions prototypes for the sd/mmc
   *           card at_surf_f437_board_sd_card driver firmware library.
   **************************************************************************

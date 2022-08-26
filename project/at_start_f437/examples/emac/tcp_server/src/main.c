@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.0.9
-  * @date     2022-06-28
+  * @version  v2.1.0
+  * @date     2022-08-16
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -71,6 +71,10 @@ int main(void)
 
   while(1)
   {
+    /* lwip receive handle */
+    lwip_rx_loop_handler();
+    
+    /*timeout handle*/
     lwip_periodic_handle(local_time);
   }
 }

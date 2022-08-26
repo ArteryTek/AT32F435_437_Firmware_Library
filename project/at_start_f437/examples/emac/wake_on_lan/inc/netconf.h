@@ -1,8 +1,8 @@
 /**
   **************************************************************************
   * @file     netconf.h
-  * @version  v2.0.9
-  * @date     2022-06-28
+  * @version  v2.1.0
+  * @date     2022-08-16
   * @brief    This file contains all the functions prototypes for the netconf.c
   *           file.
   **************************************************************************
@@ -50,6 +50,7 @@ void tcpip_stack_init(void);
 void lwip_pkt_handle(void);
 void time_update(void);
 void lwip_periodic_handle(volatile uint32_t localtime);
+void lwip_rx_loop_handler(void);
 
 
 #ifdef __cplusplus
