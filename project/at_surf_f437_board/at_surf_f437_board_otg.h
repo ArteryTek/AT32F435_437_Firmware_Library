@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     at_surf_f437_board_otg.h
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    otg application libray header file
   **************************************************************************
   *                       Copyright notice & Disclaimer

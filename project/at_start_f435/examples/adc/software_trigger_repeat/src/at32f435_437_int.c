@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     at32f435_437_int.c
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    main interrupt service routines.
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -146,7 +144,7 @@ void DMA1_Channel1_IRQHandler(void)
   if(dma_flag_get(DMA1_FDT1_FLAG) != RESET)
   {
     dma_flag_clear(DMA1_FDT1_FLAG);
-    dma_trans_complete_flag = 1;
+    dma_trans_complete_flag++;
   }
 }
 

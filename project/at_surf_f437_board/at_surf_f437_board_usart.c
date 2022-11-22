@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     at_surf_f437_board_usart.c
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    set of firmware functions to manage usart.
   **************************************************************************
   *                       Copyright notice & Disclaimer

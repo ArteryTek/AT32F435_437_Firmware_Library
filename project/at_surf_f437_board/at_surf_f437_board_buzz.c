@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     at_surf_f437_board_buzz.c
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    the driver library of the buzz
   **************************************************************************
   *                       Copyright notice & Disclaimer

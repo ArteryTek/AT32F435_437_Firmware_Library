@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     readme.txt
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    readme
   **************************************************************************
   */
@@ -18,4 +16,4 @@
   clock out will output frequency wave. if crm_pll_parameter_calculate() can 
   calculate pll parameter value accurately, led4 blink, else led2 blink.
 
-  for more detailed information. please refer to the application note document AN0084.
+  for more detailed information. please refer to the application note document AN0084.

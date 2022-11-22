@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     at32f435_437_edma.c
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    contains all the functions for the edma firmware library
   **************************************************************************
   *                       Copyright notice & Disclaimer

@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     readme.txt
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    readme
   **************************************************************************
   */
@@ -13,4 +11,4 @@
   of a 32-word data buffer stored in flash memory to the reception buffer in ram.
   if received data right, the three leds will turn on. 
 
-  for more detailed information. please refer to the application note document AN0090.
+  for more detailed information. please refer to the application note document AN0090.

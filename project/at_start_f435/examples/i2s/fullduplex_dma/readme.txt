@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     readme.txt
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    readme
   **************************************************************************
   */
@@ -16,4 +14,4 @@
 		pc2(ext_sd) rx      <--->     pc11(ext_sd) tx
 		pd4(sd) tx          <--->     pc12(sd) rx
 
-  for more detailed information. please refer to the application note document AN0102.
+  for more detailed information. please refer to the application note document AN0102.

@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     at32f435_437_ertc.c
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    contains all the functions for the ertc firmware library
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -98,14 +96,8 @@ error_status ertc_wait_update(void)
 {
   uint32_t timeout = ERTC_TIMEOUT * 2;
 
-  /* disable write protection */
-  ertc_write_protect_disable();
-
   /* clear updf flag */
   ERTC->sts = ~(ERTC_UPDF_FLAG | 0x00000080) | (ERTC->sts_bit.imen << 7);
-
-  /* enable write protection */
-  ertc_write_protect_enable();
 
   while(ERTC->sts_bit.updf == 0)
   {
@@ -163,9 +155,6 @@ error_status ertc_wait_flag(uint32_t flag, flag_status status)
 error_status ertc_init_mode_enter(void)
 {
   uint32_t timeout = ERTC_TIMEOUT * 2;
-
-  /* disable write protection */
-  ertc_write_protect_disable();
 
   if(ERTC->sts_bit.imf == 0)
   {

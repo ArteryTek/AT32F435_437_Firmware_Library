@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     at32f435_437_usb.c
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    contains all the functions for the usb firmware library
   **************************************************************************
   *                       Copyright notice & Disclaimer

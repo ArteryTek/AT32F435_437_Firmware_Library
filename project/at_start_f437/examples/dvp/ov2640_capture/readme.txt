@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     readme.txt 
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    readme
   **************************************************************************
   */
@@ -57,4 +55,4 @@ DMA, and the image will be displayed on LCD.
   - i2c2_scl  ph2     --->   scl
   - i2c2_sda  ph3     --->   sda
 
-  for more detailed information. please refer to the application note document AN0087.
+  for more detailed information. please refer to the application note document AN0087.

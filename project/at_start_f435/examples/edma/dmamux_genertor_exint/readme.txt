@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     readme.txt
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    readme
   **************************************************************************
   */
@@ -15,4 +13,4 @@
   send four dma request when the rising edge of pa1.when all data transfered, the 
   three leds will turn on.
 
-  for more detailed information. please refer to the application note document AN0090.
+  for more detailed information. please refer to the application note document AN0090.

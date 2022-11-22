@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     FlashDev.c
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    device description for new device flash
   **************************************************************************
   *                       Copyright notice & Disclaimer

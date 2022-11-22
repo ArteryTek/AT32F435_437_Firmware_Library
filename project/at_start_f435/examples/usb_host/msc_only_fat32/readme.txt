@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     readme.txt 
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    readme
   **************************************************************************
   */
@@ -11,4 +9,4 @@
   
   when an usb device is attached to the host port, the device is enumerated and
   checked whether it msc device.
-  for more detailed information, please refer to the application note document AN0094.
+  for more detailed information, please refer to the application note document AN0094.

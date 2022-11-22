@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     readme.txt
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    readme
   **************************************************************************
   */
@@ -32,4 +30,4 @@
   0x61626364 0x65666768
   0x71727374 0x75767778
   
-  for more detailed information. please refer to the application note document AN0090.
+  for more detailed information. please refer to the application note document AN0090.

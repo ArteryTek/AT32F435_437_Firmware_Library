@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     readme.txt
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    readme
   **************************************************************************
   */
@@ -48,4 +46,4 @@
 - connect the tmr1 break pin tmr1_stpin pin (pb.12) to the gnd. to generate a
   break event, switch this pin level from 0v to 3.3v.
 
-  for more detailed information. please refer to the application note document AN0085.
+  for more detailed information. please refer to the application note document AN0085.

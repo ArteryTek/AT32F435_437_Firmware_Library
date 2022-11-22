@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     at32f435_437_qspi.c
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    contain all the functions for qspi firmware library
   **************************************************************************
   *                       Copyright notice & Disclaimer

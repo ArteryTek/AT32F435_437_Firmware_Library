@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     at_surf_f437_board_delay.c
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    set of firmware functions to manage delay.
   **************************************************************************
   *                       Copyright notice & Disclaimer

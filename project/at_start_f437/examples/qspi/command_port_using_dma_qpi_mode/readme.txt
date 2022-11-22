@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     readme.txt 
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    readme
   **************************************************************************
   */
@@ -19,4 +17,4 @@
   - qspi sck   --->   pf10
   - qspi cs    --->   pg6
 
-  for more detailed information. please refer to the application note document AN0088.
+  for more detailed information. please refer to the application note document AN0088.

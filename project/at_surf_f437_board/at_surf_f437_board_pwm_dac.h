@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     at_surf_f437_board_pwm_dac.h
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    dac application libray header file
   **************************************************************************
   *                       Copyright notice & Disclaimer

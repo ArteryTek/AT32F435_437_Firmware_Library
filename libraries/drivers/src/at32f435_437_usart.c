@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     at32f435_437_usart.c
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    contains all the functions for the usart firmware library
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -86,11 +84,14 @@ void usart_reset(usart_type* usart_x)
     crm_periph_reset(CRM_UART7_PERIPH_RESET, TRUE);
     crm_periph_reset(CRM_UART7_PERIPH_RESET, FALSE);
   }
+#if defined (AT32F435Zx) || defined (AT32F435Vx) || defined (AT32F435Rx) || \
+    defined (AT32F437Zx) || defined (AT32F437Vx) || defined (AT32F437Rx)
   else if(usart_x == UART8)
   {
     crm_periph_reset(CRM_UART8_PERIPH_RESET, TRUE);
     crm_periph_reset(CRM_UART8_PERIPH_RESET, FALSE);
   }
+#endif
 }
 
 /**

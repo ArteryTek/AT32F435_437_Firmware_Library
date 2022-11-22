@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     readme.txt
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    readme
   **************************************************************************
   */
@@ -13,4 +11,4 @@
   wake-up pin 1！！！！！！pa0
   wake-up pin 2！！！！！！pc13
 
-  for more detailed information. please refer to the application note document AN0100.
+  for more detailed information. please refer to the application note document AN0100.

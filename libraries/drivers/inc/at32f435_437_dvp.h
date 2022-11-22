@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     at32f435_437_dvp.h
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    at32f435_437 dvp header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -301,7 +299,7 @@ typedef struct
       __IO uint32_t pcds                 : 1; /* [18] */
       __IO uint32_t lcdc                 : 1; /* [19] */
       __IO uint32_t lcds                 : 1; /* [20] */
-      __IO uint32_t                      : 11;/* [31:21] */
+      __IO uint32_t reserved3            : 11;/* [31:21] */
     } ctrl_bit;
   };
 

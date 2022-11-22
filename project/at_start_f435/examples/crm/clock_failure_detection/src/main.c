@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -102,9 +100,9 @@ void clock_failure_detection_handler(void)
   *         - apb2clk             = 144000000
   *         - apb1div             = 2
   *         - apb1clk             = 144000000
-  *         - pll_ns              = 72
+  *         - pll_ns              = 144
   *         - pll_ms              = 1
-  *         - pll_fr              = 2
+  *         - pll_fr              = 4
   * @param  none
   * @retval none
   */
@@ -130,7 +128,7 @@ static void sclk_288m_hick_config(void)
   }
 
   /* config pll clock resource */
-  crm_pll_config(CRM_PLL_SOURCE_HICK, 72, 1, CRM_PLL_FR_2);
+  crm_pll_config(CRM_PLL_SOURCE_HICK, 144, 1, CRM_PLL_FR_4);
 
   /* enable pll */
   crm_clock_source_enable(CRM_CLOCK_SOURCE_PLL, TRUE);
@@ -143,10 +141,10 @@ static void sclk_288m_hick_config(void)
   /* config ahbclk */
   crm_ahb_div_set(CRM_AHB_DIV_1);
 
-  /* config apb2clk */
+  /* config apb2clk, the maximum frequency of APB1/APB2 clock is 144 MHz  */
   crm_apb2_div_set(CRM_APB2_DIV_2);
 
-  /* config apb1clk */
+  /* config apb1clk, the maximum frequency of APB1/APB2 clock is 144 MHz  */
   crm_apb1_div_set(CRM_APB1_DIV_2);
 
   /* enable auto step mode */

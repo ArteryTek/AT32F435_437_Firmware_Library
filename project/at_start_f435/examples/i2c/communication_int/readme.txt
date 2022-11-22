@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     communicationint/readme.txt 
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    readme
   **************************************************************************
   */
@@ -21,4 +19,4 @@
     1. scl --- pb6
     2. sda --- pb7
 
-  for more detailed information. please refer to the application note document AN0091.
+  for more detailed information. please refer to the application note document AN0091.

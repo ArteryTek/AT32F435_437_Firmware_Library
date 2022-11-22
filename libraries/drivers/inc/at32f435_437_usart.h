@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     at32f435_437_usart.h
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    at32f435_437 usart header file
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -352,7 +350,10 @@ typedef struct
 #define UART5                            ((usart_type *) UART5_BASE)
 #define USART6                           ((usart_type *) USART6_BASE)
 #define UART7                            ((usart_type *) UART7_BASE)
+#if defined (AT32F435Zx) || defined (AT32F435Vx) || defined (AT32F435Rx) || \
+    defined (AT32F437Zx) || defined (AT32F437Vx) || defined (AT32F437Rx)
 #define UART8                            ((usart_type *) UART8_BASE)
+#endif
 
 /** @defgroup USART_exported_functions
   * @{

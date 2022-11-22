@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     at_surf_f437_board_qspi_flash.h
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    qspi flash application libray header file
   **************************************************************************
   *                       Copyright notice & Disclaimer

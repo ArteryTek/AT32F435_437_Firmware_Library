@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     at32f435_437_int.h
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    header file of main interrupt service routines.
   **************************************************************************
   *                       Copyright notice & Disclaimer

@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     at_surf_f437_board_rs485.h
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    rs485 application libray header file
   **************************************************************************
   *                       Copyright notice & Disclaimer

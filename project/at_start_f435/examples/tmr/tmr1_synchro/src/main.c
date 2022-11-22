@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     main.c
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    main program
   **************************************************************************
   *                       Copyright notice & Disclaimer
@@ -100,6 +98,7 @@ int main(void)
 
   /* tmr1 time base configuration */
   timerperiod = ((crm_clocks_freq_struct.apb1_freq * 2) / 750000) - 1;
+  tmr_repetition_counter_set(TMR1, 4);
   tmr_base_init(TMR1, timerperiod, 0);
   tmr_cnt_dir_set(TMR1, TMR_COUNT_UP);
   tmr_clock_source_div_set(TMR1, TMR_CLOCK_DIV1);

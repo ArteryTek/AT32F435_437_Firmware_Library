@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     FlashPrg.c
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    device algorithm for new device flash
   **************************************************************************
   *                       Copyright notice & Disclaimer

@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     at32f435_437_tmr.c
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    contains all the functions for the tmr firmware library
   **************************************************************************
   *                       Copyright notice & Disclaimer

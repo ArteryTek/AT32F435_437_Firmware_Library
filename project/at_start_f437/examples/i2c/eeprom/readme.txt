@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     eeprom/readme.txt 
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    readme
   **************************************************************************
   */
@@ -19,4 +17,4 @@
     1. scl --- pb10
     2. sda --- pb11
 
-  for more detailed information. please refer to the application note document AN0091.
+  for more detailed information. please refer to the application note document AN0091.

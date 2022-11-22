@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     at_surf_f437_board_calendar.c
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    the driver library of the calendar
   **************************************************************************
   *                       Copyright notice & Disclaimer

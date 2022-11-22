@@ -1,8 +1,6 @@
 /**
   **************************************************************************
   * @file     at_surf_f437_board_audio.c
-  * @version  v2.1.0
-  * @date     2022-08-16
   * @brief    header file for at-start board. set of firmware functions to 
   *           manage leds and push-button. initialize delay function.
   **************************************************************************
