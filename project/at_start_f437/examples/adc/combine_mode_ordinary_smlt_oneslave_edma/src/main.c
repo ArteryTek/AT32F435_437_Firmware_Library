@@ -98,7 +98,7 @@ static void edma_config(void)
   edmamux_enable(TRUE);
   edmamux_init(EDMAMUX_CHANNEL1, EDMAMUX_DMAREQ_ID_ADC1);
 
-  /* enable edma full data transfer intterrupt */
+  /* enable edma full data transfer interrupt */
   edma_interrupt_enable(EDMA_STREAM1, EDMA_FDT_INT, TRUE);
   edma_stream_enable(EDMA_STREAM1, TRUE);
 }

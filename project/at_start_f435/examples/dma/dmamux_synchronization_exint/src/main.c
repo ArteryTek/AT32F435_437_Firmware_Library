@@ -118,7 +118,7 @@ int main(void)
   dmamux_sync_init_struct.sync_enable = TRUE;
   dmamux_sync_config(DMA2MUX_CHANNEL4, &dmamux_sync_init_struct);
 
-  /* enable transfer full data intterrupt */
+  /* enable transfer full data interrupt */
   dma_interrupt_enable(DMA2_CHANNEL4, DMA_FDT_INT, TRUE);
 
   /* dma2 channel4 interrupt nvic init */

@@ -47,10 +47,10 @@ extern "C" {
   * @{
   */
 
-#define EDMA_DMERR_INT                   ((uint32_t)0x00000002) /* edma direct mode error intterrupt */
-#define EDMA_DTERR_INT                   ((uint32_t)0x00000004) /* edma data transfer error intterrupt */
-#define EDMA_HDT_INT                     ((uint32_t)0x00000008) /* edma half data transfer intterrupt */
-#define EDMA_FDT_INT                     ((uint32_t)0x00000010) /* edma full data transfer intterrupt */
+#define EDMA_DMERR_INT                   ((uint32_t)0x00000002) /* edma direct mode error interrupt */
+#define EDMA_DTERR_INT                   ((uint32_t)0x00000004) /* edma data transfer error interrupt */
+#define EDMA_HDT_INT                     ((uint32_t)0x00000008) /* edma half data transfer interrupt */
+#define EDMA_FDT_INT                     ((uint32_t)0x00000010) /* edma full data transfer interrupt */
 #define EDMA_FERR_INT                    ((uint32_t)0x00000080) /* edma fifo error interrupt */
 
 /**

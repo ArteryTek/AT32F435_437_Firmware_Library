@@ -100,7 +100,7 @@ static void edma_config(void)
   /* enable the double memory mode */
   edma_double_buffer_mode_enable(EDMA_STREAM1, TRUE);
 
-  /* enable edma full data transfer intterrupt */
+  /* enable edma full data transfer interrupt */
   edma_interrupt_enable(EDMA_STREAM1, EDMA_FDT_INT, TRUE);
   edma_stream_enable(EDMA_STREAM1, TRUE);
 }

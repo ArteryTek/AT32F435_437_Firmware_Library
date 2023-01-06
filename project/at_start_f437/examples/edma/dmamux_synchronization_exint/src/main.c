@@ -138,7 +138,7 @@ int main(void)
   edmamux_sync_init_struct.sync_signal_sel = EDMAMUX_SYNC_ID_EXINT1;
   edmamux_sync_config(EDMAMUX_CHANNEL4, &edmamux_sync_init_struct);
 
-  /* enable transfer full data intterrupt */
+  /* enable transfer full data interrupt */
   edma_interrupt_enable(EDMA_STREAM4, EDMA_FDT_INT, TRUE);
 
   /* edma stream4 interrupt nvic init */

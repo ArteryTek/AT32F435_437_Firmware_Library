@@ -99,7 +99,7 @@ int main(void)
   edma_init_struct.loop_mode_enable = FALSE;
   edma_init(EDMA_STREAM1, &edma_init_struct);
 
-  /* enable transfer full data intterrupt */
+  /* enable transfer full data interrupt */
   edma_interrupt_enable(EDMA_STREAM1, EDMA_FDT_INT, TRUE);
 
   /* edma stream1 interrupt nvic init */
