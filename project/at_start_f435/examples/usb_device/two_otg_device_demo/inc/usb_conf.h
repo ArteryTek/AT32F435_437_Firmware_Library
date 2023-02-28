@@ -109,7 +109,7 @@ extern "C" {
 #define OTG2_PIN_VBUS_SOURCE              GPIO_PINS_SOURCE13
 
 #define OTG2_PIN_ID                       GPIO_PINS_12
-#define OTG2_PIN_ID_SOURCE                GPIO_PINS_SOURCE10
+#define OTG2_PIN_ID_SOURCE                GPIO_PINS_SOURCE12
 
 #define OTG2_PIN_SOF_GPIO                 GPIOA
 #define OTG2_PIN_SOF_GPIO_CLOCK           CRM_GPIOA_PERIPH_CLOCK

@@ -54,6 +54,8 @@ int main(void)
   uint32_t useraddr, sector_size;
   system_clock_config();
   at32_board_init();
+  
+  uart_print_init(115200);
 
   /* config nvic priority group */
   nvic_priority_group_config(NVIC_PRIORITY_GROUP_4);
@@ -110,6 +112,8 @@ int main(void)
 
   while(1)
   {
+    lwip_rx_loop_handler();
+    
     lwip_periodic_handle(local_time);
   }
 }

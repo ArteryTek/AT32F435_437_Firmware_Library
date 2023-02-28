@@ -61,6 +61,8 @@ int main(void)
   nvic_priority_group_config(NVIC_PRIORITY_GROUP_4);
 
   delay_init();
+  
+  uart_print_init(115200);
 
   status = emac_system_init();
 

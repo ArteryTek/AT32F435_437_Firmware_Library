@@ -402,10 +402,6 @@ typedef enum
   CRM_EDMA_PERIPH_LOWPOWER               = MAKE_VALUE(0x50, 21), /*!< edma sleep mode periph clock */
   CRM_DMA1_PERIPH_LOWPOWER               = MAKE_VALUE(0x50, 22), /*!< dma1 sleep mode periph clock */
   CRM_DMA2_PERIPH_LOWPOWER               = MAKE_VALUE(0x50, 24), /*!< dma2 sleep mode periph clock */
-  CRM_EMAC_PERIPH_LOWPOWER               = MAKE_VALUE(0x50, 25), /*!< emac sleep mode periph clock */
-  CRM_EMACTX_PERIPH_LOWPOWER             = MAKE_VALUE(0x50, 26), /*!< emac tx sleep mode periph clock */
-  CRM_EMACRX_PERIPH_LOWPOWER             = MAKE_VALUE(0x50, 27), /*!< emac rx sleep mode periph clock */
-  CRM_EMACPTP_PERIPH_LOWPOWER            = MAKE_VALUE(0x50, 28), /*!< emac ptp sleep mode periph clock */
   CRM_OTGFS2_PERIPH_LOWPOWER             = MAKE_VALUE(0x50, 29), /*!< otgfs2 sleep mode periph clock */
   /* ahb periph2 */
   CRM_DVP_PERIPH_LOWPOWER                = MAKE_VALUE(0x54, 0),  /*!< dvp sleep mode periph clock */
@@ -477,6 +473,10 @@ typedef enum
   CRM_EDMA_PERIPH_LOWPOWER               = MAKE_VALUE(0x50, 21), /*!< edma sleep mode periph clock */
   CRM_DMA1_PERIPH_LOWPOWER               = MAKE_VALUE(0x50, 22), /*!< dma1 sleep mode periph clock */
   CRM_DMA2_PERIPH_LOWPOWER               = MAKE_VALUE(0x50, 24), /*!< dma2 sleep mode periph clock */
+  CRM_EMAC_PERIPH_LOWPOWER               = MAKE_VALUE(0x50, 25), /*!< emac sleep mode periph clock */
+  CRM_EMACTX_PERIPH_LOWPOWER             = MAKE_VALUE(0x50, 26), /*!< emac tx sleep mode periph clock */
+  CRM_EMACRX_PERIPH_LOWPOWER             = MAKE_VALUE(0x50, 27), /*!< emac rx sleep mode periph clock */
+  CRM_EMACPTP_PERIPH_LOWPOWER            = MAKE_VALUE(0x50, 28), /*!< emac ptp sleep mode periph clock */
   CRM_OTGFS2_PERIPH_LOWPOWER             = MAKE_VALUE(0x50, 29), /*!< otgfs2 sleep mode periph clock */
   /* ahb periph2 */
   CRM_DVP_PERIPH_LOWPOWER                = MAKE_VALUE(0x54, 0),  /*!< dvp sleep mode periph clock */

@@ -105,6 +105,9 @@ static void switch_system_clock(void)
   */
 static void sclk_64m_hick_config(void)
 {
+  /* reset crm */
+  crm_reset();
+
   /* enable pwc periph clock */
   crm_periph_clock_enable(CRM_PWC_PERIPH_CLOCK, TRUE);
 
@@ -113,9 +116,6 @@ static void sclk_64m_hick_config(void)
 
   /* set the flash clock divider */
   flash_clock_divider_set(FLASH_CLOCK_DIV_3);
-
-  /* reset crm */
-  crm_reset();
 
   crm_clock_source_enable(CRM_CLOCK_SOURCE_HICK, TRUE);
 
@@ -192,6 +192,9 @@ static void sclk_64m_hick_config(void)
   */
 static void sclk_96m_hext_config(void)
 {
+  /* reset crm */
+  crm_reset();
+
   /* enable pwc periph clock */
   crm_periph_clock_enable(CRM_PWC_PERIPH_CLOCK, TRUE);
 
@@ -200,9 +203,6 @@ static void sclk_96m_hext_config(void)
 
   /* set the flash clock divider */
   flash_clock_divider_set(FLASH_CLOCK_DIV_3);
-
-  /* reset crm */
-  crm_reset();
 
   crm_clock_source_enable(CRM_CLOCK_SOURCE_HEXT, TRUE);
 

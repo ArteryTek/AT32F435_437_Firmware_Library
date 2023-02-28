@@ -252,19 +252,16 @@ void qspi_flash_data_read(uint32_t addr, uint8_t* buf, uint32_t total_len)
   */
 void qspi_flash_data_write(uint32_t addr, uint8_t* buf, uint32_t total_len)
 {
-  uint32_t i, len = total_len;
+  uint32_t i, len;
 
   do
   {
     qspi_flash_write_enable();
-    if(total_len >= QSPI_FLASH_PAGE_SIZE)
-    {
-      len = QSPI_FLASH_PAGE_SIZE;
-    }
-    else
-    {
+    /* send up to 256 bytes at one time, and only one page */
+    len = (addr / QSPI_FLASH_PAGE_SIZE + 1) * QSPI_FLASH_PAGE_SIZE - addr;
+    if(total_len < len)
       len = total_len;
-    }
+
     qspi_flash_cmd_write_config(&qspi_flash_cmd_config, addr, len);
     qspi_cmd_operation_kick(QSPI_FLASH_QSPIx, &qspi_flash_cmd_config);
 

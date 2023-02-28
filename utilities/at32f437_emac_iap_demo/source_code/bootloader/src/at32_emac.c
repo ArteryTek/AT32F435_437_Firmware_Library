@@ -67,7 +67,7 @@ error_status emac_system_init(void)
   */
 void emac_nvic_configuration(void)
 {
-  nvic_irq_enable(EMAC_IRQn, 1, 0);
+  /* nvic_irq_enable(EMAC_IRQn, 1, 0); */
 }
 
 /**
@@ -455,7 +455,6 @@ error_status emac_phy_init(emac_control_config_type *control_para)
   {
     return ERROR;
   }
-    emac_speed_config(mac_control_para.auto_nego, mac_control_para.duplex_mode, mac_control_para.fast_ethernet_speed);
 
   emac_control_config(control_para);
   return SUCCESS;

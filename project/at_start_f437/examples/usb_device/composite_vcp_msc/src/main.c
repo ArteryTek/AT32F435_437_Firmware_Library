@@ -295,7 +295,7 @@ void usb_gpio_config(void)
   crm_periph_clock_enable(OTG_PIN_SOF_GPIO_CLOCK, TRUE);
   gpio_init_struct.gpio_pins = OTG_PIN_SOF;
   gpio_init(OTG_PIN_SOF_GPIO, &gpio_init_struct);
-  gpio_pin_mux_config(OTG_PIN_GPIO, OTG_PIN_SOF_SOURCE, OTG_PIN_MUX);
+  gpio_pin_mux_config(OTG_PIN_SOF_GPIO, OTG_PIN_SOF_SOURCE, OTG_PIN_MUX);
 #endif
 
   /* otgfs use vbus pin */

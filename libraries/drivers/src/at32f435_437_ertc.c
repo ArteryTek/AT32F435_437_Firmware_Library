@@ -320,7 +320,7 @@ error_status ertc_date_set(uint8_t year, uint8_t month, uint8_t date, uint8_t we
     return ERROR;
   }
 
-  /* Set the ertc_DR register */
+  /* set the ertc_date register */
   ERTC->date = reg.date;
 
   /* exit init mode */
@@ -394,8 +394,6 @@ void ertc_calendar_get(ertc_time_type* time)
 {
   ertc_reg_time_type reg_tm;
   ertc_reg_date_type reg_dt;
-
-  UNUSED(ERTC->sts);
 
   reg_tm.time = ERTC->time;
   reg_dt.date = ERTC->date;
@@ -1516,13 +1514,7 @@ void ertc_bpr_data_write(ertc_dt_type dt, uint32_t data)
 
   reg = ERTC_BASE + 0x50 + (dt * 4);
 
-  /* disable write protection */
-  ertc_write_protect_disable();
-
   *(__IO uint32_t *)reg = data;
-
-  /* enable write protection */
-  ertc_write_protect_enable();
 }
 
 /**

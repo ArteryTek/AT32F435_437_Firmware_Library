@@ -347,15 +347,10 @@ void qspi_data_write(uint32_t addr, uint32_t total_len, uint8_t* buf)
 {
   uint32_t blk_sz;
   do
-  { /* send up to 256 bytes at one time */
-    if(total_len > FLASH_PAGE_PROGRAM_SIZE)
-    {
-      blk_sz = FLASH_PAGE_PROGRAM_SIZE;
-    }
-    else
-    {
+  { /* send up to 256 bytes at one time, and only one page */
+    blk_sz = (addr / FLASH_PAGE_PROGRAM_SIZE + 1) * FLASH_PAGE_PROGRAM_SIZE - addr;
+    if(total_len < blk_sz)
       blk_sz = total_len;
-    }
     qspi_data_once_write(addr, blk_sz, buf);
     addr += blk_sz;
     buf += blk_sz;

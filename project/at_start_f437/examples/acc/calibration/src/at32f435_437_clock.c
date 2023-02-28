@@ -45,6 +45,9 @@
   */
 void system_clock_config(void)
 {
+  /* reset crm */
+  crm_reset();
+
   /* enable pwc periph clock */
   crm_periph_clock_enable(CRM_PWC_PERIPH_CLOCK, TRUE);
 
@@ -53,9 +56,6 @@ void system_clock_config(void)
  
   /* set the flash clock divider */
   flash_clock_divider_set(FLASH_CLOCK_DIV_3);
-
-  /* reset crm */
-  crm_reset();
 
   /* enable hick */
   crm_clock_source_enable(CRM_CLOCK_SOURCE_HICK, TRUE);

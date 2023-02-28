@@ -34,7 +34,6 @@
   * @{
   */
 
-extern void qspi_data_read(uint32_t addr, uint32_t total_len, uint8_t* buf);
 extern void qspi_data_write(uint32_t addr, uint32_t total_len, uint8_t* buf);
 extern void qspi_erase(uint32_t sec_addr);
 extern void en25qh128a_qspi_xip_init(void);
@@ -59,8 +58,6 @@ ALIGNED_HEAD uint8_t rbuf[TEST_SIZE] ALIGNED_TAIL;
 void qspi_config(void)
 {
   gpio_init_type gpio_init_struct;
-  /* enable the dma clock */
-  crm_periph_clock_enable(CRM_DMA2_PERIPH_CLOCK, TRUE);
 
   /* enable the qspi clock */
   crm_periph_clock_enable(CRM_QSPI1_PERIPH_CLOCK, TRUE);
@@ -141,18 +138,6 @@ int main(void)
 
   /* erase */
   qspi_erase(0);
-
-  /* read */
-  qspi_data_read(0, TEST_SIZE, rbuf);
-
-  for(i = 0; i < TEST_SIZE; i++)
-  {
-    if(rbuf[i] != 0xFF)
-    {
-      err = 1;
-      break;
-    }
-  }
 
   /* program */
   qspi_data_write(0, TEST_SIZE, wbuf);

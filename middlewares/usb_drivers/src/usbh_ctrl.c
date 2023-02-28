@@ -159,6 +159,7 @@ usb_sts_type usbh_ctrl_setup_wait_handler(usbh_core_type *uhost, uint32_t *timeo
         uhost->ctrl.state = CONTROL_STATUS_IN;
       }
     }
+    uhost->ctrl.timer = uhost->timer;
     status = USB_OK;
   }
   else if(urb_state == URB_ERROR || urb_state == URB_NOTREADY)
@@ -279,15 +280,13 @@ usb_sts_type usbh_ctrl_data_out_wait_handler(usbh_core_type *uhost, uint32_t tim
   {
     uhost->ctrl.state = CONTROL_DATA_OUT;
   }
-  else
+
+  /* wait nak timeout 5s*/
+  if((uhost->timer - uhost->ctrl.timer > CTRL_TIMEOUT) && (urb_state == URB_NOTREADY))
   {
-    /* wait nak timeout 5s*/
-    if(uhost->timer - uhost->ctrl.timer > CTRL_TIMEOUT)
-    {
-      uhost->ctrl.state = CONTROL_ERROR;
-      uhost->ctrl.sts = CTRL_XACTERR;
-      status = USB_ERROR;
-    }
+    uhost->ctrl.state = CONTROL_ERROR;
+    uhost->ctrl.sts = CTRL_XACTERR;
+    status = USB_ERROR;
   }
   return status;
 }
@@ -388,15 +387,12 @@ usb_sts_type usbh_ctrl_status_out_wait_handler(usbh_core_type *uhost, uint32_t t
   {
     uhost->ctrl.state = CONTROL_STATUS_OUT;
   }
-  else
+  /* wait nak timeout 5s*/
+  if((uhost->timer - uhost->ctrl.timer > CTRL_TIMEOUT) && (urb_state == URB_NOTREADY))
   {
-    /* wait nak timeout 5s*/
-    if(uhost->timer - uhost->ctrl.timer > CTRL_TIMEOUT)
-    {
-      uhost->ctrl.state = CONTROL_ERROR;
-      uhost->ctrl.sts = CTRL_XACTERR;
-      status = USB_ERROR;
-    }
+    uhost->ctrl.state = CONTROL_ERROR;
+    uhost->ctrl.sts = CTRL_XACTERR;
+    status = USB_ERROR;
   }
   return status;
 }
@@ -468,7 +464,6 @@ usb_sts_type usbh_ctrl_transfer_loop(usbh_core_type *uhost)
 
     case CONTROL_DATA_IN:
       usbh_ctrl_data_in_handler(uhost);
-      uhost->ctrl.timer = uhost->timer;
       break;
 
     case CONTROL_DATA_IN_WAIT:
@@ -477,7 +472,6 @@ usb_sts_type usbh_ctrl_transfer_loop(usbh_core_type *uhost)
 
     case CONTROL_DATA_OUT:
       usbh_ctrl_data_out_handler(uhost);
-      uhost->ctrl.timer = uhost->timer;
       break;
 
     case CONTROL_DATA_OUT_WAIT:
@@ -486,7 +480,6 @@ usb_sts_type usbh_ctrl_transfer_loop(usbh_core_type *uhost)
 
     case CONTROL_STATUS_IN:
       usbh_ctrl_status_in_handler(uhost);
-      uhost->ctrl.timer = uhost->timer;
       break;
 
     case CONTROL_STATUS_IN_WAIT:
@@ -495,7 +488,6 @@ usb_sts_type usbh_ctrl_transfer_loop(usbh_core_type *uhost)
 
     case CONTROL_STATUS_OUT:
       usbh_ctrl_status_out_handler(uhost);
-      uhost->ctrl.timer = uhost->timer;
       break;
 
     case CONTROL_STATUS_OUT_WAIT:

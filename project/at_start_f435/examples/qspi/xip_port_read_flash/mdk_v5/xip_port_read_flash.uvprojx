@@ -16,7 +16,7 @@
         <TargetCommonOption>
           <Device>-AT32F435ZMT7</Device>
           <Vendor>ArteryTek</Vendor>
-          <PackID>ArteryTek.AT32F435_437_DFP.2.1.0</PackID>
+          <PackID>ArteryTek.AT32F435_437_DFP.2.0.1</PackID>
           <Cpu>IROM(0x08000000,0x3F0000) IRAM(0x20000000,0x60000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
@@ -428,11 +428,6 @@
               <FilePath>..\..\..\..\..\..\libraries\drivers\src\at32f435_437_misc.c</FilePath>
             </File>
             <File>
-              <FileName>at32f435_437_dma.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\..\libraries\drivers\src\at32f435_437_dma.c</FilePath>
-            </File>
-            <File>
               <FileName>at32f435_437_qspi.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\..\libraries\drivers\src\at32f435_437_qspi.c</FilePath>
@@ -488,6 +483,12 @@
     <Layers>
       <Layer>
         <LayName>xip_port_read_flash</LayName>
+        <LayDesc></LayDesc>
+        <LayUrl></LayUrl>
+        <LayKeys></LayKeys>
+        <LayCat></LayCat>
+        <LayLic></LayLic>
+        <LayTarg>0</LayTarg>
         <LayPrjMark>1</LayPrjMark>
       </Layer>
     </Layers>

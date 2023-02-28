@@ -50,7 +50,6 @@
 #ifndef portENTER_CRITICAL
     #include "portmacro.h"
 #endif
-
 #if portBYTE_ALIGNMENT == 32
     #define portBYTE_ALIGNMENT_MASK    ( 0x001f )
 #endif

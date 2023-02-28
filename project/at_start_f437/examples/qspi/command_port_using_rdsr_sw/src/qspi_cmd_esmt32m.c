@@ -197,19 +197,16 @@ void qspi_data_read(uint32_t addr, uint32_t total_len, uint8_t* buf)
   */
 void qspi_data_write(uint32_t addr, uint32_t total_len, uint8_t* buf)
 {
-  uint32_t i, len = total_len;
+  uint32_t i, len;
 
   do
   {
     qspi_write_enable();
-    if(total_len >= FLASH_PAGE_PROGRAM_SIZE)
-    {
-      len = FLASH_PAGE_PROGRAM_SIZE;
-    }
-    else
-    {
+    /* send up to 256 bytes at one time, and only one page */
+    len = (addr / FLASH_PAGE_PROGRAM_SIZE + 1) * FLASH_PAGE_PROGRAM_SIZE - addr;
+    if(total_len < len)
       len = total_len;
-    }
+    
     esmt32m_cmd_write_config(&esmt32m_cmd_config, addr, len);
     qspi_cmd_operation_kick(QSPI1, &esmt32m_cmd_config);
 

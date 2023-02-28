@@ -67,7 +67,7 @@ error_status emac_system_init(void)
   */
 void emac_nvic_configuration(void)
 {
-  nvic_irq_enable(EMAC_IRQn, 1, 0);
+  /* nvic_irq_enable(EMAC_IRQn, 1, 0); */
 }
 
 /**

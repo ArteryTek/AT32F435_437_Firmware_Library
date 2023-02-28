@@ -85,6 +85,9 @@ void system_clock_config_200mhz(void)
 {
   uint16_t pll_ns, pll_ms, pll_fr;
 
+  /* reset crm */
+  crm_reset();
+
   /* enable pwc periph clock */
   crm_periph_clock_enable(CRM_PWC_PERIPH_CLOCK, TRUE);
 
@@ -93,9 +96,6 @@ void system_clock_config_200mhz(void)
 
   /* set the flash clock divider */
   flash_clock_divider_set(FLASH_CLOCK_DIV_3);
-
-  /* reset crm */
-  crm_reset();
 
   crm_clock_source_enable(CRM_CLOCK_SOURCE_HEXT, TRUE);
 

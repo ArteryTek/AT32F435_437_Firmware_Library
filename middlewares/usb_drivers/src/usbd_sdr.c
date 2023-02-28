@@ -156,6 +156,7 @@ static usb_sts_type usbd_set_address(usbd_core_type *udev)
     else
     {
       udev->device_addr = dev_addr;
+      usbd_set_device_addr(udev, udev->device_addr);
 
       if(dev_addr != 0)
       {
