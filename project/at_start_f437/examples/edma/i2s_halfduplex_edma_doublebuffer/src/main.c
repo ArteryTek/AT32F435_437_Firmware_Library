@@ -165,7 +165,7 @@ static void i2s_config(void)
   edma_double_buffer_mode_init(EDMA_STREAM2, (uint32_t)i2s3_buffer2_tx, EDMA_MEMORY_0);
   edma_double_buffer_mode_enable(EDMA_STREAM2, TRUE);
 
-  /* enable transfer full data intterrupt */
+  /* enable transfer full data interrupt */
   edma_interrupt_enable(EDMA_STREAM1, EDMA_FDT_INT, TRUE);
 
   /* edma stream1 interrupt nvic init */

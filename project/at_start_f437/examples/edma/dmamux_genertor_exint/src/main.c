@@ -136,7 +136,7 @@ int main(void)
   dmamux_gen_init_struct.gen_enable = TRUE;
   edmamux_generator_config(EDMAMUX_GENERATOR1, &dmamux_gen_init_struct);
 
-  /* enable transfer full data intterrupt */
+  /* enable transfer full data interrupt */
   edma_interrupt_enable(EDMA_STREAM4, EDMA_FDT_INT, TRUE);
 
   /* edma stream4 interrupt nvic init */

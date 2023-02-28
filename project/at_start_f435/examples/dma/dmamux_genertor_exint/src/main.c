@@ -116,7 +116,7 @@ int main(void)
   dmamux_gen_init_struct.gen_enable = TRUE;
   dmamux_generator_config(DMA2MUX_GENERATOR1, &dmamux_gen_init_struct);
 
-  /* enable transfer full data intterrupt */
+  /* enable transfer full data interrupt */
   dma_interrupt_enable(DMA2_CHANNEL4, DMA_FDT_INT, TRUE);
 
   /* dma2 channel4 interrupt nvic init */
