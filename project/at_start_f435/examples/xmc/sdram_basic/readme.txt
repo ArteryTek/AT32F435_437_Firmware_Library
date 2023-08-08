@@ -6,8 +6,8 @@
   */
 
   this example provides a basic example of how to use the xmc firmware library and
-	an associate driver to perform read/write operations on the winbond sdram
-	memory.
+  an associate driver to perform read/write operations on the winbond sdram
+  memory.
   led2/led3/led4 on : write and read all are ok
   led2/led3/led4 off: some errors
 

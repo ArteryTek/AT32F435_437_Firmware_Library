@@ -10,4 +10,4 @@
   to embedded sram memory. dma1 channel1 is configured to transfer the contents
   of a 32-word data buffer stored in flash memory to the reception buffer in ram.
   if received data right, the three leds will turn on. 
-  for more detailed information. please refer to the application note document AN0103.
+  for more detailed information. please refer to the application note document AN0103.

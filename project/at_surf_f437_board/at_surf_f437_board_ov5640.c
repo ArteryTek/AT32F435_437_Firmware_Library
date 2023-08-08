@@ -196,9 +196,9 @@ error_status ov5640_init(void)
   }
 
 #if LIGHT_SWITCH
-	ov5640_flash_ctrl(1);
-	delay_ms(500);
-	ov5640_flash_ctrl(0);
+  ov5640_flash_ctrl(1);
+  delay_ms(500);
+  ov5640_flash_ctrl(0);
 #endif
   
   return SUCCESS;

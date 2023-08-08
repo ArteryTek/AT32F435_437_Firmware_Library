@@ -50,9 +50,9 @@ static filter_int filterbuf256[(256*3 + FILTER_HISTORY_SIZE) * 2]
 //static filter_int filterbuf256[(256*3 + FILTER_HISTORY_SIZE) * 2]
 //                  MEM_ALIGN_ATTR; /* 5120 or 10240 bytes */
 
-filter_int *filterbuf64; 	  /* 2816 2432 or 4864 bytes */
-filter_int *filterbuf256;	  /* 5120 or 10240 bytes */
-filter_int *filterbuf1280;	/* 17408 or 34816 bytes */
+filter_int *filterbuf64;     /* 2816 2432 or 4864 bytes */
+filter_int *filterbuf256;    /* 5120 or 10240 bytes */
+filter_int *filterbuf1280;  /* 17408 or 34816 bytes */
 #define FILTERBUF64 filterbuf64
 #define FILTERBUF32 filterbuf64
 #define FILTERBUF16 filterbuf64

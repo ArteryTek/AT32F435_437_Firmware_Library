@@ -36,7 +36,7 @@ extern "C" {
   * @{
   */
 
-/** @addtogroup 437_USB_device_hid_app_led3
+/** @addtogroup USB_iap_app_led4_toggle
   * @{
   */
 

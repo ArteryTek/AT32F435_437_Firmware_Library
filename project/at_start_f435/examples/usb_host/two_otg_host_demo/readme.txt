@@ -12,4 +12,4 @@
 
   when an usb device is attached to the otg2 host port, the device is enumerated and
   checked whether it can support hid device or not,the demo just support keyboard
-  and mouse device.
+  and mouse device.

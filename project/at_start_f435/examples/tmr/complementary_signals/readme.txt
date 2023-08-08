@@ -7,7 +7,7 @@
 
   this demo is based on the at-start board, in this demo, shows how to configure
   the tmr1 peripheral to generate three complementary tmr1 signals, to insert
-  a defined dead time value, to use the break feature and to lock the desired
+  a defined dead time value, to use the brake feature and to lock the desired
   parameters.
 
   tmr1 configuration to:
@@ -28,7 +28,7 @@
   - channelxpulse = dutycycle * (tim1_period - 1) / 100
 
   step2: insert a dead time equal to 11/apb2_freq *2 ns
-  step3: configure the break feature, active at high level, and using the automatic
+  step3: configure the brake feature, active at high level, and using the automatic
          output enable feature
   step4:  use the locking parameters level1.
 
@@ -43,7 +43,7 @@
   - tmr1_ch3  pin (pa.10)
   - tmr1_ch3c pin (pb.15)
 
-- connect the tmr1 break pin tmr1_stpin pin (pb.12) to the gnd. to generate a
-  break event, switch this pin level from 0v to 3.3v.
+- connect the tmr1 brake pin tmr1_stpin pin (pb.12) to the gnd. to generate a
+  brake event, switch this pin level from 0v to 3.3v.
 
-  for more detailed information. please refer to the application note document AN0085.
+  for more detailed information. please refer to the application note document AN0085.

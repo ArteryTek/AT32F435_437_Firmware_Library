@@ -31,7 +31,7 @@
 /** @addtogroup qspi_algorithm_for_keil
   * @{
   */
-
+#ifdef QSPI1_SEL
 struct FlashDevice const FlashDevice  =  {
    FLASH_DRV_VERS,             // Driver Version, do not modify!
    "AT32F435/437 QSPI1 ESMT32M",   // Device Name
@@ -48,7 +48,24 @@ struct FlashDevice const FlashDevice  =  {
    4096, 0x000000,           // Sector Size (1 Sectors)
    SECTOR_END
 };
+#else
+struct FlashDevice const FlashDevice  =  {
+   FLASH_DRV_VERS,             // Driver Version, do not modify!
+   "AT32F435/437 QSPI2 ESMT32M",   // Device Name
+   EXTSPI,                     // Device Type
+   0xB0000000,                 // Device Start Address
+   16*1024*1024,               // Device Size in Bytes
+   256,                        // Programming Page Size
+   0,                          // Reserved, must be 0
+   0xFF,                       // Initial Content of Erased Memory
+   1000,                       // Program Page Timeout mSec
+   1000,                       // Erase Sector Timeout mSec
 
+// Specify Size and Address of Sectors
+   4096, 0x000000,           // Sector Size (1 Sectors)
+   SECTOR_END
+};
+#endif
 /**
   * @}
   */

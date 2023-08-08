@@ -44,7 +44,10 @@
 /* usb global struct define */
 otg_core_type otg_core_struct;
 otg_core_type otg2_core_struct;
-uint8_t report_buf[USBD_CUSTOM_IN_MAXPACKET_SIZE];
+#if defined ( __ICCARM__ ) /* iar compiler */
+  #pragma data_alignment=4
+#endif
+ALIGNED_HEAD uint8_t report_buf[USBD_CUSTOM_IN_MAXPACKET_SIZE] ALIGNED_TAIL;
 __IO uint8_t button_press = 0;
 
 void usb_clock48m_select(usb_clk48_s clk_s);

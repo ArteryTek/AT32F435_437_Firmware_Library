@@ -163,7 +163,12 @@ static usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup)
         case USB_STD_REQ_SET_INTERFACE:
           pprter->alt_setting = setup->wValue;
           break;
+        case USB_STD_REQ_CLEAR_FEATURE:
+          break;
+        case USB_STD_REQ_SET_FEATURE:
+          break;
         default:
+          usbd_ctrl_unsupport(pudev);
           break;
       }
       break;
@@ -234,6 +239,9 @@ static usb_sts_type class_out_handler(void *udev, uint8_t ept_num)
   usb_sts_type status = USB_OK;
   usbd_core_type *pudev = (usbd_core_type *)udev;
   printer_type *pprter = (printer_type *)pudev->class_handler->pdata;
+  
+  /* get endpoint receive data length  */
+  pprter->g_rxlen = usbd_get_recv_len(pudev, ept_num);
 
   /*set recv flag*/
    pprter->g_rx_completed = 1;
@@ -289,6 +297,35 @@ static usb_sts_type class_event_handler(void *udev, usbd_event_type event)
       break;
   }
   return status;
+}
+
+/**
+  * @brief  usb device class rx data process
+  * @param  udev: to the structure of usbd_core_type
+  * @param  recv_data: receive buffer
+  * @retval receive data len
+  */
+uint16_t usb_printer_get_rxdata(void *udev, uint8_t *recv_data)
+{
+  uint16_t i_index = 0;
+  uint16_t tmp_len = 0;
+  usbd_core_type *pudev = (usbd_core_type *)udev;
+  printer_type *pprter = (printer_type *)pudev->class_handler->pdata;
+
+  if(pprter->g_rx_completed == 0)
+  {
+    return 0;
+  }
+  pprter->g_rx_completed = 0;
+  tmp_len = pprter->g_rxlen;
+  for(i_index = 0; i_index < pprter->g_rxlen; i_index ++)
+  {
+    recv_data[i_index] = pprter->g_rx_buff[i_index];
+  }
+
+  usbd_ept_recv(pudev, USBD_PRINTER_BULK_OUT_EPT, pprter->g_rx_buff, USBD_PRINTER_OUT_MAXPACKET_SIZE);
+
+  return tmp_len;
 }
 
 /**

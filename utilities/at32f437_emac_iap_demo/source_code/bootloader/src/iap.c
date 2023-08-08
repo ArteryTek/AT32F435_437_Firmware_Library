@@ -32,7 +32,7 @@
   * @{
   */
 
-/** @addtogroup EMAC_IAP_bootloader
+/** @addtogroup EMAC_iap_bootloader
   * @{
   */
 
@@ -53,7 +53,7 @@ iapfun jump_to_app;
 void app_load(uint32_t app_addr)
 {
   /* check the address of stack */
-  if(((*(uint32_t*)app_addr) - 0x20000000) < (SRAM_SIZE * 1024))
+  if(((*(uint32_t*)app_addr) - 0x20000000) <= (SRAM_SIZE * 1024))
   {
     /* disable periph clock */
     crm_periph_clock_enable(CRM_EMAC_PERIPH_CLOCK, FALSE);

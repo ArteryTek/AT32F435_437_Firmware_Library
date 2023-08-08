@@ -43,7 +43,10 @@
 /* usb global struct define */
 otg_core_type otg_core_struct;
 otg_core_type otg2_core_struct;
-uint8_t usb_buffer[256];
+#if defined ( __ICCARM__ ) /* iar compiler */
+  #pragma data_alignment=4
+#endif
+ALIGNED_HEAD uint8_t usb_buffer[256] ALIGNED_TAIL;
 uint8_t report_buf[USBD_CUSTOM_IN_MAXPACKET_SIZE];
 __IO uint8_t button_press = 0;
 

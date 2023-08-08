@@ -41,6 +41,10 @@
 
 /* usb global struct define */
 otg_core_type otg_core_struct;
+#if defined ( __ICCARM__ ) /* iar compiler */
+  #pragma data_alignment=4
+#endif
+ALIGNED_HEAD uint8_t usb_buffer[256] ALIGNED_TAIL;
 void usb_clock48m_select(usb_clk48_s clk_s);
 void usb_gpio_config(void);
 void usb_low_power_wakeup_config(void);
@@ -52,6 +56,8 @@ void usb_low_power_wakeup_config(void);
   */
 int main(void)
 {
+  uint32_t rx_len = 0;
+  
   nvic_priority_group_config(NVIC_PRIORITY_GROUP_4);
 
   system_clock_config();
@@ -84,7 +90,8 @@ int main(void)
   while(1)
   {
     /* get usb printer receive data */
-    /* usb_printer_get_rxdata(&otg_core_struct.dev, usb_buffer); */
+    rx_len = usb_printer_get_rxdata(&otg_core_struct.dev, usb_buffer);
+    UNUSED(rx_len);
 
     /* user code ...*/
   }

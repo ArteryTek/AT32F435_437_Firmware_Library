@@ -145,32 +145,32 @@ uint16_t camera_identify(void)
     return reg;
   }
   
-  OV2640_RST_LOW();		//POWER ON;
-	delay_ms(10);
+  OV2640_RST_LOW();    //POWER ON;
+  delay_ms(10);
   OV2640_PWRON_LOW();
-	delay_ms(10);
+  delay_ms(10);
   OV2640_RST_HIGH();
-	delay_ms(10);
+  delay_ms(10);
   ov2640_i2c_init();
-	ov2640_reg_write(OV2640_DSP_RA_DLMT, 0x01);
- 	ov2640_reg_write(OV2640_SENSOR_COM7, 0x80);
-	delay_ms(50); 
-	ov2640_reg_read(OV2640_SENSOR_MIDH, &temp);
-	reg  = (uint16_t)temp << 8;
-	ov2640_reg_read(OV2640_SENSOR_MIDL, &temp);
+  ov2640_reg_write(OV2640_DSP_RA_DLMT, 0x01);
+   ov2640_reg_write(OV2640_SENSOR_COM7, 0x80);
+  delay_ms(50); 
+  ov2640_reg_read(OV2640_SENSOR_MIDH, &temp);
+  reg  = (uint16_t)temp << 8;
+  ov2640_reg_read(OV2640_SENSOR_MIDL, &temp);
   reg |= temp;
-	if(reg!=OV2640_MID)
-	{
-		return 0;
-	}
-	ov2640_reg_read(OV2640_SENSOR_PIDH, &temp);
-	reg  = (uint16_t)temp << 8;
-	ov2640_reg_read(OV2640_SENSOR_PIDL, &temp);	
+  if(reg!=OV2640_MID)
+  {
+    return 0;
+  }
+  ov2640_reg_read(OV2640_SENSOR_PIDH, &temp);
+  reg  = (uint16_t)temp << 8;
+  ov2640_reg_read(OV2640_SENSOR_PIDL, &temp);  
   reg |= temp;
-	if(reg==OV2640_PID)
-	{
-		return reg;
-	}
+  if(reg==OV2640_PID)
+  {
+    return reg;
+  }
   
   return 0;
 }

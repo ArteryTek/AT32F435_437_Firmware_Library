@@ -336,7 +336,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>AT32F4357MT7,USE_STDPERIPH_DRIVER,AT_START_F435_V1</Define>
+              <Define>AT32F435ZMT7,USE_STDPERIPH_DRIVER,AT_START_F435_V1</Define>
               <Undefine></Undefine>
               <IncludePath>..\..\..\..\..\..\libraries\cmsis\cm4\core_support;..\..\..\..\..\..\libraries\cmsis\cm4\device_support;..\..\..\..\..\..\libraries\drivers\inc;..\..\..\..\..\at32f435_437_board;..\inc;..\..\..\..\..\..\middlewares\usb_drivers\inc;..\..\..\..\..\..\middlewares\usbd_class\audio_hid;..\..\..\..\..\..\middlewares\i2c_application_library</IncludePath>
             </VariousControls>

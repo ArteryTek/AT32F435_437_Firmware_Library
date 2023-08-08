@@ -17,4 +17,4 @@
   - qspi sck   --->   pf10
   - qspi cs    --->   pg6
 
-  for more detailed information. please refer to the application note document AN0088.
+  for more detailed information. please refer to the application note document AN0088.

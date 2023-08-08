@@ -6,8 +6,8 @@
   */
 
   this example provides a basic example of how to use the xmc firmware library and
-	 an associate driver to perform read/write operations on the sandisk compactflash 
- 	memory.
+   an associate driver to perform read/write operations on the sandisk compactflash 
+   memory.
   usart1 using pa9 to printf the result.
 
   the pin to pin with compactflash and xmc:

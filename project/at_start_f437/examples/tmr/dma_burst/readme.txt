@@ -18,7 +18,7 @@
   clock at 24 mhz the prescaler is computed as following:
    - prescaler = (tim1clk / tmr1 counter clock) - 1
   the tmr1 period is 5.86 khz: tmr1 frequency = tmr1 counter clock/(arr + 1)
-  										   = 288mhz / 4096 = 70.31khz
+                         = 288mhz / 4096 = 70.31khz
   tmr1 channel1 duty cycle = (tim1_ccr1/ tmr1_arr)* 100 = 33.33%
 
   set-up

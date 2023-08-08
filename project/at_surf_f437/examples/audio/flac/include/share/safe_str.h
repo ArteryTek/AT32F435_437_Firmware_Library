@@ -41,31 +41,31 @@
 static inline char *
 safe_strncat(char *dest, const char *src, size_t dest_size)
 {
-	char * ret;
+  char * ret;
 
-	if (dest_size < 1)
-		return dest;
+  if (dest_size < 1)
+    return dest;
 
-	/* Assume dist has space for a term character .. */
-	ret = strncat(dest, src, dest_size - strlen (dest));
-	/* .. but set it explicitly. */
-	dest [dest_size - 1] = 0;
+  /* Assume dist has space for a term character .. */
+  ret = strncat(dest, src, dest_size - strlen (dest));
+  /* .. but set it explicitly. */
+  dest [dest_size - 1] = 0;
 
-	return ret;
+  return ret;
 }
 
 static inline char *
 safe_strncpy(char *dest, const char *src, size_t dest_size)
 {
-	char * ret;
+  char * ret;
 
-	if (dest_size < 1)
-		return dest;
+  if (dest_size < 1)
+    return dest;
 
-	ret = strncpy(dest, src, dest_size - 1);
-	dest [dest_size - 1] = 0;
+  ret = strncpy(dest, src, dest_size - 1);
+  dest [dest_size - 1] = 0;
 
-	return ret;
+  return ret;
 }
 
 #endif /* FLAC__SHARE_SAFE_STR_H */

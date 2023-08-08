@@ -361,9 +361,9 @@ void dma_init(dma_channel_type *dmax_channely, dma_init_type *dma_init_struct)
   *         - DMAMUX_DMAREQ_ID_USART6_TX    - DMAMUX_DMAREQ_ID_UART7_RX     - DMAMUX_DMAREQ_ID_UART7_TX     - DMAMUX_DMAREQ_ID_UART8_RX
   *         - DMAMUX_DMAREQ_ID_UART8_TX     - DMAMUX_DMAREQ_ID_SDIO1        - DMAMUX_DMAREQ_ID_SDIO2        - DMAMUX_DMAREQ_ID_QSPI1
   *         - DMAMUX_DMAREQ_ID_QSPI2        - DMAMUX_DMAREQ_ID_TMR1_CH1     - DMAMUX_DMAREQ_ID_TMR1_CH2     - DMAMUX_DMAREQ_ID_TMR1_CH3
-  *         - DMAMUX_DMAREQ_ID_TMR1_CH4     - DMAMUX_DMAREQ_ID_TMR1_OVERFLOW- DMAMUX_DMAREQ_ID_TMR1_TRIG    - DMAMUX_DMAREQ_ID_TMR1_COM
+  *         - DMAMUX_DMAREQ_ID_TMR1_CH4     - DMAMUX_DMAREQ_ID_TMR1_OVERFLOW- DMAMUX_DMAREQ_ID_TMR1_TRIG    - DMAMUX_DMAREQ_ID_TMR1_HALL
   *         - DMAMUX_DMAREQ_ID_TMR8_CH1     - DMAMUX_DMAREQ_ID_TMR8_CH2     - DMAMUX_DMAREQ_ID_TMR8_CH3     - DMAMUX_DMAREQ_ID_TMR8_CH4
-  *         - DMAMUX_DMAREQ_ID_TMR8_UP      - DMAMUX_DMAREQ_ID_TMR8_TRIG    - DMAMUX_DMAREQ_ID_TMR8_COM     - DMAMUX_DMAREQ_ID_TMR2_CH1
+  *         - DMAMUX_DMAREQ_ID_TMR8_OVERFLOW- DMAMUX_DMAREQ_ID_TMR8_TRIG    - DMAMUX_DMAREQ_ID_TMR8_HALL    - DMAMUX_DMAREQ_ID_TMR2_CH1
   *         - DMAMUX_DMAREQ_ID_TMR2_CH2     - DMAMUX_DMAREQ_ID_TMR2_CH3     - DMAMUX_DMAREQ_ID_TMR2_CH4     - DMAMUX_DMAREQ_ID_TMR2_OVERFLOW
   *         - DMAMUX_DMAREQ_ID_TMR2_TRIG    - DMAMUX_DMAREQ_ID_TMR3_CH1     - DMAMUX_DMAREQ_ID_TMR3_CH2     - DMAMUX_DMAREQ_ID_TMR3_CH3
   *         - DMAMUX_DMAREQ_ID_TMR3_CH4     - DMAMUX_DMAREQ_ID_TMR3_OVERFLOW- DMAMUX_DMAREQ_ID_TMR3_TRIG    - DMAMUX_DMAREQ_ID_TMR4_CH1
@@ -424,9 +424,9 @@ void dmamux_enable(dma_type *dma_x, confirm_state new_state)
   *         - DMAMUX_DMAREQ_ID_USART6_TX    - DMAMUX_DMAREQ_ID_UART7_RX     - DMAMUX_DMAREQ_ID_UART7_TX     - DMAMUX_DMAREQ_ID_UART8_RX
   *         - DMAMUX_DMAREQ_ID_UART8_TX     - DMAMUX_DMAREQ_ID_SDIO1        - DMAMUX_DMAREQ_ID_SDIO2        - DMAMUX_DMAREQ_ID_QSPI1
   *         - DMAMUX_DMAREQ_ID_QSPI2        - DMAMUX_DMAREQ_ID_TMR1_CH1     - DMAMUX_DMAREQ_ID_TMR1_CH2     - DMAMUX_DMAREQ_ID_TMR1_CH3
-  *         - DMAMUX_DMAREQ_ID_TMR1_CH4     - DMAMUX_DMAREQ_ID_TMR1_OVERFLOW- DMAMUX_DMAREQ_ID_TMR1_TRIG    - DMAMUX_DMAREQ_ID_TMR1_COM
+  *         - DMAMUX_DMAREQ_ID_TMR1_CH4     - DMAMUX_DMAREQ_ID_TMR1_OVERFLOW- DMAMUX_DMAREQ_ID_TMR1_TRIG    - DMAMUX_DMAREQ_ID_TMR1_HALL
   *         - DMAMUX_DMAREQ_ID_TMR8_CH1     - DMAMUX_DMAREQ_ID_TMR8_CH2     - DMAMUX_DMAREQ_ID_TMR8_CH3     - DMAMUX_DMAREQ_ID_TMR8_CH4
-  *         - DMAMUX_DMAREQ_ID_TMR8_UP      - DMAMUX_DMAREQ_ID_TMR8_TRIG    - DMAMUX_DMAREQ_ID_TMR8_COM     - DMAMUX_DMAREQ_ID_TMR2_CH1
+  *         - DMAMUX_DMAREQ_ID_TMR8_OVERFLOW- DMAMUX_DMAREQ_ID_TMR8_TRIG    - DMAMUX_DMAREQ_ID_TMR8_HALL    - DMAMUX_DMAREQ_ID_TMR2_CH1
   *         - DMAMUX_DMAREQ_ID_TMR2_CH2     - DMAMUX_DMAREQ_ID_TMR2_CH3     - DMAMUX_DMAREQ_ID_TMR2_CH4     - DMAMUX_DMAREQ_ID_TMR2_OVERFLOW
   *         - DMAMUX_DMAREQ_ID_TMR2_TRIG    - DMAMUX_DMAREQ_ID_TMR3_CH1     - DMAMUX_DMAREQ_ID_TMR3_CH2     - DMAMUX_DMAREQ_ID_TMR3_CH3
   *         - DMAMUX_DMAREQ_ID_TMR3_CH4     - DMAMUX_DMAREQ_ID_TMR3_OVERFLOW- DMAMUX_DMAREQ_ID_TMR3_TRIG    - DMAMUX_DMAREQ_ID_TMR4_CH1
@@ -481,7 +481,7 @@ void dmamux_sync_config(dmamux_channel_type *dmamux_channelx, dmamux_sync_init_t
 {
   dmamux_channelx->muxctrl_bit.syncsel = dmamux_sync_init_struct->sync_signal_sel;
   dmamux_channelx->muxctrl_bit.syncpol = dmamux_sync_init_struct->sync_polarity;
-  dmamux_channelx->muxctrl_bit.reqcnt  = dmamux_sync_init_struct->sync_request_number;
+  dmamux_channelx->muxctrl_bit.reqcnt  = dmamux_sync_init_struct->sync_request_number - 1;
   dmamux_channelx->muxctrl_bit.evtgen  = dmamux_sync_init_struct->sync_event_enable;
   dmamux_channelx->muxctrl_bit.syncen  = dmamux_sync_init_struct->sync_enable;
 }
@@ -518,7 +518,7 @@ void dmamux_generator_config(dmamux_generator_type *dmamux_gen_x, dmamux_gen_ini
 {
   dmamux_gen_x->gctrl_bit.sigsel  = dmamux_gen_init_struct->gen_signal_sel;
   dmamux_gen_x->gctrl_bit.gpol    = dmamux_gen_init_struct->gen_polarity;
-  dmamux_gen_x->gctrl_bit.greqcnt = dmamux_gen_init_struct->gen_request_number;
+  dmamux_gen_x->gctrl_bit.greqcnt = dmamux_gen_init_struct->gen_request_number - 1;
   dmamux_gen_x->gctrl_bit.gen     = dmamux_gen_init_struct->gen_enable;
 }
 

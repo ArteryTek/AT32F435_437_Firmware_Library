@@ -35,4 +35,4 @@
   - connect usart2_rx(pa3) to spi1_miso(pa6)
   - connect usart2_ck(pa4) to spi1_sck(pa5)
 
-  for more detailed information. please refer to the application note document AN0099.
+  for more detailed information. please refer to the application note document AN0099.

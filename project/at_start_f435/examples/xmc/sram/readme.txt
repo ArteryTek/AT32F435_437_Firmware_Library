@@ -6,8 +6,8 @@
   */
 
   this example provides a basic example of how to use the xmc firmware library and
-	an associate driver to perform read/write operations on the is61wv51216bll sram
-	memory.
+  an associate driver to perform read/write operations on the is61wv51216bll sram
+  memory.
   usart1 using pa9 to printf the result.
 
   the pin to pin with sram and xmc:

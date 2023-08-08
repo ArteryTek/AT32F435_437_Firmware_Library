@@ -35,11 +35,11 @@ extern "C" {
   * @{
   */
 
-/** @addtogroup IAP_app_led4_toggle
+/** @addtogroup USART_iap_app_led4_toggle
   * @{
   */
 
-/** @defgroup IAP_app_led3_exported_functions
+/** @defgroup IAP_app_led4_exported_functions
   * @{
   */
 

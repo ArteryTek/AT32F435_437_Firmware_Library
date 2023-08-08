@@ -371,37 +371,37 @@ void lcd_point_draw(uint16_t x, uint16_t y, uint16_t color)
   */
 void lcd_draw_line(uint16_t x_start, uint16_t y_start, uint16_t x_end, uint16_t y_end,uint16_t color)
 {
-	u16 t;
-	int xerr=0,yerr=0,delta_x,delta_y,distance;
-	int incx,incy,uRow,uCol;
-	delta_x=x_end-x_start;
-	delta_y=y_end-y_start;
-	uRow=x_start;
-	uCol=y_start;
-	if(delta_x>0)incx=1;
-	else if(delta_x==0)incx=0;
-	else {incx=-1;delta_x=-delta_x;}
-	if(delta_y>0)incy=1;
-	else if(delta_y==0)incy=0;
-	else{incy=-1;delta_y=-delta_y;}
-	if( delta_x>delta_y)distance=delta_x;
-	else distance=delta_y;
-	for(t=0;t<=distance+1;t++ )
-	{
-		lcd_point_draw(uRow,uCol,color);
-		xerr+=delta_x ;
-		yerr+=delta_y ;
-		if(xerr>distance)
-		{
-			xerr-=distance;
-			uRow+=incx;
-		}
-		if(yerr>distance)
-		{
-			yerr-=distance;
-			uCol+=incy;
-		}
-	}
+  u16 t;
+  int xerr=0,yerr=0,delta_x,delta_y,distance;
+  int incx,incy,uRow,uCol;
+  delta_x=x_end-x_start;
+  delta_y=y_end-y_start;
+  uRow=x_start;
+  uCol=y_start;
+  if(delta_x>0)incx=1;
+  else if(delta_x==0)incx=0;
+  else {incx=-1;delta_x=-delta_x;}
+  if(delta_y>0)incy=1;
+  else if(delta_y==0)incy=0;
+  else{incy=-1;delta_y=-delta_y;}
+  if( delta_x>delta_y)distance=delta_x;
+  else distance=delta_y;
+  for(t=0;t<=distance+1;t++ )
+  {
+    lcd_point_draw(uRow,uCol,color);
+    xerr+=delta_x ;
+    yerr+=delta_y ;
+    if(xerr>distance)
+    {
+      xerr-=distance;
+      uRow+=incx;
+    }
+    if(yerr>distance)
+    {
+      yerr-=distance;
+      uCol+=incy;
+    }
+  }
 }
 
 /**

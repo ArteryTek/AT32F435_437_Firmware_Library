@@ -68,6 +68,7 @@ typedef struct
   uint32_t g_printer_port_status;
   uint8_t g_rx_buff[USBD_PRINTER_OUT_MAXPACKET_SIZE];
   uint8_t g_printer_data[USBD_PRINTER_OUT_MAXPACKET_SIZE];
+  uint32_t g_rxlen;
   __IO uint8_t g_tx_completed;
   __IO uint8_t g_rx_completed;
 }printer_type;

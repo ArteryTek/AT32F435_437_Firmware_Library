@@ -12,4 +12,4 @@
   - qspi io2   --->   pf7
   - qspi io3   --->   pf6
   - qspi sck   --->   pf10
-  - qspi cs    --->   pg6
+  - qspi cs    --->   pg6

@@ -53,8 +53,8 @@ void dvp_config(uint16_t id)
   dvp_zoomout_set(DVP_PCDC_ALL, DVP_PCDS_CAP_FIRST, DVP_LCDC_ALL, DVP_LCDS_CAP_FIRST);
   dvp_zoomout_select(DVP_PCDES_CAP_FIRST);
   dvp_pixel_data_length_set(DVP_PIXEL_DATA_LENGTH_8);
-	
-	//*(__IO uint32_t *)(0x50050040) = (uint32_t)0x1000;
+  
+  //*(__IO uint32_t *)(0x50050040) = (uint32_t)0x1000;
 
   dvp_sync_mode_set(DVP_SYNC_MODE_HARDWARE);
 

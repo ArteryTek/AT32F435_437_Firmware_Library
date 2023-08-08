@@ -12,4 +12,4 @@
   Link List Mode test! This test case use Usart1_TX!" if edma send data 
   right, the three leds will turn on. 
 
-  for more detailed information. please refer to the application note document AN0090.
+  for more detailed information. please refer to the application note document AN0090.

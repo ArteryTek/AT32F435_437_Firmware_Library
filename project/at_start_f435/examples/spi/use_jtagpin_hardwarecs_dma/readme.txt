@@ -16,4 +16,4 @@
     pc2(miso)      <--->     pa13(miso)
     pd4(mosi)      <--->     pa14(mosi)
 
-  for more detailed information. please refer to the application note document AN0102.
+  for more detailed information. please refer to the application note document AN0102.

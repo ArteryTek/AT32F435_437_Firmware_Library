@@ -90,9 +90,9 @@ void clock_failure_detection_handler(void)
 /**
   * @brief  system clock config program
   * @note   the system clock is configured as follow:
-  *         - system clock        = (hick * pll_ns)/(pll_ms * pll_fr)
-  *         - system clock source = pll (hick)
-  *         - hext                = 8000000
+  *         system clock (sclk)   = (hick * pll_ns)/(pll_ms * pll_fr)
+  *         system clock source   = pll (hick)
+  *         - hext                = HEXT_VALUE
   *         - sclk                = 288000000
   *         - ahbdiv              = 1
   *         - ahbclk              = 288000000

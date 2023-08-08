@@ -42,7 +42,10 @@
 /* usb global struct define */
 otg_core_type otg_core_struct;
 uint8_t keyboard_send_flag;
-uint8_t usb_buffer[256];
+#if defined ( __ICCARM__ ) /* iar compiler */
+  #pragma data_alignment=4
+#endif
+ALIGNED_HEAD uint8_t usb_buffer[256] ALIGNED_TAIL;
 
 void usb_clock48m_select(usb_clk48_s clk_s);
 void keyboard_send_string(void *udev, uint8_t *string, uint8_t len);

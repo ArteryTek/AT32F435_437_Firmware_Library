@@ -29,7 +29,7 @@
   * @{
   */
 
-/** @addtogroup bootloader
+/** @addtogroup GEN_random_number_demo
   * @{
   */
 

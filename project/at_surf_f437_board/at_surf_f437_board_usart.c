@@ -73,7 +73,8 @@
 PUTCHAR_PROTOTYPE
 {
   while(usart_flag_get(USART1, USART_TDBE_FLAG) == RESET);
-  usart_data_transmit(USART1, ch);
+  usart_data_transmit(USART1, (uint16_t)ch);
+  while(usart_flag_get(USART1, USART_TDC_FLAG) == RESET);
   return ch;
 }
 

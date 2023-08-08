@@ -264,7 +264,7 @@ StatusType PCCARD_Init(PCCARD_HandleType *hpccard, xmc_nand_pccard_timinginit_ty
  if(hpccard->CF.Enable_8_bit_mode == TRUE)
   Set_reg_8_bit = 1;
  else
-	Set_reg_8_bit = 0;
+  Set_reg_8_bit = 0;
 
 
   if(hpccard->State == PCCARD_STATE_RESET)
@@ -703,7 +703,7 @@ BOOL PCCARD_Read_Sector(PCCARD_HandleType *hpccard, uint8_t *pBuffer, uint32_t S
         }
         else if((PCCARD_Read_STATUS_REG(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
         {
-										printf("Error Code=%X\n", PCCARD_Read_STATUS_REG(hpccard));
+                    printf("Error Code=%X\n", PCCARD_Read_STATUS_REG(hpccard));
           return FALSE;
         }
       }
@@ -787,7 +787,7 @@ BOOL PCCARD_Write_Sector(PCCARD_HandleType *hpccard, uint8_t *pBuffer, uint32_t 
         }
         else if((PCCARD_Read_STATUS_REG(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
         {
-										printf("Error Code=%X\n", PCCARD_Read_STATUS_REG(hpccard));
+                    printf("Error Code=%X\n", PCCARD_Read_STATUS_REG(hpccard));
           return FALSE;
         }
       }
@@ -885,7 +885,7 @@ BOOL PCCARD_Check_Power_Mode(PCCARD_HandleType *hpccard)
 {
   uint8_t SECTOR_COUNT_REG;
   /* set sector_count register 0x80, after check_power_mode */
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = 0x80;		
+  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = 0x80;    
   /* the register will be change to 0x00 or 0xFF */
 
   *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = hpccard->CF.CFAddr.Drv;
@@ -956,7 +956,7 @@ BOOL PCCARD_Idle_Immediate(PCCARD_HandleType *hpccard)
 {
   uint8_t SECTOR_COUNT_REG;
   /* set sector_count register 0x80, after check_power_mode */
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = 0x80;		
+  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = 0x80;    
   /* the register will be change to 0x00 or 0xFF */
 
   *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = hpccard->CF.CFAddr.Drv;
@@ -994,7 +994,7 @@ BOOL PCCARD_Set_Sleep_Mode(PCCARD_HandleType *hpccard)
 {
   uint8_t SECTOR_COUNT_REG;
   /* set sector_count register 0x80, after check_power_mode */
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = 0x80;		
+  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = 0x80;    
   /* the register will be change to 0x00 or 0xFF */
 
   *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = hpccard->CF.CFAddr.Drv;
@@ -1032,7 +1032,7 @@ BOOL PCCARD_Standby(PCCARD_HandleType *hpccard)
 {
   uint8_t SECTOR_COUNT_REG;
   /* set sector_count register 0x80, after check_power_mode */
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = 0x80;		
+  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = 0x80;    
   /* the register will be change to 0x00 or 0xFF */
 
   *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = hpccard->CF.CFAddr.Drv;
@@ -1070,7 +1070,7 @@ BOOL PCCARD_Standby_Immediate(PCCARD_HandleType *hpccard)
 {
   uint8_t SECTOR_COUNT_REG;
   /* set sector_count register 0x80, after check_power_mode */
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = 0x80;		
+  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = 0x80;    
   /* the register will be change to 0x00 or 0xFF */
 
   *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = hpccard->CF.CFAddr.Drv;
@@ -1976,7 +1976,7 @@ BOOL PCCARD_Read_Long_Sector(PCCARD_HandleType *hpccard, uint32_t Sector_Address
   hpccard->CF.CFAddr.Cylinder  = (uint16_t)(Sector_Address / Total_Cylinder);
   hpccard->CF.CFAddr.Head      = (uint8_t)((Sector_Address % Total_Cylinder) / hpccard->CF.CFCardInfo.Default_Sector);
   hpccard->CF.CFAddr.Sector    = (uint8_t)((Sector_Address % Total_Cylinder) % hpccard->CF.CFCardInfo.Default_Sector) + 1;
-  hpccard->CF.CFAddr.Sector_Count = 1;	//  some CF storage card implement the read long sector command as read sector commend
+  hpccard->CF.CFAddr.Sector_Count = 1;  //  some CF storage card implement the read long sector command as read sector commend
   //  set sector count to 1, after read 512 byte data, if the DRQ_BIT still high, means the
   //  read long sector command work well, because it shoult return 516 byte data (ECC).
 
@@ -2066,7 +2066,7 @@ BOOL PCCARD_Write_Long_Sector(PCCARD_HandleType *hpccard, uint32_t Sector_Addres
   hpccard->CF.CFAddr.Cylinder  = (uint16_t)(Sector_Address / Total_Cylinder);
   hpccard->CF.CFAddr.Head      = (uint8_t)((Sector_Address % Total_Cylinder) / hpccard->CF.CFCardInfo.Default_Sector);
   hpccard->CF.CFAddr.Sector    = (uint8_t)((Sector_Address % Total_Cylinder) % hpccard->CF.CFCardInfo.Default_Sector) + 1;
-  hpccard->CF.CFAddr.Sector_Count = 1;	//  some CF storage card implement the read long sector command as read sector commend
+  hpccard->CF.CFAddr.Sector_Count = 1;  //  some CF storage card implement the read long sector command as read sector commend
   //  set sector count to 1, after read 512 byte data, if the DRQ_BIT still high, means the
   //  read long sector command is work well, because it shoult return 516 byte data (ECC).
 
@@ -2222,7 +2222,7 @@ uint8_t *Write_Sector(PCCARD_HandleType *hpccard, uint8_t *pBuffer, uint32_t Tra
 
     while(1)
     {
-      if(edma_flag_get(EDMA_FDT1_FLAG) != RESET)	
+      if(edma_flag_get(EDMA_FDT1_FLAG) != RESET)  
       {
         edma_flag_clear(EDMA_FDT1_FLAG);
         break;
@@ -2295,14 +2295,14 @@ BOOL PCCARD_Reset(PCCARD_HandleType *hpccard)
 }
 
 /**
-	* Translate_CHSAddr:
-	*	translate DISK sector number to C.H.S address.
-	*	input	: CFCard
-	*			  Start (Start sector number)
-	*			  Sector_Count (sector count which read from CF card)
-	*			  Sector_Limit (maximum sector number)
-	*	output	: None
-	*/
+  * Translate_CHSAddr:
+  *  translate DISK sector number to C.H.S address.
+  *  input  : CFCard
+  *        Start (Start sector number)
+  *        Sector_Count (sector count which read from CF card)
+  *        Sector_Limit (maximum sector number)
+  *  output  : None
+  */
 void Translate_CHSAddr(PCCARD_HandleType *hpccard, uint32_t Start, uint16_t Sector_Count, uint16_t Sector_Limit)
 {
   uint32_t Total_Cylinder;

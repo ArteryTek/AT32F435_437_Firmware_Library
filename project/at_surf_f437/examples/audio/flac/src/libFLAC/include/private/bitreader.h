@@ -44,19 +44,19 @@ typedef FLAC__uint32 brword;
 typedef FLAC__bool (*FLAC__BitReaderReadCallback)(FLAC__byte buffer[], size_t *bytes, void *client_data);
 
 typedef struct FLAC__BitReader {
-	/* any partially-consumed word at the head will stay right-justified as bits are consumed from the left */
-	/* any incomplete word at the tail will be left-justified, and bytes from the read callback are added on the right */
-	brword *buffer;
-	uint32_t capacity; /* in words */
-	uint32_t words; /* # of completed words in buffer */
-	uint32_t bytes; /* # of bytes in incomplete word at buffer[words] */
-	uint32_t consumed_words; /* #words ... */
-	uint32_t consumed_bits; /* ... + (#bits of head word) already consumed from the front of buffer */
-	uint32_t read_crc16; /* the running frame CRC */
-	uint32_t crc16_offset; /* the number of words in the current buffer that should not be CRC'd */
-	uint32_t crc16_align; /* the number of bits in the current consumed word that should not be CRC'd */
-	FLAC__BitReaderReadCallback read_callback;
-	void *client_data;
+  /* any partially-consumed word at the head will stay right-justified as bits are consumed from the left */
+  /* any incomplete word at the tail will be left-justified, and bytes from the read callback are added on the right */
+  brword *buffer;
+  uint32_t capacity; /* in words */
+  uint32_t words; /* # of completed words in buffer */
+  uint32_t bytes; /* # of bytes in incomplete word at buffer[words] */
+  uint32_t consumed_words; /* #words ... */
+  uint32_t consumed_bits; /* ... + (#bits of head word) already consumed from the front of buffer */
+  uint32_t read_crc16; /* the running frame CRC */
+  uint32_t crc16_offset; /* the number of words in the current buffer that should not be CRC'd */
+  uint32_t crc16_align; /* the number of bits in the current consumed word that should not be CRC'd */
+  FLAC__BitReaderReadCallback read_callback;
+  void *client_data;
 }FLAC__BitReader;
 
 /*

@@ -314,15 +314,7 @@ typedef struct
   /**
     * @brief qspi actr register, offset:0x14
     */
-  union
-  {
-    __IO uint32_t actr;
-    struct
-    {
-      __IO uint32_t csdly                : 4; /* [3:0] */
-      __IO uint32_t reserved1            : 28;/* [31:4] */
-    } actr_bit;
-  };
+  __IO uint32_t reserved0;
 
   /**
     * @brief qspi fifosts register, offset:0x18
@@ -439,12 +431,12 @@ typedef struct
     __IO uint32_t xip_cmd_w2;
     struct
     {
-      __IO uint32_t xipr_dcnt            : 6; /* [5:0] */
-      __IO uint32_t reserved1            : 2; /* [7:6] */
+      __IO uint32_t xipr_dcnt            : 5; /* [4:0] */
+      __IO uint32_t reserved1            : 3; /* [7:5] */
       __IO uint32_t xipr_tcnt            : 7; /* [14:8] */
       __IO uint32_t xipr_sel             : 1; /* [15] */
-      __IO uint32_t xipw_dcnt            : 6; /* [21:16] */
-      __IO uint32_t reserved2            : 2; /* [23:22] */
+      __IO uint32_t xipw_dcnt            : 5; /* [20:16] */
+      __IO uint32_t reserved2            : 3; /* [23:21] */
       __IO uint32_t xipw_tcnt            : 7; /* [30:24] */
       __IO uint32_t xipw_sel             : 1; /* [31] */
     } xip_cmd_w2_bit;
@@ -514,6 +506,7 @@ typedef struct
   * @{
   */
 
+void qspi_reset(qspi_type* qspi_x);
 void qspi_encryption_enable(qspi_type* qspi_x, confirm_state new_state);
 void qspi_sck_mode_set(qspi_type* qspi_x, qspi_clk_mode_type new_mode);
 void qspi_clk_division_set(qspi_type* qspi_x, qspi_clk_div_type new_clkdiv);

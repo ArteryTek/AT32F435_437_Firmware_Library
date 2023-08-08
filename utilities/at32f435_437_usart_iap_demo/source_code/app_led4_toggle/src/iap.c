@@ -30,7 +30,7 @@
   * @{
   */
 
-/** @addtogroup IAP_app_led4_toggle
+/** @addtogroup USART_iap_app_led4_toggle
   * @{
   */
 

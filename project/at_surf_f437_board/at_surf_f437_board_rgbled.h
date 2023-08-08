@@ -42,14 +42,14 @@ extern "C" {
 #define RGB_LED_B_GPIO                   GPIOB
 #define RGB_LED_B_GPIO_CRM_CLK           CRM_GPIOB_PERIPH_CLOCK
 
-#define RGB_LED_R_LOW()    		           gpio_bits_reset(RGB_LED_R_GPIO, RGB_LED_R_PIN)
-#define RGB_LED_R_HIGH()    		         gpio_bits_set(RGB_LED_R_GPIO, RGB_LED_R_PIN)
+#define RGB_LED_R_LOW()                   gpio_bits_reset(RGB_LED_R_GPIO, RGB_LED_R_PIN)
+#define RGB_LED_R_HIGH()                 gpio_bits_set(RGB_LED_R_GPIO, RGB_LED_R_PIN)
 
-#define RGB_LED_G_LOW()    		           gpio_bits_reset(RGB_LED_G_GPIO, RGB_LED_G_PIN)
-#define RGB_LED_G_HIGH()    		         gpio_bits_set(RGB_LED_G_GPIO, RGB_LED_G_PIN)
+#define RGB_LED_G_LOW()                   gpio_bits_reset(RGB_LED_G_GPIO, RGB_LED_G_PIN)
+#define RGB_LED_G_HIGH()                 gpio_bits_set(RGB_LED_G_GPIO, RGB_LED_G_PIN)
 
-#define RGB_LED_B_LOW()    		           gpio_bits_reset(RGB_LED_B_GPIO, RGB_LED_B_PIN)
-#define RGB_LED_B_HIGH()    		         gpio_bits_set(RGB_LED_B_GPIO, RGB_LED_B_PIN)
+#define RGB_LED_B_LOW()                   gpio_bits_reset(RGB_LED_B_GPIO, RGB_LED_B_PIN)
+#define RGB_LED_B_HIGH()                 gpio_bits_set(RGB_LED_B_GPIO, RGB_LED_B_PIN)
 
 /**
   * @brief rgb led color type

@@ -24,7 +24,7 @@
   
 #include "at_surf_f437_board_malloc.h"
 
-#define configTOTAL_HEAP_SIZE		         ( ( size_t ) ( 250 * 1024 ) )
+#define configTOTAL_HEAP_SIZE             ( ( size_t ) ( 250 * 1024 ) )
                                          
 #define portBYTE_ALIGNMENT               8
 #define portBYTE_ALIGNMENT_MASK          ( 0x0007 )
@@ -34,7 +34,7 @@
 #define traceMALLOC( pvAddress, uiSize )
 #define traceFREE( pvAddress, uiSize )
 #define mtCOVERAGE_TEST_MARKER()
-#define configASSERT( x ) if( ( x ) == 0 ) { for( ;; ); }	
+#define configASSERT( x ) if( ( x ) == 0 ) { for( ;; ); }  
 
 
 /* Block sizes must not get too small. */
@@ -162,7 +162,7 @@ void * at32_malloc( size_t xWantedSize )
 
             if( ( xWantedSize > 0 ) && ( xWantedSize <= xFreeBytesRemaining ) )
             {
-                /* Traverse the list from the start	(lowest address) block until
+                /* Traverse the list from the start  (lowest address) block until
                  * one of adequate size is found. */
                 pxPreviousBlock = &xStart;
                 pxBlock = xStart.pxNextFreeBlock;

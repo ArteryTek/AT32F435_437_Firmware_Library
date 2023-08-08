@@ -12,4 +12,4 @@
   4 tmr1 requests to be transmitted src_buffer to dst_buffer using the edma.when all data 
   transfered, the three leds will turn on.
 
-  for more detailed information. please refer to the application note document AN0090.
+  for more detailed information. please refer to the application note document AN0090.

@@ -511,7 +511,7 @@ void lcd_fill(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey, uint16_t color
 
   for(i = 0; i < num; i++)
   {
-	  lcd_writeonepoint(color);
+    lcd_writeonepoint(color);
   }
 }
 

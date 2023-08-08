@@ -10,4 +10,4 @@
   peripheral. the pa13(jtms/swdat) as general io output push-pull toggled, 
   pa14(jtck/swclk) as usart2 tx send data.
 
-  for more detailed information. please refer to the application note document AN0096.
+  for more detailed information. please refer to the application note document AN0096.

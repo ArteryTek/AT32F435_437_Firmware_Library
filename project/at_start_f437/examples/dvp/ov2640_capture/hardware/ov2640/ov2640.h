@@ -8,8 +8,8 @@
 #define OV2640_PWRON_LOW   gpio_bits_reset(GPIOC, GPIO_PINS_1);
 
 #define OV2640_ADDR       0X60    //OV2640 ID
-#define OV2640_MID				0X7FA2
-#define OV2640_PID				0X2642
+#define OV2640_MID        0X7FA2
+#define OV2640_PID        0X2642
 
 #define OV2640_DSP_R_BYPASS     0x05
 #define OV2640_DSP_Qs           0x44

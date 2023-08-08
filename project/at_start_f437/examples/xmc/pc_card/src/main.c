@@ -44,7 +44,7 @@ typedef enum
 } TestStatus;
 
 /* Private define ------------------------------------------------------------*/
-#define Start_Sector	0
+#define Start_Sector  0
 
 /* Private variables ---------------------------------------------------------*/
 PCCARD_HandleType pccardHandle;
@@ -203,7 +203,7 @@ int main(void)
     /* Write Compact Flash Card Sector */
     CF_print(PRT_CMD_INFO, ("\r\nVerifying CF_ATA_WRITE_SECTOR..."));
     memset(pccard_TxBuffer, 0, PCCARD_SECTOR_SIZE * sizeof(uint8_t));
-	   /* Fill the buffer to write */
+     /* Fill the buffer to write */
     Fill_Buffer(pccard_TxBuffer, PCCARD_SECTOR_SIZE, 0x00);
     if(!PCCARD_Write_Sector(&pccardHandle, pccard_TxBuffer, Start_Sector, 1))
     {
@@ -221,7 +221,7 @@ int main(void)
       break;
     }
     /* Checking data integrity */
-    if(Buffercmp(pccard_TxBuffer, pccard_RxBuffer, PCCARD_SECTOR_SIZE) == PASSED)	
+    if(Buffercmp(pccard_TxBuffer, pccard_RxBuffer, PCCARD_SECTOR_SIZE) == PASSED)  
     {
       verification_result.ATA_READ_SECTOR_PASS = TRUE;
       verification_result.ATA_WRITE_SECTOR_PASS = TRUE;
@@ -237,7 +237,7 @@ int main(void)
     CF_print(PRT_CMD_INFO, ("\r\nVerifying CF_ATA_WRITE_BUFFER..."));
     memset(pccard_TxBuffer, 0, PCCARD_SECTOR_SIZE * sizeof(uint8_t));
     /* Fill the buffer to write */
-    Fill_Buffer(pccard_TxBuffer, PCCARD_SECTOR_SIZE, 0x00);	
+    Fill_Buffer(pccard_TxBuffer, PCCARD_SECTOR_SIZE, 0x00);  
 
     if(!PCCARD_Write_Buffer(&pccardHandle, pccard_TxBuffer))
     {
@@ -254,7 +254,7 @@ int main(void)
       printf("\r\nCompact Flash card Read Buffer Failed");
       break;
     }
-   	/* Checking data integrity */
+     /* Checking data integrity */
     if(Buffercmp(pccard_TxBuffer, pccard_RxBuffer, PCCARD_SECTOR_SIZE) == PASSED)
     {
       verification_result.ATA_READ_BUFFER_PASS = TRUE;
@@ -320,7 +320,7 @@ int main(void)
     CF_print(PRT_CMD_INFO, ("\r\nVerifying CF_ATA_ERASE_SECTOR..."));
     memset(pccard_TxBuffer, 0, PCCARD_SECTOR_SIZE * sizeof(uint8_t));
     /* Fill the buffer to write */
-    Fill_Buffer(pccard_TxBuffer, PCCARD_SECTOR_SIZE, 0x00);	
+    Fill_Buffer(pccard_TxBuffer, PCCARD_SECTOR_SIZE, 0x00);  
 
     if(!PCCARD_Write_Sector(&pccardHandle, pccard_TxBuffer, Start_Sector, 1))
     {
@@ -367,7 +367,7 @@ int main(void)
 
     memset(pccard_TxBuffer, 0, PCCARD_SECTOR_SIZE * sizeof(uint8_t));
     /* Fill the buffer to write */
-    Fill_Buffer(pccard_TxBuffer, PCCARD_SECTOR_SIZE, 0x00);	
+    Fill_Buffer(pccard_TxBuffer, PCCARD_SECTOR_SIZE, 0x00);  
 
     if(!PCCARD_Write_Sector_WO_ERASE(&pccardHandle, pccard_TxBuffer, Start_Sector, 1))
     {
@@ -383,7 +383,7 @@ int main(void)
       break;
     }
     /* Checking data integrity */
-    if(Buffercmp(pccard_TxBuffer, pccard_RxBuffer, PCCARD_SECTOR_SIZE) == PASSED)	
+    if(Buffercmp(pccard_TxBuffer, pccard_RxBuffer, PCCARD_SECTOR_SIZE) == PASSED)  
     {
       verification_result.ATA_WRITE_SECTOR_WO_ERASE_PASS = TRUE;
     }
@@ -396,7 +396,7 @@ int main(void)
     CF_print(PRT_CMD_INFO, ("\r\nVerifying CF_ATA_FORMAT_TRACK..."));
     memset(pccard_TxBuffer, 0, PCCARD_SECTOR_SIZE * sizeof(uint8_t));
     /* Fill the buffer to write */
-    Fill_Buffer(pccard_TxBuffer, PCCARD_SECTOR_SIZE, 0x00);	
+    Fill_Buffer(pccard_TxBuffer, PCCARD_SECTOR_SIZE, 0x00);  
 
     if(!PCCARD_Write_Sector(&pccardHandle, pccard_TxBuffer, Start_Sector, 1))
     {
@@ -439,7 +439,7 @@ int main(void)
     CF_print(PRT_CMD_INFO, ("\r\nVerifying CF_ATA_WRITE_VERIFY..."));
     memset(pccard_TxBuffer, 0, PCCARD_SECTOR_SIZE * sizeof(uint8_t));
 
-    Fill_Buffer(pccard_TxBuffer, PCCARD_SECTOR_SIZE, 0x00);	// Fill the buffer to write
+    Fill_Buffer(pccard_TxBuffer, PCCARD_SECTOR_SIZE, 0x00);  // Fill the buffer to write
 
     if(!PCCARD_Write_Verify(&pccardHandle, pccard_TxBuffer, Start_Sector, 1))
     {
@@ -456,7 +456,7 @@ int main(void)
       break;
     }
     /* Checking data integrity */
-    if(Buffercmp(pccard_TxBuffer, pccard_RxBuffer, PCCARD_SECTOR_SIZE) == PASSED)	
+    if(Buffercmp(pccard_TxBuffer, pccard_RxBuffer, PCCARD_SECTOR_SIZE) == PASSED)  
     {
       verification_result.ATA_WRITE_VERIFY_PASS = TRUE;
     }
@@ -526,7 +526,7 @@ int main(void)
        so it will work same as Read/Write Sector command. */
     memset(pccard_TxBuffer, 0, PCCARD_SECTOR_SIZE * sizeof(uint8_t));
 
-    Fill_Buffer(pccard_TxBuffer, PCCARD_SECTOR_SIZE, 0x00);	// Fill the buffer to write
+    Fill_Buffer(pccard_TxBuffer, PCCARD_SECTOR_SIZE, 0x00);  // Fill the buffer to write
 
     if(!PCCARD_Write_Multiple(&pccardHandle, pccard_TxBuffer, Start_Sector, 1))
     {
@@ -546,7 +546,7 @@ int main(void)
       break;
     }
     /* Checking data integrity */
-    if(Buffercmp(pccard_TxBuffer, pccard_RxBuffer, PCCARD_SECTOR_SIZE) == PASSED)	
+    if(Buffercmp(pccard_TxBuffer, pccard_RxBuffer, PCCARD_SECTOR_SIZE) == PASSED)  
     {
       verification_result.ATA_READ_MULTIPLE_PASS = TRUE;
       verification_result.ATA_WRITE_MULTIPLE_PASS = TRUE;
@@ -570,7 +570,7 @@ int main(void)
 
     memset(pccard_TxBuffer, 0, PCCARD_SECTOR_SIZE * sizeof(uint8_t));
     /* Fill the buffer to write */
-    Fill_Buffer(pccard_TxBuffer, PCCARD_SECTOR_SIZE, 0x00);	
+    Fill_Buffer(pccard_TxBuffer, PCCARD_SECTOR_SIZE, 0x00);  
 
     if(!PCCARD_Write_Multiple_WO_ERASE(&pccardHandle, pccard_TxBuffer, Start_Sector, 1))
     {
@@ -586,7 +586,7 @@ int main(void)
       break;
     }
 
-    if(Buffercmp(pccard_TxBuffer, pccard_RxBuffer, PCCARD_SECTOR_SIZE) == PASSED)	// Checking data integrity
+    if(Buffercmp(pccard_TxBuffer, pccard_RxBuffer, PCCARD_SECTOR_SIZE) == PASSED)  // Checking data integrity
     {
       verification_result.ATA_WRITE_MULTIPLE_WO_ERASE_PASS = TRUE;
     }
@@ -608,7 +608,7 @@ int main(void)
 
     memset(pccard_25_Sectors_TxBuffer, 0, PCCARD_25_SECTORS_SIZES * sizeof(uint8_t));
     /* Fill the buffer to write */
-    Fill_Buffer(pccard_25_Sectors_TxBuffer, PCCARD_25_SECTORS_SIZES, 0x78);	
+    Fill_Buffer(pccard_25_Sectors_TxBuffer, PCCARD_25_SECTORS_SIZES, 0x78);  
 
 
 
@@ -625,7 +625,7 @@ int main(void)
       printf("\r\nCompact Flash card Read 50 Secors Failed");
       break;
     }
-	   /* Checking data integrity */
+     /* Checking data integrity */
     if(Buffercmp(pccard_25_Sectors_TxBuffer, pccard_25_Sectors_RxBuffer, PCCARD_25_SECTORS_SIZES) == PASSED)
     {
       verification_result.ACESS_25_SECTORS_PASS = TRUE;

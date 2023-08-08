@@ -114,7 +114,7 @@ int main(void)
       - channelxpulse = dutycycle * (tmr1_period - 1) / 100
 
   2/ insert a dead time equal to 11/apb2_freq*2 ns
-  3/ configure the break feature, active at high level, and using the automatic
+  3/ configure the brake feature, active at high level, and using the automatic
      output enable feature
   4/ use the locking parameters level1.
   ----------------------------------------------------------------------- */

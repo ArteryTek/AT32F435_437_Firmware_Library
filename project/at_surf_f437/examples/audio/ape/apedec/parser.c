@@ -21,7 +21,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 
 */
-									
+                  
 #include <inttypes.h>
 #include <string.h>
 #ifndef ROCKBOX
@@ -238,7 +238,7 @@ int ape_parseheader(FIL* fx, struct ape_ctx_t* ape_ctx)
             return -1;
         if (read_uint32(fx,&ape_ctx->wavtaillength) < 0)
             return -1;
-		f_read(fx,&ape_ctx->md5,16,(u32*)&n);
+    f_read(fx,&ape_ctx->md5,16,(u32*)&n);
         if ( n!= 16)
             return -1; 
         /* Skip any unknown bytes at the end of the descriptor.  This is for future

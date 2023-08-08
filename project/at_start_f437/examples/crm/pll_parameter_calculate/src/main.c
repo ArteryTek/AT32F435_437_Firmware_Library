@@ -67,9 +67,9 @@ void clkout_config(void)
 /**
   * @brief  system clock config 200mhz
   * @note   the system clock is configured as follow:
-  *         - system clock        = (hext * pll_ns)/(pll_ms * pll_fr)
-  *         - system clock source = pll (hext)
-  *         - hext                = 8000000
+  *         system clock (sclk)   = (hext * pll_ns)/(pll_ms * pll_fr)
+  *         system clock source   = pll (hext)
+  *         - hext                = HEXT_VALUE
   *         - sclk                = 200000000
   *         - ahbdiv              = 1
   *         - ahbclk              = 200000000

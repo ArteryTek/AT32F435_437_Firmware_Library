@@ -35,7 +35,7 @@
   * @{
   */
 
-/** @addtogroup EMAC_IAP_app_led3_toggle
+/** @addtogroup EMAC_iap_app_led3_toggle
   * @{
   */
 
@@ -44,7 +44,7 @@
   */
 
 /* app starting address */
-#define APP_START_ADDR          0x08010000
+#define APP_START_ADDR          0x08020000
 
 /* the previous sector of app starting address is iap upgrade flag */
 #define IAP_UPGRADE_FLAG_ADDR    (APP_START_ADDR - 0x1000)

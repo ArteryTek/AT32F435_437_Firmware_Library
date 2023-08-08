@@ -22,8 +22,8 @@
   **************************************************************************
   */
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __USBH_MSC_CLASS_H
-#define __USBH_MSC_CLASS_H
+#ifndef __USBH_CDC_CLASS_H
+#define __USBH_CDC_CLASS_H
 
 #ifdef __cplusplus
 extern "C" {

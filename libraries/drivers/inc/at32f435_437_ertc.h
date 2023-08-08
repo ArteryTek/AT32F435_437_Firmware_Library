@@ -89,10 +89,6 @@ extern "C" {
 #define ERTC_ALARM_MASK_ALL              ((uint32_t)0x80808080) /*!< ertc alarm don't match all */
 
 /**
-  * @}
-  */
-
-/**
   * @brief compatible with older versions
   */
 #define ERTC_WAT_CLK_CK_A_16BITS         ERTC_WAT_CLK_CK_B_16BITS  

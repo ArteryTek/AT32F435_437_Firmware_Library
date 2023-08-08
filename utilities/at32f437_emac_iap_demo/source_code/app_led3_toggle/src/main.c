@@ -34,7 +34,7 @@
   * @{
   */
 
-/** @addtogroup EMAC_IAP_app_led3_toggle
+/** @addtogroup EMAC_iap_app_led3_toggle
   * @{
   */
 
@@ -49,7 +49,7 @@ int main(void)
 {
   error_status status;
   /* config vector table offset */
-  nvic_vector_table_set(NVIC_VECTTAB_FLASH, 0x10000);
+  nvic_vector_table_set(NVIC_VECTTAB_FLASH, 0x20000);
 
   system_clock_config();
   at32_board_init();

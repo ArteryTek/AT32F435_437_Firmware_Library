@@ -909,9 +909,10 @@ void crm_interrupt_enable(uint32_t crm_int, confirm_state new_state)
 error_status crm_pll_parameter_calculate(crm_pll_clock_source_type pll_rcs, uint32_t target_sclk_freq, \
                                          uint16_t *ret_ms, uint16_t *ret_ns, uint16_t *ret_fr)
 {
-  int32_t pll_rcs_freq = 0, ns = 0, ms = 0, fr = 0;
-  uint32_t ms_min = 0, ms_max = 0, error_min = 0xFFFFFFFF;
-  uint32_t result = 0, absolute_value = 0;
+  uint32_t error_min = 0xFFFFFFFF;
+  uint32_t pll_rcs_freq = 0, result = 0, absolute_value = 0;
+  uint16_t ns = 0, ms = 0, ms_min = 0, ms_max = 0;
+  int16_t fr = 0;
 
   /* reduce calculate accuracy, target_sclk_freq accuracy with khz */
   target_sclk_freq = target_sclk_freq / 1000;
@@ -955,7 +956,7 @@ error_status crm_pll_parameter_calculate(crm_pll_clock_source_type pll_rcs, uint
         {
           *ret_ms = ms;
           *ret_ns = ns;
-          *ret_fr = fr;
+          *ret_fr = (uint16_t)fr;
           /* the pll parameters that is equal to target_sclk_freq */
           return SUCCESS;
         }
@@ -966,7 +967,7 @@ error_status crm_pll_parameter_calculate(crm_pll_clock_source_type pll_rcs, uint
           error_min = absolute_value;
           *ret_ms = ms;
           *ret_ns = ns;
-          *ret_fr = fr;
+          *ret_fr = (uint16_t)fr;
         }
       }
     }

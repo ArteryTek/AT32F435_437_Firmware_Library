@@ -33,6 +33,8 @@
   * @{
   */
 
+extern void qspi_gpio_slect(void);
+
 /**
   * @brief  qspi xip mode enable or disable
   * @param  none
@@ -247,21 +249,7 @@ void uninit_clk(void)
   */
 void qspi_gpio_init(void)
 {
-  /* enable the qspi clock */
-  CRM->ahben3 |= 0x02;
-
-  /* enable the gpio pin clock */
-  CRM->ahben1 |= 0x60;
-
-  /* configure the gpio */
-  GPIOF->cfgr = 0x002AA000;
-  GPIOF->odrvr = 0x00155000;
-  GPIOF->muxl = 0x99000000;
-  GPIOF->muxh = 0x000009AA;
-
-  GPIOG->cfgr = 0x00002000;
-  GPIOG->odrvr = 0x00001000;
-  GPIOG->muxl = 0x0A000000;
+  qspi_gpio_slect();
 }
 
 /**

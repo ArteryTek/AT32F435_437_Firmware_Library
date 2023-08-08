@@ -34,4 +34,4 @@
   I2C1 SCL      PB6  
   I2C1 SDA      PB7  
   TP INT        PE3  
-  TP RS         PD11 
+  TP RS         PD11 

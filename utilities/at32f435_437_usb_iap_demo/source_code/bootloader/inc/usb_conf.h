@@ -38,7 +38,7 @@ extern "C" {
   * @{
   */
 
-/** @addtogroup 437_USB_device_hid_iap
+/** @addtogroup USB_iap_bootloader
   * @{
   */
 

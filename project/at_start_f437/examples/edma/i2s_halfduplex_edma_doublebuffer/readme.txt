@@ -14,4 +14,4 @@
     pd1(sck)       <--->     pc10(sck)
     pd4(sd)        <--->     pc12(sd)
 
-  for more detailed information. please refer to the application note document AN0090.
+  for more detailed information. please refer to the application note document AN0090.

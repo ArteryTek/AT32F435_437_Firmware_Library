@@ -12,4 +12,4 @@
     pd1(sck)       <--->     pc10(sck)
     pc2(miso)      <--->     pc12(mosi)
 
-  for more detailed information. please refer to the application note document AN0102.
+  for more detailed information. please refer to the application note document AN0102.

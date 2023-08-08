@@ -44,7 +44,7 @@ unsigned char connect_flag = 0;
   */
 void Delay_s(unsigned long ulVal)
 {
-	while ( --ulVal != 0 );
+  while ( --ulVal != 0 );
 }
 
 /**
@@ -56,12 +56,12 @@ void Delay_s(unsigned long ulVal)
   */
 err_t tcp_client_send_data(struct tcp_pcb *cpcb,unsigned char *buff,unsigned int length)
 {
-	err_t err;
+  err_t err;
 
-	err = tcp_write(cpcb,buff,length,TCP_WRITE_FLAG_COPY);	//send data
-	tcp_output(cpcb);
-	//tcp_close(cpcb);
-	return err;
+  err = tcp_write(cpcb,buff,length,TCP_WRITE_FLAG_COPY);  //send data
+  tcp_output(cpcb);
+  //tcp_close(cpcb);
+  return err;
 }
 
 /**
@@ -71,23 +71,23 @@ err_t tcp_client_send_data(struct tcp_pcb *cpcb,unsigned char *buff,unsigned int
   */
 struct tcp_pcb *check_tcp_connect(void)
 {
-	struct tcp_pcb *cpcb = 0;
-	connect_flag = 0;
-	for(cpcb = tcp_active_pcbs;cpcb != NULL; cpcb = cpcb->next)
-	{
-		if(cpcb -> state == ESTABLISHED)
-		{
-			connect_flag = 1;
-			break;
-		}
-	}
+  struct tcp_pcb *cpcb = 0;
+  connect_flag = 0;
+  for(cpcb = tcp_active_pcbs;cpcb != NULL; cpcb = cpcb->next)
+  {
+    if(cpcb -> state == ESTABLISHED)
+    {
+      connect_flag = 1;
+      break;
+    }
+  }
 
-	if(connect_flag == 0)
-	{
-		tcp_client_init(TCP_LOCAL_PORT,TCP_SERVER_PORT,TCP_SERVER_IP);
-		cpcb = 0;
-	}
-	return cpcb;
+  if(connect_flag == 0)
+  {
+    tcp_client_init(TCP_LOCAL_PORT,TCP_SERVER_PORT,TCP_SERVER_IP);
+    cpcb = 0;
+  }
+  return cpcb;
 }
 
 /**
@@ -99,8 +99,8 @@ struct tcp_pcb *check_tcp_connect(void)
   */
 err_t tcp_connected(void *arg,struct tcp_pcb *pcb,err_t err)
 {
-	//tcp_client_pcb = pcb;
-	return ERR_OK;
+  //tcp_client_pcb = pcb;
+  return ERR_OK;
 }
 
 /**
@@ -114,19 +114,19 @@ err_t tcp_connected(void *arg,struct tcp_pcb *pcb,err_t err)
 err_t tcp_client_recv(void *arg, struct tcp_pcb *pcb,struct pbuf *p,err_t err)
 {
 
-	if(p != NULL)
-	{
-		tcp_recved(pcb, p->tot_len);
-		tcp_write(pcb,p->payload,p->tot_len,TCP_WRITE_FLAG_COPY);
-		tcp_output(pcb);
-	}
-	else
-	{
-		tcp_close(pcb);
-	}
-	pbuf_free(p);
-	err = ERR_OK;
-	return err;
+  if(p != NULL)
+  {
+    tcp_recved(pcb, p->tot_len);
+    tcp_write(pcb,p->payload,p->tot_len,TCP_WRITE_FLAG_COPY);
+    tcp_output(pcb);
+  }
+  else
+  {
+    tcp_close(pcb);
+  }
+  pbuf_free(p);
+  err = ERR_OK;
+  return err;
 }
 
 /**
@@ -142,22 +142,22 @@ err_t tcp_client_recv(void *arg, struct tcp_pcb *pcb,struct pbuf *p,err_t err)
 void tcp_client_init(uint16_t local_port,uint16_t remote_port,unsigned char a,unsigned char b,unsigned char c,unsigned char d)
 {
 
-	ip_addr_t ipaddr;
-	struct tcp_pcb *tcp_client_pcb;
-	err_t err;
-	IP4_ADDR(&ipaddr,a,b,c,d);
-	tcp_client_pcb = tcp_new();
-	if (!tcp_client_pcb)
-	{
-		return ;
-	}
-	err = tcp_bind(tcp_client_pcb,IP_ADDR_ANY,local_port);
+  ip_addr_t ipaddr;
+  struct tcp_pcb *tcp_client_pcb;
+  err_t err;
+  IP4_ADDR(&ipaddr,a,b,c,d);
+  tcp_client_pcb = tcp_new();
+  if (!tcp_client_pcb)
+  {
+    return ;
+  }
+  err = tcp_bind(tcp_client_pcb,IP_ADDR_ANY,local_port);
     if(err != ERR_OK)
-	{
-		return ;
-	}
-	tcp_connect(tcp_client_pcb, &ipaddr, remote_port, tcp_connected);
-	tcp_recv(tcp_client_pcb, tcp_client_recv);
+  {
+    return ;
+  }
+  tcp_connect(tcp_client_pcb, &ipaddr, remote_port, tcp_connected);
+  tcp_recv(tcp_client_pcb, tcp_client_recv);
 }
 
 /**

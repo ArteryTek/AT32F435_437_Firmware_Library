@@ -49,7 +49,7 @@ extern "C" {
   * this header include define support list:
   *   1. at-start-f435 v1.x board
   *   2. at-start-f437 v1.x board
-  * if define AT_START_F435_V1, the header file support at-start-f437 v1.x board
+  * if define AT_START_F435_V1, the header file support at-start-f435 v1.x board
   * if define AT_START_F437_V1, the header file support at-start-f437 v1.x board
   */
 

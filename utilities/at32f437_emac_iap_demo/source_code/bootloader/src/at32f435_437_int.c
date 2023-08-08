@@ -9,6 +9,14 @@
 #include "at32f435_437_int.h"
 #include "netconf.h"
 
+/** @addtogroup UTILITIES_examples
+  * @{
+  */
+
+/** @addtogroup EMAC_iap_bootloader
+  * @{
+  */
+
 /**
   * @brief  this function handles nmi exception.
   * @param  none
@@ -121,3 +129,10 @@ void TMR6_DAC_GLOBAL_IRQHandler(void)
   }
 }
 
+/**
+  * @}
+  */
+
+/**
+  * @}
+  */

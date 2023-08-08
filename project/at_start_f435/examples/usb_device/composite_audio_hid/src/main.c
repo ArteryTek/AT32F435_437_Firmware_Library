@@ -44,7 +44,10 @@ otg_core_type otg_core_struct;
 void usb_clock48m_select(usb_clk48_s clk_s);
 void usb_gpio_config(void);
 void usb_low_power_wakeup_config(void);
-uint8_t report_buf[USBD_AUHID_IN_MAXPACKET_SIZE];
+#if defined ( __ICCARM__ ) /* iar compiler */
+  #pragma data_alignment=4
+#endif
+ALIGNED_HEAD  uint8_t report_buf[USBD_AUHID_IN_MAXPACKET_SIZE] ALIGNED_TAIL;
 
 /**
   * @brief  main function.

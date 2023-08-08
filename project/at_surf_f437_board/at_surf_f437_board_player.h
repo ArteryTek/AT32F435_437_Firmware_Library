@@ -44,7 +44,7 @@ extern "C" {
 /**
   * @brief get min value
   */
-#define AUDIO_MIN(x,y)	((x)<(y)? (x):(y))
+#define AUDIO_MIN(x,y)  ((x)<(y)? (x):(y))
 
 /**
   * @brief music file type
@@ -106,8 +106,8 @@ typedef struct
 
   uint16_t tx_size;
   uint8_t *read_buf;
-	int32_t *decoded0;
-	int32_t *decoded1;
+  int32_t *decoded0;
+  int32_t *decoded1;
 }audio_type;  
 
 extern audio_type audio_info; 

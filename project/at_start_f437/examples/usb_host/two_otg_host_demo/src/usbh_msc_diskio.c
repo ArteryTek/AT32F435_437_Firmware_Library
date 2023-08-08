@@ -21,8 +21,8 @@
   *
   **************************************************************************
   */
-#include "ff.h"			/* Obtains integer types */
-#include "diskio.h"		/* Declarations of disk functions */
+#include "ff.h"      /* Obtains integer types */
+#include "diskio.h"    /* Declarations of disk functions */
 #include "usb_core.h"
 #include "usbh_msc_class.h"
 /** @addtogroup AT32F437_periph_examples
@@ -36,9 +36,9 @@
 extern otg_core_type otg_core_struct;
 
 /* Definitions of physical drive number for each drive */
-#define DEV_RAM		0	/* Example: Map Ramdisk to physical drive 0 */
-#define DEV_MMC		1	/* Example: Map MMC/SD card to physical drive 1 */
-#define DEV_USB		2	/* Example: Map USB MSD to physical drive 2 */
+#define DEV_RAM    0  /* Example: Map Ramdisk to physical drive 0 */
+#define DEV_MMC    1  /* Example: Map MMC/SD card to physical drive 1 */
+#define DEV_USB    2  /* Example: Map USB MSD to physical drive 2 */
 
 
 /*-----------------------------------------------------------------------*/
@@ -46,7 +46,7 @@ extern otg_core_type otg_core_struct;
 /*-----------------------------------------------------------------------*/
 
 DSTATUS disk_status (
-	BYTE pdrv		/* Physical drive nmuber to identify the drive */
+  BYTE pdrv    /* Physical drive nmuber to identify the drive */
 )
 {
   if(usbh_msc_is_ready(&otg_core_struct.host, pdrv) == MSC_OK)
@@ -54,7 +54,7 @@ DSTATUS disk_status (
     return RES_OK;
   }
 
-	return RES_ERROR;
+  return RES_ERROR;
 }
 
 
@@ -64,7 +64,7 @@ DSTATUS disk_status (
 /*-----------------------------------------------------------------------*/
 
 DSTATUS disk_initialize (
-	BYTE pdrv				/* Physical drive nmuber to identify the drive */
+  BYTE pdrv        /* Physical drive nmuber to identify the drive */
 )
 {
   return RES_OK;
@@ -76,10 +76,10 @@ DSTATUS disk_initialize (
 /* Read Sector(s)                                                        */
 /*-----------------------------------------------------------------------*/
 DRESULT disk_read (
-	BYTE pdrv,		/* Physical drive nmuber to identify the drive */
-	BYTE *buff,		/* Data buffer to store read data */
-	LBA_t sector,	/* Start sector in LBA */
-	UINT count		/* Number of sectors to read */
+  BYTE pdrv,    /* Physical drive nmuber to identify the drive */
+  BYTE *buff,    /* Data buffer to store read data */
+  LBA_t sector,  /* Start sector in LBA */
+  UINT count    /* Number of sectors to read */
 )
 {
   usb_sts_type status;
@@ -101,10 +101,10 @@ DRESULT disk_read (
 #if FF_FS_READONLY == 0
 
 DRESULT disk_write (
-	BYTE pdrv,			/* Physical drive nmuber to identify the drive */
-	const BYTE *buff,	/* Data to be written */
-	LBA_t sector,		/* Start sector in LBA */
-	UINT count			/* Number of sectors to write */
+  BYTE pdrv,      /* Physical drive nmuber to identify the drive */
+  const BYTE *buff,  /* Data to be written */
+  LBA_t sector,    /* Start sector in LBA */
+  UINT count      /* Number of sectors to write */
 )
 {
   usb_sts_type status;
@@ -127,14 +127,14 @@ DRESULT disk_write (
 /*-----------------------------------------------------------------------*/
 
 DRESULT disk_ioctl (
-	BYTE pdrv,		/* Physical drive nmuber (0..) */
-	BYTE cmd,		/* Control code */
-	void *buff		/* Buffer to send/receive control data */
+  BYTE pdrv,    /* Physical drive nmuber (0..) */
+  BYTE cmd,    /* Control code */
+  void *buff    /* Buffer to send/receive control data */
 )
 {
   usbh_core_type *host = (usbh_core_type *)&otg_core_struct.host;
   usbh_msc_type *pmsc = (usbh_msc_type *)host->class_handler->pdata;
-	DRESULT res = RES_OK;
+  DRESULT res = RES_OK;
   switch(cmd)
   {
     case CTRL_SYNC:

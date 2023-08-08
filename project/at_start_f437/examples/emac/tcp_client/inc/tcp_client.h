@@ -45,8 +45,8 @@
   */
 
 /* TCP server and client configuration*/
-#define TCP_LOCAL_PORT     		           (1030)
-#define TCP_SERVER_PORT    		           (1031)
+#define TCP_LOCAL_PORT                    (1030)
+#define TCP_SERVER_PORT                   (1031)
 
 #define TCP_SERVER_IP                    192,168,81,19
 

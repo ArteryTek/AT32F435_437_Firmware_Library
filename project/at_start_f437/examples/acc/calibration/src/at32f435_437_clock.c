@@ -28,8 +28,8 @@
 /**
   * @brief  system clock config program
   * @note   the system clock is configured as follow:
-  *         - system clock        = (hick / 6 * pll_ns)/(pll_ms * pll_fr)
-  *         - system clock source = pll (hick)
+  *         system clock (sclk)   = (hick / 6 * pll_ns)/(pll_ms * pll_fr)
+  *         system clock source   = pll (hick)
   *         - sclk                = 288000000
   *         - ahbdiv              = 1
   *         - ahbclk              = 288000000

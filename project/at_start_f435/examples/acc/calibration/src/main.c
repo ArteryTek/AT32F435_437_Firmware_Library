@@ -41,7 +41,10 @@
 
 /* usb global struct define */
 otg_core_type otg_core_struct;
-uint8_t usb_buffer[256];
+#if defined ( __ICCARM__ ) /* iar compiler */
+  #pragma data_alignment=4
+#endif
+ALIGNED_HEAD uint8_t usb_buffer[256] ALIGNED_TAIL;
 
 void usb_clock48m_select(usb_clk48_s clk_s);
 void usb_gpio_config(void);

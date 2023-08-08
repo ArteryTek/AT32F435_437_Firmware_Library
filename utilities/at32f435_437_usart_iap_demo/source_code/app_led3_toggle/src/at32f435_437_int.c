@@ -29,7 +29,7 @@
   * @{
   */
 
-/** @addtogroup IAP_bootloader
+/** @addtogroup USART_iap_app_led3_toggle
   * @{
   */
 

@@ -37,7 +37,7 @@
   * @{
   */
 
-/** @addtogroup EMAC_IAP_bootloader
+/** @addtogroup EMAC_iap_bootloader
   * @{
   */
 
