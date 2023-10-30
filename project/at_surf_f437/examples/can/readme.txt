@@ -5,5 +5,5 @@
   **************************************************************************
   */
   
-  this demo shows how to use can api based on the at-surf-f437 board.
-  for more detail£¬please refer to AN0049_AT_SURF_F437_Board_Application_Note.
+  this demo shows how to use can api based on the at-surf board.
+  for more detail£¬please refer to AN0049 application note.

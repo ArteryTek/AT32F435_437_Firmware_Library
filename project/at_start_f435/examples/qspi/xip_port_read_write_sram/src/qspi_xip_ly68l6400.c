@@ -123,7 +123,10 @@ void qspi_xip_init_ly68l6400(void)
   /* initial xip */
   xip_init_ly68l6400_config(&ly68l6400_xip_init);
   qspi_xip_init(QSPI1, &ly68l6400_xip_init);
-  qspi_xip_cache_bypass_set(QSPI1,TRUE);
+  if(DEBUGMCU->ser_id_bit.rev_id == 0x00)
+  {
+    qspi_xip_cache_bypass_set(QSPI1, TRUE);
+  }
   qspi_xip_enable(QSPI1, TRUE);
 }
 

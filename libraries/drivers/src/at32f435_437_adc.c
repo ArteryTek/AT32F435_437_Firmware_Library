@@ -852,6 +852,7 @@ flag_status adc_ordinary_software_trigger_status_get(adc_type *adc_x)
 void adc_preempt_software_trigger_enable(adc_type *adc_x, confirm_state new_state)
 {
   adc_x->ctrl2_bit.pcswtrg = new_state;
+  adc_x->ctrl2_bit.pcswtrg = FALSE;
 }
 
 /**
@@ -957,6 +958,54 @@ flag_status adc_flag_get(adc_type *adc_x, uint8_t adc_flag)
   else
   {
     status = SET;
+  }
+  return status;
+}
+
+/**
+  * @brief  get interrupt flag of the specified adc peripheral.
+  * @param  adc_x: select the adc peripheral.
+  *         this parameter can be one of the following values:
+  *         - ADC1, ADC2, ADC3.
+  * @param  adc_flag: select the adc flag.
+  *         this parameter can be one of the following values:
+  *         - ADC_VMOR_FLAG
+  *         - ADC_OCCE_FLAG
+  *         - ADC_PCCE_FLAG
+  *         - ADC_OCCO_FLAG
+  * @retval the new state of adc flag status(SET or RESET).
+  */
+flag_status adc_interrupt_flag_get(adc_type *adc_x, uint8_t adc_flag)
+{
+  flag_status status = RESET;
+  switch(adc_flag)
+  {
+    case ADC_VMOR_FLAG:
+      if(adc_x->sts_bit.vmor && adc_x->ctrl1_bit.vmorien)
+      {
+        status = SET;
+      }
+      break;
+    case ADC_OCCE_FLAG:
+      if(adc_x->sts_bit.occe && adc_x->ctrl1_bit.occeien)
+      {
+        status = SET;
+      }
+      break;
+    case ADC_PCCE_FLAG:
+      if(adc_x->sts_bit.pcce && adc_x->ctrl1_bit.pcceien)
+      {
+        status = SET;
+      }
+      break;
+    case ADC_OCCO_FLAG:
+      if(adc_x->sts_bit.occo && adc_x->ctrl1_bit.occoien)
+      {
+        status = SET;
+      }
+      break;
+    default:
+      break;
   }
   return status;
 }

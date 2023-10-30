@@ -1035,6 +1035,7 @@ void xmc_nand_ecc_enable(xmc_class_bank_type xmc_bank, confirm_state new_state);
 uint32_t xmc_ecc_get(xmc_class_bank_type xmc_bank);
 void xmc_interrupt_enable(xmc_class_bank_type xmc_bank, xmc_interrupt_sources_type xmc_int, confirm_state new_state);
 flag_status xmc_flag_status_get(xmc_class_bank_type xmc_bank, xmc_interrupt_flag_type xmc_flag);
+flag_status xmc_interrupt_flag_status_get(xmc_class_bank_type xmc_bank, xmc_interrupt_flag_type xmc_flag);
 void xmc_flag_clear(xmc_class_bank_type xmc_bank, xmc_interrupt_flag_type xmc_flag);
 void xmc_pccard_reset(void);
 void xmc_pccard_init(xmc_pccard_init_type* xmc_pccard_init_struct);

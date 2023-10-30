@@ -304,7 +304,6 @@ void en25qh128a_qspi_xip_init(void)
   /* initial xip */
   en25qh128a_xip_init_config(&en25qh128a_xip_init);
   qspi_xip_init(QSPI1, &en25qh128a_xip_init);
-  qspi_xip_cache_bypass_set(QSPI1, FALSE);
   qspi_xip_enable(QSPI1, TRUE);
 }
 

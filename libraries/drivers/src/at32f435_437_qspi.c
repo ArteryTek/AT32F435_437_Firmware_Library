@@ -121,6 +121,8 @@ void qspi_clk_division_set(qspi_type* qspi_x, qspi_clk_div_type new_clkdiv)
   *         this parameter can be one of the following values:
   *         QSPI1,QSPI2.
   * @param  new_state (TRUE or FALSE)
+  *         TRUE: disable cache
+  *         FALSE: enable cache
   * @retval none
   */
 void qspi_xip_cache_bypass_set(qspi_type* qspi_x, confirm_state new_state)
@@ -152,7 +154,7 @@ void qspi_interrupt_enable(qspi_type* qspi_x, confirm_state new_state)
   *         - QSPI_RXFIFORDY_FLAG
   *         - QSPI_TXFIFORDY_FLAG
   *         - QSPI_CMDSTS_FLAG
-  * @retval the new state of usart_flag (SET or RESET).
+  * @retval the new state of the flag (SET or RESET).
   */
 flag_status qspi_flag_get(qspi_type* qspi_x, uint32_t flag)
 {
@@ -172,6 +174,24 @@ flag_status qspi_flag_get(qspi_type* qspi_x, uint32_t flag)
       break;
   }
   return bit_status;
+}
+
+/**
+  * @brief  get interrupt flags.
+  * @param  qspi_x: select the qspi peripheral.
+  *         this parameter can be one of the following values:
+  *         QSPI1,QSPI2.
+  * @param  flag: only QSPI_CMDSTS_FLAG valid.
+  * @retval the new state of the flag (SET or RESET).
+  */
+flag_status qspi_interrupt_flag_get(qspi_type* qspi_x, uint32_t flag)
+{
+  if(QSPI_CMDSTS_FLAG != flag)
+    return RESET;
+  if(qspi_x->cmdsts_bit.cmdsts && qspi_x->ctrl2_bit.cmdie)
+    return SET;
+  else
+    return RESET;
 }
 
 /**
@@ -301,7 +321,6 @@ void qspi_xip_enable(qspi_type* qspi_x, confirm_state new_state)
   {
     __NOP();
   }
-
   /* set xip mode to new state */
   qspi_x->ctrl_bit.xipsel = new_state;
 

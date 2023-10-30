@@ -725,6 +725,97 @@ flag_status xmc_flag_status_get(xmc_class_bank_type xmc_bank, xmc_interrupt_flag
 }
 
 /**
+  * @brief  check whether the specified xmc interrupt flag is set or not.
+  * @param  xmc_bank: specifies the xmc bank to be used
+  *         this parameter can be one of the following values:
+  *         - XMC_BANK2_NAND
+  *         - XMC_BANK3_NAND
+  *         - XMC_BANK4_PCCARD
+  * @param  xmc_flag: specifies the flag to check.
+  *         this parameter can be any combination of the following values:
+  *         - XMC_RISINGEDGE_FLAG
+  *         - XMC_LEVEL_FLAG
+  *         - XMC_FALLINGEDGE_FLAG
+  * @retval none
+  */
+flag_status xmc_interrupt_flag_status_get(xmc_class_bank_type xmc_bank, xmc_interrupt_flag_type xmc_flag)
+{
+  flag_status status = RESET;
+
+  if(xmc_bank == XMC_BANK2_NAND)
+  {
+    switch(xmc_flag)
+    {
+      case XMC_RISINGEDGE_FLAG:
+        if(XMC_BANK2->bk2is_bit.reien & XMC_BANK2->bk2is_bit.res)
+          status = SET;
+        break;
+      
+      case XMC_LEVEL_FLAG:
+        if(XMC_BANK2->bk2is_bit.feien & XMC_BANK2->bk2is_bit.fes)
+          status = SET;
+        break;
+      
+      case XMC_FALLINGEDGE_FLAG:
+        if(XMC_BANK2->bk2is_bit.hlien & XMC_BANK2->bk2is_bit.hls)
+          status = SET;
+        break;
+      
+      default:
+        break;
+    }
+  }
+  else if(xmc_bank == XMC_BANK3_NAND)
+  {
+    switch(xmc_flag)
+    {
+      case XMC_RISINGEDGE_FLAG:
+        if(XMC_BANK3->bk3is_bit.reien & XMC_BANK3->bk3is_bit.res)
+          status = SET;
+        break;
+      
+      case XMC_LEVEL_FLAG:
+        if(XMC_BANK3->bk3is_bit.feien & XMC_BANK3->bk3is_bit.fes)
+          status = SET;
+        break;
+      
+      case XMC_FALLINGEDGE_FLAG:
+        if(XMC_BANK3->bk3is_bit.hlien & XMC_BANK3->bk3is_bit.hls)
+          status = SET;
+        break;
+      
+      default:
+        break;
+    }
+  }
+  else if(xmc_bank == XMC_BANK4_PCCARD)
+  {
+    switch(xmc_flag)
+    {
+      case XMC_RISINGEDGE_FLAG:
+        if(XMC_BANK4->bk4is_bit.reien & XMC_BANK4->bk4is_bit.res)
+          status = SET;
+        break;
+      
+      case XMC_LEVEL_FLAG:
+        if(XMC_BANK4->bk4is_bit.feien & XMC_BANK4->bk4is_bit.fes)
+          status = SET;
+        break;
+      
+      case XMC_FALLINGEDGE_FLAG:
+        if(XMC_BANK4->bk4is_bit.hlien & XMC_BANK4->bk4is_bit.hls)
+          status = SET;
+        break;
+      
+      default:
+        break;
+    }
+  }
+  /* return the flag status */
+  return status;
+}
+
+/**
   * @brief  clear the xmc's pending flags.
   * @param  xmc_bank: specifies the xmc bank to be used
   *         this parameter can be one of the following values:

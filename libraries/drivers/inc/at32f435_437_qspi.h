@@ -312,7 +312,7 @@ typedef struct
   };
 
   /**
-    * @brief qspi actr register, offset:0x14
+    * @brief qspi register, offset:0x14
     */
   __IO uint32_t reserved0;
 
@@ -513,6 +513,7 @@ void qspi_clk_division_set(qspi_type* qspi_x, qspi_clk_div_type new_clkdiv);
 void qspi_xip_cache_bypass_set(qspi_type* qspi_x, confirm_state new_state);
 void qspi_interrupt_enable(qspi_type* qspi_x, confirm_state new_state);
 flag_status qspi_flag_get(qspi_type* qspi_x, uint32_t flag);
+flag_status qspi_interrupt_flag_get(qspi_type* qspi_x, uint32_t flag);
 void qspi_flag_clear(qspi_type* qspi_x, uint32_t flag);
 void qspi_dma_rx_threshold_set(qspi_type* qspi_x, qspi_dma_fifo_thod_type new_threshold);
 void qspi_dma_tx_threshold_set(qspi_type* qspi_x, qspi_dma_fifo_thod_type new_threshold);

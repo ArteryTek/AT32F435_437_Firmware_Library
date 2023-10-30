@@ -38,6 +38,10 @@ extern "C" {
   */
 
 #define SystemCoreClock                  system_core_clock
+#define DUMMY_NOP()                      {__NOP();__NOP();__NOP();__NOP();__NOP(); \
+                                          __NOP();__NOP();__NOP();__NOP();__NOP(); \
+                                          __NOP();__NOP();__NOP();__NOP();__NOP(); \
+                                          __NOP();__NOP();__NOP();__NOP();__NOP();}
 
 /** @defgroup AT32F435_437_system_exported_variables
   * @{

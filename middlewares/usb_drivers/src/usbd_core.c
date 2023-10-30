@@ -487,15 +487,6 @@ void usbd_ept_send(usbd_core_type *udev, uint8_t ept_addr, uint8_t *buffer, uint
     }
   }
 
-  if(ept_info->trans_type != EPT_ISO_TYPE)
-  {
-    if(ept_info->total_len > 0)
-    {
-      /* set in endpoint tx fifo empty interrupt mask */
-      dev->diepempmsk |= 1 << ept_info->eptn;
-    }
-  }
-
   if(ept_info->trans_type == EPT_ISO_TYPE)
   {
     if((dev->dsts_bit.soffn & 0x1) == 0)
@@ -514,7 +505,15 @@ void usbd_ept_send(usbd_core_type *udev, uint8_t ept_addr, uint8_t *buffer, uint
   /* endpoint enable */
   ept_in->diepctl_bit.eptena = TRUE;
 
-  if(ept_info->trans_type == EPT_ISO_TYPE)
+  if(ept_info->trans_type != EPT_ISO_TYPE)
+  {
+    if(ept_info->total_len > 0)
+    {
+      /* set in endpoint tx fifo empty interrupt mask */
+      dev->diepempmsk |= 1 << ept_info->eptn;
+    }
+  }
+  else
   {
     /* write data to fifo */
     usb_write_packet(usbx, ept_info->trans_buf, ept_info->eptn, ept_info->total_len);

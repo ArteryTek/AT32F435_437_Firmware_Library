@@ -58,8 +58,8 @@ extern "C" {
 /**
   * @brief pwc wakeup pin num definition
   */
-#define PWC_WAKEUP_PIN_1                 ((uint32_t)0x00000100) /*!< standby wake-up pin1 */
-#define PWC_WAKEUP_PIN_2                 ((uint32_t)0x00000200) /*!< standby wake-up pin2 */
+#define PWC_WAKEUP_PIN_1                 ((uint32_t)0x00000100) /*!< standby wake-up pin1(pa0) */
+#define PWC_WAKEUP_PIN_2                 ((uint32_t)0x00000200) /*!< standby wake-up pin2(pc13) */
 
 /**
   * @brief  select ldo output voltage.
