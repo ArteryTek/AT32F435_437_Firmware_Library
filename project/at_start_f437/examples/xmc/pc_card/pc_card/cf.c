@@ -22,7 +22,6 @@
   **************************************************************************
   */
 
-/* Includes ------------------------------------------------------------------*/
 #include "cf.h"
 #include "at32f435_437.h"
 #include "at32f435_437_board.h"
@@ -38,113 +37,83 @@
   * @{
   */
 
-edma_init_type EDMA_InitStructure;
 u16 DMA1_MEM_LEN;
-/* Private typedef -----------------------------------------------------------*/
-/* Private define ------------------------------------------------------------*/
-/** @defgroup PCCARD_Private_Constants PCCARD Private Constants
-  * @{
-  */
+
 
 #define PCCARD_TIMEOUT_READ_ID      (uint32_t)0x0000FFFF
 #define PCCARD_TIMEOUT_SECTOR       (uint32_t)0x0000FFFF
 #define PCCARD_TIMEOUT_STATUS       (uint32_t)0x01000000
 
-#define PCCARD_STATUS_OK            (uint8_t)0x58
+#define PCCARD_status_ok            (uint8_t)0x58
 #define PCCARD_STATUS_WRITE_OK      (uint8_t)0x50
+
 /**
-  * @}
-  */
-
-/* Private macro -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
-/* Private function prototypes -----------------------------------------------*/
-/* Exported functions ---------------------------------------------------------*/
-
-/** @defgroup PCCARD_Exported_Functions PCCARD Exported Functions
-  * @{
-  */
-
-/** @defgroup PCCARD_Exported_Functions_Group1 Initialization and de-initialization functions
-  * @brief    Initialization and Configuration functions
-  *
-  @verbatim
-  ==============================================================================
-          ##### PCCARD Initialization and de-initialization functions #####
-  ==============================================================================
-  [..]
-    This section provides functions allowing to initialize/de-initialize
-    the PCCARD memory
-
-@endverbatim
-  * @{
-  */
-  /**
-  * @brief  DMA configuration
-  * @param  EDMA_CHx: pointer to a EDMA_Channel_Type structure
-  * @param  cpar_src: the Memory 1 addr
-  * @param  cmar_dst: the Memory 2 addr
+  * @brief  dma configuration
+  * @param  edma_chx: pointer to a edma_channel_type structure
+  * @param  cpar_src: the memory 1 addr
+  * @param  cmar_dst: the memory 2 addr
   * @param  cndtr: transfer size
-  * @param  Transfer_Type: 
-  *     @arg Read_Transfer: from Memory 1 to Memory 2
-  *     @arg Write_Transfer: from Memory 2 to Memory 1
-  * @param  Transfer_Width: BYTE or HALFWORD
-  * @retval None
+  * @param  transfer_type: 
+  *     @arg read_transfer: from memory 1 to memory 2
+  *     @arg write_transfer: from memory 2 to memory 1
+  * @param  transfer_width: byte or halfword
+  * @retval none
   */
-void MYDMA_Config(edma_stream_type* DMAy_Streamx, uint32_t cpar_src, uint32_t cmar_dst, uint32_t cndtr, uint8_t Transfer_Type, uint8_t Transfer_Width)
+void MYDMA_Config(edma_stream_type* dmay_streamx, uint32_t cpar_src, uint32_t cmar_dst, uint32_t cndtr, uint8_t Transfer_Type, uint8_t Transfer_Width)
 {
-  edma_init_type  EDMA_InitStruct;
+  edma_init_type  edma_init_struct;
   crm_periph_clock_enable(CRM_EDMA_PERIPH_CLOCK, TRUE);
 
-  edma_reset(DMAy_Streamx);
+  edma_reset(dmay_streamx);
 
-  if(Transfer_Type == Read_Transfer)
+  if(Transfer_Type == READ_TRANSFER)
   {
-    EDMA_InitStruct.peripheral_inc_enable = FALSE;
-    EDMA_InitStruct.memory_inc_enable = TRUE;
+    edma_init_struct.peripheral_inc_enable = FALSE;
+    edma_init_struct.memory_inc_enable = TRUE;
   }
   else
   {
-    EDMA_InitStruct.peripheral_inc_enable = TRUE;
-    EDMA_InitStruct.memory_inc_enable = FALSE;
+    edma_init_struct.peripheral_inc_enable = TRUE;
+    edma_init_struct.memory_inc_enable = FALSE;
   }
 
-  if(Transfer_Width == Enable_8_bit_Transfer)
+  if(Transfer_Width == ENABLE_8_BIT_TRANSFER)
   {
-    EDMA_InitStruct.peripheral_data_width = EDMA_PERIPHERAL_DATA_WIDTH_BYTE;
-    EDMA_InitStruct.memory_data_width = EDMA_MEMORY_DATA_WIDTH_BYTE;
+    edma_init_struct.peripheral_data_width = EDMA_PERIPHERAL_DATA_WIDTH_BYTE;
+    edma_init_struct.memory_data_width = EDMA_MEMORY_DATA_WIDTH_BYTE;
   }
   else
   {
-    EDMA_InitStruct.peripheral_data_width = EDMA_PERIPHERAL_DATA_WIDTH_HALFWORD;
-    EDMA_InitStruct.memory_data_width = EDMA_MEMORY_DATA_WIDTH_HALFWORD;
+    edma_init_struct.peripheral_data_width = EDMA_PERIPHERAL_DATA_WIDTH_HALFWORD;
+    edma_init_struct.memory_data_width = EDMA_MEMORY_DATA_WIDTH_HALFWORD;
   }
 
-  EDMA_InitStruct.direction = EDMA_DIR_MEMORY_TO_MEMORY;
-  EDMA_InitStruct.buffer_size = cndtr;
-  EDMA_InitStruct.peripheral_base_addr = cpar_src;
+  edma_init_struct.direction = EDMA_DIR_MEMORY_TO_MEMORY;
+  edma_init_struct.buffer_size = cndtr;
+  edma_init_struct.peripheral_base_addr = cpar_src;
 
-  EDMA_InitStruct.peripheral_burst_mode = EDMA_PERIPHERAL_SINGLE;
-  EDMA_InitStruct.memory0_base_addr = cmar_dst;
+  edma_init_struct.peripheral_burst_mode = EDMA_PERIPHERAL_SINGLE;
+  edma_init_struct.memory0_base_addr = cmar_dst;
 
-  EDMA_InitStruct.memory_burst_mode = EDMA_MEMORY_SINGLE;
-  EDMA_InitStruct.loop_mode_enable = FALSE;
-  EDMA_InitStruct.fifo_mode_enable = TRUE;
-  EDMA_InitStruct.fifo_threshold = EDMA_FIFO_THRESHOLD_FULL;
-  EDMA_InitStruct.priority = EDMA_PRIORITY_MEDIUM;
-  edma_init(DMAy_Streamx,&EDMA_InitStruct);
+  edma_init_struct.memory_burst_mode = EDMA_MEMORY_SINGLE;
+  edma_init_struct.loop_mode_enable = FALSE;
+  edma_init_struct.fifo_mode_enable = TRUE;
+  edma_init_struct.fifo_threshold = EDMA_FIFO_THRESHOLD_FULL;
+  edma_init_struct.priority = EDMA_PRIORITY_MEDIUM;
+  edma_init(dmay_streamx,&edma_init_struct);
  
   
-  edma_stream_enable(DMAy_Streamx, TRUE);
+  edma_stream_enable(dmay_streamx, TRUE);
 }
+
 /**
-  * @brief  XMC InitCtrl
-  * @param  Device: pointer to a XMC_Bank4_Type structure
-  * @param  Init: pointer to a XMC_PCCARDInitType structure
-  * @param  Set_reg_8_bit: choose 8/16bit
-  * @retval STATUS_OK or STATUS_ERROR
+  * @brief  xmc init ctrl
+  * @param  device: pointer to a xmc_bank4_type structure
+  * @param  init: pointer to a xmc_pccardinittype structure
+  * @param  set_reg_8_bit: choose 8/16bit
+  * @retval status_ok or status_error
   */
-StatusType XMC_PCCARD_InitCtrl(xmc_bank4_type *Device, xmc_pccard_init_type *Init, uint8_t Set_reg_8_bit)
+status_type xmc_pccard_init_ctrl(xmc_bank4_type *Device, xmc_pccard_init_type *init, uint8_t Set_reg_8_bit)
 {
   if(Set_reg_8_bit == 1)
   {
@@ -155,33 +124,35 @@ StatusType XMC_PCCARD_InitCtrl(xmc_bank4_type *Device, xmc_pccard_init_type *Ini
    Device->bk4ctrl_bit.extmdbw = XMC_MEM_WIDTH_16;
   }
    
-  Device->bk4ctrl_bit.tar = Init->delay_time_ar;
-  Device->bk4ctrl_bit.tcr = Init->delay_time_cr;
+  Device->bk4ctrl_bit.tar = init->delay_time_ar;
+  Device->bk4ctrl_bit.tcr = init->delay_time_cr;
 
-  return STATUS_OK;
+  return status_ok;
 
 }
+
 /**
-  * @brief  XMC Enable Wait Feature
-  * @param  Device: pointer to a XMC_Bank4_Type structure
-  * @param  Init: pointer to a XMC_PCCARDInitType structure
-  * @retval STATUS_OK or STATUS_ERROR
+  * @brief  xmc enable wait feature
+  * @param  device: pointer to a xmc_bank4_type structure
+  * @param  init: pointer to a xmc_pccardinittype structure
+  * @retval status_ok or status_error
   */
-StatusType XMC_Enable_Wait_Feature(xmc_bank4_type *Device, xmc_pccard_init_type *Init)
+status_type xmc_enable_wait_feature(xmc_bank4_type *Device, xmc_pccard_init_type *init)
 {
  
- Device->bk4ctrl_bit.nwen = Init->enable_wait;
+ Device->bk4ctrl_bit.nwen = init->enable_wait;
 
-  return STATUS_OK;
+  return status_ok;
 }
+
 /**
-  * @brief  Set 16bit_Feature
-  * @param  Device: pointer to a XMC_Bank4_Type structure
-  * @param  Init: pointer to a XMC_PCCARDInitType structure
-  * @param  Set_reg_8_bit: choose 8/16bit
-  * @retval HAL status
+  * @brief  set 16bit_feature
+  * @param  device: pointer to a xmc_bank4_type structure
+  * @param  init: pointer to a xmc_pccardinittype structure
+  * @param  set_reg_8_bit: choose 8/16bit
+  * @retval status
   */
-StatusType XMC_Enable_16bit_Feature(xmc_bank4_type *Device, xmc_pccard_init_type *Init, uint8_t Set_reg_8_bit)
+status_type xmc_enable_16bit_feature(xmc_bank4_type *Device, xmc_pccard_init_type *init, uint8_t Set_reg_8_bit)
 {
   if(Set_reg_8_bit == 1)
   {
@@ -192,45 +163,48 @@ StatusType XMC_Enable_16bit_Feature(xmc_bank4_type *Device, xmc_pccard_init_type
    Device->bk4ctrl_bit.extmdbw = XMC_MEM_WIDTH_16;
   }
 
-  return STATUS_OK;
+  return status_ok;
 }
+
 /**
-  * @brief  Init CommonSpace Timing
-  * @param  Device: pointer to a XMC_Bank4_Type structure
-  * @param  Timing: pointer to a Common space timing structure
-  * @retval HAL status
+  * @brief  init commonspace timing
+  * @param  device: pointer to a xmc_bank4_type structure
+  * @param  timing: pointer to a common space timing structure
+  * @retval status
   */
-StatusType XMC_PCCARD_InitCommonSpaceTiming(xmc_bank4_type *Device, xmc_nand_pccard_timinginit_type *Timing)
+status_type xmc_pccard_init_common_space_timing(xmc_bank4_type *Device, xmc_nand_pccard_timinginit_type *Timing)
 {
  Device->bk4tmgmem_bit.cmdhizt = Timing->mem_hiz_time;
  Device->bk4tmgmem_bit.cmht = Timing->mem_hold_time;
  Device->bk4tmgmem_bit.cmst = Timing->mem_setup_time;
  Device->bk4tmgmem_bit.cmwt = Timing->mem_waite_time;
 
-  return STATUS_OK;
+  return status_ok;
 }
+
 /**
-  * @brief  Init AttributeSpace Timing
-  * @param  Device: pointer to a XMC_Bank4_Type structure
-  * @param  Timing: pointer to a Attribute space timing structure
-  * @retval HAL status
+  * @brief  init attributespace timing
+  * @param  device: pointer to a xmc_bank4_type structure
+  * @param  timing: pointer to a attribute space timing structure
+  * @retval status
   */
-StatusType XMC_PCCARD_InitAttributeSpaceTiming(xmc_bank4_type *Device, xmc_nand_pccard_timinginit_type *Timing)
+status_type xmc_pccard_init_attribute_space_timing(xmc_bank4_type *Device, xmc_nand_pccard_timinginit_type *Timing)
 {
   Device->bk4tmgatt_bit.amdhizt = Timing->mem_hiz_time;
   Device->bk4tmgatt_bit.amht = Timing->mem_hold_time;
   Device->bk4tmgatt_bit.amst = Timing->mem_setup_time;
   Device->bk4tmgatt_bit.amwt = Timing->mem_waite_time;
-  return STATUS_OK;
+  return status_ok;
 }
-/*****************************************************************/
+
+
 /**
-  * @brief  Init IOSpace Timing
-  * @param  Device: pointer to a XMC_Bank4_Type structure
-  * @param  Timing: pointer to a IO space timing structure
-  * @retval HAL status
+  * @brief  init iospace timing
+  * @param  device: pointer to a xmc_bank4_type structure
+  * @param  timing: pointer to a io space timing structure
+  * @retval status
   */
-StatusType XMC_PCCARD_InitIOSpaceTiming(xmc_bank4_type *Device, xmc_nand_pccard_timinginit_type *Timing)
+status_type xmc_pccard_init_iospace_timing(xmc_bank4_type *Device, xmc_nand_pccard_timinginit_type *Timing)
 {
  
   Device->bk4tmgio_bit.iohizt = Timing->mem_hiz_time;
@@ -238,44 +212,44 @@ StatusType XMC_PCCARD_InitIOSpaceTiming(xmc_bank4_type *Device, xmc_nand_pccard_
   Device->bk4tmgio_bit.iost = Timing->mem_setup_time;
   Device->bk4tmgio_bit.iowt = Timing->mem_waite_time;
 
-  return STATUS_OK;
+  return status_ok;
 }
-/*****************************************************************/
+
 /**
-  * @brief  Perform the PCCARD memory Initialization sequence
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @param  ComSpaceTiming: Common space timing structure
-  * @param  AttSpaceTiming: Attribute space timing structure
-  * @param  IOSpaceTiming: IO space timing structure
-  * @retval HAL status
+  * @brief  perform the pccard memory initialization sequence
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @param  comspacetiming: common space timing structure
+  * @param  attspacetiming: attribute space timing structure
+  * @param  iospacetiming: io space timing structure
+  * @retval status
   */
-StatusType PCCARD_Init(PCCARD_HandleType *hpccard, xmc_nand_pccard_timinginit_type *ComSpaceTiming, xmc_nand_pccard_timinginit_type *AttSpaceTiming, xmc_nand_pccard_timinginit_type *IOSpaceTiming)
+status_type pccard_init(pccard_handle_type *hpccard, xmc_nand_pccard_timinginit_type *comspacetiming, xmc_nand_pccard_timinginit_type *attspacetiming, xmc_nand_pccard_timinginit_type *iospacetiming)
 {
   gpio_init_type  GPIO_InitStructure;
   uint8_t Set_reg_8_bit;
 
-  /* Check the PCCARD controller state */
+  /* check the pccard controller state */
   if(hpccard == NULL)
   {
-    return STATUS_ERROR;
+    return status_error;
   }
 
- if(hpccard->CF.Enable_8_bit_mode == TRUE)
+ if(hpccard->cf.enable_8_bit_mode == TRUE)
   Set_reg_8_bit = 1;
  else
   Set_reg_8_bit = 0;
 
 
-  if(hpccard->State == PCCARD_STATE_RESET)
+  if(hpccard->state == pccard_state_reset)
   {
-    /* Allocate lock resource and initialize it */
-    hpccard->Lock = UNLOCKED;
+    /* allocate lock resource and initialize it */
+    hpccard->lock = unlocked;
 
   }
 
-  /* Initialize the PCCARD state */
-  hpccard->State = PCCARD_STATE_BUSY;
+  /* initialize the pccard state */
+  hpccard->state = pccard_state_busy;
 
 
   crm_periph_clock_enable(CRM_GPIOB_PERIPH_CLOCK,TRUE);
@@ -284,7 +258,7 @@ StatusType PCCARD_Init(PCCARD_HandleType *hpccard, xmc_nand_pccard_timinginit_ty
   crm_periph_clock_enable(CRM_GPIOE_PERIPH_CLOCK,TRUE);
   crm_periph_clock_enable(CRM_GPIOF_PERIPH_CLOCK,TRUE);
   crm_periph_clock_enable(CRM_GPIOG_PERIPH_CLOCK,TRUE);
-  /* address line:PF0 PF1 PF2 PF3 PF4 PF5 PF12 PF13 PF14 PF15 PD5 PG1 PG2 PG3 PG4 PG5 PD11 PD12 PD13 PE3 PE4 PE5 PE6 PE2 PG13 PG14 */
+  /* address line:pf0 pf1 pf2 pf3 pf4 pf5 pf12 pf13 pf14 pf15 pd5 pg1 pg2 pg3 pg4 pg5 pd11 pd12 pd13 pe3 pe4 pe5 pe6 pe2 pg13 pg14 */
   gpio_pin_mux_config(GPIOF, GPIO_PINS_SOURCE0, GPIO_MUX_12);
   gpio_pin_mux_config(GPIOF, GPIO_PINS_SOURCE1, GPIO_MUX_12);
   gpio_pin_mux_config(GPIOF, GPIO_PINS_SOURCE2, GPIO_MUX_12);
@@ -313,7 +287,7 @@ StatusType PCCARD_Init(PCCARD_HandleType *hpccard, xmc_nand_pccard_timinginit_ty
   GPIO_InitStructure.gpio_pull = GPIO_PULL_NONE;
   gpio_init(GPIOD, &GPIO_InitStructure);
 
-  /* data line:   PB14 PC6 PC11 PC12 PE7 PA3 PA4 PA5 PE11 PE12 PE13 PE14 PE15 PB12 PD9 PD10 */
+  /* data line:   pb14 pc6 pc11 pc12 pe7 pa3 pa4 pa5 pe11 pe12 pe13 pe14 pe15 pb12 pd9 pd10 */
   gpio_pin_mux_config(GPIOB, GPIO_PINS_SOURCE14, GPIO_MUX_14);
   gpio_pin_mux_config(GPIOB, GPIO_PINS_SOURCE12, GPIO_MUX_14);
   gpio_default_para_init(&GPIO_InitStructure);
@@ -365,8 +339,8 @@ StatusType PCCARD_Init(PCCARD_HandleType *hpccard, xmc_nand_pccard_timinginit_ty
   GPIO_InitStructure.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
   GPIO_InitStructure.gpio_pull = GPIO_PULL_NONE;
   gpio_init(GPIOD, &GPIO_InitStructure);
-  /* XMC_NCE4_1/XMC_NCE4_2:PG10/PG11 XMC_NOE:PD4 XMC_NWE:PC2 XMC_NBL0:PE0 XMC_NBL1:PE1 XMC_NADV:PB7  XMC_NWAIT:PD6 */
-  /* XMC_NIORD:PF6  XMC_NIOWR:PF8   XMC_NREG:PF7   XMC_INTR:PF10  XMC_CD:PF9  */
+  /* xmc_nce4_1/xmc_nce4_2:pg10/pg11 xmc_noe:pd4 xmc_nwe:pc2 xmc_nbl0:pe0 xmc_nbl1:pe1 xmc_nadv:pb7  xmc_nwait:pd6 */
+  /* xmc_niord:pf6  xmc_niowr:pf8   xmc_nreg:pf7   xmc_intr:pf10  xmc_cd:pf9  */
   gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE4, GPIO_MUX_12);
   gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE6, GPIO_MUX_12);
   gpio_default_para_init(&GPIO_InitStructure);
@@ -408,106 +382,88 @@ StatusType PCCARD_Init(PCCARD_HandleType *hpccard, xmc_nand_pccard_timinginit_ty
   GPIO_InitStructure.gpio_pull = GPIO_PULL_NONE;
   gpio_init(GPIOF, &GPIO_InitStructure);
 
-  /* Initialize PCCARD control Interface */
-  XMC_PCCARD_InitCtrl(hpccard->Instance, &(hpccard->Init), Set_reg_8_bit);
+  /* initialize pccard control interface */
+  xmc_pccard_init_ctrl(hpccard->instance, &(hpccard->init), Set_reg_8_bit);
 
-  /* Init PCCARD common space timing Interface */
-  XMC_PCCARD_InitCommonSpaceTiming(hpccard->Instance, ComSpaceTiming);
+  /* init pccard common space timing interface */
+  xmc_pccard_init_common_space_timing(hpccard->instance, comspacetiming);
 
-  /* Init PCCARD attribute space timing Interface */
-  XMC_PCCARD_InitAttributeSpaceTiming(hpccard->Instance, AttSpaceTiming);
+  /* init pccard attribute space timing interface */
+  xmc_pccard_init_attribute_space_timing(hpccard->instance, attspacetiming);
 
-  /* Init PCCARD IO space timing Interface */
-  XMC_PCCARD_InitIOSpaceTiming(hpccard->Instance, IOSpaceTiming);
+  /* init pccard io space timing interface */
+  xmc_pccard_init_iospace_timing(hpccard->instance, iospacetiming);
 
-  /* Enable the PCCARD device */
+  /* enable the pccard device */
   xmc_pccard_enable(TRUE);
 
-  /* Update the PCCARD state */
-  hpccard->State = PCCARD_STATE_READY;
+  /* update the pccard state */
+  hpccard->state = pccard_state_ready;
 
-  return STATUS_OK;
+  return status_ok;
 
 }
+
 /**
-  * @brief  Enable Wait Feature
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @retval STATUS_OK or STATUS_ERROR
+  * @brief  enable wait feature
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @retval status_ok or status_error
   */
-StatusType Enable_Wait_Feature(PCCARD_HandleType *hpccard)
+status_type enable_wait_feature(pccard_handle_type *hpccard)
 {
-  /* Check the PCCARD controller state */
+  /* check the pccard controller state */
   if(hpccard == NULL)
   {
-    return STATUS_ERROR;
+    return status_error;
   }
 
-  if(hpccard->State == PCCARD_STATE_RESET)
+  if(hpccard->state == pccard_state_reset)
   {
-    /* Allocate lock resource and initialize it */
-    hpccard->Lock = UNLOCKED;
+    /* allocate lock resource and initialize it */
+    hpccard->lock = unlocked;
   }
 
-  /* Initialize the PCCARD state */
-  hpccard->State = PCCARD_STATE_BUSY;
+  /* initialize the pccard state */
+  hpccard->state = pccard_state_busy;
 
-  XMC_Enable_Wait_Feature(hpccard->Instance, &(hpccard->Init));
+  xmc_enable_wait_feature(hpccard->instance, &(hpccard->init));
 
-  hpccard->State = PCCARD_STATE_READY;
+  hpccard->state = pccard_state_ready;
 
-  return STATUS_OK;
+  return status_ok;
 }
 
 /**
-  * @brief  Perform the PCCARD memory De-initialization sequence
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @retval HAL status
+  * @brief  perform the pccard memory de-initialization sequence
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @retval status
   */
-StatusType  PCCARD_DeInit(PCCARD_HandleType *hpccard)
+status_type  pccard_deinit(pccard_handle_type *hpccard)
 {
-
-  /* Configure the PCCARD registers with their reset values */
+  /* configure the pccard registers with their reset values */
   xmc_pccard_reset();
 
-  /* Update the PCCARD controller state */
-  hpccard->State = PCCARD_STATE_RESET;
-  return STATUS_OK;
+  /* update the pccard controller state */
+  hpccard->state = pccard_state_reset;
+  return status_ok;
 }
 
-
 /**
-  * @}
+  * @brief  identify
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @retval true or false.
   */
-
-/** @defgroup PCCARD_Exported_Functions_Group2 Input Output and memory functions
-  * @brief    Input Output and memory control functions
-  *
-  @verbatim
-  ==============================================================================
-                ##### PCCARD Input Output and memory functions #####
-  ==============================================================================
-  [..]
-    This section provides functions allowing to use and control the PCCARD memory
-
-@endverbatim
-  * @{
-  */
-/**
-  * @brief  Identify
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @retval TRUE or FALSE.
-  */
-BOOL PCCARD_Identify(PCCARD_HandleType *hpccard)
+BOOL pccard_identify(pccard_handle_type *hpccard)
 {
   uint8_t Reg;
 
-  Reg = hpccard->CF.CFAddr.Drv;
+  Reg = hpccard->cf.cf_addr.drv;
 
-  *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = Reg;
-  if(!CF_SendCommand(hpccard, ATA_IDENTIFY_DRIVE_CMD))
+  *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_CARD_HEAD) = Reg;
+  if(!cf_send_command(hpccard, ATA_IDENTIFY_DRIVE_CMD))
   {
     return FALSE;
   }
@@ -517,39 +473,39 @@ BOOL PCCARD_Identify(PCCARD_HandleType *hpccard)
 
 
 /**
-  * @brief  Read Compact Flash's ID.
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @param  CompactFlash_ID: Compact flash ID structure.
-  * @retval HAL status
+  * @brief  read compact flash's id.
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @param  compactflash_id: compact flash id structure.
+  * @retval status
   *
   */
-BOOL PCCARD_Read_ID(PCCARD_HandleType *hpccard)
+BOOL pccard_read_id(pccard_handle_type *hpccard)
 {
   uint8_t CardInfo[PCCARD_SECTOR_SIZE * sizeof(uint8_t)] = {0};
 
   memset(CardInfo, 0, PCCARD_SECTOR_SIZE * sizeof(uint8_t));
-  PCCARD_Read_STATUS_REG(hpccard);
+  pccard_read_status_reg(hpccard);
 
-  if(PCCARD_Identify(hpccard))
+  if(pccard_identify(hpccard))
   {
     while(1)
     {
-      if(TaskFileRegIsValid(hpccard))
+      if(task_file_regis_valid(hpccard))
       {
-        if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT | DRQ_BIT))
+        if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT | DRQ_BIT))
         {
-          /* Read CF ID bytes */
+          /* read cf id bytes */
 
-          Read_Sector(hpccard, CardInfo, PCCARD_SECTOR_SIZE);
+          read_sector(hpccard, CardInfo, PCCARD_SECTOR_SIZE);
 
           break;
         }
-        else if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT | ERR_BIT))
+        else if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT | ERR_BIT))
         {
           printf("\r\nCommand Pass, but ERR bit is high");
-          printf("\r\nCF Status Reg=%#x", PCCARD_Read_STATUS_REG(hpccard));
-          printf("\r\nCF Error  Reg=%#x", PCCARD_Read_ERROR_REG(hpccard));
+          printf("\r\nCF Status Reg=%#x", pccard_read_status_reg(hpccard));
+          printf("\r\nCF Error  Reg=%#x", pccard_read_error_reg(hpccard));
           return FALSE;
         }
       }
@@ -558,17 +514,17 @@ BOOL PCCARD_Read_ID(PCCARD_HandleType *hpccard)
 
   while(1)
   {
-    if(TaskFileRegIsValid(hpccard))
+    if(task_file_regis_valid(hpccard))
     {
-      if((PCCARD_Read_STATUS_REG(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x50)
+      if((pccard_read_status_reg(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x50)
       {
         break;
       }
-      else if((PCCARD_Read_STATUS_REG(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
+      else if((pccard_read_status_reg(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
       {
         printf("\r\nSend Command Failed");
-        printf("\r\nCF Status Reg=%#x", PCCARD_Read_STATUS_REG(hpccard));
-        printf("\r\nCF Error  Reg=%#x", PCCARD_Read_ERROR_REG(hpccard));
+        printf("\r\nCF Status Reg=%#x", pccard_read_status_reg(hpccard));
+        printf("\r\nCF Error  Reg=%#x", pccard_read_error_reg(hpccard));
         return FALSE;
       }
     }
@@ -577,7 +533,7 @@ BOOL PCCARD_Read_ID(PCCARD_HandleType *hpccard)
 #if 1
 
   printf("\r\n===============================================================\n");
-  printf("\r\n\nIdentify Drive Information : ");
+  printf("\r\n\nIdentify drive Information : ");
   printf("\r\n%s%#x", "Signature : ", ((uint16_t)CardInfo[0] | (uint16_t)CardInfo[1] << 8));
   printf("\r\n%s%u", "Default number of cylinders : ", ((uint16_t)CardInfo[2] | (uint16_t)CardInfo[3] << 8));
   printf("\r\n%s%u", "Default number of heads : ", ((uint16_t)CardInfo[6] | (uint16_t)CardInfo[7] << 8));
@@ -607,20 +563,20 @@ BOOL PCCARD_Read_ID(PCCARD_HandleType *hpccard)
 
 #endif
 
-  /* signature of CF storage */
+  /* signature of cf storage */
   if(((uint16_t)CardInfo[0] | (uint16_t)CardInfo[1] << 8) == 0x848A)
   {
-    hpccard->CF.CFCardInfo.Default_Cylinder = ((uint16_t)CardInfo[2] | (uint16_t)CardInfo[3] << 8);
-    hpccard->CF.CFCardInfo.Default_Head = ((uint16_t)CardInfo[6] | (uint16_t)CardInfo[7] << 8);
-    hpccard->CF.CFCardInfo.Default_Sector = ((uint16_t)CardInfo[12] | (uint16_t)CardInfo[13] << 8);
-    hpccard->CF.CFCardInfo.Current_Cylinder = ((uint16_t)CardInfo[108] | (uint16_t)CardInfo[109] << 8);
-    hpccard->CF.CFCardInfo.Current_Head = ((uint16_t)CardInfo[110] | (uint16_t)CardInfo[111] << 8);
-    hpccard->CF.CFCardInfo.Current_Sector = ((uint16_t)CardInfo[112] | (uint16_t)CardInfo[113] << 8);
+    hpccard->cf.cfcard_info.default_cylinder = ((uint16_t)CardInfo[2] | (uint16_t)CardInfo[3] << 8);
+    hpccard->cf.cfcard_info.default_head = ((uint16_t)CardInfo[6] | (uint16_t)CardInfo[7] << 8);
+    hpccard->cf.cfcard_info.default_sector = ((uint16_t)CardInfo[12] | (uint16_t)CardInfo[13] << 8);
+    hpccard->cf.cfcard_info.current_cylinder = ((uint16_t)CardInfo[108] | (uint16_t)CardInfo[109] << 8);
+    hpccard->cf.cfcard_info.current_head = ((uint16_t)CardInfo[110] | (uint16_t)CardInfo[111] << 8);
+    hpccard->cf.cfcard_info.current_sector = ((uint16_t)CardInfo[112] | (uint16_t)CardInfo[113] << 8);
 
-    hpccard->CF.CFCardInfo.Total_Sector = (uint32_t)((uint16_t)CardInfo[16] | (uint16_t)CardInfo[17] << 8) | ((uint32_t)((uint16_t)CardInfo[14] | (uint16_t)CardInfo[15] << 8) << 16);
-    hpccard->CF.CFCardInfo.Total_LBA_Sector = (uint32_t)((uint16_t)CardInfo[120] | (uint16_t)CardInfo[121] << 8) | ((uint32_t)((uint16_t)CardInfo[122] | (uint16_t)CardInfo[123] << 8) << 16);
-    hpccard->CF.CFCardInfo.Max_Mutiple_Sector = ((uint16_t)CardInfo[94] | (uint16_t)CardInfo[95] << 8);
-    hpccard->CF.CFCardInfo.Mutiple_Sector_Setting = ((uint16_t)CardInfo[118] | (uint16_t)CardInfo[119] << 8);
+    hpccard->cf.cfcard_info.total_sector = (uint32_t)((uint16_t)CardInfo[16] | (uint16_t)CardInfo[17] << 8) | ((uint32_t)((uint16_t)CardInfo[14] | (uint16_t)CardInfo[15] << 8) << 16);
+    hpccard->cf.cfcard_info.total_lba_sector = (uint32_t)((uint16_t)CardInfo[120] | (uint16_t)CardInfo[121] << 8) | ((uint32_t)((uint16_t)CardInfo[122] | (uint16_t)CardInfo[123] << 8) << 16);
+    hpccard->cf.cfcard_info.max_mutiple_sector = ((uint16_t)CardInfo[94] | (uint16_t)CardInfo[95] << 8);
+    hpccard->cf.cfcard_info.mutiple_sector_setting = ((uint16_t)CardInfo[118] | (uint16_t)CardInfo[119] << 8);
   }
   else
   {
@@ -632,60 +588,60 @@ BOOL PCCARD_Read_ID(PCCARD_HandleType *hpccard)
 }
 
 /**
-  * @brief  Read sector from PCCARD memory
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @param  pBuffer: pointer to destination read buffer
-  * @param  Sector_Address: Sector address to read
-  * @retval HAL status
+  * @brief  read sector from pccard memory
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @param  pbuffer: pointer to destination read buffer
+  * @param  sector_address: sector address to read
+  * @retval status
   */
-BOOL PCCARD_Read_Sector(PCCARD_HandleType *hpccard, uint8_t *pBuffer, uint32_t Sector_Address, uint32_t Sector_Count)
+BOOL pccard_read_sector(pccard_handle_type *hpccard, uint8_t *pbuffer, uint32_t sector_address, uint32_t sector_count)
 {
   uint16_t Count = 0;
   uint8_t Reg;
 
-  if(Sector_Count == 0)
+  if(sector_count == 0)
   {
-    Sector_Count = 256;
+    sector_count = 256;
   }
 
-  while(Count < Sector_Count)
+  while(Count < sector_count)
   {
 
-    Translate_CHSAddr(hpccard, Sector_Address, Count, Sector_Count);
-    Reg = hpccard->CF.CFAddr.Head | hpccard->CF.CFAddr.Drv | 0xA0;
+    translate_chsaddr(hpccard, sector_address, Count, sector_count);
+    Reg = hpccard->cf.cf_addr.head | hpccard->cf.cf_addr.drv | 0xA0;
 
-    *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CYLINDER_HIGH) = (uint8_t)(0xFF & hpccard->CF.CFAddr.Cylinder >> 8);
-    *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CYLINDER_LOW)  = (uint8_t)(0xFF & hpccard->CF.CFAddr.Cylinder);
-    *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_SECTOR_NUMBER) = hpccard->CF.CFAddr.Sector;
-    *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = (uint8_t)hpccard->CF.CFAddr.Sector_Count;
-    *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = Reg;
+    *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CYLINDER_HIGH) = (uint8_t)(0xFF & hpccard->cf.cf_addr.cylinder >> 8);
+    *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CYLINDER_LOW)  = (uint8_t)(0xFF & hpccard->cf.cf_addr.cylinder);
+    *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_SECTOR_NUMBER) = hpccard->cf.cf_addr.sector;
+    *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_sector_count)  = (uint8_t)hpccard->cf.cf_addr.sector_count;
+    *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CARD_HEAD)     = Reg;
 
-    if(CF_SendCommand(hpccard, ATA_READ_SECTOR_CMD))
+    if(cf_send_command(hpccard, ATA_READ_SECTOR_CMD))
     {
       while(1)
       {
-        if(TaskFileRegIsValid(hpccard))
+        if(task_file_regis_valid(hpccard))
         {
-          if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT | DRQ_BIT))
+          if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT | DRQ_BIT))
           {
-            pBuffer = Read_Sector(hpccard, pBuffer, PCCARD_SECTOR_SIZE);
+            pbuffer = read_sector(hpccard, pbuffer, PCCARD_SECTOR_SIZE);
 
-            Sector_Address += 1;
+            sector_address += 1;
             Count += 1;
 
-            if (Count == Sector_Count)
+            if (Count == sector_count)
             {
               break;
             }
 
-            if (Count <= (Sector_Count / hpccard->CF.CFCardInfo.Default_Sector) * hpccard->CF.CFCardInfo.Default_Sector)
-              if (Count % hpccard->CF.CFAddr.Sector_Count == 0)
+            if (Count <= (sector_count / hpccard->cf.cfcard_info.default_sector) * hpccard->cf.cfcard_info.default_sector)
+              if (Count % hpccard->cf.cf_addr.sector_count == 0)
               {
                 break;
               }
           }
-          else if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT | ERR_BIT))
+          else if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT | ERR_BIT))
           {
             return FALSE;
           }
@@ -695,15 +651,15 @@ BOOL PCCARD_Read_Sector(PCCARD_HandleType *hpccard, uint8_t *pBuffer, uint32_t S
 
     while(1)
     {
-      if(TaskFileRegIsValid(hpccard))
+      if(task_file_regis_valid(hpccard))
       {
-        if((PCCARD_Read_STATUS_REG(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x50)
+        if((pccard_read_status_reg(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x50)
         {
           break;
         }
-        else if((PCCARD_Read_STATUS_REG(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
+        else if((pccard_read_status_reg(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
         {
-                    printf("Error Code=%X\n", PCCARD_Read_STATUS_REG(hpccard));
+                    printf("Error Code=%X\n", pccard_read_status_reg(hpccard));
           return FALSE;
         }
       }
@@ -713,63 +669,62 @@ BOOL PCCARD_Read_Sector(PCCARD_HandleType *hpccard, uint8_t *pBuffer, uint32_t S
   return TRUE;
 }
 
-
 /**
-  * @brief  Write sector to PCCARD memory
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @param  pBuffer: pointer to source write buffer
-  * @param  Sector_Address: Sector address to write
-  * @retval HAL status
+  * @brief  write sector to pccard memory
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @param  pbuffer: pointer to source write buffer
+  * @param  sector_address: sector address to write
+  * @retval status
   */
-BOOL PCCARD_Write_Sector(PCCARD_HandleType *hpccard, uint8_t *pBuffer, uint32_t Sector_Address, uint32_t Sector_Count)
+BOOL pccard_write_sector(pccard_handle_type *hpccard, uint8_t *pbuffer, uint32_t sector_address, uint32_t sector_count)
 {
   uint16_t Count = 0;
   uint8_t Reg;
 
-  if(Sector_Count == 0)
+  if(sector_count == 0)
   {
-    Sector_Count = 256;
+    sector_count = 256;
   }
 
-  while(Count < Sector_Count)
+  while(Count < sector_count)
   {
     // Set the parameters to write a sector //
-    Translate_CHSAddr(hpccard, Sector_Address, Count, Sector_Count);
-    Reg = hpccard->CF.CFAddr.Head | hpccard->CF.CFAddr.Drv | 0xA0;
+    translate_chsaddr(hpccard, sector_address, Count, sector_count);
+    Reg = hpccard->cf.cf_addr.head | hpccard->cf.cf_addr.drv | 0xA0;
 
-    //*(__IO uint16_t *)(hpccard->CF.IOAddr | ATA_CYLINDER_LOW)  = hpccard->CF.CFAddr.Cylinder;
-    *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CYLINDER_HIGH) = (uint8_t)(0xFF & hpccard->CF.CFAddr.Cylinder >> 8);
-    *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CYLINDER_LOW)  = (uint8_t)(0xFF & hpccard->CF.CFAddr.Cylinder);
-    *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_SECTOR_NUMBER) = hpccard->CF.CFAddr.Sector;
-    *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = (uint8_t)hpccard->CF.CFAddr.Sector_Count;
-    *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = Reg;
+    //*(__IO uint16_t *)(hpccard->cf.io_addr | ATA_CYLINDER_LOW)  = hpccard->cf.cf_addr.cylinder;
+    *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CYLINDER_HIGH) = (uint8_t)(0xFF & hpccard->cf.cf_addr.cylinder >> 8);
+    *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CYLINDER_LOW)  = (uint8_t)(0xFF & hpccard->cf.cf_addr.cylinder);
+    *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_SECTOR_NUMBER) = hpccard->cf.cf_addr.sector;
+    *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_sector_count)  = (uint8_t)hpccard->cf.cf_addr.sector_count;
+    *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CARD_HEAD)     = Reg;
 
-    if(CF_SendCommand(hpccard, ATA_WRITE_SECTOR_CMD))
+    if(cf_send_command(hpccard, ATA_WRITE_SECTOR_CMD))
     {
       while(1)
       {
-        if(TaskFileRegIsValid(hpccard))
+        if(task_file_regis_valid(hpccard))
         {
-          if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT | DRQ_BIT))
+          if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT | DRQ_BIT))
           {
-            pBuffer = Write_Sector(hpccard, pBuffer, PCCARD_SECTOR_SIZE);
+            pbuffer = write_sector(hpccard, pbuffer, PCCARD_SECTOR_SIZE);
 
-            Sector_Address += 1;
+            sector_address += 1;
             Count += 1;
 
-            if (Count == Sector_Count)
+            if (Count == sector_count)
             {
               break;
             }
 
-            if (Count <= (Sector_Count / hpccard->CF.CFCardInfo.Default_Sector) * hpccard->CF.CFCardInfo.Default_Sector)
-              if (Count % hpccard->CF.CFAddr.Sector_Count == 0)
+            if (Count <= (sector_count / hpccard->cf.cfcard_info.default_sector) * hpccard->cf.cfcard_info.default_sector)
+              if (Count % hpccard->cf.cf_addr.sector_count == 0)
               {
                 break;
               }
           }
-          else if (PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT | ERR_BIT))
+          else if (pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT | ERR_BIT))
           {
             return FALSE;
           }
@@ -779,15 +734,15 @@ BOOL PCCARD_Write_Sector(PCCARD_HandleType *hpccard, uint8_t *pBuffer, uint32_t 
 
     while(1)
     {
-      if(TaskFileRegIsValid(hpccard))
+      if(task_file_regis_valid(hpccard))
       {
-        if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT))
+        if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT))
         {
           break;
         }
-        else if((PCCARD_Read_STATUS_REG(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
+        else if((pccard_read_status_reg(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
         {
-                    printf("Error Code=%X\n", PCCARD_Read_STATUS_REG(hpccard));
+                    printf("Error Code=%X\n", pccard_read_status_reg(hpccard));
           return FALSE;
         }
       }
@@ -799,44 +754,44 @@ BOOL PCCARD_Write_Sector(PCCARD_HandleType *hpccard, uint8_t *pBuffer, uint32_t 
 
 
 /**
-  * @brief  Erase sector from PCCARD memory
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @param  Sector_Address: Sector address to erase
-  * @retval HAL status
+  * @brief  erase sector from pccard memory
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @param  sector_address: sector address to erase
+  * @retval status
   */
-BOOL PCCARD_Erase_Sector(PCCARD_HandleType *hpccard, uint32_t Sector_Address, uint32_t Sector_Count)
+BOOL pccard_erase_sector(pccard_handle_type *hpccard, uint32_t sector_address, uint32_t sector_count)
 {
   uint8_t Reg;
   uint16_t Count = 0;
 
-  while (Count < Sector_Count)
+  while (Count < sector_count)
   {
 
-    Translate_CHSAddr(hpccard, Sector_Address, 0, Sector_Count);
-    Reg = hpccard->CF.CFAddr.Head | hpccard->CF.CFAddr.Drv | 0xA0;
+    translate_chsaddr(hpccard, sector_address, 0, sector_count);
+    Reg = hpccard->cf.cf_addr.head | hpccard->cf.cf_addr.drv | 0xA0;
 
-    *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CYLINDER_HIGH) = (uint8_t)(0xFF & hpccard->CF.CFAddr.Cylinder >> 8);
-    *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CYLINDER_LOW)  = (uint8_t)(0xFF & hpccard->CF.CFAddr.Cylinder);
-    *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_SECTOR_NUMBER) = hpccard->CF.CFAddr.Sector;
-    *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = hpccard->CF.CFAddr.Sector_Count;
-    *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = Reg;
+    *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CYLINDER_HIGH) = (uint8_t)(0xFF & hpccard->cf.cf_addr.cylinder >> 8);
+    *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CYLINDER_LOW)  = (uint8_t)(0xFF & hpccard->cf.cf_addr.cylinder);
+    *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_SECTOR_NUMBER) = hpccard->cf.cf_addr.sector;
+    *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_sector_count)  = hpccard->cf.cf_addr.sector_count;
+    *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_CARD_HEAD)     = Reg;
 
-    if(CF_SendCommand(hpccard, ATA_ERASE_SECTOR_CMD))
+    if(cf_send_command(hpccard, ATA_ERASE_SECTOR_CMD))
     {
-      Count += hpccard->CF.CFAddr.Sector_Count;
-      Sector_Address += hpccard->CF.CFAddr.Sector_Count;
+      Count += hpccard->cf.cf_addr.sector_count;
+      sector_address += hpccard->cf.cf_addr.sector_count;
     }
 
     while(1)
     {
-      if(TaskFileRegIsValid(hpccard))
+      if(task_file_regis_valid(hpccard))
       {
-        if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT))
+        if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT))
         {
           break;
         }
-        else if((PCCARD_Read_STATUS_REG(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
+        else if((pccard_read_status_reg(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
         {
           return FALSE;
         }
@@ -846,25 +801,26 @@ BOOL PCCARD_Erase_Sector(PCCARD_HandleType *hpccard, uint32_t Sector_Address, ui
 
   return TRUE;
 }
+
 /**
-  * @brief  Diagnostic
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @retval TRUE or FALSE.
+  * @brief  diagnostic
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @retval true or false.
   */
-BOOL PCCARD_Diagnostic(PCCARD_HandleType *hpccard)
+BOOL pccard_diagnostic(pccard_handle_type *hpccard)
 {
   uint8_t ERROR_REG;
 
   /* Set the parameters */
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = hpccard->CF.CFAddr.Drv;
+  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CARD_HEAD)     = hpccard->cf.cf_addr.drv;
 
-  if(!CF_SendCommand(hpccard, ATA_EXECUTE_DRIVE_DIAG_CMD))
+  if(!cf_send_command(hpccard, ATA_EXECUTE_DRIVE_DIAG_CMD))
   {
     return FALSE;
   }
 
-  ERROR_REG = PCCARD_Read_ERROR_REG(hpccard);
+  ERROR_REG = pccard_read_error_reg(hpccard);
 
   if((ERROR_REG == 0x01) || (ERROR_REG == 0x02) || (ERROR_REG == 0x03) || (ERROR_REG == 0x04) || (ERROR_REG == 0x05) || (ERROR_REG == 0x80))
   {
@@ -875,29 +831,30 @@ BOOL PCCARD_Diagnostic(PCCARD_HandleType *hpccard)
     return FALSE;
   }
 }
+
 /**
-  * @brief  Check Power Mode
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @retval TRUE or FALSE.
+  * @brief  check power mode
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @retval true or false.
   */
-BOOL PCCARD_Check_Power_Mode(PCCARD_HandleType *hpccard)
+BOOL pccard_check_power_mode(pccard_handle_type *hpccard)
 {
-  uint8_t SECTOR_COUNT_REG;
+  uint8_t sector_count_REG;
   /* set sector_count register 0x80, after check_power_mode */
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = 0x80;    
+  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_sector_count)  = 0x80;    
   /* the register will be change to 0x00 or 0xFF */
 
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = hpccard->CF.CFAddr.Drv;
+  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CARD_HEAD)     = hpccard->cf.cf_addr.drv;
 
-  if(!CF_SendCommand(hpccard, ATA_CHECK_POWER_MODE_CMD))
+  if(!cf_send_command(hpccard, ATA_CHECK_POWER_MODE_CMD))
   {
     return FALSE;
   }
 
-  SECTOR_COUNT_REG =  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT);
+  sector_count_REG =  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_sector_count);
 
-  if(SECTOR_COUNT_REG == 0xFF || SECTOR_COUNT_REG == 0x00)
+  if(sector_count_REG == 0xFF || sector_count_REG == 0x00)
   {
     return TRUE;
   }
@@ -906,38 +863,38 @@ BOOL PCCARD_Check_Power_Mode(PCCARD_HandleType *hpccard)
     return FALSE;
   }
 }
+
 /**
-  * @brief  Set idle 
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @param  Sector_Count: the sector count 
-  * @retval TRUE or FALSE.
+  * @brief  set idle 
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @param  sector_count: the sector count 
+  * @retval true or false.
   */
-BOOL PCCARD_Idle(PCCARD_HandleType *hpccard, uint32_t Sector_Count)
+BOOL pccard_idle(pccard_handle_type *hpccard, uint32_t sector_count)
 {
-  uint8_t SECTOR_COUNT_REG;
+  uint8_t sector_count_REG;
 
-  hpccard->CF.CFAddr.Sector_Count = Sector_Count;
+  hpccard->cf.cf_addr.sector_count = sector_count;
 
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = hpccard->CF.CFAddr.Sector_Count;
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = hpccard->CF.CFAddr.Drv;
+  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_sector_count)  = hpccard->cf.cf_addr.sector_count;
+  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CARD_HEAD)     = hpccard->cf.cf_addr.drv;
 
-  if(!CF_SendCommand(hpccard, ATA_IDLE_CMD))
+  if(!cf_send_command(hpccard, ATA_IDLE_CMD))
   {
     return FALSE;
   }
 
-
-  /* Check Power Mode */
-  if(!PCCARD_Check_Power_Mode(hpccard))
+  /* check power mode */
+  if(!pccard_check_power_mode(hpccard))
   {
     printf("Compact Flash Check Power Mode Failed \n");
     return FALSE;
   }
 
-  SECTOR_COUNT_REG =  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT);
+  sector_count_REG =  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_sector_count);
 
-  if(SECTOR_COUNT_REG == 0xFF)
+  if(sector_count_REG == 0xFF)
   {
     return TRUE;
   }
@@ -946,36 +903,37 @@ BOOL PCCARD_Idle(PCCARD_HandleType *hpccard, uint32_t Sector_Count)
     return FALSE;
   }
 }
+
 /**
-  * @brief  Idle immediate 
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @retval TRUE or FALSE.
+  * @brief  idle immediate 
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @retval true or false.
   */
-BOOL PCCARD_Idle_Immediate(PCCARD_HandleType *hpccard)
+BOOL pccard_idle_immediate(pccard_handle_type *hpccard)
 {
-  uint8_t SECTOR_COUNT_REG;
+  uint8_t sector_count_REG;
   /* set sector_count register 0x80, after check_power_mode */
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = 0x80;    
+  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_sector_count)  = 0x80;    
   /* the register will be change to 0x00 or 0xFF */
 
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = hpccard->CF.CFAddr.Drv;
+  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CARD_HEAD)     = hpccard->cf.cf_addr.drv;
 
-  if(!CF_SendCommand(hpccard, ATA_IDLE_IMMEDIATE_CMD))
+  if(!cf_send_command(hpccard, ATA_IDLE_IMMEDIATE_CMD))
   {
     return FALSE;
   }
 
   /* Check Power Mode */
-  if(!PCCARD_Check_Power_Mode(hpccard))
+  if(!pccard_check_power_mode(hpccard))
   {
     printf("Compact Flash Check Power Mode Failed \n");
     return FALSE;
   }
 
-  SECTOR_COUNT_REG =  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT);
+  sector_count_REG =  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_sector_count);
 
-  if(SECTOR_COUNT_REG == 0xFF)
+  if(sector_count_REG == 0xFF)
   {
     return TRUE;
   }
@@ -984,36 +942,37 @@ BOOL PCCARD_Idle_Immediate(PCCARD_HandleType *hpccard)
     return FALSE;
   }
 }
+
 /**
-  * @brief  Set sleep mode 
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @retval TRUE or FALSE.
+  * @brief  set sleep mode 
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @retval true or false.
   */
-BOOL PCCARD_Set_Sleep_Mode(PCCARD_HandleType *hpccard)
+BOOL pccard_set_sleep_mode(pccard_handle_type *hpccard)
 {
-  uint8_t SECTOR_COUNT_REG;
+  uint8_t sector_count_REG;
   /* set sector_count register 0x80, after check_power_mode */
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = 0x80;    
+  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_sector_count)  = 0x80;    
   /* the register will be change to 0x00 or 0xFF */
 
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = hpccard->CF.CFAddr.Drv;
+  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CARD_HEAD)     = hpccard->cf.cf_addr.drv;
 
-  if(!CF_SendCommand(hpccard, ATA_SET_SLEEP_MODE_CMD))
+  if(!cf_send_command(hpccard, ATA_SET_SLEEP_MODE_CMD))
   {
     return FALSE;
   }
 
   /* Check Power Mode */
-  if(!PCCARD_Check_Power_Mode(hpccard))
+  if(!pccard_check_power_mode(hpccard))
   {
     printf("Compact Flash Check Power Mode Failed \n");
     return FALSE;
   }
 
-  SECTOR_COUNT_REG =  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT);
+  sector_count_REG =  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_sector_count);
 
-  if(SECTOR_COUNT_REG == 0x00)
+  if(sector_count_REG == 0x00)
   {
     return TRUE;
   }
@@ -1022,36 +981,37 @@ BOOL PCCARD_Set_Sleep_Mode(PCCARD_HandleType *hpccard)
     return FALSE;
   }
 }
+
 /**
-  * @brief  Set Standby 
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @retval TRUE or FALSE.
+  * @brief  set standby 
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @retval true or false.
   */
-BOOL PCCARD_Standby(PCCARD_HandleType *hpccard)
+BOOL pccard_standby(pccard_handle_type *hpccard)
 {
-  uint8_t SECTOR_COUNT_REG;
+  uint8_t sector_count_REG;
   /* set sector_count register 0x80, after check_power_mode */
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = 0x80;    
+  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_sector_count)  = 0x80;    
   /* the register will be change to 0x00 or 0xFF */
 
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = hpccard->CF.CFAddr.Drv;
+  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CARD_HEAD)     = hpccard->cf.cf_addr.drv;
 
-  if(!CF_SendCommand(hpccard, ATA_STANDBY_CMD))
+  if(!cf_send_command(hpccard, ATA_STANDBY_CMD))
   {
     return FALSE;
   }
 
-  /* Check Power Mode */
-  if(!PCCARD_Check_Power_Mode(hpccard))
+  /* check power mode */
+  if(!pccard_check_power_mode(hpccard))
   {
     printf("Compact Flash Check Power Mode Failed \n");
     return FALSE;
   }
 
-  SECTOR_COUNT_REG =  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT);
+  sector_count_REG =  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_sector_count);
 
-  if(SECTOR_COUNT_REG == 0x00)
+  if(sector_count_REG == 0x00)
   {
     return TRUE;
   }
@@ -1060,36 +1020,37 @@ BOOL PCCARD_Standby(PCCARD_HandleType *hpccard)
     return FALSE;
   }
 }
+
 /**
-  * @brief  Standby Immediate 
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @retval TRUE or FALSE.
+  * @brief  standby immediate 
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @retval true or false.
   */
-BOOL PCCARD_Standby_Immediate(PCCARD_HandleType *hpccard)
+BOOL pccard_standby_immediate(pccard_handle_type *hpccard)
 {
-  uint8_t SECTOR_COUNT_REG;
+  uint8_t sector_count_REG;
   /* set sector_count register 0x80, after check_power_mode */
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = 0x80;    
+  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_sector_count)  = 0x80;    
   /* the register will be change to 0x00 or 0xFF */
 
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = hpccard->CF.CFAddr.Drv;
+  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CARD_HEAD)     = hpccard->cf.cf_addr.drv;
 
-  if(!CF_SendCommand(hpccard, ATA_STANDBY_IMMEDIATE_CMD))
+  if(!cf_send_command(hpccard, ATA_STANDBY_IMMEDIATE_CMD))
   {
     return FALSE;
   }
 
-  /* Check Power Mode */
-  if(!PCCARD_Check_Power_Mode(hpccard))
+  /* check power mode */
+  if(!pccard_check_power_mode(hpccard))
   {
     printf("Compact Flash Check Power Mode Failed \n");
     return FALSE;
   }
 
-  SECTOR_COUNT_REG =  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT);
+  sector_count_REG =  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_sector_count);
 
-  if(SECTOR_COUNT_REG == 0x00)
+  if(sector_count_REG == 0x00)
   {
     return TRUE;
   }
@@ -1098,26 +1059,27 @@ BOOL PCCARD_Standby_Immediate(PCCARD_HandleType *hpccard)
     return FALSE;
   }
 }
+
 /**
-  * @brief  Reuqest Sense the pccard 
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @retval TRUE or FALSE.
+  * @brief  reuqest sense the pccard 
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @retval true or false.
   */
-BOOL PCCARD_Reuqest_Sense(PCCARD_HandleType *hpccard)
+BOOL pccard_reuqest_sense(pccard_handle_type *hpccard)
 {
   uint8_t Reg, ERROR_REG;
 
-  Reg = hpccard->CF.CFAddr.Drv | 0xA0;
+  Reg = hpccard->cf.cf_addr.drv | 0xA0;
 
-  *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = Reg;
+  *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_CARD_HEAD)     = Reg;
 
-  if(!CF_SendCommand(hpccard, ATA_REQUEST_SENSE_CMD))
+  if(!cf_send_command(hpccard, ATA_REQUEST_SENSE_CMD))
   {
     return FALSE;
   }
 
-  ERROR_REG = PCCARD_Read_ERROR_REG(hpccard);
+  ERROR_REG = pccard_read_error_reg(hpccard);
 
   if((ERROR_REG == 0x2F) || (ERROR_REG == 0x21))
   {
@@ -1128,26 +1090,27 @@ BOOL PCCARD_Reuqest_Sense(PCCARD_HandleType *hpccard)
     return FALSE;
   }
 }
+
 /**
-  * @brief  Recalibrate the pccard 
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @retval TRUE or FALSE.
+  * @brief  recalibrate the pccard 
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @retval true or false.
   */
-BOOL PCCARD_Recalibrate(PCCARD_HandleType *hpccard)
+BOOL pccard_recalibrate(pccard_handle_type *hpccard)
 {
   uint8_t Reg, ERROR_REG;
 
-  Reg = hpccard->CF.CFAddr.Drv | 0xA0;
+  Reg = hpccard->cf.cf_addr.drv | 0xA0;
 
-  *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = Reg;
+  *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_CARD_HEAD)     = Reg;
 
-  if(!CF_SendCommand(hpccard, ATA_RECALIBRATE_CMD))
+  if(!cf_send_command(hpccard, ATA_RECALIBRATE_CMD))
   {
     return FALSE;
   }
 
-  ERROR_REG = PCCARD_Read_ERROR_REG(hpccard);
+  ERROR_REG = pccard_read_error_reg(hpccard);
 
   if((0x00 == ERROR_REG))
   {
@@ -1158,61 +1121,63 @@ BOOL PCCARD_Recalibrate(PCCARD_HandleType *hpccard)
     return FALSE;
   }
 }
+
 /**
-  * @brief  Init drive para 
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @param  Sector_Count: the sector count 
-  * @param  Head_Count: the head count.
-  * @retval TRUE or FALSE.
+  * @brief  init drive para 
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @param  sector_count: the sector count 
+  * @param  head_count: the head count.
+  * @retval true or false.
   */
-BOOL PCCARD_Init_Drive_Para(PCCARD_HandleType *hpccard, uint16_t Sector_Count, uint8_t Head_Count)
+BOOL pccard_init_drive_para(pccard_handle_type *hpccard, uint16_t sector_count, uint8_t head_count)
 {
   uint8_t Reg;
 
-  hpccard->CF.CFAddr.Head = (uint8_t)Head_Count;
-  hpccard->CF.CFAddr.Sector_Count = (uint8_t)Sector_Count;
+  hpccard->cf.cf_addr.head = (uint8_t)head_count;
+  hpccard->cf.cf_addr.sector_count = (uint8_t)sector_count;
 
-  Reg = hpccard->CF.CFAddr.Head | hpccard->CF.CFAddr.Drv;
+  Reg = hpccard->cf.cf_addr.head | hpccard->cf.cf_addr.drv;
 
-  *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = hpccard->CF.CFAddr.Sector_Count;
-  *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = Reg;
+  *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_sector_count)  = hpccard->cf.cf_addr.sector_count;
+  *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_CARD_HEAD)     = Reg;
 
-  if(!CF_SendCommand(hpccard, ATA_INIT_DRIVE_PARA_CMD))
+  if(!cf_send_command(hpccard, ATA_INIT_DRIVE_PARA_CMD))
   {
     return FALSE;
   }
 
   return TRUE;
 }
+
 /**
   * @brief  seek pccard 
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @param  Head_Count: the head count.
-  * @param  Cylinder_Count: the cylinder count 
-  * @retval TRUE or FALSE.
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @param  head_count: the head count.
+  * @param  cylinder_count: the cylinder count 
+  * @retval true or false.
   */
-BOOL PCCARD_Seek(PCCARD_HandleType *hpccard, uint8_t Head_Count, uint16_t Cylinder_Count)
+BOOL pccard_seek(pccard_handle_type *hpccard, uint8_t head_count, uint16_t Cylinder_Count)
 {
   uint8_t Reg, ERROR_REG;
 
-  hpccard->CF.CFAddr.Head = (uint8_t)Head_Count;
-  hpccard->CF.CFAddr.Cylinder = (uint16_t)Cylinder_Count;
+  hpccard->cf.cf_addr.head = (uint8_t)head_count;
+  hpccard->cf.cf_addr.cylinder = (uint16_t)Cylinder_Count;
 
-  Reg = hpccard->CF.CFAddr.Head | hpccard->CF.CFAddr.Drv | 0xA0;
+  Reg = hpccard->cf.cf_addr.head | hpccard->cf.cf_addr.drv | 0xA0;
 
-  *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = Reg;
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CYLINDER_HIGH) = (uint8_t)(0xFF & hpccard->CF.CFAddr.Cylinder >> 8);
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CYLINDER_LOW)  = (uint8_t)(0xFF & hpccard->CF.CFAddr.Cylinder);
+  *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_CARD_HEAD)     = Reg;
+  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CYLINDER_HIGH) = (uint8_t)(0xFF & hpccard->cf.cf_addr.cylinder >> 8);
+  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CYLINDER_LOW)  = (uint8_t)(0xFF & hpccard->cf.cf_addr.cylinder);
 
   /* This command should return false */
-  if(CF_SendCommand(hpccard, ATA_SEEK_CMD)) 
+  if(cf_send_command(hpccard, ATA_SEEK_CMD)) 
   {
     return FALSE;
   }
 
-  ERROR_REG = PCCARD_Read_ERROR_REG(hpccard);
+  ERROR_REG = pccard_read_error_reg(hpccard);
 
   if((ERROR_REG != 0x00))
   {
@@ -1223,62 +1188,63 @@ BOOL PCCARD_Seek(PCCARD_HandleType *hpccard, uint8_t Head_Count, uint16_t Cylind
     return FALSE;
   }
 }
+
 /**
   * @brief  format track 
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @param  pBuffer: pointer to the data buffer.
-  * @param  Sector_Address: the sector addr 
-  * @param  Sector_Count: the sector count 
-  * @retval TRUE or FALSE.
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @param  pbuffer: pointer to the data buffer.
+  * @param  sector_address: the sector addr 
+  * @param  sector_count: the sector count 
+  * @retval true or false.
   */
-BOOL PCCARD_Format_Track(PCCARD_HandleType *hpccard, uint8_t *pBuffer, uint32_t Sector_Address, uint32_t Sector_Count)
+BOOL pccard_format_track(pccard_handle_type *hpccard, uint8_t *pbuffer, uint32_t sector_address, uint32_t sector_count)
 {
   uint16_t Count = 0;
   uint8_t  Reg;
 
-  if(Sector_Count == 0)
+  if(sector_count == 0)
   {
-    Sector_Count = 256;
+    sector_count = 256;
   }
 
-  while(Count < Sector_Count)
+  while(Count < sector_count)
   {
-    /* Set the parameters to write a sector */
-    Translate_CHSAddr(hpccard, Sector_Address, Count, Sector_Count);
-    Reg = hpccard->CF.CFAddr.Head | hpccard->CF.CFAddr.Drv | 0xA0;
+    /* set the parameters to write a sector */
+    translate_chsaddr(hpccard, sector_address, Count, sector_count);
+    Reg = hpccard->cf.cf_addr.head | hpccard->cf.cf_addr.drv | 0xA0;
 
-    *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CYLINDER_HIGH) = (uint8_t)(0xFF & hpccard->CF.CFAddr.Cylinder >> 8);
-    *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CYLINDER_LOW)  = (uint8_t)(0xFF & hpccard->CF.CFAddr.Cylinder);
-    *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_SECTOR_NUMBER) = hpccard->CF.CFAddr.Sector;
-    *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = hpccard->CF.CFAddr.Sector_Count;
-    *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = Reg;
+    *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CYLINDER_HIGH) = (uint8_t)(0xFF & hpccard->cf.cf_addr.cylinder >> 8);
+    *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CYLINDER_LOW)  = (uint8_t)(0xFF & hpccard->cf.cf_addr.cylinder);
+    *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_SECTOR_NUMBER) = hpccard->cf.cf_addr.sector;
+    *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_sector_count)  = hpccard->cf.cf_addr.sector_count;
+    *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_CARD_HEAD)     = Reg;
 
-    if(CF_SendCommand(hpccard, ATA_FORMAT_TRACK_CMD))
+    if(cf_send_command(hpccard, ATA_FORMAT_TRACK_CMD))
     {
       while(1)
       {
-        if(TaskFileRegIsValid(hpccard))
+        if(task_file_regis_valid(hpccard))
         {
-          if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT | DRQ_BIT))
+          if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT | DRQ_BIT))
           {
-           // Write_Sector(hpccard, pBuffer, PCCARD_SECTOR_SIZE);
+           // write_sector(hpccard, pbuffer, PCCARD_SECTOR_SIZE);
 
-            Sector_Address += 1;
+            sector_address += 1;
             Count += 1;
 
-            if (Count == Sector_Count)
+            if (Count == sector_count)
             {
               break;
             }
 
-            if (Count <= (Sector_Count / hpccard->CF.CFCardInfo.Default_Sector) * hpccard->CF.CFCardInfo.Default_Sector)
-              if (Count % hpccard->CF.CFAddr.Sector_Count == 0)
+            if (Count <= (sector_count / hpccard->cf.cfcard_info.default_sector) * hpccard->cf.cfcard_info.default_sector)
+              if (Count % hpccard->cf.cf_addr.sector_count == 0)
               {
                 break;
               }
           }
-          else if (PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT | ERR_BIT))
+          else if (pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT | ERR_BIT))
           {
             return FALSE;
           }
@@ -1288,13 +1254,13 @@ BOOL PCCARD_Format_Track(PCCARD_HandleType *hpccard, uint8_t *pBuffer, uint32_t 
 
     while(1)
     {
-      if(TaskFileRegIsValid(hpccard))
+      if(task_file_regis_valid(hpccard))
       {
-        if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT | DRQ_BIT))
+        if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT | DRQ_BIT))
         {
           break;
         }
-        else if((PCCARD_Read_STATUS_REG(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
+        else if((pccard_read_status_reg(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
         {
           return FALSE;
         }
@@ -1304,66 +1270,67 @@ BOOL PCCARD_Format_Track(PCCARD_HandleType *hpccard, uint8_t *pBuffer, uint32_t 
 
   return TRUE;
 }
+
 /**
-  * @brief  read Verify Sector
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @param  Sector_Address: the sector addr 
-  * @param  Sector_Count: the sector count 
-  * @retval TRUE or FALSE.
+  * @brief  read verify sector
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @param  sector_address: the sector addr 
+  * @param  sector_count: the sector count 
+  * @retval true or false.
   */
-BOOL PCCARD_Read_Verify_Sector(PCCARD_HandleType *hpccard, uint32_t Sector_Address, uint16_t Sector_Count)
+BOOL pccard_read_verify_sector(pccard_handle_type *hpccard, uint32_t sector_address, uint16_t sector_count)
 {
   uint16_t Count = 0;
   uint8_t Reg;
 
-  if(Sector_Count == 0)
+  if(sector_count == 0)
   {
-    Sector_Count = 256;
+    sector_count = 256;
   }
 
-  while(Count < Sector_Count)
+  while(Count < sector_count)
   {
 
-    Translate_CHSAddr(hpccard, Sector_Address, Count, Sector_Count);
-    Reg = hpccard->CF.CFAddr.Head | hpccard->CF.CFAddr.Drv | 0xA0;
+    translate_chsaddr(hpccard, sector_address, Count, sector_count);
+    Reg = hpccard->cf.cf_addr.head | hpccard->cf.cf_addr.drv | 0xA0;
 
-    *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CYLINDER_HIGH) = (uint8_t)(0xFF & hpccard->CF.CFAddr.Cylinder >> 8);
-    *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CYLINDER_LOW)  = (uint8_t)(0xFF & hpccard->CF.CFAddr.Cylinder);
-    *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_SECTOR_NUMBER) = hpccard->CF.CFAddr.Sector;
-    *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = hpccard->CF.CFAddr.Sector_Count;
-    *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = Reg;
+    *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CYLINDER_HIGH) = (uint8_t)(0xFF & hpccard->cf.cf_addr.cylinder >> 8);
+    *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CYLINDER_LOW)  = (uint8_t)(0xFF & hpccard->cf.cf_addr.cylinder);
+    *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_SECTOR_NUMBER) = hpccard->cf.cf_addr.sector;
+    *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_sector_count)  = hpccard->cf.cf_addr.sector_count;
+    *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_CARD_HEAD)     = Reg;
 
-    if(CF_SendCommand(hpccard, ATA_READ_VERIFY_SECTOR_CMD))
+    if(cf_send_command(hpccard, ATA_READ_VERIFY_SECTOR_CMD))
     {
       while(1)
       {
-        if(TaskFileRegIsValid(hpccard))
+        if(task_file_regis_valid(hpccard))
         {
-          if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT))
+          if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT))
           {
-            if(PCCARD_Read_STATUS_REG(hpccard) == DRQ_BIT)  //  DRQ_BIT should not be assert in this command
+            if(pccard_read_status_reg(hpccard) == DRQ_BIT)
             {
               return FALSE;
             }
             else
             {
-              Sector_Address += 1;
+              sector_address += 1;
               Count += 1;
 
-              if (Count == Sector_Count)
+              if (Count == sector_count)
               {
                 break;
               }
 
-              if (Count <= (Sector_Count / hpccard->CF.CFCardInfo.Default_Sector) * hpccard->CF.CFCardInfo.Default_Sector)
-                if (Count % hpccard->CF.CFAddr.Sector_Count == 0)
+              if (Count <= (sector_count / hpccard->cf.cfcard_info.default_sector) * hpccard->cf.cfcard_info.default_sector)
+                if (Count % hpccard->cf.cf_addr.sector_count == 0)
                 {
                   break;
                 }
             }
           }
-          else if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT | ERR_BIT))
+          else if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT | ERR_BIT))
           {
             return FALSE;
           }
@@ -1373,13 +1340,13 @@ BOOL PCCARD_Read_Verify_Sector(PCCARD_HandleType *hpccard, uint32_t Sector_Addre
 
     while(1)
     {
-      if(TaskFileRegIsValid(hpccard))
+      if(task_file_regis_valid(hpccard))
       {
-        if((PCCARD_Read_STATUS_REG(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x50)
+        if((pccard_read_status_reg(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x50)
         {
           break;
         }
-        else if((PCCARD_Read_STATUS_REG(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
+        else if((pccard_read_status_reg(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
         {
           return FALSE;
         }
@@ -1389,62 +1356,63 @@ BOOL PCCARD_Read_Verify_Sector(PCCARD_HandleType *hpccard, uint32_t Sector_Addre
 
   return TRUE;
 }
+
 /**
-  * @brief  write Verify 
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @param  pBuffer: pointer to the data buffer.
-  * @param  Sector_Address: the sector addr 
-  * @param  Sector_Count: the sector count 
-  * @retval TRUE or FALSE.
+  * @brief  write verify 
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @param  pbuffer: pointer to the data buffer.
+  * @param  sector_address: the sector addr 
+  * @param  sector_count: the sector count 
+  * @retval true or false.
   */
-BOOL PCCARD_Write_Verify(PCCARD_HandleType *hpccard, uint8_t *pBuffer, uint32_t Sector_Address, uint32_t Sector_Count)
+BOOL pccard_write_verify(pccard_handle_type *hpccard, uint8_t *pbuffer, uint32_t sector_address, uint32_t sector_count)
 {
   uint16_t Count = 0;
   uint8_t  Reg;
 
-  if(Sector_Count == 0)
+  if(sector_count == 0)
   {
-    Sector_Count = 256;
+    sector_count = 256;
   }
 
-  while(Count < Sector_Count)
+  while(Count < sector_count)
   {
     // Set the parameters to write a sector //
-    Translate_CHSAddr(hpccard, Sector_Address, Count, Sector_Count);
-    Reg = hpccard->CF.CFAddr.Head | hpccard->CF.CFAddr.Drv | 0xA0;
+    translate_chsaddr(hpccard, sector_address, Count, sector_count);
+    Reg = hpccard->cf.cf_addr.head | hpccard->cf.cf_addr.drv | 0xA0;
 
-    *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CYLINDER_HIGH) = (uint8_t)(0xFF & hpccard->CF.CFAddr.Cylinder >> 8);
-    *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CYLINDER_LOW)  = (uint8_t)(0xFF & hpccard->CF.CFAddr.Cylinder);
-    *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_SECTOR_NUMBER) = hpccard->CF.CFAddr.Sector;
-    *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = hpccard->CF.CFAddr.Sector_Count;
-    *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = Reg;
+    *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CYLINDER_HIGH) = (uint8_t)(0xFF & hpccard->cf.cf_addr.cylinder >> 8);
+    *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CYLINDER_LOW)  = (uint8_t)(0xFF & hpccard->cf.cf_addr.cylinder);
+    *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_SECTOR_NUMBER) = hpccard->cf.cf_addr.sector;
+    *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_sector_count)  = hpccard->cf.cf_addr.sector_count;
+    *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_CARD_HEAD)     = Reg;
 
-    if(CF_SendCommand(hpccard, ATA_WRITE_VERIFY_CMD))
+    if(cf_send_command(hpccard, ATA_WRITE_VERIFY_CMD))
     {
       while(1)
       {
-        if(TaskFileRegIsValid(hpccard))
+        if(task_file_regis_valid(hpccard))
         {
-          if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT | DRQ_BIT))
+          if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT | DRQ_BIT))
           {
-            Write_Sector(hpccard, pBuffer, PCCARD_SECTOR_SIZE);
+            write_sector(hpccard, pbuffer, PCCARD_SECTOR_SIZE);
 
-            Sector_Address += 1;
+            sector_address += 1;
             Count += 1;
 
-            if (Count == Sector_Count)
+            if (Count == sector_count)
             {
               break;
             }
 
-            if (Count <= (Sector_Count / hpccard->CF.CFCardInfo.Default_Sector) * hpccard->CF.CFCardInfo.Default_Sector)
-              if (Count % hpccard->CF.CFAddr.Sector_Count == 0)
+            if (Count <= (sector_count / hpccard->cf.cfcard_info.default_sector) * hpccard->cf.cfcard_info.default_sector)
+              if (Count % hpccard->cf.cf_addr.sector_count == 0)
               {
                 break;
               }
           }
-          else if (PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT | ERR_BIT))
+          else if (pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT | ERR_BIT))
           {
             return FALSE;
           }
@@ -1454,13 +1422,13 @@ BOOL PCCARD_Write_Verify(PCCARD_HandleType *hpccard, uint8_t *pBuffer, uint32_t 
 
     while(1)
     {
-      if(TaskFileRegIsValid(hpccard))
+      if(task_file_regis_valid(hpccard))
       {
-        if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT))
+        if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT))
         {
           break;
         }
-        else if((PCCARD_Read_STATUS_REG(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
+        else if((pccard_read_status_reg(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
         {
           return FALSE;
         }
@@ -1470,70 +1438,73 @@ BOOL PCCARD_Write_Verify(PCCARD_HandleType *hpccard, uint8_t *pBuffer, uint32_t 
 
   return TRUE;
 }
+
 /**
   * @brief  set multiple mode 
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @param  Sector_Count: the sector count 
-  * @retval TRUE or FALSE.
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @param  sector_count: the sector count 
+  * @retval true or false.
   */
-BOOL PCCARD_Set_Multiple_Mode(PCCARD_HandleType *hpccard, uint32_t Sector_Count)
+BOOL pccard_set_multiple_mode(pccard_handle_type *hpccard, uint32_t sector_count)
 {
-  hpccard->CF.CFAddr.Sector_Count = Sector_Count;
+  hpccard->cf.cf_addr.sector_count = sector_count;
 
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = hpccard->CF.CFAddr.Sector_Count;
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = hpccard->CF.CFAddr.Drv;
+  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_sector_count)  = hpccard->cf.cf_addr.sector_count;
+  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CARD_HEAD)     = hpccard->cf.cf_addr.drv;
 
-  if(!CF_SendCommand(hpccard, ATA_SET_MULTIPLE_MODE_CMD))
+  if(!cf_send_command(hpccard, ATA_SET_MULTIPLE_MODE_CMD))
   {
     return FALSE;
   }
 
   return TRUE;
 }
+
 /**
   * @brief  set features 
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @param  Sector_Count: the sector count 
-  * @param  Feature: Feature val
-  * @retval TRUE or FALSE.
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @param  sector_count: the sector count 
+  * @param  feature: feature val
+  * @retval true or false.
   */
-BOOL PCCARD_Set_Features(PCCARD_HandleType *hpccard, uint32_t Sector_Count, uint8_t Feature)
+BOOL pccard_set_features(pccard_handle_type *hpccard, uint32_t sector_count, uint8_t Feature)
 {
-  hpccard->CF.CFAddr.Sector_Count = Sector_Count;
+  hpccard->cf.cf_addr.sector_count = sector_count;
 
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = hpccard->CF.CFAddr.Sector_Count;
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = hpccard->CF.CFAddr.Drv;
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_FEATURE_REG)   = Feature;
+  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_sector_count)  = hpccard->cf.cf_addr.sector_count;
+  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CARD_HEAD)     = hpccard->cf.cf_addr.drv;
+  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_FEATURE_REG)   = Feature;
 
-  if(!CF_SendCommand(hpccard, ATA_SET_FEATURE_CMD))
+  if(!cf_send_command(hpccard, ATA_SET_FEATURE_CMD))
   {
     return FALSE;
   }
 
   return TRUE;
 }
+
 /**
   * @brief  read buffer 
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @param  pBuffer: pointer to the data buffer.
-  * @retval TRUE or FALSE.
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @param  pbuffer: pointer to the data buffer.
+  * @retval true or false.
   */
-BOOL PCCARD_Read_Buffer(PCCARD_HandleType *hpccard, uint8_t *pBuffer)
+BOOL pccard_read_buffer(pccard_handle_type *hpccard, uint8_t *pbuffer)
 {
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = hpccard->CF.CFAddr.Drv;
+  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CARD_HEAD)     = hpccard->cf.cf_addr.drv;
 
-  if(CF_SendCommand(hpccard, ATA_READ_BUFFER_CMD))
+  if(cf_send_command(hpccard, ATA_READ_BUFFER_CMD))
   {
-    if (TaskFileRegIsValid(hpccard))
+    if (task_file_regis_valid(hpccard))
     {
-      if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT | DRQ_BIT))
+      if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT | DRQ_BIT))
       {
-        Read_Sector(hpccard, pBuffer, PCCARD_SECTOR_SIZE);
+        read_sector(hpccard, pbuffer, PCCARD_SECTOR_SIZE);
       }
-      else if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT | ERR_BIT))
+      else if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT | ERR_BIT))
       {
         return FALSE;
       }
@@ -1542,13 +1513,13 @@ BOOL PCCARD_Read_Buffer(PCCARD_HandleType *hpccard, uint8_t *pBuffer)
 
   while(1)
   {
-    if(TaskFileRegIsValid(hpccard))
+    if(task_file_regis_valid(hpccard))
     {
-      if((PCCARD_Read_STATUS_REG(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x50)
+      if((pccard_read_status_reg(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x50)
       {
         break;
       }
-      else if((PCCARD_Read_STATUS_REG(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
+      else if((pccard_read_status_reg(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
       {
         return FALSE;
       }
@@ -1557,26 +1528,27 @@ BOOL PCCARD_Read_Buffer(PCCARD_HandleType *hpccard, uint8_t *pBuffer)
 
   return TRUE;
 }
+
 /**
   * @brief  write buffer 
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @param  pBuffer: pointer to the data buffer.
-  * @retval TRUE or FALSE.
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @param  pbuffer: pointer to the data buffer.
+  * @retval true or false.
   */
-BOOL PCCARD_Write_Buffer(PCCARD_HandleType *hpccard, uint8_t *pBuffer)
+BOOL pccard_write_buffer(pccard_handle_type *hpccard, uint8_t *pbuffer)
 {
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = hpccard->CF.CFAddr.Drv;
+  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CARD_HEAD)     = hpccard->cf.cf_addr.drv;
 
-  if(CF_SendCommand(hpccard, ATA_WRITE_BUFFER_CMD))
+  if(cf_send_command(hpccard, ATA_WRITE_BUFFER_CMD))
   {
-    if (TaskFileRegIsValid(hpccard))
+    if (task_file_regis_valid(hpccard))
     {
-      if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT | DRQ_BIT))
+      if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT | DRQ_BIT))
       {
-        Write_Sector(hpccard, pBuffer, PCCARD_SECTOR_SIZE);
+        write_sector(hpccard, pbuffer, PCCARD_SECTOR_SIZE);
       }
-      else if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT | ERR_BIT))
+      else if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT | ERR_BIT))
       {
         return FALSE;
       }
@@ -1585,13 +1557,13 @@ BOOL PCCARD_Write_Buffer(PCCARD_HandleType *hpccard, uint8_t *pBuffer)
 
   while(1)
   {
-    if(TaskFileRegIsValid(hpccard))
+    if(task_file_regis_valid(hpccard))
     {
-      if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT))
+      if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT))
       {
         break;
       }
-      else if((PCCARD_Read_STATUS_REG(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
+      else if((pccard_read_status_reg(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
       {
         return FALSE;
       }
@@ -1600,95 +1572,97 @@ BOOL PCCARD_Write_Buffer(PCCARD_HandleType *hpccard, uint8_t *pBuffer)
 
   return TRUE;
 }
+
 /**
-  * @brief  Translate sector 
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @param  Sector_Address: the sector addr 
-  * @retval TRUE or FALSE.
+  * @brief  translate sector 
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @param  sector_address: the sector addr 
+  * @retval true or false.
   */
-BOOL PCCARD_Translate_Sector(PCCARD_HandleType *hpccard, uint32_t Sector_Address)
+BOOL pccard_translate_sector(pccard_handle_type *hpccard, uint32_t sector_address)
 {
   uint32_t Total_Cylinder;
   uint8_t Reg;
 
-  Total_Cylinder = (uint32_t)(hpccard->CF.CFCardInfo.Default_Head * hpccard->CF.CFCardInfo.Default_Sector); // The total sectors in one cylinder
+  Total_Cylinder = (uint32_t)(hpccard->cf.cfcard_info.default_head * hpccard->cf.cfcard_info.default_sector); // The total sectors in one cylinder
 
-  hpccard->CF.CFAddr.Cylinder  = (uint16_t)(Sector_Address / Total_Cylinder);
-  hpccard->CF.CFAddr.Head      = (uint8_t)((Sector_Address % Total_Cylinder) / hpccard->CF.CFCardInfo.Default_Sector);
-  hpccard->CF.CFAddr.Sector    = (uint8_t)((Sector_Address % Total_Cylinder) % hpccard->CF.CFCardInfo.Default_Sector) + 1;
+  hpccard->cf.cf_addr.cylinder  = (uint16_t)(sector_address / Total_Cylinder);
+  hpccard->cf.cf_addr.head      = (uint8_t)((sector_address % Total_Cylinder) / hpccard->cf.cfcard_info.default_sector);
+  hpccard->cf.cf_addr.sector    = (uint8_t)((sector_address % Total_Cylinder) % hpccard->cf.cfcard_info.default_sector) + 1;
 
-  /* Set the parameters to write a sector */
-  Reg = hpccard->CF.CFAddr.Head | hpccard->CF.CFAddr.Drv | 0xA0;
+  /* set the parameters to write a sector */
+  Reg = hpccard->cf.cf_addr.head | hpccard->cf.cf_addr.drv | 0xA0;
 
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CYLINDER_HIGH) = (uint8_t)(0xFF & hpccard->CF.CFAddr.Cylinder >> 8);
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CYLINDER_LOW)  = (uint8_t)(0xFF & hpccard->CF.CFAddr.Cylinder);
-  *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_SECTOR_NUMBER) = hpccard->CF.CFAddr.Sector;
-  *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = Reg;
+  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CYLINDER_HIGH) = (uint8_t)(0xFF & hpccard->cf.cf_addr.cylinder >> 8);
+  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CYLINDER_LOW)  = (uint8_t)(0xFF & hpccard->cf.cf_addr.cylinder);
+  *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_SECTOR_NUMBER) = hpccard->cf.cf_addr.sector;
+  *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_CARD_HEAD)     = Reg;
 
-  if(!CF_SendCommand(hpccard, ATA_TRANSLATE_SECTOR_CMD))
+  if(!cf_send_command(hpccard, ATA_TRANSLATE_SECTOR_CMD))
   {
     return FALSE;
   }
 
   return TRUE;
 }
+
 /**
-  * @brief  write sector WO_ERASE
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @param  pBuffer: pointer to the data buffer.
-  * @param  Sector_Address: the sector addr 
-  * @param  Sector_Count: the sector count 
-  * @retval TRUE or FALSE.
+  * @brief  write sector wo_erase
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @param  pbuffer: pointer to the data buffer.
+  * @param  sector_address: the sector addr 
+  * @param  sector_count: the sector count 
+  * @retval true or false.
   */
-BOOL PCCARD_Write_Sector_WO_ERASE(PCCARD_HandleType *hpccard, uint8_t *pBuffer, uint32_t Sector_Address, uint32_t Sector_Count)
+BOOL pccard_write_sector_wo_erase(pccard_handle_type *hpccard, uint8_t *pbuffer, uint32_t sector_address, uint32_t sector_count)
 {
   uint16_t Count = 0;
   uint8_t  Reg;
 
-  if(Sector_Count == 0)
+  if(sector_count == 0)
   {
-    Sector_Count = 256;
+    sector_count = 256;
   }
 
-  while(Count < Sector_Count)
+  while(Count < sector_count)
   {
-    /* Set the parameters to write a sector */
-    Translate_CHSAddr(hpccard, Sector_Address, Count, Sector_Count);
-    Reg = hpccard->CF.CFAddr.Head | hpccard->CF.CFAddr.Drv | 0xA0;
+    /* set the parameters to write a sector */
+    translate_chsaddr(hpccard, sector_address, Count, sector_count);
+    Reg = hpccard->cf.cf_addr.head | hpccard->cf.cf_addr.drv | 0xA0;
 
-    *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CYLINDER_HIGH) = (uint8_t)(0xFF & hpccard->CF.CFAddr.Cylinder >> 8);
-    *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CYLINDER_LOW)  = (uint8_t)(0xFF & hpccard->CF.CFAddr.Cylinder);
-    *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_SECTOR_NUMBER) = hpccard->CF.CFAddr.Sector;
-    *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = hpccard->CF.CFAddr.Sector_Count;
-    *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = Reg;
+    *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CYLINDER_HIGH) = (uint8_t)(0xFF & hpccard->cf.cf_addr.cylinder >> 8);
+    *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CYLINDER_LOW)  = (uint8_t)(0xFF & hpccard->cf.cf_addr.cylinder);
+    *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_SECTOR_NUMBER) = hpccard->cf.cf_addr.sector;
+    *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_sector_count)  = hpccard->cf.cf_addr.sector_count;
+    *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_CARD_HEAD)     = Reg;
 
-    if(CF_SendCommand(hpccard, ATA_WRITE_SECTOR_WO_ERASE_CMD))
+    if(cf_send_command(hpccard, ATA_WRITE_SECTOR_WO_ERASE_CMD))
     {
       while(1)
       {
-        if(TaskFileRegIsValid(hpccard))
+        if(task_file_regis_valid(hpccard))
         {
-          if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT | DRQ_BIT))
+          if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT | DRQ_BIT))
           {
-            Write_Sector(hpccard, pBuffer, PCCARD_SECTOR_SIZE);
+            write_sector(hpccard, pbuffer, PCCARD_SECTOR_SIZE);
 
-            Sector_Address += 1;
+            sector_address += 1;
             Count += 1;
 
-            if (Count == Sector_Count)
+            if (Count == sector_count)
             {
               break;
             }
 
-            if (Count <= (Sector_Count / hpccard->CF.CFCardInfo.Default_Sector) * hpccard->CF.CFCardInfo.Default_Sector)
-              if (Count % hpccard->CF.CFAddr.Sector_Count == 0)
+            if (Count <= (sector_count / hpccard->cf.cfcard_info.default_sector) * hpccard->cf.cfcard_info.default_sector)
+              if (Count % hpccard->cf.cf_addr.sector_count == 0)
               {
                 break;
               }
           }
-          else if (PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT | ERR_BIT))
+          else if (pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT | ERR_BIT))
           {
             return FALSE;
           }
@@ -1698,13 +1672,13 @@ BOOL PCCARD_Write_Sector_WO_ERASE(PCCARD_HandleType *hpccard, uint8_t *pBuffer, 
 
     while(1)
     {
-      if(TaskFileRegIsValid(hpccard))
+      if(task_file_regis_valid(hpccard))
       {
-        if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT))
+        if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT))
         {
           break;
         }
-        else if((PCCARD_Read_STATUS_REG(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
+        else if((pccard_read_status_reg(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
         {
           return FALSE;
         }
@@ -1714,62 +1688,63 @@ BOOL PCCARD_Write_Sector_WO_ERASE(PCCARD_HandleType *hpccard, uint8_t *pBuffer, 
 
   return TRUE;
 }
+
 /**
-  * @brief  write Multiple
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @param  pBuffer: pointer to the data buffer.
-  * @param  Sector_Address: the sector addr 
-  * @param  Sector_Count: the sector count 
-  * @retval TRUE or FALSE.
+  * @brief  write multiple
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @param  pbuffer: pointer to the data buffer.
+  * @param  sector_address: the sector addr 
+  * @param  sector_count: the sector count 
+  * @retval true or false.
   */
-BOOL PCCARD_Write_Multiple(PCCARD_HandleType *hpccard, uint8_t *pBuffer, uint32_t Sector_Address, uint32_t Sector_Count)
+BOOL pccard_write_multiple(pccard_handle_type *hpccard, uint8_t *pbuffer, uint32_t sector_address, uint32_t sector_count)
 {
   uint16_t Count = 0;
   uint8_t  Reg;
 
-  if(Sector_Count == 0)
+  if(sector_count == 0)
   {
-    Sector_Count = 256;
+    sector_count = 256;
   }
 
-  while(Count < Sector_Count)
+  while(Count < sector_count)
   {
-    /* Set the parameters to write a sector */
-    Translate_CHSAddr(hpccard, Sector_Address, Count, Sector_Count);
-    Reg = hpccard->CF.CFAddr.Head | hpccard->CF.CFAddr.Drv | 0xA0;
+    /* set the parameters to write a sector */
+    translate_chsaddr(hpccard, sector_address, Count, sector_count);
+    Reg = hpccard->cf.cf_addr.head | hpccard->cf.cf_addr.drv | 0xA0;
 
-    *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CYLINDER_HIGH) = (uint8_t)(0xFF & hpccard->CF.CFAddr.Cylinder >> 8);
-    *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CYLINDER_LOW)  = (uint8_t)(0xFF & hpccard->CF.CFAddr.Cylinder);
-    *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_SECTOR_NUMBER) = hpccard->CF.CFAddr.Sector;
-    *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = hpccard->CF.CFAddr.Sector_Count;
-    *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = Reg;
+    *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CYLINDER_HIGH) = (uint8_t)(0xFF & hpccard->cf.cf_addr.cylinder >> 8);
+    *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CYLINDER_LOW)  = (uint8_t)(0xFF & hpccard->cf.cf_addr.cylinder);
+    *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_SECTOR_NUMBER) = hpccard->cf.cf_addr.sector;
+    *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_sector_count)  = hpccard->cf.cf_addr.sector_count;
+    *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_CARD_HEAD)     = Reg;
 
-    if(CF_SendCommand(hpccard, ATA_WRITE_MULTIPLE_CMD))
+    if(cf_send_command(hpccard, ATA_WRITE_MULTIPLE_CMD))
     {
       while(1)
       {
-        if(TaskFileRegIsValid(hpccard))
+        if(task_file_regis_valid(hpccard))
         {
-          if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT | DRQ_BIT))
+          if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT | DRQ_BIT))
           {
-            Write_Sector(hpccard, pBuffer, PCCARD_SECTOR_SIZE);
+            write_sector(hpccard, pbuffer, PCCARD_SECTOR_SIZE);
 
-            Sector_Address += 1;
+            sector_address += 1;
             Count += 1;
 
-            if (Count == Sector_Count)
+            if (Count == sector_count)
             {
               break;
             }
 
-            if (Count <= (Sector_Count / hpccard->CF.CFCardInfo.Default_Sector) * hpccard->CF.CFCardInfo.Default_Sector)
-              if (Count % hpccard->CF.CFAddr.Sector_Count == 0)
+            if (Count <= (sector_count / hpccard->cf.cfcard_info.default_sector) * hpccard->cf.cfcard_info.default_sector)
+              if (Count % hpccard->cf.cf_addr.sector_count == 0)
               {
                 break;
               }
           }
-          else if (PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT | ERR_BIT))
+          else if (pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT | ERR_BIT))
           {
             return FALSE;
           }
@@ -1779,13 +1754,13 @@ BOOL PCCARD_Write_Multiple(PCCARD_HandleType *hpccard, uint8_t *pBuffer, uint32_
 
     while(1)
     {
-      if(TaskFileRegIsValid(hpccard))
+      if(task_file_regis_valid(hpccard))
       {
-        if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT))
+        if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT))
         {
           break;
         }
-        else if((PCCARD_Read_STATUS_REG(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
+        else if((pccard_read_status_reg(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
         {
           return FALSE;
         }
@@ -1795,62 +1770,63 @@ BOOL PCCARD_Write_Multiple(PCCARD_HandleType *hpccard, uint8_t *pBuffer, uint32_
 
   return TRUE;
 }
+
 /**
-  * @brief  read Multiple 
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @param  pBuffer: pointer to the data buffer.
-  * @param  Sector_Address: the sector addr 
-  * @param  Sector_Count: the sector count 
-  * @retval TRUE or FALSE.
+  * @brief  read multiple 
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @param  pbuffer: pointer to the data buffer.
+  * @param  sector_address: the sector addr 
+  * @param  sector_count: the sector count 
+  * @retval true or false.
   */
-BOOL PCCARD_Read_Multiple(PCCARD_HandleType *hpccard, uint8_t *pBuffer, uint32_t Sector_Address, uint32_t Sector_Count)
+BOOL pccard_read_multiple(pccard_handle_type *hpccard, uint8_t *pbuffer, uint32_t sector_address, uint32_t sector_count)
 {
   uint16_t Count = 0;
   uint8_t Reg;
 
-  if(Sector_Count == 0)
+  if(sector_count == 0)
   {
-    Sector_Count = 256;
+    sector_count = 256;
   }
 
-  while(Count < Sector_Count)
+  while(Count < sector_count)
   {
 
-    Translate_CHSAddr(hpccard, Sector_Address, Count, Sector_Count);
-    Reg = hpccard->CF.CFAddr.Head | hpccard->CF.CFAddr.Drv | 0xA0;
+    translate_chsaddr(hpccard, sector_address, Count, sector_count);
+    Reg = hpccard->cf.cf_addr.head | hpccard->cf.cf_addr.drv | 0xA0;
 
-    *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CYLINDER_HIGH) = (uint8_t)(0xFF & hpccard->CF.CFAddr.Cylinder >> 8);
-    *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CYLINDER_LOW)  = (uint8_t)(0xFF & hpccard->CF.CFAddr.Cylinder);
-    *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_SECTOR_NUMBER) = hpccard->CF.CFAddr.Sector;
-    *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = hpccard->CF.CFAddr.Sector_Count;
-    *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = Reg;
+    *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CYLINDER_HIGH) = (uint8_t)(0xFF & hpccard->cf.cf_addr.cylinder >> 8);
+    *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CYLINDER_LOW)  = (uint8_t)(0xFF & hpccard->cf.cf_addr.cylinder);
+    *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_SECTOR_NUMBER) = hpccard->cf.cf_addr.sector;
+    *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_sector_count)  = hpccard->cf.cf_addr.sector_count;
+    *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_CARD_HEAD)     = Reg;
 
-    if(CF_SendCommand(hpccard, ATA_READ_MULTIPLE_CMD))
+    if(cf_send_command(hpccard, ATA_READ_MULTIPLE_CMD))
     {
       while(1)
       {
-        if(TaskFileRegIsValid(hpccard))
+        if(task_file_regis_valid(hpccard))
         {
-          if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT | DRQ_BIT))
+          if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT | DRQ_BIT))
           {
-            Read_Sector(hpccard, pBuffer, PCCARD_SECTOR_SIZE);
+            read_sector(hpccard, pbuffer, PCCARD_SECTOR_SIZE);
 
-            Sector_Address += 1;
+            sector_address += 1;
             Count += 1;
 
-            if (Count == Sector_Count)
+            if (Count == sector_count)
             {
               break;
             }
 
-            if (Count <= (Sector_Count / hpccard->CF.CFCardInfo.Default_Sector) * hpccard->CF.CFCardInfo.Default_Sector)
-              if (Count % hpccard->CF.CFAddr.Sector_Count == 0)
+            if (Count <= (sector_count / hpccard->cf.cfcard_info.default_sector) * hpccard->cf.cfcard_info.default_sector)
+              if (Count % hpccard->cf.cf_addr.sector_count == 0)
               {
                 break;
               }
           }
-          else if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT | ERR_BIT))
+          else if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT | ERR_BIT))
           {
             return FALSE;
           }
@@ -1860,13 +1836,13 @@ BOOL PCCARD_Read_Multiple(PCCARD_HandleType *hpccard, uint8_t *pBuffer, uint32_t
 
     while(1)
     {
-      if(TaskFileRegIsValid(hpccard))
+      if(task_file_regis_valid(hpccard))
       {
-        if((PCCARD_Read_STATUS_REG(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x50)
+        if((pccard_read_status_reg(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x50)
         {
           break;
         }
-        else if((PCCARD_Read_STATUS_REG(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
+        else if((pccard_read_status_reg(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
         {
           return FALSE;
         }
@@ -1876,62 +1852,63 @@ BOOL PCCARD_Read_Multiple(PCCARD_HandleType *hpccard, uint8_t *pBuffer, uint32_t
 
   return TRUE;
 }
+
 /**
-  * @brief  write Multiple WO_ERASE
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @param  pBuffer: pointer to the data buffer.
-  * @param  Sector_Address: the sector addr 
-  * @param  Sector_Count: the sector count 
-  * @retval TRUE or FALSE.
+  * @brief  write multiple wo_erase
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @param  pbuffer: pointer to the data buffer.
+  * @param  sector_address: the sector addr 
+  * @param  sector_count: the sector count 
+  * @retval true or false.
   */
-BOOL PCCARD_Write_Multiple_WO_ERASE(PCCARD_HandleType *hpccard, uint8_t *pBuffer, uint32_t Sector_Address, uint32_t Sector_Count)
+BOOL pccard_write_multiple_wo_erase(pccard_handle_type *hpccard, uint8_t *pbuffer, uint32_t sector_address, uint32_t sector_count)
 {
   uint16_t Count = 0;
   uint8_t Reg;
 
-  if(Sector_Count == 0)
+  if(sector_count == 0)
   {
-    Sector_Count = 256;
+    sector_count = 256;
   }
 
-  while(Count < Sector_Count)
+  while(Count < sector_count)
   {
-    /* Set the parameters to write a sector */
-    Translate_CHSAddr(hpccard, Sector_Address, Count, Sector_Count);
-    Reg = hpccard->CF.CFAddr.Head | hpccard->CF.CFAddr.Drv | 0xA0;
+    /* set the parameters to write a sector */
+    translate_chsaddr(hpccard, sector_address, Count, sector_count);
+    Reg = hpccard->cf.cf_addr.head | hpccard->cf.cf_addr.drv | 0xA0;
 
-    *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CYLINDER_HIGH) = (uint8_t)(0xFF & hpccard->CF.CFAddr.Cylinder >> 8);
-    *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CYLINDER_LOW)  = (uint8_t)(0xFF & hpccard->CF.CFAddr.Cylinder);
-    *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_SECTOR_NUMBER) = hpccard->CF.CFAddr.Sector;
-    *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = hpccard->CF.CFAddr.Sector_Count;
-    *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = Reg;
+    *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CYLINDER_HIGH) = (uint8_t)(0xFF & hpccard->cf.cf_addr.cylinder >> 8);
+    *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CYLINDER_LOW)  = (uint8_t)(0xFF & hpccard->cf.cf_addr.cylinder);
+    *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_SECTOR_NUMBER) = hpccard->cf.cf_addr.sector;
+    *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_sector_count)  = hpccard->cf.cf_addr.sector_count;
+    *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_CARD_HEAD)     = Reg;
 
-    if(CF_SendCommand(hpccard, ATA_WRITE_MULTIPLE_WO_ERASE_CMD))
+    if(cf_send_command(hpccard, ATA_WRITE_MULTIPLE_WO_ERASE_CMD))
     {
       while(1)
       {
-        if(TaskFileRegIsValid(hpccard))
+        if(task_file_regis_valid(hpccard))
         {
-          if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT | DRQ_BIT))
+          if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT | DRQ_BIT))
           {
-            Write_Sector(hpccard, pBuffer, PCCARD_SECTOR_SIZE);
+            write_sector(hpccard, pbuffer, PCCARD_SECTOR_SIZE);
 
-            Sector_Address += 1;
+            sector_address += 1;
             Count += 1;
 
-            if (Count == Sector_Count)
+            if (Count == sector_count)
             {
               break;
             }
 
-            if (Count <= (Sector_Count / hpccard->CF.CFCardInfo.Default_Sector) * hpccard->CF.CFCardInfo.Default_Sector)
-              if (Count % hpccard->CF.CFAddr.Sector_Count == 0)
+            if (Count <= (sector_count / hpccard->cf.cfcard_info.default_sector) * hpccard->cf.cfcard_info.default_sector)
+              if (Count % hpccard->cf.cf_addr.sector_count == 0)
               {
                 break;
               }
           }
-          else if (PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT | ERR_BIT))
+          else if (pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT | ERR_BIT))
           {
             return FALSE;
           }
@@ -1941,13 +1918,13 @@ BOOL PCCARD_Write_Multiple_WO_ERASE(PCCARD_HandleType *hpccard, uint8_t *pBuffer
 
     while(1)
     {
-      if(TaskFileRegIsValid(hpccard))
+      if(task_file_regis_valid(hpccard))
       {
-        if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT))
+        if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT))
         {
           break;
         }
-        else if((PCCARD_Read_STATUS_REG(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
+        else if((pccard_read_status_reg(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
         {
           return FALSE;
         }
@@ -1957,51 +1934,49 @@ BOOL PCCARD_Write_Multiple_WO_ERASE(PCCARD_HandleType *hpccard, uint8_t *pBuffer
 
   return TRUE;
 }
+
 /**
   * @brief  read long sector
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @param  Sector_Address: the sector addr 
-  * @param  pBuffer: pointer to the data buffer.
-  * @retval TRUE or FALSE.
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @param  sector_address: the sector addr 
+  * @param  pbuffer: pointer to the data buffer.
+  * @retval true or false.
   */
-BOOL PCCARD_Read_Long_Sector(PCCARD_HandleType *hpccard, uint32_t Sector_Address, uint8_t *pBuffer)
+BOOL pccard_read_long_sector(pccard_handle_type *hpccard, uint32_t sector_address, uint8_t *pbuffer)
 {
   uint32_t index = 0, Total_Cylinder;
   uint8_t Reg;
   BOOL command_vaild = TRUE;
 
-  Total_Cylinder = (uint32_t)(hpccard->CF.CFCardInfo.Default_Head * hpccard->CF.CFCardInfo.Default_Sector); // The total sectors in one cylinder
+  Total_Cylinder = (uint32_t)(hpccard->cf.cfcard_info.default_head * hpccard->cf.cfcard_info.default_sector);
 
-  hpccard->CF.CFAddr.Cylinder  = (uint16_t)(Sector_Address / Total_Cylinder);
-  hpccard->CF.CFAddr.Head      = (uint8_t)((Sector_Address % Total_Cylinder) / hpccard->CF.CFCardInfo.Default_Sector);
-  hpccard->CF.CFAddr.Sector    = (uint8_t)((Sector_Address % Total_Cylinder) % hpccard->CF.CFCardInfo.Default_Sector) + 1;
-  hpccard->CF.CFAddr.Sector_Count = 1;  //  some CF storage card implement the read long sector command as read sector commend
-  //  set sector count to 1, after read 512 byte data, if the DRQ_BIT still high, means the
-  //  read long sector command work well, because it shoult return 516 byte data (ECC).
+  hpccard->cf.cf_addr.cylinder  = (uint16_t)(sector_address / Total_Cylinder);
+  hpccard->cf.cf_addr.head      = (uint8_t)((sector_address % Total_Cylinder) / hpccard->cf.cfcard_info.default_sector);
+  hpccard->cf.cf_addr.sector    = (uint8_t)((sector_address % Total_Cylinder) % hpccard->cf.cfcard_info.default_sector) + 1;
+  hpccard->cf.cf_addr.sector_count = 1;
 
+  Reg = hpccard->cf.cf_addr.head | hpccard->cf.cf_addr.drv | 0xA0;
 
-  Reg = hpccard->CF.CFAddr.Head | hpccard->CF.CFAddr.Drv | 0xA0;
+  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CYLINDER_HIGH) = (uint8_t)(0xFF & hpccard->cf.cf_addr.cylinder >> 8);
+  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CYLINDER_LOW)  = (uint8_t)(0xFF & hpccard->cf.cf_addr.cylinder);
+  *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_SECTOR_NUMBER) = hpccard->cf.cf_addr.sector;
+  *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_sector_count)  = hpccard->cf.cf_addr.sector_count;
+  *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_CARD_HEAD)     = Reg;
 
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CYLINDER_HIGH) = (uint8_t)(0xFF & hpccard->CF.CFAddr.Cylinder >> 8);
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CYLINDER_LOW)  = (uint8_t)(0xFF & hpccard->CF.CFAddr.Cylinder);
-  *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_SECTOR_NUMBER) = hpccard->CF.CFAddr.Sector;
-  *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = hpccard->CF.CFAddr.Sector_Count;
-  *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = Reg;
-
-  if(CF_SendCommand(hpccard, ATA_READ_LONG_SECTOR_CMD))
+  if(cf_send_command(hpccard, ATA_READ_LONG_SECTOR_CMD))
   {
-    if(TaskFileRegIsValid(hpccard))
+    if(task_file_regis_valid(hpccard))
     {
-      if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT | DRQ_BIT))
+      if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT | DRQ_BIT))
       {
-        Read_Sector(hpccard, pBuffer, PCCARD_SECTOR_SIZE);
+        read_sector(hpccard, pbuffer, PCCARD_SECTOR_SIZE);
 
-        if(PCCARD_Read_STATUS_REG(hpccard) & DRQ_BIT)
+        if(pccard_read_status_reg(hpccard) & DRQ_BIT)
         {
           for(index = 0; index < 4; index++)
           {
-            *(uint8_t *)pBuffer++ = *(uint8_t *)(hpccard->CF.IOAddr);
+            *(uint8_t *)pbuffer++ = *(uint8_t *)(hpccard->cf.io_addr);
           }
         }
         else
@@ -2009,12 +1984,12 @@ BOOL PCCARD_Read_Long_Sector(PCCARD_HandleType *hpccard, uint32_t Sector_Address
           command_vaild = FALSE;
         }
 
-        if(PCCARD_Read_STATUS_REG(hpccard) & DRQ_BIT)
+        if(pccard_read_status_reg(hpccard) & DRQ_BIT)
         {
           command_vaild = FALSE;
         }
 
-        else if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT | ERR_BIT))
+        else if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT | ERR_BIT))
         {
           return FALSE;
 
@@ -2025,13 +2000,13 @@ BOOL PCCARD_Read_Long_Sector(PCCARD_HandleType *hpccard, uint32_t Sector_Address
 
   while(1)
   {
-    if(TaskFileRegIsValid(hpccard))
+    if(task_file_regis_valid(hpccard))
     {
-      if((PCCARD_Read_STATUS_REG(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x50)
+      if((pccard_read_status_reg(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x50)
       {
         break;
       }
-      else if((PCCARD_Read_STATUS_REG(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
+      else if((pccard_read_status_reg(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
       {
         return FALSE;
       }
@@ -2047,51 +2022,49 @@ BOOL PCCARD_Read_Long_Sector(PCCARD_HandleType *hpccard, uint32_t Sector_Address
     return FALSE;
   }
 }
+
 /**
   * @brief  write long sector
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @param  Sector_Address: the sector addr 
-  * @param  pBuffer: pointer to the data buffer.
-  * @retval TRUE or FALSE.
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @param  sector_address: the sector addr 
+  * @param  pbuffer: pointer to the data buffer.
+  * @retval true or false.
   */
-BOOL PCCARD_Write_Long_Sector(PCCARD_HandleType *hpccard, uint32_t Sector_Address, uint8_t *pBuffer)
+BOOL pccard_write_long_sector(pccard_handle_type *hpccard, uint32_t sector_address, uint8_t *pbuffer)
 {
   uint32_t index = 0, Total_Cylinder;
   uint8_t Reg;
   BOOL command_vaild = TRUE;
 
-  Total_Cylinder = (uint32_t)(hpccard->CF.CFCardInfo.Default_Head * hpccard->CF.CFCardInfo.Default_Sector); // The total sectors in one cylinder
+  Total_Cylinder = (uint32_t)(hpccard->cf.cfcard_info.default_head * hpccard->cf.cfcard_info.default_sector);
 
-  hpccard->CF.CFAddr.Cylinder  = (uint16_t)(Sector_Address / Total_Cylinder);
-  hpccard->CF.CFAddr.Head      = (uint8_t)((Sector_Address % Total_Cylinder) / hpccard->CF.CFCardInfo.Default_Sector);
-  hpccard->CF.CFAddr.Sector    = (uint8_t)((Sector_Address % Total_Cylinder) % hpccard->CF.CFCardInfo.Default_Sector) + 1;
-  hpccard->CF.CFAddr.Sector_Count = 1;  //  some CF storage card implement the read long sector command as read sector commend
-  //  set sector count to 1, after read 512 byte data, if the DRQ_BIT still high, means the
-  //  read long sector command is work well, because it shoult return 516 byte data (ECC).
+  hpccard->cf.cf_addr.cylinder  = (uint16_t)(sector_address / Total_Cylinder);
+  hpccard->cf.cf_addr.head      = (uint8_t)((sector_address % Total_Cylinder) / hpccard->cf.cfcard_info.default_sector);
+  hpccard->cf.cf_addr.sector    = (uint8_t)((sector_address % Total_Cylinder) % hpccard->cf.cfcard_info.default_sector) + 1;
+  hpccard->cf.cf_addr.sector_count = 1; 
 
+  Reg = hpccard->cf.cf_addr.head | hpccard->cf.cf_addr.drv | 0xA0;
 
-  Reg = hpccard->CF.CFAddr.Head | hpccard->CF.CFAddr.Drv | 0xA0;
+  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CYLINDER_HIGH) = (uint8_t)(0xFF & hpccard->cf.cf_addr.cylinder >> 8);
+  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_CYLINDER_LOW)  = (uint8_t)(0xFF & hpccard->cf.cf_addr.cylinder);
+  *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_SECTOR_NUMBER) = hpccard->cf.cf_addr.sector;
+  *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_sector_count)  = hpccard->cf.cf_addr.sector_count;
+  *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_CARD_HEAD)     = Reg;
 
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CYLINDER_HIGH) = (uint8_t)(0xFF & hpccard->CF.CFAddr.Cylinder >> 8);
-  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_CYLINDER_LOW)  = (uint8_t)(0xFF & hpccard->CF.CFAddr.Cylinder);
-  *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_SECTOR_NUMBER) = hpccard->CF.CFAddr.Sector;
-  *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_SECTOR_COUNT)  = hpccard->CF.CFAddr.Sector_Count;
-  *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_CARD_HEAD)     = Reg;
-
-  if(CF_SendCommand(hpccard, ATA_WRITE_LONG_SECTOR_CMD))
+  if(cf_send_command(hpccard, ATA_WRITE_LONG_SECTOR_CMD))
   {
-    if(TaskFileRegIsValid(hpccard))
+    if(task_file_regis_valid(hpccard))
     {
-      if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT | DRQ_BIT))
+      if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT | DRQ_BIT))
       {
-        Write_Sector(hpccard, pBuffer, PCCARD_SECTOR_SIZE);
+        write_sector(hpccard, pbuffer, PCCARD_SECTOR_SIZE);
 
-        if(PCCARD_Read_STATUS_REG(hpccard) & DRQ_BIT)
+        if(pccard_read_status_reg(hpccard) & DRQ_BIT)
         {
           for(index = 0; index < 4; index++)
           {
-            *(uint8_t *)(hpccard->CF.IOAddr) = *(uint8_t *)pBuffer++;
+            *(uint8_t *)(hpccard->cf.io_addr) = *(uint8_t *)pbuffer++;
           }
         }
         else
@@ -2099,12 +2072,12 @@ BOOL PCCARD_Write_Long_Sector(PCCARD_HandleType *hpccard, uint32_t Sector_Addres
           command_vaild = FALSE;
         }
 
-        if(PCCARD_Read_STATUS_REG(hpccard) & DRQ_BIT)
+        if(pccard_read_status_reg(hpccard) & DRQ_BIT)
         {
           command_vaild = FALSE;
         }
 
-        else if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT | ERR_BIT))
+        else if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT | ERR_BIT))
         {
           return FALSE;
         }
@@ -2114,13 +2087,13 @@ BOOL PCCARD_Write_Long_Sector(PCCARD_HandleType *hpccard, uint32_t Sector_Addres
 
   while(1)
   {
-    if(TaskFileRegIsValid(hpccard))
+    if(task_file_regis_valid(hpccard))
     {
-      if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT))
+      if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT))
       {
         break;
       }
-      else if((PCCARD_Read_STATUS_REG(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
+      else if((pccard_read_status_reg(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
       {
         return FALSE;
       }
@@ -2136,29 +2109,30 @@ BOOL PCCARD_Write_Long_Sector(PCCARD_HandleType *hpccard, uint32_t Sector_Addres
     return FALSE;
   }
 }
+
 /**
   * @brief  read sector
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @param  pBuffer: pointer to the data buffer.
-  * @param  Transfer_Size: the data length.
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @param  pbuffer: pointer to the data buffer.
+  * @param  transfer_size: the data length.
   * @retval pointer to the data buffer after read.
   */
-uint8_t *Read_Sector(PCCARD_HandleType *hpccard, uint8_t *pBuffer, uint32_t Transfer_Size)
+uint8_t *read_sector(pccard_handle_type *hpccard, uint8_t *pbuffer, uint32_t transfer_size)
 {
   uint32_t index = 0;
 
-  XMC_Enable_16bit_Feature(hpccard->Instance, &(hpccard->Init), hpccard->CF.Enable_8_bit_mode);
+  xmc_enable_16bit_feature(hpccard->instance, &(hpccard->init), hpccard->cf.enable_8_bit_mode);
 
-  if(hpccard->CF.DMAEnable == TRUE)
+  if(hpccard->cf.dma_enable == TRUE)
   {
-    if(hpccard->CF.Enable_8_bit_mode)
+    if(hpccard->cf.enable_8_bit_mode)
     {
-      MYDMA_Config(EDMA_STREAM1, (uint32_t)hpccard->CF.IOAddr, (uint32_t)pBuffer, Transfer_Size, Read_Transfer, Enable_8_bit_Transfer);
+      MYDMA_Config(EDMA_STREAM1, (uint32_t)hpccard->cf.io_addr, (uint32_t)pbuffer, transfer_size, READ_TRANSFER, ENABLE_8_BIT_TRANSFER);
     }
     else
     {
-      MYDMA_Config(EDMA_STREAM1, (uint32_t)hpccard->CF.IOAddr, (uint32_t)pBuffer, (Transfer_Size / 2), Read_Transfer, Enable_16_bit_Transfer);
+      MYDMA_Config(EDMA_STREAM1, (uint32_t)hpccard->cf.io_addr, (uint32_t)pbuffer, (transfer_size / 2), READ_TRANSFER, ENABLE_16_BIT_TRANSFER);
     }
 
     while(1)
@@ -2170,54 +2144,55 @@ uint8_t *Read_Sector(PCCARD_HandleType *hpccard, uint8_t *pBuffer, uint32_t Tran
       }
     }
 
-    pBuffer += 512;
+    pbuffer += 512;
   }
   else
   {
-    if(hpccard->CF.Enable_8_bit_mode)
+    if(hpccard->cf.enable_8_bit_mode)
     {
-      for(; index < (Transfer_Size) ; index++)
+      for(; index < (transfer_size) ; index++)
       {
-        *(uint8_t *)pBuffer++ = *(uint8_t *)(hpccard->CF.IOAddr);
+        *(uint8_t *)pbuffer++ = *(uint8_t *)(hpccard->cf.io_addr);
       }
     }
     else
     {
-      for(; index < (Transfer_Size / 2); index++)
+      for(; index < (transfer_size / 2); index++)
       {
-        *(uint16_t *)pBuffer = *(uint16_t *)(hpccard->CF.IOAddr);
+        *(uint16_t *)pbuffer = *(uint16_t *)(hpccard->cf.io_addr);
        /* offset to next 16 bit */
-        pBuffer += 2;  
+        pbuffer += 2;  
       }
     }
   }
 
-  XMC_Enable_16bit_Feature(hpccard->Instance, &(hpccard->Init), 1);
-  return pBuffer;
+  xmc_enable_16bit_feature(hpccard->instance, &(hpccard->init), 1);
+  return pbuffer;
 }
+
 /**
   * @brief  write sector
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @param  pBuffer: pointer to the data buffer.
-  * @param  Transfer_Size: the data length.
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @param  pbuffer: pointer to the data buffer.
+  * @param  transfer_size: the data length.
   * @retval pointer to the data buffer after write.
   */
-uint8_t *Write_Sector(PCCARD_HandleType *hpccard, uint8_t *pBuffer, uint32_t Transfer_Size)
+uint8_t *write_sector(pccard_handle_type *hpccard, uint8_t *pbuffer, uint32_t transfer_size)
 {
   uint32_t index = 0;
 
-  XMC_Enable_16bit_Feature(hpccard->Instance, &(hpccard->Init), hpccard->CF.Enable_8_bit_mode);
+  xmc_enable_16bit_feature(hpccard->instance, &(hpccard->init), hpccard->cf.enable_8_bit_mode);
 
-  if(hpccard->CF.DMAEnable == TRUE)
+  if(hpccard->cf.dma_enable == TRUE)
   {
-    if(hpccard->CF.Enable_8_bit_mode)
+    if(hpccard->cf.enable_8_bit_mode)
     {
-      MYDMA_Config(EDMA_STREAM1, (uint32_t)pBuffer, (uint32_t)hpccard->CF.IOAddr, Transfer_Size, Write_Transfer, Enable_8_bit_Transfer);
+      MYDMA_Config(EDMA_STREAM1, (uint32_t)pbuffer, (uint32_t)hpccard->cf.io_addr, transfer_size, WRITE_TRANSFER, ENABLE_8_BIT_TRANSFER);
     }
     else
     {
-      MYDMA_Config(EDMA_STREAM1, (uint32_t)pBuffer, (uint32_t)hpccard->CF.IOAddr, (Transfer_Size / 2), Write_Transfer, Enable_16_bit_Transfer);
+      MYDMA_Config(EDMA_STREAM1, (uint32_t)pbuffer, (uint32_t)hpccard->cf.io_addr, (transfer_size / 2), WRITE_TRANSFER, ENABLE_16_BIT_TRANSFER);
     }
 
     while(1)
@@ -2229,62 +2204,62 @@ uint8_t *Write_Sector(PCCARD_HandleType *hpccard, uint8_t *pBuffer, uint32_t Tra
       }
     }
 
-    pBuffer += 512;
+    pbuffer += 512;
   }
   else
   {
-    if(hpccard->CF.Enable_8_bit_mode)
+    if(hpccard->cf.enable_8_bit_mode)
     {
-      for(; index < (Transfer_Size); index++)
+      for(; index < (transfer_size); index++)
       {
-        *(uint8_t *)(hpccard->CF.IOAddr) = *(uint8_t *)pBuffer++;
+        *(uint8_t *)(hpccard->cf.io_addr) = *(uint8_t *)pbuffer++;
       }
     }
     else
     {
-      for(; index < (Transfer_Size / 2); index++)
+      for(; index < (transfer_size / 2); index++)
       {
-        *(uint16_t *)(hpccard->CF.IOAddr) = *(uint16_t *)pBuffer;
+        *(uint16_t *)(hpccard->cf.io_addr) = *(uint16_t *)pbuffer;
         /* offset to next 16 bit */
-        pBuffer += 2;  // offset to next 16 bit
+        pbuffer += 2;  // offset to next 16 bit
       }
     }
   }
 
-  XMC_Enable_16bit_Feature(hpccard->Instance, &(hpccard->Init), 1);
-  return pBuffer;
+  xmc_enable_16bit_feature(hpccard->instance, &(hpccard->init), 1);
+  return pbuffer;
 }
 
 /**
-  * @brief  Reset the PCCARD memory
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @retval HAL status
+  * @brief  reset the pccard memory
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @retval status
   */
-BOOL PCCARD_Reset(PCCARD_HandleType *hpccard)
+BOOL pccard_reset(pccard_handle_type *hpccard)
 {
-  /* Provide an SW reset and Read and verify the:
-   - CF Configuration Option Register at address 0x98000200 --> 0x80
-   - Card Configuration and Status Register at address 0x98000202 --> 0x00
-   - Pin Replacement Register  at address 0x98000204 --> 0x0C
-   - Socket and Copy Register at address 0x98000206 --> 0x00
+  /* provide an sw reset and read and verify the:
+   - cf configuration option register at address 0x98000200 --> 0x80
+   - card configuration and status register at address 0x98000202 --> 0x00
+   - pin replacement register  at address 0x98000204 --> 0x0c
+   - socket and copy register at address 0x98000206 --> 0x00
   */
 
   uint8_t config_option_reg;
 
-  /* Set up the Reset bit in config option register */
+  /* set up the reset bit in config option register */
   *(__IO uint8_t *)(PCCARD_ATTRIBUTE_SPACE_ADDRESS | CONFIG_OPTION_REG) = 0x80;
   delay_ms(100);
-  /* Clear the Reset bit in config option register */
+  /* clear the reset bit in config option register */
   *(__IO uint8_t *)(PCCARD_ATTRIBUTE_SPACE_ADDRESS | CONFIG_OPTION_REG) = 0x00;
   delay_ms(100);
-  /* Set the PC card I/O configurations */
-  *(__IO uint8_t *)(PCCARD_ATTRIBUTE_SPACE_ADDRESS | CONFIG_OPTION_REG) = hpccard->CF.Protocol;
+  /* set the pc card i/o configurations */
+  *(__IO uint8_t *)(PCCARD_ATTRIBUTE_SPACE_ADDRESS | CONFIG_OPTION_REG) = hpccard->cf.protocol;
   delay_ms(100);
 
   config_option_reg = *(__IO uint8_t *)(PCCARD_ATTRIBUTE_SPACE_ADDRESS | CONFIG_OPTION_REG);
 
-  if(config_option_reg == hpccard->CF.Protocol)
+  if(config_option_reg == hpccard->cf.protocol)
   {
     return TRUE;
   }
@@ -2295,44 +2270,44 @@ BOOL PCCARD_Reset(PCCARD_HandleType *hpccard)
 }
 
 /**
-  * Translate_CHSAddr:
-  *  translate DISK sector number to C.H.S address.
-  *  input  : CFCard
-  *        Start (Start sector number)
-  *        Sector_Count (sector count which read from CF card)
-  *        Sector_Limit (maximum sector number)
-  *  output  : None
+  * translate_chsaddr:
+  *  translate disk sector number to c.h.s address.
+  *  input  : cfcard
+  *        start (start sector number)
+  *        sector_count (sector count which read from cf card)
+  *        sector_limit (maximum sector number)
+  *  output  : none
   */
-void Translate_CHSAddr(PCCARD_HandleType *hpccard, uint32_t Start, uint16_t Sector_Count, uint16_t Sector_Limit)
+void translate_chsaddr(pccard_handle_type *hpccard, uint32_t Start, uint16_t sector_count, uint16_t Sector_Limit)
 {
   uint32_t Total_Cylinder;
   uint16_t Prev_Count;
 
-  Prev_Count = (Sector_Limit / hpccard->CF.CFCardInfo.Default_Sector) * hpccard->CF.CFCardInfo.Default_Sector;
+  Prev_Count = (Sector_Limit / hpccard->cf.cfcard_info.default_sector) * hpccard->cf.cfcard_info.default_sector;
 
-  Total_Cylinder = (uint32_t)(hpccard->CF.CFCardInfo.Default_Head * hpccard->CF.CFCardInfo.Default_Sector); // The total sectors in one cylinder
+  Total_Cylinder = (uint32_t)(hpccard->cf.cfcard_info.default_head * hpccard->cf.cfcard_info.default_sector); // The total sectors in one cylinder
 
-  hpccard->CF.CFAddr.Cylinder  = (uint16_t)(Start / Total_Cylinder);
-  hpccard->CF.CFAddr.Head      = (uint8_t)((Start % Total_Cylinder) / hpccard->CF.CFCardInfo.Default_Sector);
-  hpccard->CF.CFAddr.Sector    = (uint8_t)((Start % Total_Cylinder) % hpccard->CF.CFCardInfo.Default_Sector) + 1;
+  hpccard->cf.cf_addr.cylinder  = (uint16_t)(Start / Total_Cylinder);
+  hpccard->cf.cf_addr.head      = (uint8_t)((Start % Total_Cylinder) / hpccard->cf.cfcard_info.default_sector);
+  hpccard->cf.cf_addr.sector    = (uint8_t)((Start % Total_Cylinder) % hpccard->cf.cfcard_info.default_sector) + 1;
 
-  if ((Prev_Count <= Sector_Count) && (Sector_Count <= Sector_Limit))
+  if ((Prev_Count <= sector_count) && (sector_count <= Sector_Limit))
   {
-    hpccard->CF.CFAddr.Sector_Count = (uint8_t)(Sector_Limit % hpccard->CF.CFCardInfo.Default_Sector);
+    hpccard->cf.cf_addr.sector_count = (uint8_t)(Sector_Limit % hpccard->cf.cfcard_info.default_sector);
   }
   else
   {
-    hpccard->CF.CFAddr.Sector_Count = (uint8_t)hpccard->CF.CFCardInfo.Default_Sector;
+    hpccard->cf.cf_addr.sector_count = (uint8_t)hpccard->cf.cfcard_info.default_sector;
   }
 }
 
 /**
-  * @brief  Read CIS Information.
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @retval TRUE or FALSE.
+  * @brief  read cis information.
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @retval true or false.
   */
-BOOL ReadCFCardCISInformation(PCCARD_HandleType *hpccard)
+BOOL read_cfcard_cis_information(pccard_handle_type *hpccard)
 {
   uint8_t CIS_1, CIS_2, CIS_3;
 
@@ -2351,23 +2326,23 @@ BOOL ReadCFCardCISInformation(PCCARD_HandleType *hpccard)
 }
 
 /**
-  * @brief  Send command.
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @param  Cmd: the command value
-  * @retval TRUE or FALSE.
+  * @brief  send command.
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @param  cmd: the command value
+  * @retval true or false.
   */
-BOOL CF_SendCommand(PCCARD_HandleType *hpccard, uint8_t Cmd)
+BOOL cf_send_command(pccard_handle_type *hpccard, uint8_t Cmd)
 {
   uint8_t Reg;
 
   do
   {
-    *(__IO uint8_t  *)(hpccard->CF.IOAddr | ATA_STATUS_CMD) = Cmd;
+    *(__IO uint8_t  *)(hpccard->cf.io_addr | ATA_STATUS_CMD) = Cmd;
 
-    while(!TaskFileRegIsValid(hpccard)) ;
+    while(!task_file_regis_valid(hpccard)) ;
 
-    Reg = PCCARD_Read_STATUS_REG(hpccard);
+    Reg = pccard_read_status_reg(hpccard);
 
     if ((Reg & ERR_BIT) != 0)
     {
@@ -2378,17 +2353,18 @@ BOOL CF_SendCommand(PCCARD_HandleType *hpccard, uint8_t Cmd)
 
   return TRUE;
 }
+
 /**
-  * @brief  Check the PCCARD TaskFileReg valid.
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @retval TRUE or FALSE.
+  * @brief  check the pccard taskfilereg valid.
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @retval true or false.
   */
-BOOL TaskFileRegIsValid(PCCARD_HandleType *hpccard)
+BOOL task_file_regis_valid(pccard_handle_type *hpccard)
 {
   uint8_t status = 0;
 
-  status = PCCARD_Read_STATUS_REG(hpccard);
+  status = pccard_read_status_reg(hpccard);
 
   if(status & BUSY_BIT)
   {
@@ -2397,36 +2373,37 @@ BOOL TaskFileRegIsValid(PCCARD_HandleType *hpccard)
 
   return TRUE;
 }
+
 /**
-  * @brief  Check the PCCARD info valid.
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @param  Sector_Count: sector count
-  * @param  Head_Count:head count
-  * @retval TRUE or FALSE.
+  * @brief  check the pccard info valid.
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @param  sector_count: sector count
+  * @param  head_count:head count
+  * @retval true or false.
   */
-BOOL Vaild_Init_Drive_Para(PCCARD_HandleType *hpccard, uint16_t Sector_Count, uint8_t Head_Count)
+BOOL vaild_init_drive_para(pccard_handle_type *hpccard, uint16_t sector_count, uint8_t head_count)
 {
   uint8_t CardInfo[PCCARD_SECTOR_SIZE * sizeof(uint8_t)] = {0};
 
   memset(CardInfo, 0, PCCARD_SECTOR_SIZE * sizeof(uint8_t));
 
-  if(PCCARD_Identify(hpccard))
+  if(pccard_identify(hpccard))
   {
     while(1)
     {
-      if(TaskFileRegIsValid(hpccard))
+      if(task_file_regis_valid(hpccard))
       {
-        if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT | DRQ_BIT))
+        if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT | DRQ_BIT))
         {
-          Read_Sector(hpccard, CardInfo, PCCARD_SECTOR_SIZE);
+          read_sector(hpccard, CardInfo, PCCARD_SECTOR_SIZE);
           break;
         }
-        else if(PCCARD_Read_STATUS_REG(hpccard) == (RDY_BIT | DSC_BIT | ERR_BIT))
+        else if(pccard_read_status_reg(hpccard) == (RDY_BIT | DSC_BIT | ERR_BIT))
         {
           printf("\r\nCommand Pass, but ERR bit is high");
-          printf("\r\nCF Status Reg=%#x", PCCARD_Read_STATUS_REG(hpccard));
-          printf("\r\nCF Error  Reg=%#x", PCCARD_Read_ERROR_REG(hpccard));
+          printf("\r\nCF Status Reg=%#x", pccard_read_status_reg(hpccard));
+          printf("\r\nCF Error  Reg=%#x", pccard_read_error_reg(hpccard));
           return FALSE;
         }
       }
@@ -2435,24 +2412,24 @@ BOOL Vaild_Init_Drive_Para(PCCARD_HandleType *hpccard, uint16_t Sector_Count, ui
 
   while(1)
   {
-    if(TaskFileRegIsValid(hpccard))
+    if(task_file_regis_valid(hpccard))
     {
-      if((PCCARD_Read_STATUS_REG(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x50)
+      if((pccard_read_status_reg(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x50)
       {
         break;
       }
-      else if((PCCARD_Read_STATUS_REG(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
+      else if((pccard_read_status_reg(hpccard) & (RDY_BIT | DSC_BIT | ERR_BIT)) == 0x51)
       {
         printf("\r\nSend Command Failed");
-        printf("\r\nCF Status Reg=%#x", PCCARD_Read_STATUS_REG(hpccard));
-        printf("\r\nCF Error  Reg=%#x", PCCARD_Read_ERROR_REG(hpccard));
+        printf("\r\nCF Status Reg=%#x", pccard_read_status_reg(hpccard));
+        printf("\r\nCF Error  Reg=%#x", pccard_read_error_reg(hpccard));
         return FALSE;
       }
     }
   }
 
   if (((uint16_t)CardInfo[0] | (uint16_t)CardInfo[1] << 8) == 0x848A && ((uint16_t)CardInfo[110] | \
-      (uint16_t)CardInfo[111] << 8) ==  Head_Count && ((uint16_t)CardInfo[112] | (uint16_t)CardInfo[113] << 8) ==  Sector_Count )
+      (uint16_t)CardInfo[111] << 8) ==  head_count && ((uint16_t)CardInfo[112] | (uint16_t)CardInfo[113] << 8) ==  sector_count )
   {
     return TRUE;
   }
@@ -2462,115 +2439,83 @@ BOOL Vaild_Init_Drive_Para(PCCARD_HandleType *hpccard, uint16_t Sector_Count, ui
   }
 
 }
+
 /**
   * @brief  printf the verification result.
   * @param  result: pointer to a verification_result structure that contains
   *                various kinds of verification.
-  * @retval None.
+  * @retval none.
   */
 void show_verification_result(verification_result_struct *result)
 {
   printf("\r\n");
   printf("\r\n----------------------------------------------------------------------");
-  printf("\r\n%s    %-6s   ", "ATTRIBUTE_RW_PASS      ", ((result->ATTRIBUTE_RW_PASS) ? " PASS" : "FAILED *****"));
-  printf("\r\n%s    %-6s   ", "READ_ATTRIBUTE_CIS     ", ((result->CIS_READ_PASS) ? " PASS" : "FAILED *****"));
-  printf("\r\n%s    %-6s   ", "IDENTIFY_DRIVE         ", ((result->ATA_IDENTIFY_DRIVE_PASS) ? " PASS" : "FAILED *****"));
-  printf("\r\n%s    %-6s   ", "EXECUTE_DRIVE_DIAG     ", ((result->ATA_EXECUTE_DRIVE_DIAG_PASS) ? " PASS" : "FAILED *****"));
-  printf("\r\n%s    %-6s   ", "WRITE_SECTOR           ", ((result->ATA_WRITE_SECTOR_PASS) ? " PASS" : "FAILED *****"));
-  printf("\r\n%s    %-6s   ", "READ_SECTOR            ", ((result->ATA_READ_SECTOR_PASS) ? " PASS" : "FAILED *****"));
-  printf("\r\n%s    %-6s   ", "ACESS_25_SECTORS       ", ((result->ACESS_25_SECTORS_PASS) ? " PASS" : "FAILED *****"));
+  printf("\r\n%s    %-6s   ", "ATTRIBUTE_RW_PASS      ", ((result->attribute_rw_pass) ? " PASS" : "FAILED *****"));
+  printf("\r\n%s    %-6s   ", "READ_ATTRIBUTE_CIS     ", ((result->cis_read_pass) ? " PASS" : "FAILED *****"));
+  printf("\r\n%s    %-6s   ", "IDENTIFY_DRIVE         ", ((result->ata_identify_drive_pass) ? " PASS" : "FAILED *****"));
+  printf("\r\n%s    %-6s   ", "EXECUTE_DRIVE_DIAG     ", ((result->ata_execute_drive_diag_pass) ? " PASS" : "FAILED *****"));
+  printf("\r\n%s    %-6s   ", "write_sector           ", ((result->ata_write_sector_pass) ? " PASS" : "FAILED *****"));
+  printf("\r\n%s    %-6s   ", "read_sector            ", ((result->ata_read_sector_pass) ? " PASS" : "FAILED *****"));
+  printf("\r\n%s    %-6s   ", "ACESS_25_SECTORS       ", ((result->acess_25_sectors_pass) ? " PASS" : "FAILED *****"));
   printf("\r\n----------------------------------------------------------------------");
   printf("\r\n\r\n");
 }
 
 
 /**
-  * @brief  This function handles PCCARD device interrupt request.
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @retval HAL status
+  * @brief  this function handles pccard device interrupt request.
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @retval status
   */
-void PCCARD_IRQHandler(PCCARD_HandleType *hpccard)
+void pccard_irqhandler(pccard_handle_type *hpccard)
 {
 }
 
 
 /**
-  * @}
+  * @brief  return the pccard controller state
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
+  * @retval state
   */
-
-/** @defgroup PCCARD_Exported_Functions_Group3 Peripheral State functions
- *  @brief   Peripheral State functions
- *
-@verbatim
-  ==============================================================================
-                   ##### PCCARD Peripheral State functions #####
-  ==============================================================================
-  [..]
-    This subsection permits to get in run-time the status of the PCCARD controller
-    and the data flow.
-
-@endverbatim
-  * @{
-  */
-
-/**
-  * @brief  return the PCCARD controller state
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
-  * @retval HAL state
-  */
-PCCARD_StateType PCCARD_GetState(PCCARD_HandleType *hpccard)
+pccard_state_type pccard_get_state(pccard_handle_type *hpccard)
 {
-  return hpccard->State;
+  return hpccard->state;
 }
+
 /**
-  * @brief  Get the PCCARD error reg value.
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
+  * @brief  get the pccard error reg value.
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
   * @retval reg: error reg value.
   */
-uint8_t PCCARD_Read_ERROR_REG(PCCARD_HandleType *hpccard)
+uint8_t pccard_read_error_reg(pccard_handle_type *hpccard)
 {
   uint8_t Reg = 0;
 
-  /* Read ERROR Reg operation */
-  Reg =  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_ERROR_REG);
+  /* read error reg operation */
+  Reg =  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_ERROR_REG);
   CF_print(ERR_REG_INFO, ("\r\nCF card ERROR Register value is %#x", Reg));
   return Reg;
 }
+
 /**
-  * @brief  Get the PCCARD status reg value.
-  * @param  hpccard: pointer to a PCCARD_HandleType structure that contains
-  *                the configuration information for PCCARD module.
+  * @brief  get the pccard status reg value.
+  * @param  hpccard: pointer to a pccard_handle_type structure that contains
+  *                the configuration information for pccard module.
   * @retval reg: status reg value.
   */
-uint8_t PCCARD_Read_STATUS_REG(PCCARD_HandleType *hpccard)
+uint8_t pccard_read_status_reg(pccard_handle_type *hpccard)
 {
   uint8_t Reg = 0;
 
-  /* Read STATUS Reg operation */
-  Reg =  *(__IO uint8_t *)(hpccard->CF.IOAddr | ATA_STATUS_CMD);
+  /* read status reg operation */
+  Reg =  *(__IO uint8_t *)(hpccard->cf.io_addr | ATA_STATUS_CMD);
   CF_print(STS_REG_INFO, ("\r\nCF card STATUS Register value is %#x", Reg));
 
   return Reg;
 }
-
-
-void XMC_IRQHandler(void)
-{
-  __nop();
-}
-
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */
-
-
 /**
   * @}
   */

@@ -140,7 +140,7 @@ void SysTick_Handler(void)
   */
 void ADC1_2_3_IRQHandler(void)
 {
-  if(adc_flag_get(ADC1, ADC_OCCO_FLAG) != RESET)
+  if(adc_interrupt_flag_get(ADC1, ADC_OCCO_FLAG) != RESET)
   {
     adc_flag_clear(ADC1, ADC_OCCO_FLAG);
     adc1_overflow_flag++;

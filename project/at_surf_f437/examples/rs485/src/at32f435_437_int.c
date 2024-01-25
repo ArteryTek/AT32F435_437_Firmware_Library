@@ -130,13 +130,13 @@ void SysTick_Handler(void)
   */
 void RS485_USART_IRQHandler(void)
 {
-  if(usart_flag_get(RS485_USARTx, USART_RDBF_FLAG) != RESET)
+  if(usart_interrupt_flag_get(RS485_USARTx, USART_RDBF_FLAG) != RESET)
   {
     /* read one byte from the receive data register */
     rs485_rx_buffer[rs485_rx_counter++] = usart_data_receive(RS485_USARTx);
   }
 
-  if(usart_flag_get(RS485_USARTx, USART_TDBE_FLAG) != RESET)
+  if(usart_interrupt_flag_get(RS485_USARTx, USART_TDBE_FLAG) != RESET)
   {
     if(rs485_tx_counter < rs485_tx_number)
     {
@@ -150,7 +150,7 @@ void RS485_USART_IRQHandler(void)
     }
   }
 
-  if(usart_flag_get(RS485_USARTx, USART_IDLEF_FLAG) != RESET)
+  if(usart_interrupt_flag_get(RS485_USARTx, USART_IDLEF_FLAG) != RESET)
   {
     /* clear usart idle flag */
     usart_data_receive(RS485_USARTx);

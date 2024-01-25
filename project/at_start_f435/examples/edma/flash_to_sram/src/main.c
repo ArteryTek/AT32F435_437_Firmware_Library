@@ -57,7 +57,7 @@ error_status buffer_compare(const uint32_t* pbuffer, uint32_t* pbuffer1, uint16_
   */
 void EDMA_Stream1_IRQHandler(void)
 {
-  if(edma_flag_get(EDMA_FDT1_FLAG) != RESET)
+  if(edma_interrupt_flag_get(EDMA_FDT1_FLAG) != RESET)
   {
     data_counter_end = 0;
     edma_flag_clear(EDMA_FDT1_FLAG);

@@ -140,7 +140,7 @@ void SysTick_Handler(void)
   */
 void TAMP_STAMP_IRQHandler(void)
 {
-  if(ertc_flag_get(ERTC_TP1F_FLAG) != RESET)
+  if(ertc_interrupt_flag_get(ERTC_TP1F_FLAG) != RESET)
   {
     /* check if ertc backup data registers are cleared */
     if(is_bpr_reg_reset() == 0)

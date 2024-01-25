@@ -185,7 +185,7 @@ typedef enum
   */
 typedef struct
 {
-  confirm_state                          pe_mode_enable;          /*!< perfornance enhance mode enable */
+  confirm_state                          pe_mode_enable;          /*!< performance enhance mode enable */
   uint8_t                                pe_mode_operate_code;    /*!< performance enhance mode operate code */
   uint8_t                                instruction_code;        /*!< instruction code */
   qspi_cmd_inslen_type                   instruction_length;      /*!< instruction code length */

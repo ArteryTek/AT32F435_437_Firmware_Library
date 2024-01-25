@@ -105,7 +105,7 @@ static void can_configuration(void)
   nvic_irq_enable(CAN1_SE_IRQn, 0x00, 0x00);
   nvic_irq_enable(CAN1_RX0_IRQn, 0x00, 0x00);
   can_interrupt_enable(CAN1, CAN_RF0MIEN_INT, TRUE);
-  
+
   /* error interrupt enable */
   can_interrupt_enable(CAN1, CAN_ETRIEN_INT, TRUE);
   can_interrupt_enable(CAN1, CAN_EOIEN_INT, TRUE);
@@ -145,7 +145,7 @@ static void can_transmit_data(void)
 void CAN1_RX0_IRQHandler(void)
 {
   can_rx_message_type rx_message_struct;
-  if(can_flag_get(CAN1,CAN_RF0MN_FLAG) != RESET)
+  if(can_interrupt_flag_get(CAN1,CAN_RF0MN_FLAG) != RESET)
   {
     can_message_receive(CAN1, CAN_RX_FIFO0, &rx_message_struct);
     if(rx_message_struct.standard_id == 0x400)
@@ -163,7 +163,7 @@ void CAN1_RX0_IRQHandler(void)
 void CAN1_SE_IRQHandler(void)
 {
   __IO uint32_t err_index = 0;
-  if(can_flag_get(CAN1,CAN_ETR_FLAG) != RESET)
+  if(can_interrupt_flag_get(CAN1,CAN_ETR_FLAG) != RESET)
   {
     err_index = CAN1->ests & 0x70;
     can_flag_clear(CAN1, CAN_ETR_FLAG);
@@ -205,4 +205,3 @@ int main(void)
 /**
   * @}
   */
-

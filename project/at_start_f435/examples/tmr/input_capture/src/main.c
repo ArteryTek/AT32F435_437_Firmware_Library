@@ -129,7 +129,7 @@ void delay(uint32_t time)
   */
 void TMR3_GLOBAL_IRQHandler(void)
 {
-  if(tmr_flag_get(TMR3, TMR_C2_FLAG) == SET)
+  if(tmr_interrupt_flag_get(TMR3, TMR_C2_FLAG) == SET)
   {
     tmr_flag_clear(TMR3, TMR_C2_FLAG);
     if(capturenumber == 0)
@@ -150,7 +150,7 @@ void TMR3_GLOBAL_IRQHandler(void)
       }
       else
       {
-        capture = ((0xFFFF - ic3readvalue1) + ic3readvalue2);
+        capture = ((0x10000 - ic3readvalue1) + ic3readvalue2);
       }
       /* frequency computation */
       tmr3freq = (uint32_t) crm_clocks_freq_struct.sclk_freq / capture;

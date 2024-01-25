@@ -35,6 +35,16 @@
 #define QSPI_FIFO_DEPTH                  (32*4)
 #define FLASH_PAGE_PROGRAM_SIZE          256
 
+/**
+  * @brief  user function to check timeout or not
+  * @param  user_func_check_timeout: the pointer for qspi_cmd_type parameter
+  * @retval TRUE if timeout, FALSE if not.
+  */
+confirm_state user_func_check_timeout(void)
+{
+  /* add your timeout check mechanism here */
+  return FALSE;
+}
 qspi_cmd_type esmt32m_cmd_config;
 
 void qspi_busy_check(void);
@@ -175,7 +185,15 @@ void qspi_data_read(uint32_t addr, uint32_t total_len, uint8_t* buf)
     {
       len = total_len;
     }
-    while(qspi_flag_get(QSPI1, QSPI_RXFIFORDY_FLAG) == RESET);
+    while(qspi_flag_get(QSPI1, QSPI_RXFIFORDY_FLAG) == RESET)
+    {
+      //user can add timeout check here
+      if(user_func_check_timeout())
+      {
+        //add your error handling here.
+        while(1);
+      }
+    }
     for(i = 0; i < len; ++i)
     {
       *buf++ = qspi_byte_read(QSPI1);
@@ -184,7 +202,15 @@ void qspi_data_read(uint32_t addr, uint32_t total_len, uint8_t* buf)
   }while(total_len);
 
   /* wait command completed */
-  while(qspi_flag_get(QSPI1, QSPI_CMDSTS_FLAG) == RESET);
+  while(qspi_flag_get(QSPI1, QSPI_CMDSTS_FLAG) == RESET)
+  {
+    //user can add timeout check here
+    if(user_func_check_timeout())
+    {
+      //add your error handling here.
+      while(1);
+    }
+  }  
   qspi_flag_clear(QSPI1, QSPI_CMDSTS_FLAG);
 }
 
@@ -212,14 +238,30 @@ void qspi_data_write(uint32_t addr, uint32_t total_len, uint8_t* buf)
 
     for(i = 0; i < len; ++i)
     {
-      while(qspi_flag_get(QSPI1, QSPI_TXFIFORDY_FLAG) == RESET);
+      while(qspi_flag_get(QSPI1, QSPI_TXFIFORDY_FLAG) == RESET)
+      {
+        //user can add timeout check here
+        if(user_func_check_timeout())
+        {
+          //add your error handling here.
+          while(1);
+        }
+      }    
       qspi_byte_write(QSPI1, *buf++);
     }
     total_len -= len;
     addr += len;
 
     /* wait command completed */
-    while(qspi_flag_get(QSPI1, QSPI_CMDSTS_FLAG) == RESET);
+    while(qspi_flag_get(QSPI1, QSPI_CMDSTS_FLAG) == RESET)
+    {
+      //user can add timeout check here
+      if(user_func_check_timeout())
+      {
+        //add your error handling here.
+        while(1);
+      }
+    }    
     qspi_flag_clear(QSPI1, QSPI_CMDSTS_FLAG);
 
     qspi_busy_check();
@@ -240,7 +282,15 @@ void qspi_erase(uint32_t sec_addr)
   qspi_cmd_operation_kick(QSPI1, &esmt32m_cmd_config);
 
   /* wait command completed */
-  while(qspi_flag_get(QSPI1, QSPI_CMDSTS_FLAG) == RESET);
+  while(qspi_flag_get(QSPI1, QSPI_CMDSTS_FLAG) == RESET)
+  {
+    //user can add timeout check here
+    if(user_func_check_timeout())
+    {
+      //add your error handling here.
+      while(1);
+    }
+  }  
   qspi_flag_clear(QSPI1, QSPI_CMDSTS_FLAG);
 
   qspi_busy_check();
@@ -259,7 +309,15 @@ void qspi_busy_check(void)
     qspi_cmd_operation_kick(QSPI1, &esmt32m_cmd_config);
 
     /* wait command completed */
-    while(qspi_flag_get(QSPI1, QSPI_CMDSTS_FLAG) == RESET);
+    while(qspi_flag_get(QSPI1, QSPI_CMDSTS_FLAG) == RESET)
+    {
+      //user can add timeout check here
+      if(user_func_check_timeout())
+      {
+        //add your error handling here.
+        while(1);
+      }
+    }  
     qspi_flag_clear(QSPI1, QSPI_CMDSTS_FLAG);
     /* check wip status */
   }while(QSPI1->rsts & (1 << QSPI_BUSY_OFFSET_0));
@@ -276,7 +334,15 @@ void qspi_write_enable(void)
   qspi_cmd_operation_kick(QSPI1, &esmt32m_cmd_config);
 
   /* wait command completed */
-  while(qspi_flag_get(QSPI1, QSPI_CMDSTS_FLAG) == RESET);
+  while(qspi_flag_get(QSPI1, QSPI_CMDSTS_FLAG) == RESET)
+  {
+    //user can add timeout check here
+    if(user_func_check_timeout())
+    {
+      //add your error handling here.
+      while(1);
+    }
+  }  
   qspi_flag_clear(QSPI1, QSPI_CMDSTS_FLAG);
 }
 

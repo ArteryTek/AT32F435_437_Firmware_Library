@@ -138,7 +138,7 @@ void SysTick_Handler(void)
   */
 void DMA2_Channel1_IRQHandler(void)
 {
-  if(dma_flag_get(DMA2_FDT1_FLAG) != RESET)
+  if(dma_interrupt_flag_get(DMA2_FDT1_FLAG) != RESET)
   {
     /* turn led2/led3/led4 on */
     at32_led_on(LED2);

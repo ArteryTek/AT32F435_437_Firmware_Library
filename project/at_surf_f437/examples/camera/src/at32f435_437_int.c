@@ -140,7 +140,7 @@ void DVP_IRQHandler(void)
   */
 void DVP_EDMA_IRQHandler(void)
 {
-  if(edma_flag_get(DVP_EDMA_FDT_FLAG) != RESET)
+  if(edma_interrupt_flag_get(DVP_EDMA_FDT_FLAG) != RESET)
   {
     edma_flag_clear(DVP_EDMA_FDT_FLAG);
   }

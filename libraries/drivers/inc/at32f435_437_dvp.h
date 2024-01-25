@@ -590,6 +590,7 @@ void dvp_zoomout_select(dvp_pcdes_type dvp_pcdes);
 void dvp_zoomout_set(dvp_pcdc_type dvp_pcdc, dvp_pcds_type dvp_pcds, dvp_lcdc_type dvp_lcdc, dvp_lcds_type dvp_lcds);
 flag_status dvp_basic_status_get(dvp_status_basic_type dvp_status_basic);
 void dvp_interrupt_enable(uint32_t dvp_int, confirm_state new_state);
+flag_status dvp_interrupt_flag_get(uint32_t flag);
 flag_status dvp_flag_get(uint32_t flag);
 void dvp_flag_clear(uint32_t flag);
 void dvp_enhanced_scaling_resize_enable(confirm_state new_state);

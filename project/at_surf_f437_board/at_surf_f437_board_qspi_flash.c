@@ -30,6 +30,17 @@ void qspi_flash_busy_check(void);
 void qspi_flash_write_enable(void);
 
 /**
+  * @brief  user function to check timeout or not
+  * @param  user_func_check_timeout: the pointer for qspi_cmd_type parameter
+  * @retval TRUE if timeout, FALSE if not.
+  */
+confirm_state user_func_check_timeout(void)
+{
+  /* add your timeout check mechanism here */
+  return FALSE;
+}
+
+/**
   * @brief  initializes quad spi flash.
   * @param  none
   * @retval none
@@ -230,7 +241,15 @@ void qspi_flash_data_read(uint32_t addr, uint8_t* buf, uint32_t total_len)
     {
       len = total_len;
     }
-    while(qspi_flag_get(QSPI_FLASH_QSPIx, QSPI_RXFIFORDY_FLAG) == RESET);
+    while(qspi_flag_get(QSPI_FLASH_QSPIx, QSPI_RXFIFORDY_FLAG) == RESET)
+    {
+      //user can add timeout check here
+      if(user_func_check_timeout())
+      {
+        //add your error handling here.
+        while(1);
+      }
+    }      
     for(i = 0; i < len; ++i)
     {
       *buf++ = qspi_byte_read(QSPI_FLASH_QSPIx);
@@ -239,7 +258,15 @@ void qspi_flash_data_read(uint32_t addr, uint8_t* buf, uint32_t total_len)
   }while(total_len);
 
   /* wait command completed */
-  while(qspi_flag_get(QSPI_FLASH_QSPIx, QSPI_CMDSTS_FLAG) == RESET);
+  while(qspi_flag_get(QSPI_FLASH_QSPIx, QSPI_CMDSTS_FLAG) == RESET)
+  {
+    //user can add timeout check here
+    if(user_func_check_timeout())
+    {
+      //add your error handling here.
+      while(1);
+    }
+  }    
   qspi_flag_clear(QSPI_FLASH_QSPIx, QSPI_CMDSTS_FLAG);
 }
 
@@ -267,14 +294,30 @@ void qspi_flash_data_write(uint32_t addr, uint8_t* buf, uint32_t total_len)
 
     for(i = 0; i < len; ++i)
     {
-      while(qspi_flag_get(QSPI_FLASH_QSPIx, QSPI_TXFIFORDY_FLAG) == RESET);
+      while(qspi_flag_get(QSPI_FLASH_QSPIx, QSPI_TXFIFORDY_FLAG) == RESET)
+      {
+        //user can add timeout check here
+        if(user_func_check_timeout())
+        {
+          //add your error handling here.
+          while(1);
+        }
+      }
       qspi_byte_write(QSPI_FLASH_QSPIx, *buf++);
     }
     total_len -= len;
     addr += len;
 
     /* wait command completed */
-    while(qspi_flag_get(QSPI_FLASH_QSPIx, QSPI_CMDSTS_FLAG) == RESET);
+    while(qspi_flag_get(QSPI_FLASH_QSPIx, QSPI_CMDSTS_FLAG) == RESET)
+    {
+      //user can add timeout check here
+      if(user_func_check_timeout())
+      {
+        //add your error handling here.
+        while(1);
+      }
+    }      
     qspi_flag_clear(QSPI_FLASH_QSPIx, QSPI_CMDSTS_FLAG);
 
     qspi_flash_busy_check();
@@ -295,7 +338,15 @@ void qspi_flash_erase(uint32_t sec_addr)
   qspi_cmd_operation_kick(QSPI_FLASH_QSPIx, &qspi_flash_cmd_config);
 
   /* wait command completed */
-  while(qspi_flag_get(QSPI_FLASH_QSPIx, QSPI_CMDSTS_FLAG) == RESET);
+  while(qspi_flag_get(QSPI_FLASH_QSPIx, QSPI_CMDSTS_FLAG) == RESET)
+  {
+    //user can add timeout check here
+    if(user_func_check_timeout())
+    {
+      //add your error handling here.
+      while(1);
+    }
+  }    
   qspi_flag_clear(QSPI_FLASH_QSPIx, QSPI_CMDSTS_FLAG);
 
   qspi_flash_busy_check();
@@ -312,7 +363,15 @@ void qspi_flash_busy_check(void)
   qspi_cmd_operation_kick(QSPI_FLASH_QSPIx, &qspi_flash_cmd_config);
 
   /* wait command completed */
-  while(qspi_flag_get(QSPI_FLASH_QSPIx, QSPI_CMDSTS_FLAG) == RESET);
+  while(qspi_flag_get(QSPI_FLASH_QSPIx, QSPI_CMDSTS_FLAG) == RESET)
+  {
+    //user can add timeout check here
+    if(user_func_check_timeout())
+    {
+      //add your error handling here.
+      while(1);
+    }
+  }    
   qspi_flag_clear(QSPI_FLASH_QSPIx, QSPI_CMDSTS_FLAG);
 }
 
@@ -327,6 +386,14 @@ void qspi_flash_write_enable(void)
   qspi_cmd_operation_kick(QSPI_FLASH_QSPIx, &qspi_flash_cmd_config);
 
   /* wait command completed */
-  while(qspi_flag_get(QSPI_FLASH_QSPIx, QSPI_CMDSTS_FLAG) == RESET);
+  while(qspi_flag_get(QSPI_FLASH_QSPIx, QSPI_CMDSTS_FLAG) == RESET)
+  {
+    //user can add timeout check here
+    if(user_func_check_timeout())
+    {
+      //add your error handling here.
+      while(1);
+    }
+  }    
   qspi_flag_clear(QSPI_FLASH_QSPIx, QSPI_CMDSTS_FLAG);
 }

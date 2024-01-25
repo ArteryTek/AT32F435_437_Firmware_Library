@@ -140,7 +140,7 @@ void SysTick_Handler(void)
   */
 void ERTC_WKUP_IRQHandler(void)
 {
-  if(ertc_flag_get(ERTC_WATF_FLAG) != RESET)
+  if(ertc_interrupt_flag_get(ERTC_WATF_FLAG) != RESET)
   {
     printf("wakeup\r\n");
 

@@ -53,7 +53,7 @@ void usb_low_power_wakeup_config(void);
 /* ACC_CAL : the step is incremented or decremented by one, the hickcal will be incremented or decremented by 40khz */
 /* ACC_TRIM : the step is incremented or decremented by one, the hicktrim will be incremented or decremented by 20khz */
 /* define ACC_TRIM in order to get higher calibration accuracy */
-//#define                                 ACC_CAL 
+//#define                                 ACC_CAL
 #define                                  ACC_TRIM
 
 uint32_t acc_c2_value = 0;
@@ -147,14 +147,14 @@ void OTG_IRQ_HANDLER(void)
   */
 void ACC_IRQHandler(void)
 {
-  if(acc_flag_get(ACC_CALRDY_FLAG) != RESET)
+  if(acc_interrupt_flag_get(ACC_CALRDY_FLAG) != RESET)
   {
     at32_led_toggle(LED2);
 
     /* clear acc calibration ready flag */
     acc_flag_clear(ACC_CALRDY_FLAG);
   }
-  if(acc_flag_get(ACC_RSLOST_FLAG) != RESET)
+  if(acc_interrupt_flag_get(ACC_RSLOST_FLAG) != RESET)
   {
     at32_led_toggle(LED3);
 

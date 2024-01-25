@@ -130,7 +130,7 @@ void SysTick_Handler(void)
   */
 void CAN1_RX0_IRQHandler(void)
 {
-  if(can_flag_get(CAN1, CAN_RF0MN_FLAG) != RESET)
+  if(can_interrupt_flag_get(CAN1, CAN_RF0MN_FLAG) != RESET)
   {
     can_message_receive(CAN1, CAN_RX_FIFO0, &can1_rx_message);
 
@@ -145,7 +145,7 @@ void CAN1_RX0_IRQHandler(void)
   */
 void CAN2_RX0_IRQHandler(void)
 {
-  if(can_flag_get(CAN2, CAN_RF0MN_FLAG) != RESET)
+  if(can_interrupt_flag_get(CAN2, CAN_RF0MN_FLAG) != RESET)
   {
     can_message_receive(CAN2, CAN_RX_FIFO0, &can2_rx_message);
 
@@ -162,7 +162,7 @@ void CAN1_SE_IRQHandler(void)
 {
   uint32_t flag = 0;
 
-  if(can_flag_get(CAN1, CAN_ETR_FLAG) != RESET)
+  if(can_interrupt_flag_get(CAN1, CAN_ETR_FLAG) != RESET)
   {
     flag = CAN1->ests & 0x70;
 
@@ -186,7 +186,7 @@ void CAN2_SE_IRQHandler(void)
 {
   uint32_t flag = 0;
 
-  if(can_flag_get(CAN2, CAN_ETR_FLAG) != RESET)
+  if(can_interrupt_flag_get(CAN2, CAN_ETR_FLAG) != RESET)
   {
     flag = CAN2->ests & 0x70;
 

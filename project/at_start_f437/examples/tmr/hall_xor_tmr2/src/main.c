@@ -140,7 +140,7 @@ int main(void)
   */
 void TMR2_GLOBAL_IRQHandler(void)
 {
-  if(tmr_flag_get(TMR2, TMR_TRIGGER_FLAG) == SET)
+  if(tmr_interrupt_flag_get(TMR2, TMR_TRIGGER_FLAG) == SET)
   {
     GPIOA->odt ^= GPIO_PINS_8;
     tmr_flag_clear(TMR2, TMR_TRIGGER_FLAG);

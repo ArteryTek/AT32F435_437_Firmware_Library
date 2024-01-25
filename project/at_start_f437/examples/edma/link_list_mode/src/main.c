@@ -174,7 +174,7 @@ void uart_init(uint32_t bound)
   */
 void EDMA_Stream1_IRQHandler(void)
 {
-  if(edma_flag_get(EDMA_FDT1_FLAG) != RESET)
+  if(edma_interrupt_flag_get(EDMA_FDT1_FLAG) != RESET)
   {
     /* led2/3/4 on  */
     at32_led_on(LED2);

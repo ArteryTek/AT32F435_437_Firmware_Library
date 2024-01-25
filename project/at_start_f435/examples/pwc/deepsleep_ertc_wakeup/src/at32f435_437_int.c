@@ -138,7 +138,7 @@ void SysTick_Handler(void)
   */
 void ERTC_WKUP_IRQHandler(void)
 {
-  if(ertc_flag_get(ERTC_WATF_FLAG) != RESET)
+  if(ertc_interrupt_flag_get(ERTC_WATF_FLAG) != RESET)
   {
     /* clear ertc wakeup timer flag */
     ertc_flag_clear(ERTC_WATF_FLAG);

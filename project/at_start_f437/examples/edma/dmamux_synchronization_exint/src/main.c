@@ -50,7 +50,7 @@ uint16_t  dst_buffer[BUFFER_SIZE];
   */
 void EDMA_Stream4_IRQHandler(void)
 {
-  if(edma_flag_get(EDMA_FDT4_FLAG) != RESET)
+  if(edma_interrupt_flag_get(EDMA_FDT4_FLAG) != RESET)
   {
     /* turn led2/led3/led4 on */
     at32_led_on(LED2);
@@ -67,7 +67,7 @@ void EDMA_Stream4_IRQHandler(void)
   */
 void EXINT1_IRQHandler(void)
 {
-  if(exint_flag_get(EXINT_LINE_1) != RESET)
+  if(exint_interrupt_flag_get(EXINT_LINE_1) != RESET)
   {
     at32_led_toggle(LED2);
     exint_flag_clear(EXINT_LINE_1);

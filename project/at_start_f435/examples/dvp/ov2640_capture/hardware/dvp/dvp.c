@@ -213,7 +213,7 @@ void dvp_frame_done(void)
   */
 void EDMA_Stream4_IRQHandler(void)
 {
-  if(edma_flag_get(EDMA_FDT4_FLAG) != RESET)
+  if(edma_interrupt_flag_get(EDMA_FDT4_FLAG) != RESET)
   {
     edma_flag_clear(EDMA_FDT4_FLAG);
   }
@@ -227,35 +227,35 @@ void EDMA_Stream4_IRQHandler(void)
 void dvp_int_handler(void)
 {
   /* synchronization error interrupt management */
-  if(dvp_flag_get(DVP_ESE_INT_FLAG) != RESET)
+  if(dvp_interrupt_flag_get(DVP_ESE_INT_FLAG) != RESET)
   {
     /* clear the synchronization error flag */
     dvp_flag_clear(DVP_ESE_INT_FLAG);
   }
 
   /* overflow interrupt management */
-  if(dvp_flag_get(DVP_OVR_INT_FLAG) != RESET)
+  if(dvp_interrupt_flag_get(DVP_OVR_INT_FLAG) != RESET)
   {
     /* clear the overflow flag */
     dvp_flag_clear(DVP_OVR_INT_FLAG);
   }
 
   /* line interrupt management */
-  if(dvp_flag_get(DVP_HS_INT_FLAG) != RESET)
+  if(dvp_interrupt_flag_get(DVP_HS_INT_FLAG) != RESET)
   {
     /* clear the line interrupt flag */
     dvp_flag_clear(DVP_HS_INT_FLAG);
   }
 
   /* vsync interrupt management */
-  if(dvp_flag_get(DVP_VS_INT_FLAG) != RESET)
+  if(dvp_interrupt_flag_get(DVP_VS_INT_FLAG) != RESET)
   {
     /* clear the vsync flag */
     dvp_flag_clear(DVP_VS_INT_FLAG);
   }
 
   /* end of frame interrupt management */
-  if(dvp_flag_get(DVP_CFD_INT_FLAG) != RESET)
+  if(dvp_interrupt_flag_get(DVP_CFD_INT_FLAG) != RESET)
   {
     /* clear the end of frame flag */
     dvp_flag_clear(DVP_CFD_INT_FLAG);

@@ -120,7 +120,7 @@ int main(void)
   qspi_xip_enable(QSPI1, FALSE);
 
   /* set sclk */
-  qspi_clk_division_set(QSPI1, QSPI_CLK_DIV_4);
+  qspi_clk_division_set(QSPI1, QSPI_CLK_DIV_3);
 
   /* set sck idle mode 0 */
   qspi_sck_mode_set(QSPI1, QSPI_SCK_MODE_0);
@@ -146,25 +146,29 @@ int main(void)
   /* program */
   qspi_data_write(0, TEST_SIZE, wbuf);
 
-  /* read */
-  qspi_data_read(0, TEST_SIZE, rbuf);
-
-  if(memcmp(rbuf, wbuf, TEST_SIZE))
-  {
-    err = 1;
-  }
 
   while(1)
   {
+    /* read */
+    qspi_data_read(0, TEST_SIZE, rbuf);
+
+    if(memcmp(rbuf, wbuf, TEST_SIZE))
+    {
+      err = 1;
+    }
+    else
+    {
+      err = 0;
+    }
     if(err == 0)
     {
       at32_led_toggle(LED3);
-      delay_ms(300);
+      delay_ms(10);
     }
     else
     {
       at32_led_toggle(LED2);
-      delay_ms(300);
+      while(1);
     }
   }
 }

@@ -67,7 +67,7 @@ void exint_line0_config(void)
   */
 void EXINT0_IRQHandler(void)
 {
-  if(exint_flag_get(EXINT_LINE_0) != RESET)
+  if(exint_interrupt_flag_get(EXINT_LINE_0) != RESET)
   {
     at32_led_toggle(LED2);
     at32_led_toggle(LED3);
@@ -107,4 +107,3 @@ int main(void)
 /**
   * @}
   */
-

@@ -51,7 +51,7 @@ uint16_t  dst_buffer[BUFFER_SIZE];
   */
 void EXINT1_IRQHandler(void)
 {
-  if(exint_flag_get(EXINT_LINE_1) != RESET)
+  if(exint_interrupt_flag_get(EXINT_LINE_1) != RESET)
   {
     at32_led_toggle(LED2);
     exint_flag_clear(EXINT_LINE_1);
@@ -153,4 +153,3 @@ int main(void)
 /**
   * @}
   */
-

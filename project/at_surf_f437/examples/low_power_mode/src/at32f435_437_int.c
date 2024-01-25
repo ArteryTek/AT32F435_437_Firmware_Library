@@ -130,7 +130,7 @@ void SysTick_Handler(void)
   */
 void WAKEUP_EXINT_IRQHandler(void)
 {
-  if(exint_flag_get(WAKEUP_EXINT_LINE) != RESET)
+  if(exint_interrupt_flag_get(WAKEUP_EXINT_LINE) != RESET)
   {
     exint_flag_clear(WAKEUP_EXINT_LINE);
   }

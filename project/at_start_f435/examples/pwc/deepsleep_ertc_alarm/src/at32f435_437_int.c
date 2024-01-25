@@ -138,7 +138,7 @@ void SysTick_Handler(void)
   */
 void ERTCAlarm_IRQHandler(void)
 {
-  if(ertc_flag_get(ERTC_ALAF_FLAG) != RESET)
+  if(ertc_interrupt_flag_get(ERTC_ALAF_FLAG) != RESET)
   {
     /* clear ertc alarm flag */
     ertc_flag_clear(ERTC_ALAF_FLAG);

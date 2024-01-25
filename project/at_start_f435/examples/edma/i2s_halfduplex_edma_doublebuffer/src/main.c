@@ -80,7 +80,7 @@ error_status buffer_compare(uint16_t* pbuffer1, uint16_t* pbuffer2, uint16_t buf
   */
 void EDMA_Stream1_IRQHandler(void)
 {
-  if(edma_flag_get(EDMA_FDT1_FLAG) != RESET)
+  if(edma_interrupt_flag_get(EDMA_FDT1_FLAG) != RESET)
   {
     if(transfer_count == 0)
     {

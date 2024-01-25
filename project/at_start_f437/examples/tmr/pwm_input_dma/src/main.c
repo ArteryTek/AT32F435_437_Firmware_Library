@@ -33,9 +33,6 @@
   * @{
   */
 
-#define tmr1_c1dt_address   0x40010034
-#define tmr1_c2dt_address   0x40010038
-
 #define SAMPLING_NUM  1000
 
 tmr_input_config_type tmr_ic_init_structure;
@@ -77,7 +74,7 @@ int main(void)
 
   dma_reset(DMA1_CHANNEL2);
   dma_default_para_init(&dma_init_structure);
-  dma_init_structure.peripheral_base_addr    = (uint32_t)tmr1_c1dt_address;
+  dma_init_structure.peripheral_base_addr    = (uint32_t)&TMR1->c1dt;
   dma_init_structure.memory_base_addr        = (uint32_t)buffer_cc1;
   dma_init_structure.direction               = DMA_DIR_PERIPHERAL_TO_MEMORY;
   dma_init_structure.buffer_size             = SAMPLING_NUM;
@@ -90,7 +87,7 @@ int main(void)
   dma_init(DMA1_CHANNEL2, &dma_init_structure);
 
   dma_reset(DMA1_CHANNEL3);
-  dma_init_structure.peripheral_base_addr    = (uint32_t)tmr1_c2dt_address;
+  dma_init_structure.peripheral_base_addr    = (uint32_t)&TMR1->c2dt;
   dma_init_structure.memory_base_addr        = (uint32_t)buffer_cc2;
   dma_init(DMA1_CHANNEL3, &dma_init_structure);
 

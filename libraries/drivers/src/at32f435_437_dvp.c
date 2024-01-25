@@ -320,16 +320,9 @@ void dvp_interrupt_enable(uint32_t dvp_int, confirm_state new_state)
 }
 
 /**
-  * @brief  get dvp event/interrupt flag status
+  * @brief  get dvp interrupt flag status
   * @param  flag
   *         this parameter can be one of the following values:
-  *         event flag:
-  *         - DVP_CFD_EVT_FLAG
-  *         - DVP_OVR_EVT_FLAG
-  *         - DVP_ESE_EVT_FLAG
-  *         - DVP_VS_EVT_FLAG
-  *         - DVP_HS_EVT_FLAG
-  *         interrupt flag:
   *         - DVP_CFD_INT_FLAG
   *         - DVP_OVR_INT_FLAG
   *         - DVP_ESE_INT_FLAG
@@ -337,31 +330,47 @@ void dvp_interrupt_enable(uint32_t dvp_int, confirm_state new_state)
   *         - DVP_HS_INT_FLAG
   * @retval flag_status (SET or RESET)
   */
-flag_status dvp_flag_get(uint32_t flag)
+flag_status dvp_interrupt_flag_get(uint32_t flag)
 {
   flag_status status = RESET;
-  if(flag & 0x80000000)
+
+  if((DVP->ists & flag) != RESET)
   {
-    if((DVP->ists & flag) != RESET)
-    {
-      status = SET;
-    }
-    else
-    {
-      status = RESET;
-    }
+    status = SET;
   }
   else
   {
-    if((DVP->ests & flag) != RESET)
-    {
-      status = SET;
-    }
-    else
-    {
-      status = RESET;
-    }
+    status = RESET;
   }
+
+  return status;
+}
+
+/**
+  * @brief  get dvp event flag status
+  * @param  flag
+  *         this parameter can be one of the following values:
+  *         - DVP_CFD_EVT_FLAG
+  *         - DVP_OVR_EVT_FLAG
+  *         - DVP_ESE_EVT_FLAG
+  *         - DVP_VS_EVT_FLAG
+  *         - DVP_HS_EVT_FLAG
+  * @retval flag_status (SET or RESET)
+  */
+flag_status dvp_flag_get(uint32_t flag)
+{
+  flag_status status = RESET;
+  flag &= ~0x80000000;
+  
+  if((DVP->ests & flag) != RESET)
+  {
+    status = SET;
+  }
+  else
+  {
+    status = RESET;
+  }
+  
   return status;
 }
 

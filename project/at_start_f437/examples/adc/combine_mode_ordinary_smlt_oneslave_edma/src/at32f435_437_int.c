@@ -141,7 +141,7 @@ void SysTick_Handler(void)
   */
 void EDMA_Stream1_IRQHandler(void)
 {
-  if(edma_flag_get(EDMA_FDT1_FLAG) != RESET)
+  if(edma_interrupt_flag_get(EDMA_FDT1_FLAG) != RESET)
   {
     edma_flag_clear(EDMA_FDT1_FLAG);
     edma_trans_complete_flag = 1;
@@ -155,12 +155,12 @@ void EDMA_Stream1_IRQHandler(void)
   */
 void ADC1_2_3_IRQHandler(void)
 {
-  if(adc_flag_get(ADC1, ADC_OCCO_FLAG) != RESET)
+  if(adc_interrupt_flag_get(ADC1, ADC_OCCO_FLAG) != RESET)
   {
     adc_flag_clear(ADC1, ADC_OCCO_FLAG);
     adc1_overflow_flag++;
   }
-  if(adc_flag_get(ADC2, ADC_OCCO_FLAG) != RESET)
+  if(adc_interrupt_flag_get(ADC2, ADC_OCCO_FLAG) != RESET)
   {
     adc_flag_clear(ADC2, ADC_OCCO_FLAG);
     adc2_overflow_flag++;

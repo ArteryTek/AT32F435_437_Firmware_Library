@@ -78,6 +78,25 @@ PUTCHAR_PROTOTYPE
   return ch;
 }
 
+#if (defined (__GNUC__) && !defined (__clang__)) || (defined (__ICCARM__))
+#if defined (__GNUC__) && !defined (__clang__)
+int _write(int fd, char *pbuffer, int size)
+#elif defined ( __ICCARM__ )
+#pragma module_name = "?__write"
+int __write(int fd, char *pbuffer, int size)
+#endif
+{
+  for(int i = 0; i < size; i ++)
+  {
+    while(usart_flag_get(USART1, USART_TDBE_FLAG) == RESET);
+    usart_data_transmit(USART1, (uint16_t)(*pbuffer++));
+    while(usart_flag_get(USART1, USART_TDC_FLAG) == RESET);
+  }
+
+  return size;
+}
+#endif
+
 /**
   * @brief  initialize uart
   * @param  baudrate: uart baudrate
@@ -86,6 +105,10 @@ PUTCHAR_PROTOTYPE
 void uart_print_init(uint32_t baudrate)
 {
   gpio_init_type gpio_init_struct;
+
+#if defined (__GNUC__) && !defined (__clang__)
+  setvbuf(stdout, NULL, _IONBF, 0);
+#endif
 
   /* enable the uart1 and gpio clock */
   crm_periph_clock_enable(PRINT_USART_CLK, TRUE);

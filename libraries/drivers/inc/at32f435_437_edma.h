@@ -1019,6 +1019,7 @@ edma_memory_type edma_memory_target_get(edma_stream_type *edma_streamx);
 flag_status edma_stream_status_get(edma_stream_type *edma_streamx);
 uint8_t edma_fifo_status_get(edma_stream_type *edma_streamx);
 flag_status edma_flag_get(uint32_t edma_flag);
+flag_status edma_interrupt_flag_get(uint32_t edma_flag);
 void edma_flag_clear(uint32_t edma_flag);
 
 /* edma 2d controller function */
@@ -1039,8 +1040,10 @@ void edmamux_generator_config(edmamux_generator_type *edmamux_gen_x, edmamux_gen
 void edmamux_sync_interrupt_enable(edmamux_channel_type *edmamux_channelx, confirm_state new_state);
 void edmamux_generator_interrupt_enable(edmamux_generator_type *edmamux_gen_x, confirm_state new_state);
 flag_status edmamux_sync_flag_get(uint32_t flag);
+flag_status edmamux_sync_interrupt_flag_get(uint32_t flag);
 void edmamux_sync_flag_clear(uint32_t flag);
 flag_status edmamux_generator_flag_get(uint32_t flag);
+flag_status edmamux_generator_interrupt_flag_get(uint32_t flag);
 void edmamux_generator_flag_clear(uint32_t flag);
 
 /**

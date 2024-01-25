@@ -57,7 +57,7 @@ uint16_t counter = 0;
   */
 void EDMA_Stream1_IRQHandler(void)
 {
-  if(edma_flag_get(EDMA_FDT1_FLAG) != RESET)
+  if(edma_interrupt_flag_get(EDMA_FDT1_FLAG) != RESET)
   {
     data_counter_end = 0;
     edma_flag_clear(EDMA_FDT1_FLAG);

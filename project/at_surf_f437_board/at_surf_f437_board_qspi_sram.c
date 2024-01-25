@@ -27,6 +27,16 @@ qspi_xip_type sram_xip_init;
 qspi_cmd_type sram_cmd_config;
 
 /**
+  * @brief  user function to check timeout or not
+  * @param  user_func_check_timeout: the pointer for qspi_cmd_type parameter
+  * @retval TRUE if timeout, FALSE if not.
+  */
+confirm_state user_func_check_timeout(void)
+{
+  /* add your timeout check mechanism here */
+  return FALSE;
+}
+/**
   * @brief  xip init sram config
   * @param  qspi_xip_struct: the pointer for qspi_xip_type parameter
   * @retval none
@@ -143,6 +153,14 @@ void qspi_sram_cmd_send(qspi_cmd_type* cmd)
   qspi_cmd_operation_kick(QSPI_SRAM_QSPIx, cmd);
   /* wait command completed */
   while(qspi_flag_get(QSPI_SRAM_QSPIx, QSPI_CMDSTS_FLAG) == RESET);
+  {
+    //user can add timeout check here
+    if(user_func_check_timeout())
+    {
+      //add your error handling here.
+      while(1);
+    }
+  }    
   qspi_flag_clear(QSPI_SRAM_QSPIx, QSPI_CMDSTS_FLAG);
 }
 

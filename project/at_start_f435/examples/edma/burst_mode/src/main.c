@@ -158,7 +158,7 @@ int main(void)
   */
 void TMR1_OVF_TMR10_IRQHandler(void)
 {
-  if(tmr_flag_get(TMR1, TMR_OVF_FLAG) == SET)
+  if(tmr_interrupt_flag_get(TMR1, TMR_OVF_FLAG) == SET)
   {
     /* change duty_buffer data value */
     duty_buffer[0] += 10;

@@ -145,7 +145,7 @@ void SysTick_Handler(void)
   */
 void ADC1_2_3_IRQHandler(void)
 {
-  if(adc_flag_get(ADC1, ADC_PCCE_FLAG) != RESET)
+  if(adc_interrupt_flag_get(ADC1, ADC_PCCE_FLAG) != RESET)
   {
     adc_flag_clear(ADC1, ADC_PCCE_FLAG);
     if(adc1_preempt_conversion_count < 2)
@@ -156,7 +156,7 @@ void ADC1_2_3_IRQHandler(void)
       adc1_preempt_conversion_count++;
     }
   }
-  if(adc_flag_get(ADC2, ADC_PCCE_FLAG) != RESET)
+  if(adc_interrupt_flag_get(ADC2, ADC_PCCE_FLAG) != RESET)
   {
     adc_flag_clear(ADC2, ADC_PCCE_FLAG);
     if(adc2_preempt_conversion_count < 2)
@@ -167,7 +167,7 @@ void ADC1_2_3_IRQHandler(void)
       adc2_preempt_conversion_count++;
     }
   }
-  if(adc_flag_get(ADC3, ADC_PCCE_FLAG) != RESET)
+  if(adc_interrupt_flag_get(ADC3, ADC_PCCE_FLAG) != RESET)
   {
     adc_flag_clear(ADC3, ADC_PCCE_FLAG);
     if(adc3_preempt_conversion_count < 2)

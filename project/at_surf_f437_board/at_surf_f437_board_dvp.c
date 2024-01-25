@@ -38,7 +38,7 @@ void dvp_config(uint16_t id)
   dvp_io_init();
 
   nvic_irq_enable(DVP_IRQn, 0, 0);
-  
+
   dvp_capture_mode_set(DVP_CAP_FUNC_MODE_CONTINUOUS);
   dvp_hsync_polarity_set(DVP_HSYNC_POLARITY_HIGH);
   if (id == OV5640_ID)
@@ -53,7 +53,7 @@ void dvp_config(uint16_t id)
   dvp_zoomout_set(DVP_PCDC_ALL, DVP_PCDS_CAP_FIRST, DVP_LCDC_ALL, DVP_LCDS_CAP_FIRST);
   dvp_zoomout_select(DVP_PCDES_CAP_FIRST);
   dvp_pixel_data_length_set(DVP_PIXEL_DATA_LENGTH_8);
-  
+
   //*(__IO uint32_t *)(0x50050040) = (uint32_t)0x1000;
 
   dvp_sync_mode_set(DVP_SYNC_MODE_HARDWARE);
@@ -231,35 +231,35 @@ void dvp_frame_done(void)
 void dvp_int_handler(void)
 {
   /* synchronization error interrupt management */
-  if(dvp_flag_get(DVP_ESE_INT_FLAG) != RESET)
+  if(dvp_interrupt_flag_get(DVP_ESE_INT_FLAG) != RESET)
   {
     /* clear the synchronization error flag */
     dvp_flag_clear(DVP_ESE_INT_FLAG);
   }
 
   /* overflow interrupt management */
-  if(dvp_flag_get(DVP_OVR_INT_FLAG) != RESET)
+  if(dvp_interrupt_flag_get(DVP_OVR_INT_FLAG) != RESET)
   {
     /* clear the overflow flag */
     dvp_flag_clear(DVP_OVR_INT_FLAG);
   }
 
   /* line interrupt management */
-  if(dvp_flag_get(DVP_HS_INT_FLAG) != RESET)
+  if(dvp_interrupt_flag_get(DVP_HS_INT_FLAG) != RESET)
   {
     /* clear the line interrupt flag */
     dvp_flag_clear(DVP_HS_INT_FLAG);
   }
 
   /* vsync interrupt management */
-  if(dvp_flag_get(DVP_VS_INT_FLAG) != RESET)
+  if(dvp_interrupt_flag_get(DVP_VS_INT_FLAG) != RESET)
   {
     /* clear the vsync flag */
     dvp_flag_clear(DVP_VS_INT_FLAG);
   }
 
   /* end of frame interrupt management */
-  if(dvp_flag_get(DVP_CFD_INT_FLAG) != RESET)
+  if(dvp_interrupt_flag_get(DVP_CFD_INT_FLAG) != RESET)
   {
     /* clear the end of frame flag */
     dvp_flag_clear(DVP_CFD_INT_FLAG);
@@ -267,4 +267,3 @@ void dvp_int_handler(void)
     dvp_frame_done();
   }
 }
-

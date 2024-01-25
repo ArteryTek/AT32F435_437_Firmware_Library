@@ -429,11 +429,11 @@ flag_status dac_udr_interrupt_flag_get(dac_select_type dac_select)
   switch(dac_select)
   {
     case DAC1_SELECT:
-      if((DAC->sts_bit.d1dmaudrf & DAC->ctrl_bit.d1dmaudrien) != 0)
+      if((DAC->sts_bit.d1dmaudrf && DAC->ctrl_bit.d1dmaudrien) != 0)
         status = SET;
       break;
     case DAC2_SELECT:
-      if((DAC->sts_bit.d2dmaudrf & DAC->ctrl_bit.d2dmaudrien) != 0)
+      if((DAC->sts_bit.d2dmaudrf && DAC->ctrl_bit.d2dmaudrien) != 0)
         status = SET;
       break;
     default:

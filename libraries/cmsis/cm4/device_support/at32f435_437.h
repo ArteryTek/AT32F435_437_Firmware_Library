@@ -197,7 +197,7 @@ extern "C" {
   */
 #define __AT32F435_437_LIBRARY_VERSION_MAJOR    (0x02) /*!< [31:24] major version */
 #define __AT32F435_437_LIBRARY_VERSION_MIDDLE   (0x01) /*!< [23:16] middle version */
-#define __AT32F435_437_LIBRARY_VERSION_MINOR    (0x04) /*!< [15:8]  minor version */
+#define __AT32F435_437_LIBRARY_VERSION_MINOR    (0x05) /*!< [15:8]  minor version */
 #define __AT32F435_437_LIBRARY_VERSION_RC       (0x00) /*!< [7:0]  release candidate */
 #define __AT32F435_437_LIBRARY_VERSION          ((__AT32F435_437_LIBRARY_VERSION_MAJOR << 24)  | \
                                                  (__AT32F435_437_LIBRARY_VERSION_MIDDLE << 16) | \
@@ -335,7 +335,7 @@ typedef enum IRQn
     DMA2_Channel4_IRQn          = 111,    /*!< dma2 channel 4 global interrupt                      */
     DMA2_Channel5_IRQn          = 112,    /*!< dma2 channel 5 global interrupt                      */
     DMA2_Channel6_IRQn          = 113,    /*!< dma2 channel 6 global interrupt                      */
-    DMA2_Channel7_IRQn          = 114,    /*!< dma2 channel 7 global interrupt                      */
+    DMA2_Channel7_IRQn          = 114     /*!< dma2 channel 7 global interrupt                      */
 #endif
 
 #if defined (AT32F437xx)
@@ -416,7 +416,7 @@ typedef enum IRQn
     DMA2_Channel4_IRQn          = 111,    /*!< dma2 channel 4 global interrupt                      */
     DMA2_Channel5_IRQn          = 112,    /*!< dma2 channel 5 global interrupt                      */
     DMA2_Channel6_IRQn          = 113,    /*!< dma2 channel 6 global interrupt                      */
-    DMA2_Channel7_IRQn          = 114,    /*!< dma2 channel 7 global interrupt                      */
+    DMA2_Channel7_IRQn          = 114     /*!< dma2 channel 7 global interrupt                      */
 #endif
 
 } IRQn_Type;
