@@ -269,6 +269,9 @@ void qspi_sram_init(void)
   /* set wip in bit 0 */
   qspi_busy_config(QSPI_SRAM_QSPIx, QSPI_BUSY_OFFSET_0);
 
+  /* enable auto ispc */
+  qspi_auto_ispc_enable(QSPI_SRAM_QSPIx);
+
   /* exit quad mode */
   qspi_sram_cmd_exitquadmode_config(&sram_cmd_config);
   qspi_sram_cmd_send(&sram_cmd_config);
@@ -286,6 +289,9 @@ void qspi_sram_init(void)
   /* initial xip */
   qspi_sram_xip_init_para(&sram_xip_init);
   qspi_xip_init(QSPI_SRAM_QSPIx, &sram_xip_init);
-  qspi_xip_cache_bypass_set(QSPI_SRAM_QSPIx,TRUE);
+  if(DEBUGMCU->ser_id_bit.rev_id == 0x00)
+  {
+    qspi_xip_cache_bypass_set(QSPI_SRAM_QSPIx, TRUE);
+  }
   qspi_xip_enable(QSPI_SRAM_QSPIx, TRUE);
 }

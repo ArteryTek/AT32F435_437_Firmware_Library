@@ -83,6 +83,7 @@ void lcd_writeonepoint(uint16_t color);
 void lcd_drawpoint(uint16_t x,uint16_t y,uint16_t color);
 void lcd_clear(uint16_t color);
 void lcd_display_number(void);
+uint16_t lcd_read_id(void);
 
 /**
   * @}

@@ -136,8 +136,8 @@ typedef struct
 
   uint8_t                                device_addr;                /*!< device address */
   uint8_t                                remote_wakup;               /*!< remote wakeup state */
-  uint8_t                                default_config;             /*!< usb default config state */
-  uint8_t                                dev_config;                 /*!< usb device config state */
+  uint32_t                               default_config;             /*!< usb default config state */
+  uint32_t                               dev_config;                 /*!< usb device config state */
   uint32_t                               config_status;              /*!< usb configure status */
 }usbd_core_type;
 

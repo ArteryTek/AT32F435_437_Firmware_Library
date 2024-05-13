@@ -214,7 +214,8 @@ void qspi_gpio_slect(void)
   //  <2=> PD13
   //  <3=> PF6
   //  <4=> PG14
-  #define QSPI_IO3_PIN_SELECT     3
+  //  <5=> PC5
+  #define QSPI_IO3_PIN_SELECT     5
   #if (QSPI_IO3_PIN_SELECT == 0)
     #define GPIO_IO3_PORT_VALUE  GPIOA
     #define GPIO_IO3_CLOCK_VALUE  0U
@@ -240,6 +241,11 @@ void qspi_gpio_slect(void)
     #define GPIO_IO3_CLOCK_VALUE  6U
     #define GPIO_IO3_PIN_VALUE    14U
     #define GPIO_IO3_MUX_VALUE    9U
+  #elif (QSPI_IO3_PIN_SELECT == 5)
+    #define GPIO_IO3_PORT_VALUE  GPIOC
+    #define GPIO_IO3_CLOCK_VALUE  2U
+    #define GPIO_IO3_PIN_VALUE    5U
+    #define GPIO_IO3_MUX_VALUE    10U
   #endif 
   
   /* enable the qspi clock */

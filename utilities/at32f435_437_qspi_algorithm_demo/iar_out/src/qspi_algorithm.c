@@ -271,6 +271,11 @@ void qspi_cmd_init(void)
   /* clk div2 */
   QSPI1->ctrl_bit.clkdiv = QSPI_CLK_DIV_2;
 
+  /* enable auto ispc */
+  QSPI1->ctrl3_bit.ispc = TRUE;
+  QSPI1->ctrl3_bit.ispd = 56;
+  //QSPI2 ispd is 50
+
   /* reset qpi mode and reset the device */
   custom_qspi_rstqpi();
   custom_qspi_rsten();

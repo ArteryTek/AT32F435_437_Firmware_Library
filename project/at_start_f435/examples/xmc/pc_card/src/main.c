@@ -94,7 +94,7 @@ int main(void)
   PCCARD_PIO4_Timing.mem_hiz_time  = 1;
 
 
-  pccardHandle.init.enable_wait   = 1;
+  pccardHandle.init.enable_wait   = (xmc_nand_pccard_wait_type)1;
   pccardHandle.init.delay_time_cr = 0;
   pccardHandle.init.delay_time_ar  = 0;
   memset(&verification_result, 0, sizeof(verification_result));

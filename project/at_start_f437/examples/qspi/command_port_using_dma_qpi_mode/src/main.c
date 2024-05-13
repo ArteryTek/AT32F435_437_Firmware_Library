@@ -139,6 +139,9 @@ int main(void)
   /* set wip in bit 0 */
   qspi_busy_config(QSPI1, QSPI_BUSY_OFFSET_0);
 
+  /* enable auto ispc */
+  qspi_auto_ispc_enable(QSPI1);
+
   esmt32m_qpi_mode_init();
 
   /* erase */

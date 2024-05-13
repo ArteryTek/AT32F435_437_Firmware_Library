@@ -155,12 +155,12 @@ typedef enum
 {
   I2C_ADDR2_NOMASK                       = 0x00, /*!< compare bit      [7:1] */
   I2C_ADDR2_MASK01                       = 0x01, /*!< only compare bit [7:2] */
-  I2C_ADDR2_MASK02                       = 0x02, /*!< only compare bit [7:2] */
-  I2C_ADDR2_MASK03                       = 0x03, /*!< only compare bit [7:3] */
-  I2C_ADDR2_MASK04                       = 0x04, /*!< only compare bit [7:4] */
-  I2C_ADDR2_MASK05                       = 0x05, /*!< only compare bit [7:5] */
-  I2C_ADDR2_MASK06                       = 0x06, /*!< only compare bit [7:6] */
-  I2C_ADDR2_MASK07                       = 0x07  /*!< only compare bit [7] */
+  I2C_ADDR2_MASK02                       = 0x02, /*!< only compare bit [7:3] */
+  I2C_ADDR2_MASK03                       = 0x03, /*!< only compare bit [7:4] */
+  I2C_ADDR2_MASK04                       = 0x04, /*!< only compare bit [7:5] */
+  I2C_ADDR2_MASK05                       = 0x05, /*!< only compare bit [7:6] */
+  I2C_ADDR2_MASK06                       = 0x06, /*!< only compare bit [7] */
+  I2C_ADDR2_MASK07                       = 0x07  /*!< response all addresses other than those reserved for i2c */
 } i2c_addr2_mask_type;
 
 /**

@@ -131,9 +131,9 @@ void xmc_init(void)
   xmc_norsram_timing_default_para_init(&rw_timing_struct, &w_timing_struct);
   rw_timing_struct.subbank = XMC_BANK1_NOR_SRAM1;
   rw_timing_struct.write_timing_enable = XMC_WRITE_TIMING_ENABLE;
-  rw_timing_struct.addr_setup_time = 0x2;
+  rw_timing_struct.addr_setup_time = 0xf;
   rw_timing_struct.addr_hold_time = 0x0;
-  rw_timing_struct.data_setup_time = 0x2;
+  rw_timing_struct.data_setup_time = 0xf;
   rw_timing_struct.bus_latency_time = 0x0;
   rw_timing_struct.clk_psc = 0x0;
   rw_timing_struct.data_latency_time = 0x0;
@@ -176,6 +176,10 @@ void lcd_init(void)
   delay_ms(10);
   LCD_RESET_HIGH;
   delay_ms(120);
+  
+  /* read lcd id */
+  lcd_read_id();
+  
   lcd_wr_command(0x36);
   lcd_wr_data(0x00);
   lcd_wr_command(0x3a);
@@ -268,6 +272,23 @@ void lcd_wr_command(uint8_t command)
 void lcd_wr_data(uint8_t data)
 {
   *(__IO uint8_t *) XMC_LCD_DATA = data;
+}
+
+/**
+  * @brief  this function is read lcd id.
+  * @param  none.
+  * @retval the lcd id.
+  */
+uint16_t lcd_read_id(void)
+{
+  uint16_t id = 0;
+  
+  /* read id */
+  *(__IO uint8_t *) XMC_LCD_COMMAND = 0xDA;
+  id = *(__IO uint8_t *) XMC_LCD_DATA;
+  id = (id<<8) | (*(__IO uint8_t *) XMC_LCD_DATA);
+  
+  return id;
 }
 
 /**

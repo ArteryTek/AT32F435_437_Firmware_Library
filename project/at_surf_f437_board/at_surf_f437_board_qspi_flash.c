@@ -104,6 +104,9 @@ void qspi_flash_init(void)
 
   /* set wip in bit 0 */
   qspi_busy_config(QSPI_FLASH_QSPIx, QSPI_BUSY_OFFSET_0);
+
+  /* enable auto ispc */
+  qspi_auto_ispc_enable(QSPI_FLASH_QSPIx);
 }
 
 /**

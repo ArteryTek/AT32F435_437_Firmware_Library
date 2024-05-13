@@ -127,6 +127,9 @@ int main(void)
   /* set wip in bit 0 */
   qspi_busy_config(QSPI1, QSPI_BUSY_OFFSET_0);
 
+  /* enable auto ispc */
+  qspi_auto_ispc_enable(QSPI1);
+
   qspi_xip_init_ly68l6400();
 
   qspi1_mem_addr = (uint8_t*)QSPI1_MEM_BASE;

@@ -33,6 +33,14 @@
   * @{
   */
 
+#ifdef QSPI1_SEL
+  #define QSPIx  QSPI1
+  #define QSPIx_MEM_BASE  QSPI1_MEM_BASE   
+#else
+  #define QSPIx  QSPI2
+  #define QSPIx_MEM_BASE  QSPI2_MEM_BASE   
+#endif
+
 extern void qspi_gpio_slect(void);
 
 /**
@@ -44,17 +52,17 @@ void custom_qspi_xip_enable(confirm_state new_state)
 {
   if(new_state == TRUE)
   {
-    QSPI1->ctrl_bit.xipsel = TRUE;
-    while(QSPI1->xip_cmd_w3_bit.csts != RESET);
-    while(QSPI1->ctrl_bit.xipidle == RESET);
+    QSPIx->ctrl_bit.xipsel = TRUE;
+    while(QSPIx->xip_cmd_w3_bit.csts != RESET);
+    while(QSPIx->ctrl_bit.xipidle == RESET);
   }
   else
   {
-    while(QSPI1->fifosts_bit.txfifordy == RESET);
-    while((QSPI1->ctrl_bit.abort != RESET) && (QSPI1->ctrl_bit.xipidle == RESET));
-    QSPI1->ctrl_bit.xiprcmdf = TRUE;
-    while(QSPI1->ctrl_bit.abort != RESET || QSPI1->ctrl_bit.xipidle == RESET);
-    QSPI1->ctrl_bit.xipsel = FALSE;
+    while(QSPIx->fifosts_bit.txfifordy == RESET);
+    while((QSPIx->ctrl_bit.abort != RESET) && (QSPIx->ctrl_bit.xipidle == RESET));
+    QSPIx->ctrl_bit.xiprcmdf = TRUE;
+    while(QSPIx->ctrl_bit.abort != RESET || QSPIx->ctrl_bit.xipidle == RESET);
+    QSPIx->ctrl_bit.xipsel = FALSE;
   }
 }
 
@@ -81,14 +89,14 @@ void custom_xip_enable_config(void)
   xc0_val |= (uint32_t)(custom_xip_config->read_operation_mode << 8);
   xc0_val |= (uint32_t)(custom_xip_config->read_address_length << 11);
   xc0_val |= (uint32_t)(custom_xip_config->read_instruction_code << 12);
-  QSPI1->xip_cmd_w0 = xc0_val;
+  QSPIx->xip_cmd_w0 = xc0_val;
 
   /* config analyse xip_cmd_w1 register */
   xc1_val = (uint32_t)custom_xip_config->write_second_dummy_cycle_num;
   xc1_val |= (uint32_t)(custom_xip_config->write_operation_mode << 8);
   xc1_val |= (uint32_t)(custom_xip_config->write_address_length << 11);
   xc1_val |= (uint32_t)(custom_xip_config->write_instruction_code << 12);
-  QSPI1->xip_cmd_w1 = xc1_val;
+  QSPIx->xip_cmd_w1 = xc1_val;
 
   /* config analyse xip_cmd_w2 register */
   xc2_val = (uint32_t)custom_xip_config->read_data_counter;
@@ -97,7 +105,7 @@ void custom_xip_enable_config(void)
   xc2_val |= (uint32_t)(custom_xip_config->write_data_counter << 16);
   xc2_val |= (uint32_t)(custom_xip_config->write_time_counter << 24);
   xc2_val |= (uint32_t)(custom_xip_config->write_select_mode << 31);
-  QSPI1->xip_cmd_w2 = xc2_val;
+  QSPIx->xip_cmd_w2 = xc2_val;
 
   custom_qspi_xip_enable(TRUE);
 }
@@ -109,12 +117,12 @@ void custom_xip_enable_config(void)
   */
 void custom_qspi_rstqpi(void)
 {
-  QSPI1->cmd_w0 = 0;
-  QSPI1->cmd_w1 = 0x01000000;
-  QSPI1->cmd_w2 = 0;
-  QSPI1->cmd_w3 = 0xFF0000C2;
-  while((flag_status)(QSPI1->cmdsts_bit.cmdsts) == RESET);
-  QSPI1->cmdsts_bit.cmdsts = TRUE;
+  QSPIx->cmd_w0 = 0;
+  QSPIx->cmd_w1 = 0x01000000;
+  QSPIx->cmd_w2 = 0;
+  QSPIx->cmd_w3 = 0xFF0000C2;
+  while((flag_status)(QSPIx->cmdsts_bit.cmdsts) == RESET);
+  QSPIx->cmdsts_bit.cmdsts = TRUE;
 }
 
 /**
@@ -124,12 +132,12 @@ void custom_qspi_rstqpi(void)
   */
 void custom_qspi_rsten(void)
 {
-  QSPI1->cmd_w0 = 0;
-  QSPI1->cmd_w1 = 0x01000000;
-  QSPI1->cmd_w2 = 0;
-  QSPI1->cmd_w3 = 0x66000002;
-  while((flag_status)(QSPI1->cmdsts_bit.cmdsts) == RESET);
-  QSPI1->cmdsts_bit.cmdsts = TRUE;
+  QSPIx->cmd_w0 = 0;
+  QSPIx->cmd_w1 = 0x01000000;
+  QSPIx->cmd_w2 = 0;
+  QSPIx->cmd_w3 = 0x66000002;
+  while((flag_status)(QSPIx->cmdsts_bit.cmdsts) == RESET);
+  QSPIx->cmdsts_bit.cmdsts = TRUE;
 }
 
 /**
@@ -139,12 +147,12 @@ void custom_qspi_rsten(void)
   */
 void custom_qspi_rst(void)
 {
-  QSPI1->cmd_w0 = 0;
-  QSPI1->cmd_w1 = 0x01000000;
-  QSPI1->cmd_w2 = 0;
-  QSPI1->cmd_w3 = 0x99000002;
-  while((flag_status)(QSPI1->cmdsts_bit.cmdsts) == RESET);
-  QSPI1->cmdsts_bit.cmdsts = TRUE;
+  QSPIx->cmd_w0 = 0;
+  QSPIx->cmd_w1 = 0x01000000;
+  QSPIx->cmd_w2 = 0;
+  QSPIx->cmd_w3 = 0x99000002;
+  while((flag_status)(QSPIx->cmdsts_bit.cmdsts) == RESET);
+  QSPIx->cmdsts_bit.cmdsts = TRUE;
 }
 
 /**
@@ -154,12 +162,12 @@ void custom_qspi_rst(void)
   */
 void custom_qspi_write_enable(void)
 {
-  QSPI1->cmd_w0 = 0;
-  QSPI1->cmd_w1 = 0x01000000;
-  QSPI1->cmd_w2 = 0;
-  QSPI1->cmd_w3 = 0x06000002;
-  while((flag_status)(QSPI1->cmdsts_bit.cmdsts) == RESET);
-  QSPI1->cmdsts_bit.cmdsts = TRUE;
+  QSPIx->cmd_w0 = 0;
+  QSPIx->cmd_w1 = 0x01000000;
+  QSPIx->cmd_w2 = 0;
+  QSPIx->cmd_w3 = 0x06000002;
+  while((flag_status)(QSPIx->cmdsts_bit.cmdsts) == RESET);
+  QSPIx->cmdsts_bit.cmdsts = TRUE;
 }
 
 /**
@@ -169,12 +177,12 @@ void custom_qspi_write_enable(void)
   */
 void custom_qspi_busy_check(void)
 {
-  QSPI1->cmd_w0 = 0;
-  QSPI1->cmd_w1 = 0x01000000;
-  QSPI1->cmd_w2 = 0;
-  QSPI1->cmd_w3 = 0x05000004;
-  while((flag_status)(QSPI1->cmdsts_bit.cmdsts) == RESET);
-  QSPI1->cmdsts_bit.cmdsts = TRUE;
+  QSPIx->cmd_w0 = 0;
+  QSPIx->cmd_w1 = 0x01000000;
+  QSPIx->cmd_w2 = 0;
+  QSPIx->cmd_w3 = 0x05000004;
+  while((flag_status)(QSPIx->cmdsts_bit.cmdsts) == RESET);
+  QSPIx->cmdsts_bit.cmdsts = TRUE;
 }
 
 /**
@@ -184,12 +192,12 @@ void custom_qspi_busy_check(void)
   */
 void custom_qspi_sector_erase(uint32_t adr)
 {
-  QSPI1->cmd_w0 = adr;
-  QSPI1->cmd_w1 = 0x01000003;
-  QSPI1->cmd_w2 = 0;
-  QSPI1->cmd_w3 = 0x20000002;
-  while((flag_status)(QSPI1->cmdsts_bit.cmdsts) == RESET);
-  QSPI1->cmdsts_bit.cmdsts = TRUE;
+  QSPIx->cmd_w0 = adr;
+  QSPIx->cmd_w1 = 0x01000003;
+  QSPIx->cmd_w2 = 0;
+  QSPIx->cmd_w3 = 0x20000002;
+  while((flag_status)(QSPIx->cmdsts_bit.cmdsts) == RESET);
+  QSPIx->cmdsts_bit.cmdsts = TRUE;
 }
 
 /**
@@ -199,12 +207,12 @@ void custom_qspi_sector_erase(uint32_t adr)
   */
 void custom_qspi_chip_erase(void)
 {
-  QSPI1->cmd_w0 = 0;
-  QSPI1->cmd_w1 = 0x01000000;
-  QSPI1->cmd_w2 = 0;
-  QSPI1->cmd_w3 = 0x60000002;
-  while((flag_status)(QSPI1->cmdsts_bit.cmdsts) == RESET);
-  QSPI1->cmdsts_bit.cmdsts = TRUE;
+  QSPIx->cmd_w0 = 0;
+  QSPIx->cmd_w1 = 0x01000000;
+  QSPIx->cmd_w2 = 0;
+  QSPIx->cmd_w3 = 0x60000002;
+  while((flag_status)(QSPIx->cmdsts_bit.cmdsts) == RESET);
+  QSPIx->cmdsts_bit.cmdsts = TRUE;
 }
 
 /**
@@ -264,14 +272,21 @@ void qspi_cmd_init(void)
   custom_qspi_xip_enable(FALSE);
 
   /* clk mode 0 */
-  QSPI1->ctrl_bit.sckmode = QSPI_SCK_MODE_0;
+  QSPIx->ctrl_bit.sckmode = QSPI_SCK_MODE_0;
 
   /* busy offset 0 */
-  QSPI1->ctrl_bit.busy = QSPI_BUSY_OFFSET_0;
+  QSPIx->ctrl_bit.busy = QSPI_BUSY_OFFSET_0;
 
   /* clk div2 */
-  QSPI1->ctrl_bit.clkdiv = QSPI_CLK_DIV_2;
-
+  QSPIx->ctrl_bit.clkdiv = QSPI_CLK_DIV_2;
+ 
+  /* enable auto ispc */
+  QSPIx->ctrl3_bit.ispc = TRUE;
+  if(QSPIx == QSPI1)
+    QSPIx->ctrl3_bit.ispd = 56;
+  else if(QSPIx == QSPI2)
+    QSPIx->ctrl3_bit.ispd = 50;
+  
   /* reset qpi mode and reset the device */
   custom_qspi_rstqpi();
   custom_qspi_rsten();
@@ -337,7 +352,7 @@ int EraseChip (void)
   */
 int EraseSector (unsigned long adr)
 {
-  adr -= QSPI1_MEM_BASE;
+  adr -= QSPIx_MEM_BASE;
   custom_qspi_xip_enable(FALSE);
 
   /* qspi write enable */
@@ -363,23 +378,23 @@ int EraseSector (unsigned long adr)
 int ProgramPage (unsigned long adr, unsigned long sz, unsigned char *buf)
 {
   uint32_t i;
-  adr -= QSPI1_MEM_BASE;
+  adr -= QSPIx_MEM_BASE;
   custom_qspi_xip_enable(FALSE);
   /* qspi write enable */
   custom_qspi_write_enable();
 
   /* qspi program */
-  QSPI1->cmd_w0 = adr;
-  QSPI1->cmd_w1 = 0x01000003;
-  QSPI1->cmd_w2 = sz;
-  QSPI1->cmd_w3 = 0x32000042;
+  QSPIx->cmd_w0 = adr;
+  QSPIx->cmd_w1 = 0x01000003;
+  QSPIx->cmd_w2 = sz;
+  QSPIx->cmd_w3 = 0x32000042;
   for(i = 0; i < sz; ++i)
   {
-    while((flag_status)(QSPI1->fifosts_bit.txfifordy) == RESET);
-    QSPI1->dt_u8 = *buf++;
+    while((flag_status)(QSPIx->fifosts_bit.txfifordy) == RESET);
+    QSPIx->dt_u8 = *buf++;
   }
-  while((flag_status)(QSPI1->cmdsts_bit.cmdsts) == RESET);
-  QSPI1->cmdsts_bit.cmdsts = TRUE;
+  while((flag_status)(QSPIx->cmdsts_bit.cmdsts) == RESET);
+  QSPIx->cmdsts_bit.cmdsts = TRUE;
 
   /* qspi check busy */
   custom_qspi_busy_check();

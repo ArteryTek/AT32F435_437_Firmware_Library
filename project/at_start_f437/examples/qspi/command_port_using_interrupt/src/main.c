@@ -130,6 +130,9 @@ int main(void)
   /* set wip in bit 0 */
   qspi_busy_config(QSPI1, QSPI_BUSY_OFFSET_0);
 
+  /* enable auto ispc */
+  qspi_auto_ispc_enable(QSPI1);
+
   nvic_irq_enable(QSPI1_IRQn, 0, 0);
   qspi_interrupt_enable(QSPI1, TRUE);
 

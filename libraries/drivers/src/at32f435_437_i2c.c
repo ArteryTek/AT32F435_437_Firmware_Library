@@ -120,12 +120,12 @@ void i2c_own_address1_set(i2c_type *i2c_x, i2c_address_mode_type mode, uint16_t 
   *         this parameter can be one of the following values:
   *         - I2C_ADDR2_NOMASK: compare bit      [7:1].
   *         - I2C_ADDR2_MASK01: only compare bit [7:2].
-  *         - I2C_ADDR2_MASK02: only compare bit [7:2].
-  *         - I2C_ADDR2_MASK03: only compare bit [7:3].
-  *         - I2C_ADDR2_MASK04: only compare bit [7:4].
-  *         - I2C_ADDR2_MASK05: only compare bit [7:5].
-  *         - I2C_ADDR2_MASK06: only compare bit [7:6].
-  *         - I2C_ADDR2_MASK07: only compare bit [7].
+  *         - I2C_ADDR2_MASK02: only compare bit [7:3].
+  *         - I2C_ADDR2_MASK03: only compare bit [7:4].
+  *         - I2C_ADDR2_MASK04: only compare bit [7:5].
+  *         - I2C_ADDR2_MASK05: only compare bit [7:6].
+  *         - I2C_ADDR2_MASK06: only compare bit [7].
+  *         - I2C_ADDR2_MASK07: response all addresses other than those reserved for i2c.
   * @retval none
   */
 void i2c_own_address2_set(i2c_type *i2c_x, uint8_t address, i2c_addr2_mask_type mask)

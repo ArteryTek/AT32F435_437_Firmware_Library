@@ -28,7 +28,7 @@
 #include "at_surf_f437_board_joystick.h"
 #include "at_surf_f437_board_lcd.h"
 
-#define PI  3.141
+#define PI  3.141F
 #define MUL 2
 float pitch = 5, roll = 5, yaw = 5;
 float pitch_buf, roll_buf, yaw_buf;
@@ -67,10 +67,21 @@ float *matconv(float *a, float b[3][3])
   */
 void rotate(float* obj, float x, float y, float z)
 {
+  float rz[3][3], ry[3][3], rx[3][3];
   x /= PI; y /= PI; z /= PI;
-  float rz[3][3] = {{cos(z),-sin(z),0}, {sin(z),cos(z),0}, {0,0,1}};
-  float ry[3][3] = {{1,0,0}, {0,cos(y),-sin(y)}, {0,sin(y),cos(y)}};
-  float rx[3][3] = {{cos(x),0,sin(x)}, {0,1,0}, {-sin(x),0,cos(x)}};
+
+  rz[0][0] = cos(z);  rz[0][1] = -sin(z); rz[0][2] = 0;
+  rz[1][0] = sin(z);  rz[1][1] = cos(z);  rz[1][2] = 0;
+  rz[2][0] = 0;       rz[2][1] = 0;       rz[2][2] = 1;
+
+  ry[0][0] = 1;       ry[0][1] = 0;       ry[0][2] = 0;
+  ry[1][0] = 0;       ry[1][1] = cos(y);  ry[1][2] = -sin(y);
+  ry[2][0] = 0;       ry[2][1] = sin(y);  ry[2][2] = cos(y);
+
+  rx[0][0] = cos(x);  rx[0][1] = 0;       rx[0][2] = sin(x);
+  rx[1][0] = 0;       rx[1][1] = 1;       rx[1][2] = 0;
+  rx[2][0] = -sin(x); rx[2][1] = 0;       rx[2][2] = cos(x);
+
   matconv(matconv(matconv(obj,rz), ry), rx);
 }
 
@@ -209,7 +220,7 @@ void lcd_memory_clear(uint16_t color)
   */
 int main(void)
 {
-  uint16_t x = 0, i;
+  uint16_t i;
 
   joy_type key;
 

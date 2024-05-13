@@ -179,8 +179,8 @@ sd_error_status_type sd_init(void)
     }
     else
     {
-      /* set sdio_ck to 48mhz */
-      clkdiv = system_core_clock / 48000000;
+      /* set sdio_ck to 25mhz */
+      clkdiv = system_core_clock / 25000000;
 
       if(clkdiv >= 2)
       {

@@ -31,8 +31,6 @@
 extern "C" {
 #endif
 
-#define FALSE                            0
-#define TRUE                             1
 #define XMC_BASE                         ((uint32_t)0xA8000000)
 #define XMC_BANK4_                       (XMC_BASE + 0x0000000)
 #define PCCARD_DEVICE_ADDRESS            XMC_BANK4_
