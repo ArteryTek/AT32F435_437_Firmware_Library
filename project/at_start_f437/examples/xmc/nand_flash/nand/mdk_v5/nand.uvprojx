@@ -20,7 +20,7 @@
           <Cpu>IRAM(0x20000000,0x60000) IROM(0x08000000,0x3F0000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0AT32F437_4032 -FS08000000 -FL03F0000 -FP0($$Device:-AT32F437ZMT7$Flash\AT32F437_4032.FLM))</FlashDriverDll>
+          <FlashDriverDll></FlashDriverDll>
           <DeviceId>0</DeviceId>
           <RegisterFile>$$Device:-</RegisterFile>
           <MemoryEnv></MemoryEnv>
@@ -482,10 +482,10 @@
           <Device>-AT32F437ZMT7</Device>
           <Vendor>ArteryTek</Vendor>
           <PackID>ArteryTek.AT32F435_437_DFP.2.0.0</PackID>
-          <Cpu>IRAM(0x20000000,0x60000) IROM(0x08000000,0x3F0000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ELITTLE</Cpu>
+          <Cpu></Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0AT32F437_4032 -FS08000000 -FL03F0000 -FP0($$Device:-AT32F437ZMT7$Flash\AT32F437_4032.FLM))</FlashDriverDll>
+          <FlashDriverDll></FlashDriverDll>
           <DeviceId>0</DeviceId>
           <RegisterFile>$$Device:-</RegisterFile>
           <MemoryEnv></MemoryEnv>

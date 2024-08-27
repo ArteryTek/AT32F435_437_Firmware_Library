@@ -26,8 +26,8 @@
 #include "at32f435_437_clock.h"
 
 #define ADC_VREF                         (3.3)
-#define ADC_TEMP_BASE                    (1.26)
-#define ADC_TEMP_SLOPE                   (-0.00423)
+#define ADC_TEMP_BASE                    (1.27)
+#define ADC_TEMP_SLOPE                   (-0.00413)
 
 /** @addtogroup AT32F435_periph_examples
   * @{

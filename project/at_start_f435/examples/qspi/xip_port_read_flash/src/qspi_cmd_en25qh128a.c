@@ -34,98 +34,39 @@
 
 #define FLASH_PAGE_PROGRAM_SIZE          256
 
+/* en25qh128a cmd write parameters, the address_code and data_counter need to be set in application */
+static const qspi_cmd_type en25qh128a_write_para = {
+FALSE,0,0x32,QSPI_CMD_INSLEN_1_BYTE,0,QSPI_CMD_ADRLEN_3_BYTE,0,0,QSPI_OPERATE_MODE_114,QSPI_RSTSC_HW_AUTO,FALSE,TRUE};
+
+/* en25qh128a cmd sector erase parameters, the address_code need to be set in application */
+static const qspi_cmd_type en25qh128a_erase_para = {
+FALSE,0,0x20,QSPI_CMD_INSLEN_1_BYTE,0,QSPI_CMD_ADRLEN_3_BYTE,0,0,QSPI_OPERATE_MODE_111,QSPI_RSTSC_HW_AUTO,FALSE,TRUE};
+
+/* en25qh128a cmd wren parameters */
+static const qspi_cmd_type en25qh128a_wren_para = {
+FALSE,0,0x06,QSPI_CMD_INSLEN_1_BYTE,0,QSPI_CMD_ADRLEN_0_BYTE,0,0,QSPI_OPERATE_MODE_111,QSPI_RSTSC_HW_AUTO,FALSE,TRUE};
+
+/* en25qh128a cmd rdsr parameters */
+static const qspi_cmd_type en25qh128a_rdsr_para = {
+FALSE,0,0x05,QSPI_CMD_INSLEN_1_BYTE,0,QSPI_CMD_ADRLEN_0_BYTE,0,0,QSPI_OPERATE_MODE_111,QSPI_RSTSC_HW_AUTO,TRUE,FALSE};
+
+/* en25qh128a cmd rsten parameters */
+static const qspi_cmd_type en25qh128a_rsten_para = {
+FALSE,0,0x66,QSPI_CMD_INSLEN_1_BYTE,0,QSPI_CMD_ADRLEN_0_BYTE,0,0,QSPI_OPERATE_MODE_111,QSPI_RSTSC_HW_AUTO,FALSE,TRUE};
+
+/* en25qh128a cmd rst parameters */
+static const qspi_cmd_type en25qh128a_rst_para = {
+FALSE,0,0x99,QSPI_CMD_INSLEN_1_BYTE,0,QSPI_CMD_ADRLEN_0_BYTE,0,0,QSPI_OPERATE_MODE_111,QSPI_RSTSC_HW_AUTO,FALSE,TRUE};
+
+/* en25qh128a xip init parameters */
+static const qspi_xip_type en25qh128a_xip_init_para = {
+0x6B,QSPI_XIP_ADDRLEN_3_BYTE,QSPI_OPERATE_MODE_114,8,0x32,QSPI_XIP_ADDRLEN_3_BYTE,QSPI_OPERATE_MODE_114,0,QSPI_XIPW_SEL_MODED,0x7F,0x1F,QSPI_XIPR_SEL_MODET,0x7F,0x1F};
+
 qspi_cmd_type en25qh128a_cmd_config;
-qspi_xip_type en25qh128a_xip_init;
 
 void qspi_busy_check(void);
 void qspi_write_enable(void);
-
-/**
-  * @brief  en25qh128a cmd write config
-  * @param  qspi_cmd_struct: the pointer for qspi_cmd_type parameter
-  * @param  addr: write start address
-  * @param  counter: write data counter
-  * @retval none
-  */
-void en25qh128a_cmd_write_config(qspi_cmd_type *qspi_cmd_struct, uint32_t addr, uint32_t counter)
-{
-  qspi_cmd_struct->pe_mode_enable = FALSE;
-  qspi_cmd_struct->pe_mode_operate_code = 0;
-  qspi_cmd_struct->instruction_code = 0x32;
-  qspi_cmd_struct->instruction_length = QSPI_CMD_INSLEN_1_BYTE;
-  qspi_cmd_struct->address_code = addr;
-  qspi_cmd_struct->address_length = QSPI_CMD_ADRLEN_3_BYTE;
-  qspi_cmd_struct->data_counter = counter;
-  qspi_cmd_struct->second_dummy_cycle_num = 0;
-  qspi_cmd_struct->operation_mode = QSPI_OPERATE_MODE_114;
-  qspi_cmd_struct->read_status_config = QSPI_RSTSC_HW_AUTO;
-  qspi_cmd_struct->read_status_enable = FALSE;
-  qspi_cmd_struct->write_data_enable = TRUE;
-}
-
-/**
-  * @brief  en25qh128a cmd erase config
-  * @param  qspi_cmd_struct: the pointer for qspi_cmd_type parameter
-  * @param  addr: erase address
-  * @retval none
-  */
-void en25qh128a_cmd_erase_config(qspi_cmd_type *qspi_cmd_struct, uint32_t addr)
-{
-  qspi_cmd_struct->pe_mode_enable = FALSE;
-  qspi_cmd_struct->pe_mode_operate_code = 0;
-  qspi_cmd_struct->instruction_code = 0x20;
-  qspi_cmd_struct->instruction_length = QSPI_CMD_INSLEN_1_BYTE;
-  qspi_cmd_struct->address_code = addr;
-  qspi_cmd_struct->address_length = QSPI_CMD_ADRLEN_3_BYTE;
-  qspi_cmd_struct->data_counter = 0;
-  qspi_cmd_struct->second_dummy_cycle_num = 0;
-  qspi_cmd_struct->operation_mode = QSPI_OPERATE_MODE_111;
-  qspi_cmd_struct->read_status_config = QSPI_RSTSC_HW_AUTO;
-  qspi_cmd_struct->read_status_enable = FALSE;
-  qspi_cmd_struct->write_data_enable = TRUE;
-}
-
-/**
-  * @brief  en25qh128a cmd wren config
-  * @param  qspi_cmd_struct: the pointer for qspi_cmd_type parameter
-  * @retval none
-  */
-void en25qh128a_cmd_wren_config(qspi_cmd_type *qspi_cmd_struct)
-{
-  qspi_cmd_struct->pe_mode_enable = FALSE;
-  qspi_cmd_struct->pe_mode_operate_code = 0;
-  qspi_cmd_struct->instruction_code = 0x06;
-  qspi_cmd_struct->instruction_length = QSPI_CMD_INSLEN_1_BYTE;
-  qspi_cmd_struct->address_code = 0;
-  qspi_cmd_struct->address_length = QSPI_CMD_ADRLEN_0_BYTE;
-  qspi_cmd_struct->data_counter = 0;
-  qspi_cmd_struct->second_dummy_cycle_num = 0;
-  qspi_cmd_struct->operation_mode = QSPI_OPERATE_MODE_111;
-  qspi_cmd_struct->read_status_config = QSPI_RSTSC_HW_AUTO;
-  qspi_cmd_struct->read_status_enable = FALSE;
-  qspi_cmd_struct->write_data_enable = TRUE;
-}
-
-/**
-  * @brief  en25qh128a cmd rdsr config
-  * @param  qspi_cmd_struct: the pointer for qspi_cmd_type parameter
-  * @retval none
-  */
-void en25qh128a_cmd_rdsr_config(qspi_cmd_type *qspi_cmd_struct)
-{
-  qspi_cmd_struct->pe_mode_enable = FALSE;
-  qspi_cmd_struct->pe_mode_operate_code = 0;
-  qspi_cmd_struct->instruction_code = 0x05;
-  qspi_cmd_struct->instruction_length = QSPI_CMD_INSLEN_1_BYTE;
-  qspi_cmd_struct->address_code = 0;
-  qspi_cmd_struct->address_length = QSPI_CMD_ADRLEN_0_BYTE;
-  qspi_cmd_struct->data_counter = 0;
-  qspi_cmd_struct->second_dummy_cycle_num = 0;
-  qspi_cmd_struct->operation_mode = QSPI_OPERATE_MODE_111;
-  qspi_cmd_struct->read_status_config = QSPI_RSTSC_HW_AUTO;
-  qspi_cmd_struct->read_status_enable = TRUE;
-  qspi_cmd_struct->write_data_enable = FALSE;
-}
+void qspi_cmd_send(qspi_cmd_type* qspi_cmd_struct);
 
 /**
   * @brief  qspi write data
@@ -144,8 +85,10 @@ void qspi_data_write(uint32_t addr, uint32_t total_len, uint8_t* buf)
     len = (addr / FLASH_PAGE_PROGRAM_SIZE + 1) * FLASH_PAGE_PROGRAM_SIZE - addr;
     if(total_len < len)
       len = total_len;
-    
-   en25qh128a_cmd_write_config(&en25qh128a_cmd_config, addr, len);
+
+   en25qh128a_cmd_config = en25qh128a_write_para;
+   en25qh128a_cmd_config.address_code = addr;
+   en25qh128a_cmd_config.data_counter = len;    
    qspi_cmd_operation_kick(QSPI1, &en25qh128a_cmd_config);
 
    for(i = 0; i < len; ++i)
@@ -174,12 +117,9 @@ void qspi_erase(uint32_t sec_addr)
 {
   qspi_write_enable();
 
-  en25qh128a_cmd_erase_config(&en25qh128a_cmd_config, sec_addr);
-  qspi_cmd_operation_kick(QSPI1, &en25qh128a_cmd_config);
-
-  /* wait command completed */
-  while(qspi_flag_get(QSPI1, QSPI_CMDSTS_FLAG) == RESET);
-  qspi_flag_clear(QSPI1, QSPI_CMDSTS_FLAG);
+  en25qh128a_cmd_config = en25qh128a_erase_para;
+  en25qh128a_cmd_config.address_code = sec_addr; 
+  qspi_cmd_send(&en25qh128a_cmd_config);
 
   qspi_busy_check();
 }
@@ -191,12 +131,7 @@ void qspi_erase(uint32_t sec_addr)
   */
 void qspi_busy_check(void)
 {
-  en25qh128a_cmd_rdsr_config(&en25qh128a_cmd_config);
-  qspi_cmd_operation_kick(QSPI1, &en25qh128a_cmd_config);
-
-  /* wait command completed */
-  while(qspi_flag_get(QSPI1, QSPI_CMDSTS_FLAG) == RESET);
-  qspi_flag_clear(QSPI1, QSPI_CMDSTS_FLAG);
+  qspi_cmd_send((qspi_cmd_type*)&en25qh128a_rdsr_para);
 }
 
 /**
@@ -206,107 +141,37 @@ void qspi_busy_check(void)
   */
 void qspi_write_enable(void)
 {
-  en25qh128a_cmd_wren_config(&en25qh128a_cmd_config);
-  qspi_cmd_operation_kick(QSPI1, &en25qh128a_cmd_config);
+  qspi_cmd_send((qspi_cmd_type*)&en25qh128a_wren_para);
+}
+
+/**
+  * @brief  qspi cmd kick and wait completed
+  * @param  qspi_cmd_struct: the pointer for qspi_cmd_type parameter
+  * @retval none
+  */
+void qspi_cmd_send(qspi_cmd_type* qspi_cmd_struct)
+{
+  /* kick command */
+  qspi_cmd_operation_kick(QSPI1, qspi_cmd_struct);
 
   /* wait command completed */
   while(qspi_flag_get(QSPI1, QSPI_CMDSTS_FLAG) == RESET);
   qspi_flag_clear(QSPI1, QSPI_CMDSTS_FLAG);
 }
-
-
-/**
-  * @brief  en25qh128a cmd rsten config
-  * @param  qspi_cmd_struct: the pointer for qspi_cmd_type parameter
-  * @retval none
-  */
-void  en25qh128a_cmd_rsten_config(qspi_cmd_type *qspi_cmd_struct)
-{
-  qspi_cmd_struct->pe_mode_enable = FALSE;
-  qspi_cmd_struct->pe_mode_operate_code = 0;
-  qspi_cmd_struct->instruction_code = 0x66;
-  qspi_cmd_struct->instruction_length = QSPI_CMD_INSLEN_1_BYTE;
-  qspi_cmd_struct->address_code = 0;
-  qspi_cmd_struct->address_length = QSPI_CMD_ADRLEN_0_BYTE;
-  qspi_cmd_struct->data_counter = 0;
-  qspi_cmd_struct->second_dummy_cycle_num = 0;
-  qspi_cmd_struct->operation_mode = QSPI_OPERATE_MODE_111;
-  qspi_cmd_struct->read_status_config = QSPI_RSTSC_HW_AUTO;
-  qspi_cmd_struct->read_status_enable = FALSE;
-  qspi_cmd_struct->write_data_enable = TRUE;
-}
-
-/**
-  * @brief  en25qh128a cmd rst config
-  * @param  qspi_cmd_struct: the pointer for qspi_cmd_type parameter
-  * @retval none
-  */
-void en25qh128a_cmd_rst_config(qspi_cmd_type *qspi_cmd_struct)
-{
-  qspi_cmd_struct->pe_mode_enable = FALSE;
-  qspi_cmd_struct->pe_mode_operate_code = 0;
-  qspi_cmd_struct->instruction_code = 0x99;
-  qspi_cmd_struct->instruction_length = QSPI_CMD_INSLEN_1_BYTE;
-  qspi_cmd_struct->address_code = 0;
-  qspi_cmd_struct->address_length = QSPI_CMD_ADRLEN_0_BYTE;
-  qspi_cmd_struct->data_counter = 0;
-  qspi_cmd_struct->second_dummy_cycle_num = 0;
-  qspi_cmd_struct->operation_mode = QSPI_OPERATE_MODE_111;
-  qspi_cmd_struct->read_status_config = QSPI_RSTSC_HW_AUTO;
-  qspi_cmd_struct->read_status_enable = FALSE;
-  qspi_cmd_struct->write_data_enable = TRUE;
-}
-
-void en25qh128a_qspi_cmd_send(qspi_cmd_type* cmd)
-{
-  qspi_cmd_operation_kick(QSPI1, cmd);
-  /* wait command completed */
-  while(qspi_flag_get(QSPI1, QSPI_CMDSTS_FLAG) == RESET);
-  qspi_flag_clear(QSPI1, QSPI_CMDSTS_FLAG);
-}
-
-
-/**
-  * @brief  en25qh128a xip init config
-  * @param  qspi_xip_struct: the pointer for qspi_xip_type parameter
-  * @retval none
-  */
-void en25qh128a_xip_init_config(qspi_xip_type *qspi_xip_struct)
-{
-  qspi_xip_struct->read_instruction_code = 0x6B; 
-  qspi_xip_struct->read_address_length = QSPI_XIP_ADDRLEN_3_BYTE;
-  qspi_xip_struct->read_operation_mode = QSPI_OPERATE_MODE_114;
-  qspi_xip_struct->read_second_dummy_cycle_num = 8;
-  qspi_xip_struct->write_instruction_code = 0x32;
-  qspi_xip_struct->write_address_length = QSPI_XIP_ADDRLEN_3_BYTE;
-  qspi_xip_struct->write_operation_mode = QSPI_OPERATE_MODE_114;
-  qspi_xip_struct->write_second_dummy_cycle_num = 0;
-  qspi_xip_struct->write_select_mode = QSPI_XIPW_SEL_MODED;
-  qspi_xip_struct->write_time_counter = 0x7F;
-  qspi_xip_struct->write_data_counter = 0x1F;
-  qspi_xip_struct->read_select_mode = QSPI_XIPR_SEL_MODED;
-  qspi_xip_struct->read_time_counter = 0x7F;
-  qspi_xip_struct->read_data_counter = 0x1F;
-}
-
 
 void en25qh128a_qspi_xip_init(void)
 {
   /* switch to command-port mode */
   qspi_xip_enable(QSPI1, FALSE);
 
-  /* issue reset command */
-  en25qh128a_cmd_rsten_config(&en25qh128a_cmd_config);
-  en25qh128a_qspi_cmd_send(&en25qh128a_cmd_config);
-  en25qh128a_cmd_rst_config(&en25qh128a_cmd_config);
-  en25qh128a_qspi_cmd_send(&en25qh128a_cmd_config);
-  
+  /* system reset */
+  qspi_cmd_send((qspi_cmd_type*)&en25qh128a_rsten_para);
+  qspi_cmd_send((qspi_cmd_type*)&en25qh128a_rst_para);
+ 
   /* initial xip */
-  en25qh128a_xip_init_config(&en25qh128a_xip_init);
-  qspi_xip_init(QSPI1, &en25qh128a_xip_init);
+  qspi_xip_init(QSPI1, (qspi_xip_type*)&en25qh128a_xip_init_para);
   qspi_xip_enable(QSPI1, TRUE);
 }
-
 
 /**
   * @}

@@ -37,7 +37,7 @@
 extern void qspi_data_read(uint32_t addr, uint32_t total_len, uint8_t* buf);
 extern void qspi_data_write(uint32_t addr, uint32_t total_len, uint8_t* buf);
 extern void qspi_erase(uint32_t sec_addr);
-extern void esmt32m_qpi_mode_init(void);
+extern void qspi_qpi_mode_init(void);
 
 #define TEST_SIZE                        4096
 /* use dma transmit must align at word */
@@ -142,7 +142,7 @@ int main(void)
   /* enable auto ispc */
   qspi_auto_ispc_enable(QSPI1);
 
-  esmt32m_qpi_mode_init();
+  qspi_qpi_mode_init();
 
   /* erase */
   qspi_erase(0);

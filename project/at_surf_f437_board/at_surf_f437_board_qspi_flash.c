@@ -24,21 +24,31 @@
 
 #include "at_surf_f437_board_qspi_flash.h"
 
+/* en25qh128a cmd read parameters, the address_code and data_counter need to be set in application */
+static const qspi_cmd_type en25qh128a_read_para = {
+FALSE,0,0xEB,QSPI_CMD_INSLEN_1_BYTE,0,QSPI_CMD_ADRLEN_3_BYTE,0,6,QSPI_OPERATE_MODE_144,QSPI_RSTSC_HW_AUTO,FALSE,FALSE};
+
+/* en25qh128a cmd write parameters, the address_code and data_counter need to be set in application */
+static const qspi_cmd_type en25qh128a_write_para = {
+FALSE,0,0x32,QSPI_CMD_INSLEN_1_BYTE,0,QSPI_CMD_ADRLEN_3_BYTE,0,0,QSPI_OPERATE_MODE_114,QSPI_RSTSC_HW_AUTO,FALSE,TRUE};
+
+/* en25qh128a cmd sector erase parameters, the address_code need to be set in application */
+static const qspi_cmd_type en25qh128a_erase_para = {
+FALSE,0,0x20,QSPI_CMD_INSLEN_1_BYTE,0,QSPI_CMD_ADRLEN_3_BYTE,0,0,QSPI_OPERATE_MODE_111,QSPI_RSTSC_HW_AUTO,FALSE,TRUE};
+
+/* en25qh128a cmd wren parameters */
+static const qspi_cmd_type en25qh128a_wren_para = {
+FALSE,0,0x06,QSPI_CMD_INSLEN_1_BYTE,0,QSPI_CMD_ADRLEN_0_BYTE,0,0,QSPI_OPERATE_MODE_111,QSPI_RSTSC_HW_AUTO,FALSE,TRUE};
+
+/* en25qh128a cmd rdsr parameters */
+static const qspi_cmd_type en25qh128a_rdsr_para = {
+FALSE,0,0x05,QSPI_CMD_INSLEN_1_BYTE,0,QSPI_CMD_ADRLEN_0_BYTE,0,0,QSPI_OPERATE_MODE_111,QSPI_RSTSC_HW_AUTO,TRUE,FALSE};
+
 qspi_cmd_type qspi_flash_cmd_config;
 
 void qspi_flash_busy_check(void);
 void qspi_flash_write_enable(void);
-
-/**
-  * @brief  user function to check timeout or not
-  * @param  user_func_check_timeout: the pointer for qspi_cmd_type parameter
-  * @retval TRUE if timeout, FALSE if not.
-  */
-confirm_state user_func_check_timeout(void)
-{
-  /* add your timeout check mechanism here */
-  return FALSE;
-}
+void qspi_cmd_send(qspi_cmd_type* qspi_cmd_struct);
 
 /**
   * @brief  initializes quad spi flash.
@@ -110,116 +120,6 @@ void qspi_flash_init(void)
 }
 
 /**
-  * @brief  qspi_flash cmd read config
-  * @param  qspi_cmd_struct: the pointer for qspi_cmd_type parameter
-  * @param  addr: read start address
-  * @param  counter: read data counter
-  * @retval none
-  */
-void qspi_flash_cmd_read_config(qspi_cmd_type *qspi_cmd_struct, uint32_t addr, uint32_t counter)
-{
-  qspi_cmd_struct->pe_mode_enable = FALSE;
-  qspi_cmd_struct->pe_mode_operate_code = 0;
-  qspi_cmd_struct->instruction_code = 0xEB;
-  qspi_cmd_struct->instruction_length = QSPI_CMD_INSLEN_1_BYTE;
-  qspi_cmd_struct->address_code = addr;
-  qspi_cmd_struct->address_length = QSPI_CMD_ADRLEN_3_BYTE;
-  qspi_cmd_struct->data_counter = counter;
-  qspi_cmd_struct->second_dummy_cycle_num = 6;
-  qspi_cmd_struct->operation_mode = QSPI_OPERATE_MODE_144;
-  qspi_cmd_struct->read_status_config = QSPI_RSTSC_HW_AUTO;
-  qspi_cmd_struct->read_status_enable = FALSE;
-  qspi_cmd_struct->write_data_enable = FALSE;
-}
-
-/**
-  * @brief  qspi_flash cmd write config
-  * @param  qspi_cmd_struct: the pointer for qspi_cmd_type parameter
-  * @param  addr: write start address
-  * @param  counter: write data counter
-  * @retval none
-  */
-void qspi_flash_cmd_write_config(qspi_cmd_type *qspi_cmd_struct, uint32_t addr, uint32_t counter)
-{
-  qspi_cmd_struct->pe_mode_enable = FALSE;
-  qspi_cmd_struct->pe_mode_operate_code = 0;
-  qspi_cmd_struct->instruction_code = 0x32;
-  qspi_cmd_struct->instruction_length = QSPI_CMD_INSLEN_1_BYTE;
-  qspi_cmd_struct->address_code = addr;
-  qspi_cmd_struct->address_length = QSPI_CMD_ADRLEN_3_BYTE;
-  qspi_cmd_struct->data_counter = counter;
-  qspi_cmd_struct->second_dummy_cycle_num = 0;
-  qspi_cmd_struct->operation_mode = QSPI_OPERATE_MODE_114;
-  qspi_cmd_struct->read_status_config = QSPI_RSTSC_HW_AUTO;
-  qspi_cmd_struct->read_status_enable = FALSE;
-  qspi_cmd_struct->write_data_enable = TRUE;
-}
-
-/**
-  * @brief  qspi_flash cmd erase config
-  * @param  qspi_cmd_struct: the pointer for qspi_cmd_type parameter
-  * @param  addr: erase address
-  * @retval none
-  */
-void qspi_flash_cmd_erase_config(qspi_cmd_type *qspi_cmd_struct, uint32_t addr)
-{
-  qspi_cmd_struct->pe_mode_enable = FALSE;
-  qspi_cmd_struct->pe_mode_operate_code = 0;
-  qspi_cmd_struct->instruction_code = 0x20;
-  qspi_cmd_struct->instruction_length = QSPI_CMD_INSLEN_1_BYTE;
-  qspi_cmd_struct->address_code = addr;
-  qspi_cmd_struct->address_length = QSPI_CMD_ADRLEN_3_BYTE;
-  qspi_cmd_struct->data_counter = 0;
-  qspi_cmd_struct->second_dummy_cycle_num = 0;
-  qspi_cmd_struct->operation_mode = QSPI_OPERATE_MODE_111;
-  qspi_cmd_struct->read_status_config = QSPI_RSTSC_HW_AUTO;
-  qspi_cmd_struct->read_status_enable = FALSE;
-  qspi_cmd_struct->write_data_enable = TRUE;
-}
-
-/**
-  * @brief  qspi_flash cmd wren config
-  * @param  qspi_cmd_struct: the pointer for qspi_cmd_type parameter
-  * @retval none
-  */
-void qspi_flash_cmd_wren_config(qspi_cmd_type *qspi_cmd_struct)
-{
-  qspi_cmd_struct->pe_mode_enable = FALSE;
-  qspi_cmd_struct->pe_mode_operate_code = 0;
-  qspi_cmd_struct->instruction_code = 0x06;
-  qspi_cmd_struct->instruction_length = QSPI_CMD_INSLEN_1_BYTE;
-  qspi_cmd_struct->address_code = 0;
-  qspi_cmd_struct->address_length = QSPI_CMD_ADRLEN_0_BYTE;
-  qspi_cmd_struct->data_counter = 0;
-  qspi_cmd_struct->second_dummy_cycle_num = 0;
-  qspi_cmd_struct->operation_mode = QSPI_OPERATE_MODE_111;
-  qspi_cmd_struct->read_status_config = QSPI_RSTSC_HW_AUTO;
-  qspi_cmd_struct->read_status_enable = FALSE;
-  qspi_cmd_struct->write_data_enable = TRUE;
-}
-
-/**
-  * @brief  qspi_flash cmd rdsr config
-  * @param  qspi_cmd_struct: the pointer for qspi_cmd_type parameter
-  * @retval none
-  */
-void qspi_flash_cmd_rdsr_config(qspi_cmd_type *qspi_cmd_struct)
-{
-  qspi_cmd_struct->pe_mode_enable = FALSE;
-  qspi_cmd_struct->pe_mode_operate_code = 0;
-  qspi_cmd_struct->instruction_code = 0x05;
-  qspi_cmd_struct->instruction_length = QSPI_CMD_INSLEN_1_BYTE;
-  qspi_cmd_struct->address_code = 0;
-  qspi_cmd_struct->address_length = QSPI_CMD_ADRLEN_0_BYTE;
-  qspi_cmd_struct->data_counter = 0;
-  qspi_cmd_struct->second_dummy_cycle_num = 0;
-  qspi_cmd_struct->operation_mode = QSPI_OPERATE_MODE_111;
-  qspi_cmd_struct->read_status_config = QSPI_RSTSC_HW_AUTO;
-  qspi_cmd_struct->read_status_enable = TRUE;
-  qspi_cmd_struct->write_data_enable = FALSE;
-}
-
-/**
   * @brief  qspi flash read data
   * @param  addr: the address for read
   * @param  total_len: the length for read
@@ -230,7 +130,9 @@ void qspi_flash_data_read(uint32_t addr, uint8_t* buf, uint32_t total_len)
 {
   uint32_t i, len = total_len;
 
-  qspi_flash_cmd_read_config(&qspi_flash_cmd_config, addr, total_len);
+  qspi_flash_cmd_config = en25qh128a_read_para;
+  qspi_flash_cmd_config.address_code = addr;
+  qspi_flash_cmd_config.data_counter = total_len; 
   qspi_cmd_operation_kick(QSPI_FLASH_QSPIx, &qspi_flash_cmd_config);
 
   /* read data */
@@ -244,15 +146,8 @@ void qspi_flash_data_read(uint32_t addr, uint8_t* buf, uint32_t total_len)
     {
       len = total_len;
     }
-    while(qspi_flag_get(QSPI_FLASH_QSPIx, QSPI_RXFIFORDY_FLAG) == RESET)
-    {
-      //user can add timeout check here
-      if(user_func_check_timeout())
-      {
-        //add your error handling here.
-        while(1);
-      }
-    }      
+    while(qspi_flag_get(QSPI_FLASH_QSPIx, QSPI_RXFIFORDY_FLAG) == RESET);
+    
     for(i = 0; i < len; ++i)
     {
       *buf++ = qspi_byte_read(QSPI_FLASH_QSPIx);
@@ -261,15 +156,8 @@ void qspi_flash_data_read(uint32_t addr, uint8_t* buf, uint32_t total_len)
   }while(total_len);
 
   /* wait command completed */
-  while(qspi_flag_get(QSPI_FLASH_QSPIx, QSPI_CMDSTS_FLAG) == RESET)
-  {
-    //user can add timeout check here
-    if(user_func_check_timeout())
-    {
-      //add your error handling here.
-      while(1);
-    }
-  }    
+  while(qspi_flag_get(QSPI_FLASH_QSPIx, QSPI_CMDSTS_FLAG) == RESET);
+   
   qspi_flag_clear(QSPI_FLASH_QSPIx, QSPI_CMDSTS_FLAG);
 }
 
@@ -292,35 +180,23 @@ void qspi_flash_data_write(uint32_t addr, uint8_t* buf, uint32_t total_len)
     if(total_len < len)
       len = total_len;
 
-    qspi_flash_cmd_write_config(&qspi_flash_cmd_config, addr, len);
+    qspi_flash_cmd_config = en25qh128a_write_para;
+    qspi_flash_cmd_config.address_code = addr;
+    qspi_flash_cmd_config.data_counter = len;    
     qspi_cmd_operation_kick(QSPI_FLASH_QSPIx, &qspi_flash_cmd_config);
 
     for(i = 0; i < len; ++i)
     {
-      while(qspi_flag_get(QSPI_FLASH_QSPIx, QSPI_TXFIFORDY_FLAG) == RESET)
-      {
-        //user can add timeout check here
-        if(user_func_check_timeout())
-        {
-          //add your error handling here.
-          while(1);
-        }
-      }
+      while(qspi_flag_get(QSPI_FLASH_QSPIx, QSPI_TXFIFORDY_FLAG) == RESET);
+
       qspi_byte_write(QSPI_FLASH_QSPIx, *buf++);
     }
     total_len -= len;
     addr += len;
 
     /* wait command completed */
-    while(qspi_flag_get(QSPI_FLASH_QSPIx, QSPI_CMDSTS_FLAG) == RESET)
-    {
-      //user can add timeout check here
-      if(user_func_check_timeout())
-      {
-        //add your error handling here.
-        while(1);
-      }
-    }      
+    while(qspi_flag_get(QSPI_FLASH_QSPIx, QSPI_CMDSTS_FLAG) == RESET);
+    
     qspi_flag_clear(QSPI_FLASH_QSPIx, QSPI_CMDSTS_FLAG);
 
     qspi_flash_busy_check();
@@ -337,20 +213,9 @@ void qspi_flash_erase(uint32_t sec_addr)
 {
   qspi_flash_write_enable();
 
-  qspi_flash_cmd_erase_config(&qspi_flash_cmd_config, sec_addr);
-  qspi_cmd_operation_kick(QSPI_FLASH_QSPIx, &qspi_flash_cmd_config);
-
-  /* wait command completed */
-  while(qspi_flag_get(QSPI_FLASH_QSPIx, QSPI_CMDSTS_FLAG) == RESET)
-  {
-    //user can add timeout check here
-    if(user_func_check_timeout())
-    {
-      //add your error handling here.
-      while(1);
-    }
-  }    
-  qspi_flag_clear(QSPI_FLASH_QSPIx, QSPI_CMDSTS_FLAG);
+  qspi_flash_cmd_config = en25qh128a_erase_para;
+  qspi_flash_cmd_config.address_code = sec_addr;
+  qspi_cmd_send(&qspi_flash_cmd_config);
 
   qspi_flash_busy_check();
 }
@@ -362,20 +227,7 @@ void qspi_flash_erase(uint32_t sec_addr)
   */
 void qspi_flash_busy_check(void)
 {
-  qspi_flash_cmd_rdsr_config(&qspi_flash_cmd_config);
-  qspi_cmd_operation_kick(QSPI_FLASH_QSPIx, &qspi_flash_cmd_config);
-
-  /* wait command completed */
-  while(qspi_flag_get(QSPI_FLASH_QSPIx, QSPI_CMDSTS_FLAG) == RESET)
-  {
-    //user can add timeout check here
-    if(user_func_check_timeout())
-    {
-      //add your error handling here.
-      while(1);
-    }
-  }    
-  qspi_flag_clear(QSPI_FLASH_QSPIx, QSPI_CMDSTS_FLAG);
+  qspi_cmd_send((qspi_cmd_type*)&en25qh128a_rdsr_para);
 }
 
 /**
@@ -385,18 +237,20 @@ void qspi_flash_busy_check(void)
   */
 void qspi_flash_write_enable(void)
 {
-  qspi_flash_cmd_wren_config(&qspi_flash_cmd_config);
-  qspi_cmd_operation_kick(QSPI_FLASH_QSPIx, &qspi_flash_cmd_config);
+  qspi_cmd_send((qspi_cmd_type*)&en25qh128a_wren_para);
+}
 
+/**
+  * @brief  qspi cmd kick and wait completed
+  * @param  qspi_cmd_struct: the pointer for qspi_cmd_type parameter
+  * @retval none
+  */
+void qspi_cmd_send(qspi_cmd_type* qspi_cmd_struct)
+{
+  /* kick command */
+  qspi_cmd_operation_kick(QSPI_FLASH_QSPIx, qspi_cmd_struct);
+ 
   /* wait command completed */
-  while(qspi_flag_get(QSPI_FLASH_QSPIx, QSPI_CMDSTS_FLAG) == RESET)
-  {
-    //user can add timeout check here
-    if(user_func_check_timeout())
-    {
-      //add your error handling here.
-      while(1);
-    }
-  }    
+  while(qspi_flag_get(QSPI_FLASH_QSPIx, QSPI_CMDSTS_FLAG) == RESET);
   qspi_flag_clear(QSPI_FLASH_QSPIx, QSPI_CMDSTS_FLAG);
 }

@@ -23,144 +23,39 @@
   */
 
 #include "at_surf_f437_board_qspi_sram.h"
-qspi_xip_type sram_xip_init;
-qspi_cmd_type sram_cmd_config;
 
-/**
-  * @brief  user function to check timeout or not
-  * @param  user_func_check_timeout: the pointer for qspi_cmd_type parameter
-  * @retval TRUE if timeout, FALSE if not.
-  */
-confirm_state user_func_check_timeout(void)
-{
-  /* add your timeout check mechanism here */
-  return FALSE;
-}
-/**
-  * @brief  xip init sram config
-  * @param  qspi_xip_struct: the pointer for qspi_xip_type parameter
-  * @retval none
-  */
-void qspi_sram_xip_init_para(qspi_xip_type *qspi_xip_struct)
-{
-  qspi_xip_struct->read_instruction_code = 0xEB;
-  qspi_xip_struct->read_address_length = QSPI_XIP_ADDRLEN_3_BYTE;
-  qspi_xip_struct->read_operation_mode = QSPI_OPERATE_MODE_444;
-  qspi_xip_struct->read_second_dummy_cycle_num = 6;
-  qspi_xip_struct->write_instruction_code = 0x38;
-  qspi_xip_struct->write_address_length = QSPI_XIP_ADDRLEN_3_BYTE;
-  qspi_xip_struct->write_operation_mode = QSPI_OPERATE_MODE_444;
-  qspi_xip_struct->write_second_dummy_cycle_num = 0;
-  qspi_xip_struct->write_select_mode = QSPI_XIPW_SEL_MODED;
-  qspi_xip_struct->write_time_counter = 0x7F;
-  qspi_xip_struct->write_data_counter = 0x1F;
-  qspi_xip_struct->read_select_mode = QSPI_XIPR_SEL_MODED;
-  qspi_xip_struct->read_time_counter = 0x7F;
-  qspi_xip_struct->read_data_counter = 0x1F;
-}
+/* ly68l6400 cmd rsten parameters */
+static const qspi_cmd_type ly68l6400_rsten_para = {
+FALSE,0,0x66,QSPI_CMD_INSLEN_1_BYTE,0,QSPI_CMD_ADRLEN_0_BYTE,0,0,QSPI_OPERATE_MODE_111,QSPI_RSTSC_HW_AUTO,FALSE,TRUE};
 
-/**
-  * @brief  cmd rsten sram config
-  * @param  qspi_cmd_struct: the pointer for qspi_cmd_type parameter
-  * @retval none
-  */
-void qspi_sram_cmd_rsten_config(qspi_cmd_type *qspi_cmd_struct)
-{
-  qspi_cmd_struct->pe_mode_enable = FALSE;
-  qspi_cmd_struct->pe_mode_operate_code = 0;
-  qspi_cmd_struct->instruction_code = 0x66;
-  qspi_cmd_struct->instruction_length = QSPI_CMD_INSLEN_1_BYTE;
-  qspi_cmd_struct->address_code = 0;
-  qspi_cmd_struct->address_length = QSPI_CMD_ADRLEN_0_BYTE;
-  qspi_cmd_struct->data_counter = 0;
-  qspi_cmd_struct->second_dummy_cycle_num = 0;
-  qspi_cmd_struct->operation_mode = QSPI_OPERATE_MODE_111;
-  qspi_cmd_struct->read_status_config = QSPI_RSTSC_HW_AUTO;
-  qspi_cmd_struct->read_status_enable = FALSE;
-  qspi_cmd_struct->write_data_enable = TRUE;
-}
+/* ly68l6400 cmd rst parameters */
+static const qspi_cmd_type ly68l6400_rst_para = {
+FALSE,0,0x99,QSPI_CMD_INSLEN_1_BYTE,0,QSPI_CMD_ADRLEN_0_BYTE,0,0,QSPI_OPERATE_MODE_111,QSPI_RSTSC_HW_AUTO,FALSE,TRUE};
 
-/**
-  * @brief  cmd quad mode enable config
-  * @param  qspi_cmd_struct: the pointer for qspi_cmd_type parameter
-  * @retval none
-  */
-void qspi_sram_cmd_enquadmode_config(qspi_cmd_type *qspi_cmd_struct)
-{
-  qspi_cmd_struct->pe_mode_enable = FALSE;
-  qspi_cmd_struct->pe_mode_operate_code = 0;
-  qspi_cmd_struct->instruction_code = 0x35;
-  qspi_cmd_struct->instruction_length = QSPI_CMD_INSLEN_1_BYTE;
-  qspi_cmd_struct->address_code = 0;
-  qspi_cmd_struct->address_length = QSPI_CMD_ADRLEN_0_BYTE;
-  qspi_cmd_struct->data_counter = 0;
-  qspi_cmd_struct->second_dummy_cycle_num = 0;
-  qspi_cmd_struct->operation_mode = QSPI_OPERATE_MODE_111;
-  qspi_cmd_struct->read_status_config = QSPI_RSTSC_HW_AUTO;
-  qspi_cmd_struct->read_status_enable = FALSE;
-  qspi_cmd_struct->write_data_enable = TRUE;
-}
+/* ly68l6400 cmd exitquadmode parameters */
+static const qspi_cmd_type ly68l6400_exitquadmode_para = {
+FALSE,0,0xF5,QSPI_CMD_INSLEN_1_BYTE,0,QSPI_CMD_ADRLEN_0_BYTE,0,0,QSPI_OPERATE_MODE_444,QSPI_RSTSC_HW_AUTO,FALSE,TRUE};
 
-/**
-  * @brief  cmd quad mode exit config
-  * @param  qspi_cmd_struct: the pointer for qspi_cmd_type parameter
-  * @retval none
-  */
-void qspi_sram_cmd_exitquadmode_config(qspi_cmd_type *qspi_cmd_struct)
-{
-  qspi_cmd_struct->pe_mode_enable = FALSE;
-  qspi_cmd_struct->pe_mode_operate_code = 0;
-  qspi_cmd_struct->instruction_code = 0xF5;
-  qspi_cmd_struct->instruction_length = QSPI_CMD_INSLEN_1_BYTE;
-  qspi_cmd_struct->address_code = 0;
-  qspi_cmd_struct->address_length = QSPI_CMD_ADRLEN_0_BYTE;
-  qspi_cmd_struct->data_counter = 0;
-  qspi_cmd_struct->second_dummy_cycle_num = 0;
-  qspi_cmd_struct->operation_mode = QSPI_OPERATE_MODE_444;
-  qspi_cmd_struct->read_status_config = QSPI_RSTSC_HW_AUTO;
-  qspi_cmd_struct->read_status_enable = FALSE;
-  qspi_cmd_struct->write_data_enable = TRUE;
-}
+/* ly68l6400 cmd enquadmode parameters */
+static const qspi_cmd_type ly68l6400_enquadmode_para = {
+FALSE,0,0x35,QSPI_CMD_INSLEN_1_BYTE,0,QSPI_CMD_ADRLEN_0_BYTE,0,0,QSPI_OPERATE_MODE_111,QSPI_RSTSC_HW_AUTO,FALSE,TRUE};
 
-/**
-  * @brief  cmd rst sram config
-  * @param  qspi_cmd_struct: the pointer for qspi_cmd_type parameter
-  * @retval none
-  */
-void qspi_sram_cmd_rst_config(qspi_cmd_type *qspi_cmd_struct)
-{
-  qspi_cmd_struct->pe_mode_enable = FALSE;
-  qspi_cmd_struct->pe_mode_operate_code = 0;
-  qspi_cmd_struct->instruction_code = 0x99;
-  qspi_cmd_struct->instruction_length = QSPI_CMD_INSLEN_1_BYTE;
-  qspi_cmd_struct->address_code = 0;
-  qspi_cmd_struct->address_length = QSPI_CMD_ADRLEN_0_BYTE;
-  qspi_cmd_struct->data_counter = 0;
-  qspi_cmd_struct->second_dummy_cycle_num = 0;
-  qspi_cmd_struct->operation_mode = QSPI_OPERATE_MODE_111;
-  qspi_cmd_struct->read_status_config = QSPI_RSTSC_HW_AUTO;
-  qspi_cmd_struct->read_status_enable = FALSE;
-  qspi_cmd_struct->write_data_enable = TRUE;
-}
+/* ly68l6400 xip init parameters */
+static const qspi_xip_type ly68l6400_xip_init_para = {
+0xEB,QSPI_XIP_ADDRLEN_3_BYTE,QSPI_OPERATE_MODE_444,6,0x38,QSPI_XIP_ADDRLEN_3_BYTE,QSPI_OPERATE_MODE_444,0,QSPI_XIPW_SEL_MODED,0x7F,0x1F,QSPI_XIPR_SEL_MODET,0x7F,0x1F};
 
 /**
   * @brief  sram cmd send
   * @param  qspi_cmd_type: the pointer for qspi_cmd_type parameter
   * @retval none
   */
-void qspi_sram_cmd_send(qspi_cmd_type* cmd)
+void qspi_sram_cmd_send(qspi_cmd_type* qspi_cmd_struct)
 {
-  qspi_cmd_operation_kick(QSPI_SRAM_QSPIx, cmd);
+  /* kick command */ 
+  qspi_cmd_operation_kick(QSPI_SRAM_QSPIx, qspi_cmd_struct);
+ 
   /* wait command completed */
-  while(qspi_flag_get(QSPI_SRAM_QSPIx, QSPI_CMDSTS_FLAG) == RESET);
-  {
-    //user can add timeout check here
-    if(user_func_check_timeout())
-    {
-      //add your error handling here.
-      while(1);
-    }
-  }    
+  while(qspi_flag_get(QSPI_SRAM_QSPIx, QSPI_CMDSTS_FLAG) == RESET);   
   qspi_flag_clear(QSPI_SRAM_QSPIx, QSPI_CMDSTS_FLAG);
 }
 
@@ -273,25 +168,22 @@ void qspi_sram_init(void)
   qspi_auto_ispc_enable(QSPI_SRAM_QSPIx);
 
   /* exit quad mode */
-  qspi_sram_cmd_exitquadmode_config(&sram_cmd_config);
-  qspi_sram_cmd_send(&sram_cmd_config);
+  qspi_sram_cmd_send((qspi_cmd_type*)&ly68l6400_exitquadmode_para);
 
-  /* issue reset command */
-  qspi_sram_cmd_rsten_config(&sram_cmd_config);
-  qspi_sram_cmd_send(&sram_cmd_config);
-  qspi_sram_cmd_rst_config(&sram_cmd_config);
-  qspi_sram_cmd_send(&sram_cmd_config);
+  /* reset command */
+  qspi_sram_cmd_send((qspi_cmd_type*)&ly68l6400_rsten_para);
+  qspi_sram_cmd_send((qspi_cmd_type*)&ly68l6400_rst_para);
 
   /* enable quad mode */
-  qspi_sram_cmd_enquadmode_config(&sram_cmd_config);
-  qspi_sram_cmd_send(&sram_cmd_config);
+  qspi_sram_cmd_send((qspi_cmd_type*)&ly68l6400_enquadmode_para);
 
   /* initial xip */
-  qspi_sram_xip_init_para(&sram_xip_init);
-  qspi_xip_init(QSPI_SRAM_QSPIx, &sram_xip_init);
+  qspi_xip_init(QSPI_SRAM_QSPIx, (qspi_xip_type*)&ly68l6400_xip_init_para);
+  
   if(DEBUGMCU->ser_id_bit.rev_id == 0x00)
   {
     qspi_xip_cache_bypass_set(QSPI_SRAM_QSPIx, TRUE);
   }
+  
   qspi_xip_enable(QSPI_SRAM_QSPIx, TRUE);
 }

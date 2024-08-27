@@ -1,7 +1,7 @@
 /**
   **************************************************************************
-  * @file     qspi_cmd_esmt32m.c
-  * @brief    qspi_cmd_esmt32m program
+  * @file     qspi_xip_ly68l6400.c
+  * @brief    qspi_xip_ly68l6400 program
   **************************************************************************
   *                       Copyright notice & Disclaimer
   *
@@ -32,97 +32,42 @@
   * @{
   */
 
-qspi_xip_type ly68l6400_xip_init;
-qspi_cmd_type ly68l6400_cmd_config;
+/* ly68l6400 cmd rsten parameters */
+static const qspi_cmd_type ly68l6400_rsten_para = {
+FALSE,0,0x66,QSPI_CMD_INSLEN_1_BYTE,0,QSPI_CMD_ADRLEN_0_BYTE,0,0,QSPI_OPERATE_MODE_111,QSPI_RSTSC_HW_AUTO,FALSE,TRUE};
 
-/**
-  * @brief  xip init ly68l6400 config
-  * @param  qspi_xip_struct: the pointer for qspi_xip_type parameter
-  * @retval none
-  */
-void xip_init_ly68l6400_config(qspi_xip_type *qspi_xip_struct)
-{
-  qspi_xip_struct->read_instruction_code = 0xEB;
-  qspi_xip_struct->read_address_length = QSPI_XIP_ADDRLEN_3_BYTE;
-  qspi_xip_struct->read_operation_mode = QSPI_OPERATE_MODE_144;
-  qspi_xip_struct->read_second_dummy_cycle_num = 6;
-  qspi_xip_struct->write_instruction_code = 0x38;
-  qspi_xip_struct->write_address_length = QSPI_XIP_ADDRLEN_3_BYTE;
-  qspi_xip_struct->write_operation_mode = QSPI_OPERATE_MODE_144;
-  qspi_xip_struct->write_second_dummy_cycle_num = 0;
-  qspi_xip_struct->write_select_mode = QSPI_XIPW_SEL_MODED;
-  qspi_xip_struct->write_time_counter = 0x7F;
-  qspi_xip_struct->write_data_counter = 0x1F;
-  qspi_xip_struct->read_select_mode = QSPI_XIPR_SEL_MODED;
-  qspi_xip_struct->read_time_counter = 0x7F;
-  qspi_xip_struct->read_data_counter = 0x1F;
-}
+/* ly68l6400 cmd rst parameters */
+static const qspi_cmd_type ly68l6400_rst_para = {
+FALSE,0,0x99,QSPI_CMD_INSLEN_1_BYTE,0,QSPI_CMD_ADRLEN_0_BYTE,0,0,QSPI_OPERATE_MODE_111,QSPI_RSTSC_HW_AUTO,FALSE,TRUE};
 
-/**
-  * @brief  cmd rsten ly68l6400 config
-  * @param  qspi_cmd_struct: the pointer for qspi_cmd_type parameter
-  * @retval none
-  */
-void cmd_rsten_ly68l6400_config(qspi_cmd_type *qspi_cmd_struct)
-{
-  qspi_cmd_struct->pe_mode_enable = FALSE;
-  qspi_cmd_struct->pe_mode_operate_code = 0;
-  qspi_cmd_struct->instruction_code = 0x66;
-  qspi_cmd_struct->instruction_length = QSPI_CMD_INSLEN_1_BYTE;
-  qspi_cmd_struct->address_code = 0;
-  qspi_cmd_struct->address_length = QSPI_CMD_ADRLEN_0_BYTE;
-  qspi_cmd_struct->data_counter = 0;
-  qspi_cmd_struct->second_dummy_cycle_num = 0;
-  qspi_cmd_struct->operation_mode = QSPI_OPERATE_MODE_111;
-  qspi_cmd_struct->read_status_config = QSPI_RSTSC_HW_AUTO;
-  qspi_cmd_struct->read_status_enable = FALSE;
-  qspi_cmd_struct->write_data_enable = TRUE;
-}
+/* ly68l6400 xip init parameters */
+static const qspi_xip_type ly68l6400_xip_init_para = {
+0xEB,QSPI_XIP_ADDRLEN_3_BYTE,QSPI_OPERATE_MODE_144,6,0x38,QSPI_XIP_ADDRLEN_3_BYTE,QSPI_OPERATE_MODE_144,0,QSPI_XIPW_SEL_MODED,0x7F,0x1F,QSPI_XIPR_SEL_MODET,0x7F,0x1F};
 
-/**
-  * @brief  cmd rst ly68l6400 config
-  * @param  qspi_cmd_struct: the pointer for qspi_cmd_type parameter
-  * @retval none
-  */
-void cmd_rst_ly68l6400_config(qspi_cmd_type *qspi_cmd_struct)
-{
-  qspi_cmd_struct->pe_mode_enable = FALSE;
-  qspi_cmd_struct->pe_mode_operate_code = 0;
-  qspi_cmd_struct->instruction_code = 0x99;
-  qspi_cmd_struct->instruction_length = QSPI_CMD_INSLEN_1_BYTE;
-  qspi_cmd_struct->address_code = 0;
-  qspi_cmd_struct->address_length = QSPI_CMD_ADRLEN_0_BYTE;
-  qspi_cmd_struct->data_counter = 0;
-  qspi_cmd_struct->second_dummy_cycle_num = 0;
-  qspi_cmd_struct->operation_mode = QSPI_OPERATE_MODE_111;
-  qspi_cmd_struct->read_status_config = QSPI_RSTSC_HW_AUTO;
-  qspi_cmd_struct->read_status_enable = FALSE;
-  qspi_cmd_struct->write_data_enable = TRUE;
-}
+void qspi_cmd_send(qspi_cmd_type* qspi_cmd_struct);
 
-void qspi_cmd_ly68l6400_send(qspi_cmd_type* cmd)
+void qspi_cmd_send(qspi_cmd_type* qspi_cmd_struct)
 {
-  qspi_cmd_operation_kick(QSPI1, cmd);
+  /* kick command */ 
+  qspi_cmd_operation_kick(QSPI1, qspi_cmd_struct);
+ 
   /* wait command completed */
   while(qspi_flag_get(QSPI1, QSPI_CMDSTS_FLAG) == RESET);
   qspi_flag_clear(QSPI1, QSPI_CMDSTS_FLAG);
 }
-
 
 void qspi_xip_init_ly68l6400(void)
 {
   /* switch to command-port mode */
   qspi_xip_enable(QSPI1, FALSE);
 
-  /* issue reset command */
-  cmd_rsten_ly68l6400_config(&ly68l6400_cmd_config);
-  qspi_cmd_ly68l6400_send(&ly68l6400_cmd_config);
-  cmd_rst_ly68l6400_config(&ly68l6400_cmd_config);
-  qspi_cmd_ly68l6400_send(&ly68l6400_cmd_config);
+  /* reset command */
+  qspi_cmd_send((qspi_cmd_type*)&ly68l6400_rsten_para);
+  qspi_cmd_send((qspi_cmd_type*)&ly68l6400_rst_para);
 
   /* initial xip */
-  xip_init_ly68l6400_config(&ly68l6400_xip_init);
-  qspi_xip_init(QSPI1, &ly68l6400_xip_init);
+  qspi_xip_init(QSPI1, (qspi_xip_type*)&ly68l6400_xip_init_para);
+ 
   if(DEBUGMCU->ser_id_bit.rev_id == 0x00)
   {
     qspi_xip_cache_bypass_set(QSPI1, TRUE);

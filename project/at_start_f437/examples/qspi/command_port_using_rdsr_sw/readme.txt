@@ -8,7 +8,7 @@
   this demo is based on the at-start board, in this demo, systick used for 
   delay function. qspi command port operate erase/write/read with polling,
   rdsr using software mode, if qspi test pass, led3 fresh, else led2 fresh.
-  the qspi flash is esmt32m. 
+  the qspi flash is en25qh128a. 
   - qspi io0   --->   pf8
   - qspi io1   --->   pf9
   - qspi io2   --->   pf7

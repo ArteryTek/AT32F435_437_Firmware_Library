@@ -14,10 +14,8 @@
         <TargetCommonOption>
           <Device>-AT32F435ZMT7</Device>
           <Vendor>ArteryTek</Vendor>
-          <Cpu>IRAM(0x20000000-0x2007FFFF) IROM(0x08000000-0x083EFFFF) CLOCK(8000000) CPUTYPE("Cortex-M4") FPU2</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile>"Startup\ArteryTek\AT32F435_437\startup_at32f435_f437.s" ("AT32F435_437 Startup Code")</StartupFile>
-          <FlashDriverDll>UL2CM3(-O207 -S0 -C0 -FO7 -FD20000000 -FC1000 -FN1 -FF0AT32F435_4032 -FS08000000 -FL400000)</FlashDriverDll>
           <DeviceId>0</DeviceId>
           <RegisterFile>at32f435_437.h</RegisterFile>
           <MemoryEnv></MemoryEnv>

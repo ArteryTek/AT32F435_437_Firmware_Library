@@ -362,11 +362,11 @@ void pca9555_i2c_lowlevel_init(i2c_handle_type* hi2c, uint32_t i2c_speed)
   crm_periph_clock_enable(PCA_I2C_DMA_CLK, TRUE);
 
   /* i2c dma channel configuration */
-  dma_reset(hi2c->dma_tx_channel);
-  dma_reset(hi2c->dma_rx_channel);
-
   hi2c->dma_tx_channel = PCA_I2C_DMA_TX_CHANNEL;
   hi2c->dma_rx_channel = PCA_I2C_DMA_RX_CHANNEL;
+
+  dma_reset(hi2c->dma_tx_channel);
+  dma_reset(hi2c->dma_rx_channel);
 
   hi2c->dma_init_struct.peripheral_base_addr    = (uint32_t)&hi2c->i2cx->txdt;
   hi2c->dma_init_struct.memory_base_addr        = 0;
@@ -438,7 +438,7 @@ void pca9555_init(uint32_t i2c_speed)
 
     exint_default_para_init(&exint_init_struct);
     exint_init_struct.line_enable = TRUE;
-    exint_init_struct.line_mode = EXINT_LINE_INTERRUPUT;
+    exint_init_struct.line_mode = EXINT_LINE_INTERRUPT;
     exint_init_struct.line_select = PCA_INT_EXINT_LINE;
     exint_init_struct.line_polarity = EXINT_TRIGGER_FALLING_EDGE;
     exint_init(&exint_init_struct);

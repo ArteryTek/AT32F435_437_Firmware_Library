@@ -55,7 +55,7 @@ void wakeup_pin_init(void)
 
   exint_default_para_init(&exint_init_struct);
   exint_init_struct.line_enable = TRUE;
-  exint_init_struct.line_mode = EXINT_LINE_INTERRUPUT;
+  exint_init_struct.line_mode = EXINT_LINE_INTERRUPT;
   exint_init_struct.line_select = WAKEUP_EXINT_LINE;
   exint_init_struct.line_polarity = EXINT_TRIGGER_RISING_EDGE;
   exint_init(&exint_init_struct);

@@ -206,8 +206,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\src\qspi_cmd_esmt32m.c</PathWithFileName>
-      <FilenameWithoutPath>qspi_cmd_esmt32m.c</FilenameWithoutPath>
+      <PathWithFileName>..\src\qspi_cmd_en25qh128a.c</PathWithFileName>
+      <FilenameWithoutPath>qspi_cmd_en25qh128a.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

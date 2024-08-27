@@ -354,11 +354,11 @@ void eeprom_i2c_lowlevel_init(i2c_handle_type* hi2c, uint32_t i2c_speed)
   crm_periph_clock_enable(EE_I2C_DMA_CLK, TRUE);
 
   /* i2c dma channel configuration */
-  dma_reset(hi2c->dma_tx_channel);
-  dma_reset(hi2c->dma_rx_channel);
-
   hi2c->dma_tx_channel = EE_I2C_DMA_TX_CHANNEL;
   hi2c->dma_rx_channel = EE_I2C_DMA_RX_CHANNEL;
+
+  dma_reset(hi2c->dma_tx_channel);
+  dma_reset(hi2c->dma_rx_channel);
 
   hi2c->dma_init_struct.peripheral_base_addr    = (uint32_t)&hi2c->i2cx->txdt;
   hi2c->dma_init_struct.memory_base_addr        = 0;

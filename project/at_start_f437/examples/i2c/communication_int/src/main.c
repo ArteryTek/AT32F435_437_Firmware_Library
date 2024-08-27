@@ -241,7 +241,7 @@ void i2c_lowlevel_init(i2c_handle_type* hi2c)
     gpio_init_structure.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
     gpio_init_structure.gpio_mode           = GPIO_MODE_MUX;
     gpio_init_structure.gpio_out_type       = GPIO_OUTPUT_OPEN_DRAIN;
-    gpio_init_structure.gpio_pull           = GPIO_PULL_UP;
+    gpio_init_structure.gpio_pull           = GPIO_PULL_NONE;
 
     gpio_init_structure.gpio_pins           = I2Cx_SCL_GPIO_PIN;
     gpio_init(I2Cx_SCL_GPIO_PORT, &gpio_init_structure);

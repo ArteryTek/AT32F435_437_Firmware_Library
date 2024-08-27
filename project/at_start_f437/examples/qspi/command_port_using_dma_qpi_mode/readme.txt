@@ -9,7 +9,7 @@
   in this demo, qspi command port operate erase/write/read with dma.
   and all operations are in qpi mode, if qspi test pass, led3 fresh,
   else led2 fresh.
-  the qspi flash is esmt32m. 
+  the qspi flash is en25qh128a. 
   - qspi io0   --->   pf8
   - qspi io1   --->   pf9
   - qspi io2   --->   pf7

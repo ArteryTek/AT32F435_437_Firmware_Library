@@ -678,11 +678,11 @@ void i2c_lowlevel_init(i2c_handle_type* hi2c)
   /* enable the dma clock */
 
   /* i2c dma channel configuration */
-  dma_reset(hi2c->dma_tx_channel);
-  dma_reset(hi2c->dma_rx_channel);
-
   hi2c->dma_tx_channel = DMA1_CHANNEL1;
   hi2c->dma_rx_channel = DMA1_CHANNEL2;
+
+  dma_reset(hi2c->dma_tx_channel);
+  dma_reset(hi2c->dma_rx_channel);
 
   hi2c->dma_init_struct.peripheral_base_addr    = (uint32_t)&hi2c->i2cx->txdt;
   hi2c->dma_init_struct.memory_base_addr        = 0;

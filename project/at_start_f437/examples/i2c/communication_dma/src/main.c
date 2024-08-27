@@ -254,7 +254,7 @@ void i2c_lowlevel_init(i2c_handle_type* hi2c)
     gpio_init_structure.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
     gpio_init_structure.gpio_mode           = GPIO_MODE_MUX;
     gpio_init_structure.gpio_out_type       = GPIO_OUTPUT_OPEN_DRAIN;
-    gpio_init_structure.gpio_pull           = GPIO_PULL_UP;
+    gpio_init_structure.gpio_pull           = GPIO_PULL_NONE;
 
     gpio_init_structure.gpio_pins           = I2Cx_SCL_GPIO_PIN;
     gpio_init(I2Cx_SCL_GPIO_PORT, &gpio_init_structure);
@@ -276,11 +276,11 @@ void i2c_lowlevel_init(i2c_handle_type* hi2c)
     crm_periph_clock_enable(I2Cx_DMA_CLK, TRUE);
 
     /* i2c dma channel configuration */
-    dma_reset(hi2c->dma_tx_channel);
-    dma_reset(hi2c->dma_rx_channel);
-
     hi2c->dma_tx_channel = I2Cx_DMA_TX_Channel;
     hi2c->dma_rx_channel = I2Cx_DMA_RX_Channel;
+
+    dma_reset(hi2c->dma_tx_channel);
+    dma_reset(hi2c->dma_rx_channel);
 
     hi2c->dma_init_struct.peripheral_base_addr    = (uint32_t)&hi2c->i2cx->txdt;
     hi2c->dma_init_struct.memory_base_addr        = 0;
