@@ -29,7 +29,7 @@
   * @{
   */
 
-/** @addtogroup 437_SDIO_fatfs
+/** @addtogroup 437_SDIO_sdio_fatfs
   * @{
   */
 

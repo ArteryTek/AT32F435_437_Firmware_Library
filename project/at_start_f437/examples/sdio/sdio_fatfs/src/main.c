@@ -33,7 +33,7 @@
   * @{
   */
 
-/** @addtogroup 437_SDIO_fatfs SDIO_fatfs
+/** @addtogroup 437_SDIO_sdio_fatfs SDIO_sdio_fatfs
   * @{
   */
 

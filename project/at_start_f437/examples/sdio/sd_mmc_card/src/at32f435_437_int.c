@@ -29,7 +29,7 @@
   * @{
   */
 
-/** @addtogroup 437_SD_mmc_card
+/** @addtogroup 437_SDIO_sd_mmc_card
   * @{
   */
 

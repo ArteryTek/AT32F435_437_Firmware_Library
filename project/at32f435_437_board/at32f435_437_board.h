@@ -1,6 +1,6 @@
 /**
   **************************************************************************
-  * @file     at32f435_437_board.c
+  * @file     at32f435_437_board.h
   * @brief    header file for at-start board. set of firmware functions to
   *           manage leds and push-button. initialize delay function.
   **************************************************************************

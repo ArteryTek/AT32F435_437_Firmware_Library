@@ -46,60 +46,58 @@ void usbh_irq_handler(otg_core_type *otgdev)
 {
   otg_global_type *usbx = otgdev->usb_reg;
   usbh_core_type *uhost = &otgdev->host;
-  uint32_t intsts = usb_global_get_all_interrupt(usbx);
 
   if(usbx->gintsts_bit.curmode == 1)
   {
-    if(intsts & USB_OTG_HCH_FLAG)
-    {
-      usbh_hch_handler(uhost);
-      usb_global_clear_interrupt(usbx, USB_OTG_HCH_FLAG);
-    }
-    if(intsts & USB_OTG_SOF_FLAG)
-    {
-      usbh_sof_handler(uhost);
-      usb_global_clear_interrupt(usbx, USB_OTG_SOF_FLAG);
-    }
-    if(intsts & USB_OTG_MODEMIS_FLAG)
-    {
-      usb_global_clear_interrupt(usbx, USB_OTG_MODEMIS_FLAG);
-    }
-    if(intsts & USB_OTG_WKUP_FLAG)
-    {
-      usbh_wakeup_handler(uhost);
-      usb_global_clear_interrupt(usbx, USB_OTG_WKUP_FLAG);
-    }
-    while(usbx->gintsts & USB_OTG_RXFLVL_FLAG)
+    if(usb_global_get_all_interrupt(usbx) & USB_OTG_RXFLVL_FLAG)
     {
       usbh_rx_qlvl_handler(uhost);
       usb_global_clear_interrupt(usbx, USB_OTG_RXFLVL_FLAG);
     }
-    if(intsts & USB_OTG_DISCON_FLAG)
+    if(usb_global_get_all_interrupt(usbx) & USB_OTG_HCH_FLAG)
+    {
+      usbh_hch_handler(uhost);
+      usb_global_clear_interrupt(usbx, USB_OTG_HCH_FLAG);
+    }
+    if(usb_global_get_all_interrupt(usbx) & USB_OTG_SOF_FLAG)
+    {
+      usbh_sof_handler(uhost);
+      usb_global_clear_interrupt(usbx, USB_OTG_SOF_FLAG);
+    }
+    if(usb_global_get_all_interrupt(usbx) & USB_OTG_MODEMIS_FLAG)
+    {
+      usb_global_clear_interrupt(usbx, USB_OTG_MODEMIS_FLAG);
+    }
+    if(usb_global_get_all_interrupt(usbx) & USB_OTG_WKUP_FLAG)
+    {
+      usbh_wakeup_handler(uhost);
+      usb_global_clear_interrupt(usbx, USB_OTG_WKUP_FLAG);
+    }
+    if(usb_global_get_all_interrupt(usbx) & USB_OTG_DISCON_FLAG)
     {
       usbh_disconnect_handler(uhost);
       usb_global_clear_interrupt(usbx, USB_OTG_DISCON_FLAG);
     }
-    if(intsts & USB_OTG_PRT_FLAG)
+    if(usb_global_get_all_interrupt(usbx) & USB_OTG_PRT_FLAG)
     {
       usbh_port_handler(uhost);
     }
-    if(intsts & USB_OTG_INCOMPIP_INCOMPISOOUT_FLAG)
+    if(usb_global_get_all_interrupt(usbx) & USB_OTG_INCOMPIP_INCOMPISOOUT_FLAG)
     {
       usb_global_clear_interrupt(usbx, USB_OTG_INCOMPIP_INCOMPISOOUT_FLAG);
     }
-    if(intsts & USB_OTG_INCOMISOIN_FLAG)
+    if(usb_global_get_all_interrupt(usbx) & USB_OTG_INCOMISOIN_FLAG)
     {
       usb_global_clear_interrupt(usbx, USB_OTG_INCOMISOIN_FLAG);
     }
-    if(intsts & USB_OTG_PTXFEMP_FLAG)
+    if(usb_global_get_all_interrupt(usbx) & USB_OTG_PTXFEMP_FLAG)
     {
       usb_global_clear_interrupt(usbx, USB_OTG_PTXFEMP_FLAG);
     }
-    if(intsts & USB_OTG_ISOOUTDROP_FLAG)
+    if(usb_global_get_all_interrupt(usbx) & USB_OTG_ISOOUTDROP_FLAG)
     {
       usb_global_clear_interrupt(usbx, USB_OTG_ISOOUTDROP_FLAG);
     }
-
   }
 }
 
@@ -157,7 +155,8 @@ void usbh_hch_in_handler(usbh_core_type *uhost, uint8_t chn)
 {
   otg_global_type *usbx = uhost->usb_reg;
   otg_hchannel_type *usb_chh = USB_CHL(usbx, chn);
-  uint32_t hcint_value = usb_chh->hcint & usb_chh->hcintmsk;
+  uint32_t hcint_value = usb_chh->hcint;
+  hcint_value &= usb_chh->hcintmsk;
 
   if( hcint_value & USB_OTG_HC_ACK_FLAG)
   {
@@ -283,7 +282,8 @@ void usbh_hch_out_handler(usbh_core_type *uhost, uint8_t chn)
 {
   otg_global_type *usbx = uhost->usb_reg;
   otg_hchannel_type *usb_chh = USB_CHL(usbx, chn);
-  uint32_t hcint_value = usb_chh->hcint & usb_chh->hcintmsk;
+  uint32_t hcint_value = usb_chh->hcint;
+  hcint_value &= usb_chh->hcintmsk;
 
   if( hcint_value & USB_OTG_HC_ACK_FLAG)
   {

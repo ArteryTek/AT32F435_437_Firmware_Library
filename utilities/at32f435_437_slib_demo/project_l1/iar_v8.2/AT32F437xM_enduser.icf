@@ -8,15 +8,15 @@ define symbol __ICFEDIT_region_ROM_start__ = 0x08000000;
 define symbol __ICFEDIT_region_ROM_end__   = 0x083EFFFF;
 
 /* SLIB area */
-define symbol __ICFEDIT_region_SLIB_start__ = 0x08001000;
-define symbol __ICFEDIT_region_SLIB_end__   = 0x08002FFF;
+define symbol __ICFEDIT_region_SLIB_start__ = 0x0801E000;
+define symbol __ICFEDIT_region_SLIB_end__   = 0x0801FFFF;
 
 define symbol __ICFEDIT_region_RAM_start__ = 0x20000000;
 define symbol __ICFEDIT_region_RAM_end__   = 0x2005FFFF;
 
 /* SLIB RAM region */
-define symbol __ICFEDIT_region_SLIB_RAM_start__ = 0x2005F000;
-define symbol __ICFEDIT_region_SLIB_RAM_end__   = 0x2005FFFF;
+define symbol __ICFEDIT_region_SLIB_RAM_start__ = 0x20000000;
+define symbol __ICFEDIT_region_SLIB_RAM_end__   = 0x20000FFF;
 
 
 /*-Sizes-*/

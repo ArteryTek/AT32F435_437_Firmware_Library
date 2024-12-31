@@ -211,9 +211,10 @@ error_status emac_layer2_configuration(void)
   #elif defined RMII_MODE
   scfg_emac_interface_set(SCFG_EMAC_SELECT_RMII);
   #endif
+  #if !CRYSTAL_ON_PHY
   crm_clock_out1_set(CRM_CLKOUT1_PLL);
   crm_clkout_div_set(CRM_CLKOUT_INDEX_1, CRM_CLKOUT_DIV1_5, CRM_CLKOUT_DIV2_2);
-
+  #endif
   /* reset phy */
   reset_phy();
   /* reset emac ahb bus */

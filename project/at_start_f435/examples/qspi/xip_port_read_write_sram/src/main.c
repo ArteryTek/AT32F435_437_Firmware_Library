@@ -130,6 +130,9 @@ int main(void)
   /* enable auto ispc */
   qspi_auto_ispc_enable(QSPI1);
 
+  /* disable cache */
+  qspi_xip_cache_bypass_set(QSPI1, TRUE);
+  
   qspi_xip_init_ly68l6400();
 
   qspi1_mem_addr = (uint8_t*)QSPI1_MEM_BASE;

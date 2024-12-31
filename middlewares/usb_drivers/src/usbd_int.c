@@ -429,8 +429,12 @@ void usbd_reset_handler(usbd_core_type *udev)
   /* clear in and out endpoint interrupt flag */
   for(i_index = 0; i_index < USB_EPT_MAX_NUM; i_index ++)
   {
-    USB_INEPT(usbx, i_index)->diepint = 0xFF;
-    USB_OUTEPT(usbx, i_index)->doepint = 0xFF;
+    USB_INEPT(usbx, i_index)->diepint = 0xFFFF;
+    USB_INEPT(usbx, i_index)->diepctl_bit.stall = FALSE;
+    USB_INEPT(usbx, i_index)->diepctl_bit.snak = TRUE;
+    USB_OUTEPT(usbx, i_index)->doepint = 0xFFFF;
+    USB_OUTEPT(usbx, i_index)->doepctl_bit.stall = FALSE;
+    USB_OUTEPT(usbx, i_index)->doepctl_bit.snak = TRUE;
   }
 
   /* clear endpoint flag */

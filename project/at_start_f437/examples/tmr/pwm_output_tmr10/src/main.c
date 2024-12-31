@@ -79,6 +79,9 @@ int main(void)
 
   tmr_period_buffer_enable(TMR10, TRUE);
 
+  /* tmr enable output */
+  tmr_output_enable(TMR10, TRUE);
+
   /* tmr enable counter */
   tmr_counter_enable(TMR10, TRUE);
 

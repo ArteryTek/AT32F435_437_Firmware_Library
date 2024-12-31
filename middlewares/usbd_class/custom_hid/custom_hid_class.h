@@ -77,6 +77,7 @@ typedef struct
   uint8_t hid_set_report[64];
   uint8_t hid_get_report[64];
   uint8_t hid_state;
+  uint8_t send_state;
 }custom_hid_type;
 
 /**

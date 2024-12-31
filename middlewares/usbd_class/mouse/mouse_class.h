@@ -87,6 +87,7 @@ typedef struct
   uint8_t mouse_buffer[4];
   uint8_t hid_state;
   __IO uint8_t hid_suspend_flag;
+  uint8_t send_state;
 }mouse_type;
 
 /**

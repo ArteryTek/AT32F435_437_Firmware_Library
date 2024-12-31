@@ -94,6 +94,9 @@ int main(void)
   tmr_output_channel_config(TMR9, TMR_SELECT_CHANNEL_2, &tmr_oc_init_structure);
   tmr_channel_value_set(TMR9, TMR_SELECT_CHANNEL_2, ccr2_val);
 
+  /* tmr enable output */
+  tmr_output_enable(TMR9, TRUE);
+
   /* tmr enable counter */
   tmr_counter_enable(TMR9, TRUE);
 

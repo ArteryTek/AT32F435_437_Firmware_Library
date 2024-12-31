@@ -29,7 +29,7 @@
   * @{
   */
 
-/** @addtogroup 437_XMC_sram
+/** @addtogroup 437_XMC_pc_card
   * @{
   */
 

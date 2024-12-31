@@ -833,7 +833,7 @@ sd_error_status_type sd_deselect_select(uint32_t addr)
   sdio_command_init_struct.argument =  addr;
   sdio_command_init_struct.cmd_index = SD_CMD_SEL_DESEL_CARD;
   sdio_command_init_struct.rsp_type = SDIO_RESPONSE_SHORT;
-  sdio_command_init_struct.wait_type = SDIO_WAIT_FOR_INT;
+  sdio_command_init_struct.wait_type = SDIO_WAIT_FOR_NO;
 
   /* sdio command config */
   sdio_command_config(SDIOx, &sdio_command_init_struct);

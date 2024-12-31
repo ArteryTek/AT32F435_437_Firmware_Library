@@ -160,6 +160,7 @@ void usbd_core_setup_handler(usbd_core_type *udev, uint8_t ept_num)
       usbd_endpoint_request(udev);
       break;
     default:
+      usbd_ctrl_unsupport(udev);
       break;
   }
 }
@@ -336,6 +337,28 @@ void usbd_ept_open(usbd_core_type *udev, uint8_t ept_addr, uint8_t ept_type, uin
 }
 
 /**
+  * @brief  usb check fifo
+  * @param  udev: to the structure of usbd_core_type
+  * @param  ept_addr: endpoint number
+  * @retval none
+  */
+void usbd_ept_in_check_fifo(usbd_core_type *udev, uint8_t ept_addr)
+{
+  otg_global_type *usbx = udev->usb_reg;
+  uint32_t timeout = 0xFFFF;
+  uint8_t endp = ept_addr & 0x7F;
+  if(USB_INEPT(usbx, endp)->diepctl_bit.eptena == SET && 
+    USB_INEPT(usbx, endp)->diepctl_bit.usbacept == SET)
+  {
+    USB_INEPT(usbx, endp)->diepctl_bit.snak = TRUE;
+    USB_INEPT(usbx, endp)->diepctl_bit.eptdis = TRUE;
+    USB_INEPT(usbx, endp)->diepctl_bit.snak = TRUE;
+    while(USB_INEPT(usbx, endp)->diepctl_bit.eptdis && timeout --);
+    usbd_flush_tx_fifo(udev, endp);
+  }
+}
+
+/**
   * @brief  usb close endpoint
   * @param  udev: to the structure of usbd_core_type
   * @param  ept_addr: endpoint number
@@ -437,7 +460,10 @@ void usbd_ept_send(usbd_core_type *udev, uint8_t ept_addr, uint8_t *buffer, uint
   otg_eptin_type *ept_in = USB_INEPT(usbx, ept_info->eptn);
   otg_device_type *dev = OTG_DEVICE(usbx);
   uint32_t pktcnt;
-
+  
+  /* check endpoint fifo */
+  usbd_ept_in_check_fifo(udev, ept_addr);
+  
   /* set send data buffer and length */
   ept_info->trans_buf = buffer;
   ept_info->total_len = len;

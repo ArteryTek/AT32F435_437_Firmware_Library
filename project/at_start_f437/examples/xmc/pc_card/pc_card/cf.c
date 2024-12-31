@@ -33,7 +33,7 @@
   * @{
   */
 
-/** @addtogroup XMC_CF_CARD
+/** @addtogroup 437_XMC_pc_card
   * @{
   */
 

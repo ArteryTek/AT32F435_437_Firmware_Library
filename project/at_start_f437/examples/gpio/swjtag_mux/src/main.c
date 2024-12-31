@@ -30,7 +30,7 @@
   * @{
   */
 
-/** @addtogroup 437_GPIO_swjtag_muxe GPIO_swjtag_mux
+/** @addtogroup 437_GPIO_swjtag_mux GPIO_swjtag_mux
   * @{
   */
 

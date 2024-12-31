@@ -35,6 +35,7 @@
 
 #define SDRAM_BANK1_ADDR    ((uint32_t)0xC0000000)
 void sdram_init_sequence(xmc_cmd_bank1_2_type cmd_bank);
+uint32_t sdclk_mhz = 0;
 
 /**
   * @brief  init sdram interface
@@ -153,6 +154,10 @@ void sdram_init(void)
   sdram_init_struct.cas                        = XMC_CAS_3;
   sdram_init_struct.width                      = XMC_MEM_WIDTH_16;
 
+  /* 
+    The trcd, trp, trc, tras cycle is referred to the description in the 
+    SDRAM device documentation.
+  */
   sdram_timing_struct.tmrd                     = XMC_DELAY_CYCLE_2;
   sdram_timing_struct.txsr                     = XMC_DELAY_CYCLE_11;
   sdram_timing_struct.tras                     = XMC_DELAY_CYCLE_7;
@@ -161,7 +166,19 @@ void sdram_init(void)
   sdram_timing_struct.trp                      = XMC_DELAY_CYCLE_3;
   sdram_timing_struct.trcd                     = XMC_DELAY_CYCLE_3;
 
-
+  if(sdram_init_struct.clkdiv == XMC_CLKDIV_4)
+  {
+    sdclk_mhz = system_core_clock / 4000000;
+  }
+  else if(sdram_init_struct.clkdiv == XMC_CLKDIV_3)
+  {
+    sdclk_mhz = system_core_clock / 3000000;
+  }
+  else
+  {
+    sdclk_mhz = system_core_clock / 2000000;
+  }
+  
   xmc_sdram_init(&sdram_init_struct, &sdram_timing_struct);
 
   sdram_init_sequence(XMC_CMD_BANK1);
@@ -177,6 +194,7 @@ void sdram_init_sequence(xmc_cmd_bank1_2_type cmd_bank)
 {
   xmc_sdram_cmd_type sdram_cmd_struct;
   uint32_t timeout = 0xFFFF;
+  uint32_t counter = 0;
 
   sdram_cmd_struct.cmd                   = XMC_CMD_CLK;
   sdram_cmd_struct.auto_refresh          = 1;
@@ -202,9 +220,16 @@ void sdram_init_sequence(xmc_cmd_bank1_2_type cmd_bank)
     timeout --;
   }
 
-  /* counter = (refresh_count * 1000 * SDCLK) / row - 20 */
-  /* counter = (64ms * 1000 * 144MHz) / 2^13 - 20 */
-  xmc_sdram_refresh_counter_set(1105);
+  /* 
+    The refresh_count cycle is referred to the description in the 
+    SDRAM device documentation.
+  
+    W9825G6KH: 8K refresh cycles/64ms
+    refresh_rate = 64ms / 8196(rows) = 7.81us
+    counter = sdclk_mhz * 7.81us - 20
+  */
+  counter = sdclk_mhz * 64 * 1000 / 8192 - 20;
+  xmc_sdram_refresh_counter_set(counter);
 
   sdram_cmd_struct.cmd                   = XMC_CMD_AUTO_REFRESH;
   sdram_cmd_struct.auto_refresh          = 8;

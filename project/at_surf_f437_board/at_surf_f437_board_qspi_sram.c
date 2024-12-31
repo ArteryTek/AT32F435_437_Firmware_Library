@@ -167,6 +167,9 @@ void qspi_sram_init(void)
   /* enable auto ispc */
   qspi_auto_ispc_enable(QSPI_SRAM_QSPIx);
 
+  /* disable cache */
+  qspi_xip_cache_bypass_set(QSPI_SRAM_QSPIx, TRUE);
+
   /* exit quad mode */
   qspi_sram_cmd_send((qspi_cmd_type*)&ly68l6400_exitquadmode_para);
 

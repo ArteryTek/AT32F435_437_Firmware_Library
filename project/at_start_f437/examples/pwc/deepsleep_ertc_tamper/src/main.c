@@ -176,7 +176,7 @@ int main(void)
   {
   }
 
-  pwc_ldo_output_voltage_set(PWC_LDO_OUTPUT_1V0);
+  pwc_ldo_output_voltage_set(PWC_LDO_OUTPUT_1V1);
 
   /* congfig the voltage regulator mode */
   pwc_voltage_regulate_set(PWC_REGULATOR_LOW_POWER);
@@ -190,8 +190,12 @@ int main(void)
   /* turn on the led light */
   at32_led_on(LED3);
 
-  /* wait clock stable */
-  delay_us(120);
+  /* determine if the debugging function is enabled or the revision code is revision A */
+  if(((DEBUGMCU->ctrl & 0x00000007) != 0x00000000) || (DEBUGMCU->ser_id_bit.rev_id == 0))
+  {
+    /* wait 3 LICK cycles to ensure clock stable */
+    delay_us(4);
+  }
 
   /* resume ldo before system clock source enhance */
   pwc_ldo_output_voltage_set(PWC_LDO_OUTPUT_1V3);

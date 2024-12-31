@@ -35,7 +35,7 @@
   * @{
   */
 
-/** @addtogroup 435_USB_virtaul_comport USB_device_virtaul_comport
+/** @addtogroup 435_USB_device_virtaul_comport USB_device_virtaul_comport
   * @{
   */
 

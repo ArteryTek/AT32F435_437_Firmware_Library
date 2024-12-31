@@ -689,13 +689,23 @@ void lcd_char_show(uint16_t x, uint16_t y, uint8_t num, uint8_t size, uint8_t mo
 
     for(t1 = 0; t1 < 8; t1++)
     {
-      if(temp & 0x80)
+      if(mode == 0)
       {
-        lcd_point_draw(x, y, WHITE);
+        if(temp & 0x80)
+        {
+          lcd_point_draw(x, y, WHITE);
+        }
+        else
+        {
+          lcd_point_draw(x, y, BLACK);
+        }      
       }
-      else if(mode == 0)
+      else if(mode == 1)
       {
-        lcd_point_draw(x, y, BLACK);
+        if(temp & 0x80)
+        {
+          lcd_point_draw(x, y, RED);
+        }
       }
 
       temp <<= 1;
@@ -821,6 +831,48 @@ void lcd_string_show(uint16_t x, uint16_t y, uint16_t width, uint16_t height, ui
     else
     {
       lcd_font_show(x, y, p, size, BLACK);
+      x += size;
+      p += 2;
+    }
+  }
+}
+
+/**
+  * @brief  this function is show string to lcd
+  * @param  x : row coordinates starting vaule
+  * @param  y : column coordinates starting vaule
+  * @param  width : width of area
+  * @param  height : height of area
+  * @param  size : size of font
+  * @param  p : pointer of string
+  * @retval none
+  */
+void lcd_string_show2(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint8_t size, uint8_t *p)
+{
+  width += x;
+  height += y;
+
+  while(*p)
+  {
+    if(x >= width)
+    {
+      break;
+    }
+
+    if(y >= height)
+    {
+      break;
+    }
+
+    if(*p < 127)
+    {
+      lcd_char_show(x, y, *p, size, 1);
+      x += size / 2;
+      p++;
+    }
+    else
+    {
+      lcd_font_show(x, y, p, size, 1);
       x += size;
       p += 2;
     }

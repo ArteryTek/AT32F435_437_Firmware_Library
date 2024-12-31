@@ -32,14 +32,14 @@
   * @{
   */
 
-/** @addtogroup 435_SD_mmc_card SD_mmc_card
+/** @addtogroup 435_SDIO_sd_mmc_card SDIO_sd_mmc_card
   * @{
   */
 
 #define BLOCK_SIZE                       (512)
 #define BLOCKS_NUMBER                    (64)
 #define MULTI_BUFFER_SIZE                (BLOCK_SIZE * BLOCKS_NUMBER)
-#define STREAM_BUFFER_SIZE               (4096)
+#define STREAM_BUFFER_SIZE               (2048)
 
 static uint8_t sblock_tbuffer[BLOCK_SIZE], sblock_rbuffer[BLOCK_SIZE];
 static uint8_t mblock_tbuffer[MULTI_BUFFER_SIZE], mblock_rbuffer[MULTI_BUFFER_SIZE];
@@ -258,10 +258,12 @@ void show_card_info(void)
   printf("---------------------\r\n");
   switch(sd_card_info.card_type)
   {
-  case SDIO_STD_CAPACITY_SD_CARD_V1_1: printf("card type: SDSC V1.1\r\n");break;
-  case SDIO_STD_CAPACITY_SD_CARD_V2_0: printf("card type: SDSC V2.0\r\n");break;
-  case SDIO_HIGH_CAPACITY_SD_CARD:     printf("card type: SDHC V2.0\r\n");break;
-  case SDIO_MULTIMEDIA_CARD:           printf("card type: MMC Card\r\n");break;
+  case SDIO_STD_CAPACITY_SD_CARD_V1_1:  printf("card type: SDSC V1.1\r\n");break;
+  case SDIO_STD_CAPACITY_SD_CARD_V2_0:  printf("card type: SDSC V2.0\r\n");break;
+  case SDIO_HIGH_CAPACITY_SD_CARD:      printf("card type: SDHC V2.0\r\n");break;
+  case SDIO_MULTIMEDIA_CARD:            printf("card type: MMC \r\n");break;
+  case SDIO_HIGH_SPEED_MULTIMEDIA_CARD: printf("card type: MMC V4.2\r\n");break;
+  case SDIO_HIGH_CAPACITY_MMC_CARD:     printf("card type: eMMC \r\n");break;
   }
   printf("card manufacturer_id: %d\r\n", sd_card_info.sd_cid_reg.manufacturer_id);
   printf("card rca: 0x%X\r\n", sd_card_info.rca);
@@ -325,7 +327,7 @@ int main(void)
   printf("sd card multiple blocks test ok\r\n");
 
   /* mmc card stream data transfer test */
-  if(sd_card_info.card_type == SDIO_MULTIMEDIA_CARD)
+  if((sd_card_info.card_type == SDIO_MULTIMEDIA_CARD)||(sd_card_info.card_type == SDIO_HIGH_SPEED_MULTIMEDIA_CARD))
   {
     if(TEST_SUCCESS != mmc_stream_test())
     {

@@ -112,9 +112,6 @@
 #include <stdlib.h> /* atoi */
 #include <stdio.h>
 
-#include "at32f4xx_adc.h"
-#include "at32_board.h"
-
 #if LWIP_TCP && LWIP_CALLBACK_API
 
 /** Minimum length for a valid HTTP/0.9 request: "GET /\r\n" -> 7 bytes */
@@ -149,8 +146,6 @@
 #define HTTP_DATA_TO_SEND_CONTINUE 1
 #define HTTP_NO_DATA_TO_SEND       0
 
-#define CUSTOM_HTTP_SERVER
-
 typedef struct {
   const char *name;
   u8_t shtml;
@@ -160,12 +155,9 @@ static const default_filename httpd_default_filenames[] = {
   {"/index.shtml", 1 },
   {"/index.ssi",   1 },
   {"/index.shtm",  1 },
-  {"/AT32F407.html",   0 },
-  {"/AT32F407LED.html",   0 },
-  {"/AT32F407ADC.html",   0 }
+  {"/index.html",  0 },
+  {"/index.htm",   0 }
 };
-
-char html_tmp[4096] = {0};
 
 #define NUM_DEFAULT_FILENAMES LWIP_ARRAYSIZE(httpd_default_filenames)
 
@@ -241,7 +233,7 @@ struct http_ssi_state {
 
 struct http_ssi_tag_description {
   const char *lead_in;
-  const char *lead_out;
+  const char *lead_out; 
 };
 
 #endif /* LWIP_HTTPD_SSI */
@@ -2523,7 +2515,6 @@ http_poll(void *arg, struct altcp_pcb *pcb)
 static err_t
 http_recv(void *arg, struct altcp_pcb *pcb, struct pbuf *p, err_t err)
 {
-  #ifndef CUSTOM_HTTP_SERVER
   struct http_state *hs = (struct http_state *)arg;
   LWIP_DEBUGF(HTTPD_DEBUG | LWIP_DBG_TRACE, ("http_recv: pcb=%p pbuf=%p err=%s\n", (void *)pcb,
               (void *)p, lwip_strerr(err)));
@@ -2601,184 +2592,6 @@ http_recv(void *arg, struct altcp_pcb *pcb, struct pbuf *p, err_t err)
     }
   }
   return ERR_OK;
-  #else
-  int i, j;
-  char *data;
-  char fname[40];
-  struct fs_file file = {0, 0};
-  struct http_state *hs;
-	char LED2_html[32] = {0};
-	char LED3_html[32] = {0};
-	char LED4_html[32] = {0};
-	char LED2_Status = 0, LED3_Status = 0, LED4_Status = 0;
-	char *Led_Select = "checked=\"checked\"";
-
-  hs = arg;
-
-  if (err == ERR_OK && p != NULL)
-  {
-
-    /* Inform TCP that we have taken the data. */
-    tcp_recved(pcb, p->tot_len);
-
-    if (hs->file == NULL)
-    {
-      data = p->payload;
-      if (strncmp(data, "GET /AT32F407ADC", 16) == 0)
-      {
-        int ADCVal = 0, iADCVa;
-        float fADCVal = 0;
-
-        pbuf_free(p);
-
-        ADCVal = ADC_GetConversionValue(ADC1);
-        printf("ADCVal = %d\n", ADCVal);
-        fADCVal = (float)((float)ADCVal / (float)4096.00) * (float)3.3;
-
-        iADCVa = ((ADCVal * 100 ) / 4096 ) * 512 / 100;
-
-        fs_open(&file, "/AT32F407ADC.html");
-        sprintf(html_tmp, file.data, fADCVal, iADCVa);
-        hs->file = html_tmp;
-        hs->left = strlen(html_tmp);
-
-        http_send(pcb, hs);
-
-        /* Tell TCP that we wish be to informed of data that has been
-           successfully sent by a call to the http_sent() function. */
-        tcp_sent(pcb, http_sent);
-      }
-      else if (strncmp(data, "GET /AT32F407LED", 16) == 0)
-      {
-        fs_open(&file, "/AT32F407LED.html");
-        hs->file = file.data;
-        hs->left = file.len;
-
-        http_send(pcb, hs);
-
-        /* Tell TCP that we wish be to informed of data that has been
-           successfully sent by a call to the http_sent() function. */
-        tcp_sent(pcb, http_sent);
-      }
-      else if (strncmp(data, "GET /method=get", 15) == 0)
-      {
-        i = 15;
-        while(data[i]!=0x20/* */)
-        {
-          i++;
-          if (data[i] == 0x6C /* l */)
-          {
-            i++;
-            if (data[i] ==  0x65 /* e */)
-            {
-              i++;
-              if (data[i] ==  0x64 /* d*/)
-              {
-                i+=2;
-
-                if(data[i]==0x32 /* 2 */)
-                {
-									AT32_LEDn_ON(LED2);
-									memcpy(LED2_html, Led_Select, strlen(Led_Select));
-									LED2_Status = 1;
-                }
-
-                if(data[i]==0x33 /* 3 */)
-                {
-									AT32_LEDn_ON(LED3);
-									memcpy(LED3_html, Led_Select, strlen(Led_Select));
-									LED3_Status = 1;
-                }
-
-                if(data[i]==0x34 /* 4 */)
-                {
-									AT32_LEDn_ON(LED4);
-									memcpy(LED4_html, Led_Select, strlen(Led_Select));
-									LED4_Status = 1;
-                }
-              }
-            }
-          }
-        }
-        if ( LED2_Status == 0)
-				{
-					AT32_LEDn_OFF(LED2);
-				}
-				if ( LED3_Status == 0 )
-				{
-					AT32_LEDn_OFF(LED3);
-				}
-				if ( LED4_Status == 0 )
-				{
-					AT32_LEDn_OFF(LED4);
-				}
-        pbuf_free(p);
-
-        fs_open(&file, "/AT32F407LED.html");
-        sprintf(html_tmp, file.data, LED2_html, LED3_html, LED4_html);
-				hs->file = html_tmp;
-        hs->left = strlen(html_tmp);
-
-        http_send(pcb, hs);
-
-        /* Tell TCP that we wish be to informed of data that has been
-           successfully sent by a call to the http_sent() function. */
-        tcp_sent(pcb, http_sent);
-      }
-      else if (strncmp(data, "GET ", 4) == 0)
-      {
-        for (i = 0; i < 40; i++)
-        {
-          if (((char *)data + 4)[i] == ' ' ||
-              ((char *)data + 4)[i] == '\r' ||
-              ((char *)data + 4)[i] == '\n')
-          {
-            ((char *)data + 4)[i] = 0;
-          }
-        }
-
-        i = 0;
-        j = 0;
-
-        do
-        {
-          fname[i] = ((char *)data + 4)[j];
-          j++;
-          i++;
-        } while (fname[i - 1] != 0 && i < 40);
-
-        pbuf_free(p);
-
-
-        fs_open(&file, "/AT32F407.html");
-
-        hs->file = file.data;
-        hs->left = file.len;
-        http_send(pcb, hs);
-
-        /* Tell TCP that we wish be to informed of data that has been
-           successfully sent by a call to the http_sent() function. */
-        tcp_sent(pcb, http_sent);
-      }
-      else
-      {
-        http_close_conn(pcb, hs);
-      }
-    }
-    else
-    {
-      pbuf_free(p);
-    }
-  }
-
-  if (err == ERR_OK && p == NULL)
-  {
-
-    http_close_conn(pcb, hs);
-  }
-
-  return ERR_OK;
-  #endif
 }
 
 /**

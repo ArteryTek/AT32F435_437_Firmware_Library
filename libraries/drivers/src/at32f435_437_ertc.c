@@ -1485,7 +1485,7 @@ flag_status ertc_flag_get(uint32_t flag)
 flag_status ertc_interrupt_flag_get(uint32_t flag)
 {
   __IO uint32_t iten = 0;
-  
+
   switch(flag)
   {
     case ERTC_ALAF_FLAG:
@@ -1504,7 +1504,7 @@ flag_status ertc_interrupt_flag_get(uint32_t flag)
     case ERTC_TP2F_FLAG:
       iten = ERTC->tamp_bit.tpien;
       break;
-    
+
     default:
       break;
   }
