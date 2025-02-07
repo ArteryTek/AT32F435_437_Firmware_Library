@@ -119,21 +119,31 @@ int main(void)
      /* enter deep sleep */
     if(((mouse_type *)(otg_core_struct.dev.class_handler->pdata))->hid_suspend_flag == 1)
     {
-      at32_led_off(LED2);
-      at32_led_off(LED3);
-      at32_led_off(LED4);
-      /* congfig the voltage regulator mode */
-      pwc_voltage_regulate_set(PWC_REGULATOR_LOW_POWER);
-
-      /* enter deep sleep mode */
-      pwc_deep_sleep_mode_enter(PWC_DEEP_SLEEP_ENTER_WFI);
-      /* wait clock stable */
-      for(delay_index = 0; delay_index < 600; delay_index++)
+      __disable_irq();
+      if(OTG_PCGCCTL(otg_core_struct.usb_reg)->pcgcctl_bit.suspendm == 1
+         && usb_suspend_status_get(otg_core_struct.usb_reg) == 1)
       {
-        __NOP();
+        at32_led_off(LED2);
+        at32_led_off(LED3);
+        at32_led_off(LED4);
+        /* congfig the voltage regulator mode */
+        pwc_voltage_regulate_set(PWC_REGULATOR_LOW_POWER);
+
+        /* enter deep sleep mode */
+        pwc_deep_sleep_mode_enter(PWC_DEEP_SLEEP_ENTER_WFI);
+        
+        /* hick 8MHz as system clock, wait clock stable, 
+           wait 3 LICK cycles to ensure clock stable, at least 120us */
+        for(delay_index = 0; delay_index < 600; delay_index++)
+        {
+          __NOP();
+        }
+        
+        system_clock_recover();
       }
-      system_clock_recover();
       ((mouse_type *)(otg_core_struct.dev.class_handler->pdata))->hid_suspend_flag = 0;
+      __enable_irq();
+      
       at32_led_on(LED2);
       at32_led_on(LED3);
       at32_led_on(LED4);

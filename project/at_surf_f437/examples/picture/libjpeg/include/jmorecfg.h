@@ -132,29 +132,29 @@ typedef char JOCTET;
 
 /* UINT8 must hold at least the values 0..255. */
 
-#ifdef HAVE_UNSIGNED_CHAR
-typedef unsigned char UINT8;
-#else /* not HAVE_UNSIGNED_CHAR */
-#ifdef CHAR_IS_UNSIGNED
-typedef char UINT8;
-#else /* not CHAR_IS_UNSIGNED */
-typedef short UINT8;
-#endif /* CHAR_IS_UNSIGNED */
-#endif /* HAVE_UNSIGNED_CHAR */
+//#ifdef HAVE_UNSIGNED_CHAR
+//typedef unsigned char UINT8;
+//#else /* not HAVE_UNSIGNED_CHAR */
+//#ifdef CHAR_IS_UNSIGNED
+//typedef char UINT8;
+//#else /* not CHAR_IS_UNSIGNED */
+//typedef short UINT8;
+//#endif /* CHAR_IS_UNSIGNED */
+//#endif /* HAVE_UNSIGNED_CHAR */
 
 /* UINT16 must hold at least the values 0..65535. */
 
-#ifdef HAVE_UNSIGNED_SHORT
-typedef unsigned short UINT16;
-#else /* not HAVE_UNSIGNED_SHORT */
-typedef unsigned int UINT16;
-#endif /* HAVE_UNSIGNED_SHORT */
+//#ifdef HAVE_UNSIGNED_SHORT
+//typedef unsigned short UINT16;
+//#else /* not HAVE_UNSIGNED_SHORT */
+//typedef unsigned int UINT16;
+//#endif /* HAVE_UNSIGNED_SHORT */
 
-/* INT16 must hold at least the values -32768..32767. */
+///* INT16 must hold at least the values -32768..32767. */
 
-#ifndef XMD_H			/* X11/xmd.h correctly defines INT16 */
-typedef short INT16;
-#endif
+//#ifndef XMD_H			/* X11/xmd.h correctly defines INT16 */
+//typedef short INT16;
+//#endif
 
 /* INT32 must hold at least signed 32-bit values. */
 

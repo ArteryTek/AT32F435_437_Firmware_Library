@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>AT32F437ZMT7,USE_STDPERIPH_DRIVER,HAVE_CONFIG_H</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\..\at_surf_f437_board;..\..\..\..\..\libraries\drivers\inc;..\..\..\..\..\libraries\cmsis\cm4\core_support;..\..\..\..\..\libraries\cmsis\cm4\device_support;..\inc;..\..\..\..\..\middlewares\i2c_application_library;..\..\..\..\at_surf_f437_board;..\..\..\..\..\middlewares\3rd_party\fatfs\source;..\libmad;..\libmad\msvc++;..\wav;..\flac\include;..\flac\src\libFLAC\include;..\flac\src\libFLAC\include\private;..\ape\apedec;..\tjpgd\src;..\libjpeg\include;..\giflib;..\png</IncludePath>
+              <IncludePath>..\..\..\..\at_surf_f437_board;..\..\..\..\..\libraries\drivers\inc;..\..\..\..\..\libraries\cmsis\cm4\core_support;..\..\..\..\..\libraries\cmsis\cm4\device_support;..\inc;..\..\..\..\..\middlewares\i2c_application_library;..\..\..\..\at_surf_f437_board;..\..\..\..\..\middlewares\3rd_party\fatfs\source;..\libmad;..\libmad\msvc++;..\wav;..\flac\include;..\flac\src\libFLAC\include;..\flac\src\libFLAC\include\private;..\ape\apedec;..\tjpgd\src;..\libjpeg\include;..\giflib;..\png;..\libjpeg</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -828,9 +828,14 @@
               <FilePath>..\libjpeg\source\jutils.c</FilePath>
             </File>
             <File>
-              <FileName>jdatasrc_conf.c</FileName>
+              <FileName>libjpeg_port.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\libjpeg\source\jdatasrc_conf.c</FilePath>
+              <FilePath>..\libjpeg\libjpeg_port.c</FilePath>
+            </File>
+            <File>
+              <FileName>libjpeg_port.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\libjpeg\libjpeg_port.h</FilePath>
             </File>
           </Files>
         </Group>

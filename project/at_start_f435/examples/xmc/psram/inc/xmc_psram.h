@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file     xmc_sram.h
+  * @file     xmc_psram.h
   * @brief    header file for the nand configuration.
   ******************************************************************************
   *                       Copyright notice & Disclaimer
@@ -22,8 +22,8 @@
   **************************************************************************
   */
 
-#ifndef __XMC_SRAM_H
-#define __XMC_SRAM_H
+#ifndef __XMC_PSRAM_H
+#define __XMC_PSRAM_H
 
 #include "at32f435_437_board.h"
 

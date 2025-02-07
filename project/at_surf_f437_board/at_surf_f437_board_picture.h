@@ -39,6 +39,7 @@ extern "C" {
 #include "ff.h"
 #include "string.h"
 #include "stdio.h"
+#include "cmsis_compiler.h"
 
 /**
   * @brief memory size
@@ -101,7 +102,7 @@ typedef enum
 /**
   * @brief bmp type
   */
-typedef __packed struct
+typedef __PACKED_STRUCT
 {
   uint16_t bfType;
   uint32_t bfSize;
@@ -149,7 +150,7 @@ typedef struct
 /**
   * @brief logical screen description block
   */
-__packed typedef struct
+typedef __PACKED_STRUCT
 {
   uint16_t width;                        /* gif width */
   uint16_t height;                       /* gif height */
@@ -161,7 +162,7 @@ __packed typedef struct
 /**
   * @brief image description block
   */
-__packed typedef struct
+typedef __PACKED_STRUCT
 {
   uint16_t xoff;                         /* x-direction offset */
   uint16_t yoff;                         /* y-direction offset */
@@ -173,7 +174,7 @@ __packed typedef struct
 /**
   * @brief image description
   */
-__packed typedef struct
+typedef __PACKED_STRUCT
 {
   LogicalScreenDescriptor gifLSD;        /* logical screen description block */
   ImageScreenDescriptor   gifISD;        /* fast image description */

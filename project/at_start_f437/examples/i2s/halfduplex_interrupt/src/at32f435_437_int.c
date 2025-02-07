@@ -33,10 +33,6 @@
   * @{
   */
 
-extern uint16_t i2s3_buffer_tx[32];
-extern uint16_t i2s2_buffer_rx[32];
-extern __IO uint32_t tx_index, rx_index;
-
 /**
   * @brief  this function handles nmi exception.
   * @param  none
@@ -132,36 +128,6 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
-}
-
-/**
-  * @brief  This function handles the spi2 interrupt request.
-  * @param  None
-  * @retval None
-  */
- void SPI2_I2S2EXT_IRQHandler(void)
-{
-  if(spi_i2s_interrupt_flag_get(SPI2, SPI_I2S_RDBF_FLAG) != RESET)
-  {
-    i2s2_buffer_rx[rx_index++] = spi_i2s_data_receive(SPI2);
-  }
-}
-
-/**
-  * @brief  This function handles the spi3 interrupt request.
-  * @param  None
-  * @retval None
-  */
-void SPI3_I2S3EXT_IRQHandler(void)
-{
-  if(spi_i2s_interrupt_flag_get(SPI3, SPI_I2S_TDBE_FLAG) != RESET)
-  {
-    spi_i2s_data_transmit(SPI3, i2s3_buffer_tx[tx_index++]);
-    if(tx_index == 32)
-    {
-      spi_i2s_interrupt_enable(SPI3, SPI_I2S_TDBE_INT, FALSE);
-    }
-  }
 }
 
 /**

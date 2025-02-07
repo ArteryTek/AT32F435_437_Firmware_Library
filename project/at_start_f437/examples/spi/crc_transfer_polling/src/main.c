@@ -33,7 +33,9 @@
   * @{
   */
 
-#define BUFFER_SIZE                      32
+#define SPI_MASTER_CS_HIGH   gpio_bits_set(GPIOA, GPIO_PINS_4)
+#define SPI_MASTER_CS_LOW    gpio_bits_reset(GPIOA, GPIO_PINS_4)
+#define BUFFER_SIZE          32
 
 uint16_t spi3_buffer_tx[BUFFER_SIZE] = {0x0102, 0x0304, 0x0506, 0x0708, 0x090A, 0x0B0C, 0x0D0E, 0x0F10,
                                         0x1112, 0x1314, 0x1516, 0x1718, 0x191A, 0x1B1C, 0x1D1E, 0x1F20,
@@ -47,10 +49,6 @@ uint16_t spi3_buffer_rx[BUFFER_SIZE], spi2_buffer_rx[BUFFER_SIZE];
 uint32_t tx_index = 0, rx_index = 0;
 __IO uint16_t crc1_value = 0, crc2_value = 0;
 volatile error_status transfer_status1 = ERROR, transfer_status2 = ERROR;
-
-static void gpio_config(void);
-static void spi_config(void);
-error_status buffer_compare(uint16_t* pbuffer1, uint16_t* pbuffer2, uint16_t buffer_length);
 
 /**
   * @brief  buffer compare function.
@@ -80,9 +78,12 @@ error_status buffer_compare(uint16_t* pbuffer1, uint16_t* pbuffer2, uint16_t buf
 static void spi_config(void)
 {
   spi_init_type spi_init_struct;
+  
+  /* master spi initialization */
   crm_periph_clock_enable(CRM_SPI3_PERIPH_CLOCK, TRUE);
-  crm_periph_clock_enable(CRM_SPI2_PERIPH_CLOCK, TRUE);
   spi_default_para_init(&spi_init_struct);
+  
+  /* dual line unidirectional full-duplex mode */
   spi_init_struct.transmission_mode = SPI_TRANSMIT_FULL_DUPLEX;
   spi_init_struct.master_slave_mode = SPI_MODE_MASTER;
   spi_init_struct.mclk_freq_division = SPI_MCLK_DIV_8;
@@ -92,15 +93,30 @@ static void spi_config(void)
   spi_init_struct.clock_phase = SPI_CLOCK_PHASE_2EDGE;
   spi_init_struct.cs_mode_selection = SPI_CS_SOFTWARE_MODE;
   spi_init(SPI3, &spi_init_struct);
-
+  
+  /* hardware crc calculation config */
+  spi_crc_polynomial_set(SPI3, 7);
+  spi_crc_enable(SPI3, TRUE);
+  
+  spi_enable(SPI3, TRUE);
+  
+  /* slave spi initialization */
+  crm_periph_clock_enable(CRM_SPI2_PERIPH_CLOCK, TRUE);
+  
+  spi_init_struct.transmission_mode = SPI_TRANSMIT_FULL_DUPLEX;
   spi_init_struct.master_slave_mode = SPI_MODE_SLAVE;
+  spi_init_struct.mclk_freq_division = SPI_MCLK_DIV_8;
+  spi_init_struct.first_bit_transmission = SPI_FIRST_BIT_MSB;
+  spi_init_struct.frame_bit_num = SPI_FRAME_16BIT;
+  spi_init_struct.clock_polarity = SPI_CLOCK_POLARITY_LOW;
+  spi_init_struct.clock_phase = SPI_CLOCK_PHASE_2EDGE;
+  spi_init_struct.cs_mode_selection = SPI_CS_HARDWARE_MODE;
   spi_init(SPI2, &spi_init_struct);
 
-  spi_crc_polynomial_set(SPI3, 7);
+  /* hardware crc calculation config */
   spi_crc_polynomial_set(SPI2, 7);
-  spi_crc_enable(SPI3, TRUE);
   spi_crc_enable(SPI2, TRUE);
-  spi_enable(SPI3, TRUE);
+  
   spi_enable(SPI2, TRUE);
 }
 
@@ -112,45 +128,66 @@ static void spi_config(void)
 static void gpio_config(void)
 {
   gpio_init_type gpio_initstructure;
+  crm_periph_clock_enable(CRM_GPIOA_PERIPH_CLOCK, TRUE);
   crm_periph_clock_enable(CRM_GPIOC_PERIPH_CLOCK, TRUE);
   crm_periph_clock_enable(CRM_GPIOD_PERIPH_CLOCK, TRUE);
-
-  /* master sck pin */
-  gpio_initstructure.gpio_out_type       = GPIO_OUTPUT_PUSH_PULL;
-  gpio_initstructure.gpio_pull           = GPIO_PULL_DOWN;
-  gpio_initstructure.gpio_mode           = GPIO_MODE_MUX;
+  
+  /* master spi cs pin */
+  gpio_initstructure.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
+  gpio_initstructure.gpio_pull = GPIO_PULL_UP;
+  gpio_initstructure.gpio_mode = GPIO_MODE_OUTPUT;
   gpio_initstructure.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
-  gpio_initstructure.gpio_pins           = GPIO_PINS_10;
+  gpio_initstructure.gpio_pins = GPIO_PINS_4;
+  gpio_init(GPIOA, &gpio_initstructure);
+  
+  /* non communication time: master pull up CS pin release slave */
+  SPI_MASTER_CS_HIGH;
+
+  /* master spi sck pin */
+  gpio_initstructure.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
+  gpio_initstructure.gpio_pull = GPIO_PULL_DOWN;
+  gpio_initstructure.gpio_mode = GPIO_MODE_MUX;
+  gpio_initstructure.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
+  gpio_initstructure.gpio_pins = GPIO_PINS_10;
   gpio_init(GPIOC, &gpio_initstructure);
   gpio_pin_mux_config(GPIOC, GPIO_PINS_SOURCE10, GPIO_MUX_6);
 
-  /* master miso pin */
-  gpio_initstructure.gpio_pull           = GPIO_PULL_UP;
-  gpio_initstructure.gpio_pins           = GPIO_PINS_11;
+  /* master spi miso pin */
+  gpio_initstructure.gpio_pull = GPIO_PULL_UP;
+  gpio_initstructure.gpio_pins = GPIO_PINS_11;
   gpio_init(GPIOC, &gpio_initstructure);
   gpio_pin_mux_config(GPIOC, GPIO_PINS_SOURCE11, GPIO_MUX_6);
 
-    /* master mosi pin */
-  gpio_initstructure.gpio_pull           = GPIO_PULL_UP;
-  gpio_initstructure.gpio_pins           = GPIO_PINS_12;
+  /* master spi mosi pin */
+  gpio_initstructure.gpio_pull = GPIO_PULL_UP;
+  gpio_initstructure.gpio_pins = GPIO_PINS_12;
   gpio_init(GPIOC, &gpio_initstructure);
   gpio_pin_mux_config(GPIOC, GPIO_PINS_SOURCE12, GPIO_MUX_6);
 
-  /* slave sck pin */
-  gpio_initstructure.gpio_pull           = GPIO_PULL_DOWN;
-  gpio_initstructure.gpio_pins           = GPIO_PINS_1;
+  /* slave spi cs pin */
+  gpio_initstructure.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
+  gpio_initstructure.gpio_pull = GPIO_PULL_UP;
+  gpio_initstructure.gpio_mode = GPIO_MODE_MUX;
+  gpio_initstructure.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
+  gpio_initstructure.gpio_pins = GPIO_PINS_0;
+  gpio_init(GPIOD, &gpio_initstructure);
+  gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE0, GPIO_MUX_7);
+
+  /* slave spi sck pin */
+  gpio_initstructure.gpio_pull = GPIO_PULL_DOWN;
+  gpio_initstructure.gpio_pins = GPIO_PINS_1;
   gpio_init(GPIOD, &gpio_initstructure);
   gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE1, GPIO_MUX_6);
 
-  /* slave miso pin */
-  gpio_initstructure.gpio_pull           = GPIO_PULL_UP;
-  gpio_initstructure.gpio_pins           = GPIO_PINS_2;
+  /* slave spi miso pin */
+  gpio_initstructure.gpio_pull = GPIO_PULL_UP;
+  gpio_initstructure.gpio_pins = GPIO_PINS_2;
   gpio_init(GPIOC, &gpio_initstructure);
   gpio_pin_mux_config(GPIOC, GPIO_PINS_SOURCE2, GPIO_MUX_5);
 
-  /* slave mosi pin */
-  gpio_initstructure.gpio_pull           = GPIO_PULL_UP;
-  gpio_initstructure.gpio_pins           = GPIO_PINS_4;
+  /* slave spi mosi pin */
+  gpio_initstructure.gpio_pull = GPIO_PULL_UP;
+  gpio_initstructure.gpio_pins = GPIO_PINS_4;
   gpio_init(GPIOD, &gpio_initstructure);
   gpio_pin_mux_config(GPIOD, GPIO_PINS_SOURCE4, GPIO_MUX_6);
 }
@@ -164,35 +201,58 @@ int main(void)
 {
   system_clock_config();
   at32_board_init();
+  at32_led_on(LED4);
   gpio_config();
   spi_config();
+  
+  /* start communication: master pull down CS pin select slave */
+  SPI_MASTER_CS_LOW;
 
   /* transfer procedure:the "BUFFER_SIZE-1" data transfer */
   while(tx_index < BUFFER_SIZE - 1)
   {
+    /* slave and master transmit data fill */
     while(spi_i2s_flag_get(SPI2, SPI_I2S_TDBE_FLAG) == RESET);
     spi_i2s_data_transmit(SPI2, spi2_buffer_tx[tx_index]);
     while(spi_i2s_flag_get(SPI3, SPI_I2S_TDBE_FLAG) == RESET);
     spi_i2s_data_transmit(SPI3, spi3_buffer_tx[tx_index++]);
+    
+    /* slave and master receive data get */
     while(spi_i2s_flag_get(SPI2, SPI_I2S_RDBF_FLAG) == RESET);
     spi2_buffer_rx[rx_index] = spi_i2s_data_receive(SPI2);
     while(spi_i2s_flag_get(SPI3, SPI_I2S_RDBF_FLAG) == RESET);
     spi3_buffer_rx[rx_index++] = spi_i2s_data_receive(SPI3);
   }
+  
+  /* wait master and slave transmit data buffer empty */
   while(spi_i2s_flag_get(SPI3, SPI_I2S_TDBE_FLAG) == RESET);
   while(spi_i2s_flag_get(SPI2, SPI_I2S_TDBE_FLAG) == RESET);
 
   /* transfer procedure:the last data and crc transfer */
+  /* slave the last transmit data fill and crc transfer setting */
   spi_i2s_data_transmit(SPI2, spi2_buffer_tx[tx_index]);
   spi_crc_next_transmit(SPI2);
+  
+  /* master the last transmit data fill and crc transfer setting */
   spi_i2s_data_transmit(SPI3, spi3_buffer_tx[tx_index]);
   spi_crc_next_transmit(SPI3);
+  
+  /* wait master and slave the last data transfer end */
   while(spi_i2s_flag_get(SPI3, SPI_I2S_RDBF_FLAG) == RESET);
   spi3_buffer_rx[rx_index] = spi_i2s_data_receive(SPI3);
   while(spi_i2s_flag_get(SPI2, SPI_I2S_RDBF_FLAG) == RESET);
   spi2_buffer_rx[rx_index] = spi_i2s_data_receive(SPI2);
+  
+  /* wait master and slave the crc transfer end */
   while(spi_i2s_flag_get(SPI3, SPI_I2S_RDBF_FLAG) == RESET);
   while(spi_i2s_flag_get(SPI2, SPI_I2S_RDBF_FLAG) == RESET);
+  
+  /* wait master and slave idle when communication end */
+  while(spi_i2s_flag_get(SPI3, SPI_I2S_BF_FLAG) != RESET);
+  while(spi_i2s_flag_get(SPI2, SPI_I2S_BF_FLAG) != RESET);
+  
+  /* end communication: master pull up CS pin release slave */
+  SPI_MASTER_CS_HIGH;
 
   /* test result:the data and crc check */
   transfer_status1 = buffer_compare(spi2_buffer_rx, spi3_buffer_tx, BUFFER_SIZE);
@@ -217,7 +277,7 @@ int main(void)
   }
   else
   {
-    at32_led_off(LED2);
+    at32_led_on(LED3);
   }
   while(1)
   {

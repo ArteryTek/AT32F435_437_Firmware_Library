@@ -33,15 +33,6 @@
   * @{
   */
 
-#define BUFFERSIZE 32
-
-extern uint8_t spi3_buffer_tx[BUFFERSIZE];
-extern uint8_t spi2_buffer_tx[BUFFERSIZE];
-extern uint8_t spi3_buffer_rx[BUFFERSIZE];
-extern uint8_t spi2_buffer_rx[BUFFERSIZE];
-extern uint32_t tx_index;
-extern uint32_t rx_index;
-
 /**
   * @brief  this function handles nmi exception.
   * @param  none
@@ -137,54 +128,6 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
-}
-
-/**
-  * @brief  This function handles the spi3 interrupt request.
-  * @param  None
-  * @retval None
-  */
- void SPI3_I2S3EXT_IRQHandler(void)
-{
-  if(spi_i2s_interrupt_flag_get(SPI3, SPI_I2S_TDBE_FLAG) != RESET)
-  {
-    spi_i2s_data_transmit(SPI3, spi3_buffer_tx[tx_index++]);
-    if(tx_index == BUFFERSIZE)
-    {
-      spi_i2s_interrupt_enable(SPI3, SPI_I2S_TDBE_INT, FALSE);
-    }
-  }
-  if(spi_i2s_interrupt_flag_get(SPI3, SPI_I2S_RDBF_FLAG) != RESET)
-  {
-    spi_enable(SPI3, FALSE);
-    spi3_buffer_rx[rx_index++] = spi_i2s_data_receive(SPI3);
-    spi_enable(SPI3, TRUE);
-    if(rx_index == BUFFERSIZE)
-    {
-      spi_i2s_interrupt_enable(SPI3, SPI_I2S_RDBF_INT, FALSE);
-    }
-  }
-}
-
-/**
-  * @brief  This function handles the spi2 interrupt request.
-  * @param  None
-  * @retval None
-  */
- void SPI2_I2S2EXT_IRQHandler(void)
-{
-  if(spi_i2s_interrupt_flag_get(SPI2, SPI_I2S_TDBE_FLAG) != RESET)
-  {
-    spi_i2s_data_transmit(SPI2, spi2_buffer_tx[tx_index++]);
-    if(tx_index == BUFFERSIZE)
-    {
-      spi_i2s_interrupt_enable(SPI2, SPI_I2S_TDBE_INT, FALSE);
-    }
-  }
-  if(spi_i2s_interrupt_flag_get(SPI2, SPI_I2S_RDBF_FLAG) != RESET)
-  {
-    spi2_buffer_rx[rx_index++] = spi_i2s_data_receive(SPI2);
-  }
 }
 
 /**

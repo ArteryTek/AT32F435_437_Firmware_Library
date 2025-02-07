@@ -167,11 +167,14 @@ void system_clock_recover(void)
   */
 int main(void)
 {
+  crm_clocks_freq_type crm_clocks_freq_struct = {0};
   __IO uint32_t systick_index = 0;
-  __IO uint32_t delay_index = 0;
 
   /* congfig the system clock */
   system_clock_config();
+  
+  /* get system clock */
+  crm_clocks_freq_get(&crm_clocks_freq_struct);
 
   /* init at start board */
   at32_board_init();
@@ -227,8 +230,18 @@ int main(void)
     /* determine if the debugging function is enabled or the revision code is revision A */
     if(((DEBUGMCU->ctrl & 0x00000007) != 0x00000000) || (DEBUGMCU->ser_id_bit.rev_id == 0))
     {
-      /* wait 3 LICK cycles to ensure clock stable */
-      delay_us(4);
+      /* wait 3 LICK(maximum 120us) cycles to ensure clock stable */
+      /* when wakeup from deepsleep,system clock source changes to HICK */
+      if((CRM->misc1_bit.hick_to_sclk == TRUE) && (CRM->misc1_bit.hickdiv == TRUE))
+      {
+        /* HICK is 48MHz */
+        delay_us(((120 * 6 * HICK_VALUE) /crm_clocks_freq_struct.sclk_freq) + 1);
+      }
+      else
+      {
+        /* HICK is 8MHz */
+        delay_us(((120 * HICK_VALUE) /crm_clocks_freq_struct.sclk_freq) + 1);
+      }
     }
 
     /* resume ldo before system clock source enhance */
