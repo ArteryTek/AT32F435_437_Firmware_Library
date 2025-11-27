@@ -3,7 +3,8 @@
   * @file     system_at32f435_437.c
   * @brief    contains all the functions for cmsis cortex-m4 system source file
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to
   * download from Artery official website is the copyrighted work of Artery.
@@ -141,7 +142,7 @@ void system_core_clock_update(void)
       pll_ms = CRM->pllcfg_bit.pllms;
       pll_fr = pll_fr_table[CRM->pllcfg_bit.pllfr];
 
-      if (pll_clock_source == CRM_PLL_SOURCE_HICK)
+      if(pll_clock_source == CRM_PLL_SOURCE_HICK)
       {
         /* hick selected as pll clock entry */
         pllrcsfreq = HICK_VALUE;

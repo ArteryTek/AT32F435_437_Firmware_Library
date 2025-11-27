@@ -3,7 +3,8 @@
   * @file     usbh_msc_bot_scsi.c
   * @brief    usb host msc bulk-only transfer and scsi type
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to
   * download from Artery official website is the copyrighted work of Artery.

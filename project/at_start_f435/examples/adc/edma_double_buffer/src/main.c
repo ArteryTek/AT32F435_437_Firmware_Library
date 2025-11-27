@@ -3,7 +3,8 @@
   * @file     main.c
   * @brief    main program
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to
   * download from Artery official website is the copyrighted work of Artery.
@@ -36,12 +37,10 @@
 __IO uint16_t adc1_ordinary_valuetab[3] = {0};
 __IO uint16_t double_adc1_ordinary_valuetab[3] = {0};
 __IO uint16_t edma_trans_complete_flag = 0;
+__IO uint16_t adc_conversion_times_index = 0;
 __IO uint16_t double_buffer_is_useful = 0;
 __IO uint32_t adc1_overflow_flag = 0;
-
-static void gpio_config(void);
-static void edma_config(void);
-static void adc_config(void);
+__IO uint32_t error_times_index = 0;
 
 /**
   * @brief  gpio configuration.
@@ -85,7 +84,7 @@ static void edma_config(void)
   edma_init_struct.peripheral_data_width = EDMA_PERIPHERAL_DATA_WIDTH_HALFWORD;
   edma_init_struct.peripheral_inc_enable = FALSE;
   edma_init_struct.priority = EDMA_PRIORITY_VERY_HIGH;
-  edma_init_struct.loop_mode_enable = FALSE;
+  edma_init_struct.loop_mode_enable = TRUE;
   edma_init_struct.fifo_threshold = EDMA_FIFO_THRESHOLD_1QUARTER;
   edma_init_struct.fifo_mode_enable = FALSE;
   edma_init(EDMA_STREAM1, &edma_init_struct);
@@ -102,7 +101,6 @@ static void edma_config(void)
 
   /* enable edma full data transfer interrupt */
   edma_interrupt_enable(EDMA_STREAM1, EDMA_FDT_INT, TRUE);
-  edma_stream_enable(EDMA_STREAM1, TRUE);
 }
 
 /**
@@ -115,6 +113,7 @@ static void adc_config(void)
   adc_common_config_type adc_common_struct;
   adc_base_config_type adc_base_struct;
   crm_periph_clock_enable(CRM_ADC1_PERIPH_CLOCK, TRUE);
+  adc_reset();
   nvic_irq_enable(ADC1_2_3_IRQn, 0, 0);
 
   adc_common_default_para_init(&adc_common_struct);
@@ -180,13 +179,56 @@ static void adc_config(void)
 }
 
 /**
+  * @brief  this function handles edma_stream1 handler.
+  * @param  none
+  * @retval none
+  */
+void EDMA_Stream1_IRQHandler(void)
+{
+  if(edma_interrupt_flag_get(EDMA_FDT1_FLAG) != RESET)
+  {
+    if(edma_memory_target_get(EDMA_STREAM1))
+    {
+      double_buffer_is_useful = 0;
+    }
+    else
+    {
+      double_buffer_is_useful = 1;
+    }
+    edma_flag_clear(EDMA_FDT1_FLAG);
+    edma_trans_complete_flag++;
+  }
+}
+
+/**
+  * @brief  this function handles adc1_2_3 handler.
+  * @param  none
+  * @retval none
+  */
+void ADC1_2_3_IRQHandler(void)
+{
+  if(adc_interrupt_flag_get(ADC1, ADC_OCCO_FLAG) != RESET)
+  {
+    adc_flag_clear(ADC1, ADC_OCCO_FLAG);
+    adc1_overflow_flag++;
+
+    /* to avoid data wrong,it is recommended to add the following recovery code */
+    adc_enable(ADC1, FALSE);
+    edma_stream_enable(EDMA_STREAM1, FALSE);
+    edma_flag_clear(EDMA_FDT1_FLAG);
+    edma_data_number_set(EDMA_STREAM1, 3);
+    edma_stream_enable(EDMA_STREAM1, TRUE);
+    adc_enable(ADC1, TRUE);
+  }
+}
+
+/**
   * @brief  main function.
   * @param  none
   * @retval none
   */
 int main(void)
 {
-  __IO uint32_t index = 0;
   nvic_priority_group_config(NVIC_PRIORITY_GROUP_4);
 
   /* config the system clock */
@@ -201,23 +243,33 @@ int main(void)
   gpio_config();
   edma_config();
   adc_config();
+
+  /* enable EDMA after ADC activation */
+  edma_stream_enable(EDMA_STREAM1, TRUE);
+
   printf("edma_double_buffer \r\n");
   while(1)
   {
+    /* adc1 software trigger start conversion */
     adc_ordinary_software_trigger_enable(ADC1, TRUE);
-    while(edma_trans_complete_flag == 0);
-    edma_trans_complete_flag = 0;
-    if(adc1_overflow_flag != 0)
+    delay_sec(1);
+    
+    if((adc_conversion_times_index == edma_trans_complete_flag) || (error_times_index != adc1_overflow_flag))
     {
       /* printf flag when error occur */
+      error_times_index = adc1_overflow_flag;
+      at32_led_on(LED3);
       at32_led_on(LED4);
       printf("error occur\r\n");
-      printf("adc1_overflow_flag = %d\r\n",adc1_overflow_flag);
+      printf("error_times_index = %d\r\n",error_times_index);
+      printf("conversion_times_index = %d\r\n",adc_conversion_times_index);
+      printf("\r\n");
     }
     else
     {
-      printf("conversion end without error\r\n");
       /* printf data when conversion end without error */
+      adc_conversion_times_index = edma_trans_complete_flag;
+      printf("conversion_times_index = %d\r\n",adc_conversion_times_index);
       if(double_buffer_is_useful == 1)
       {
         printf("double_adc1_ordinary_valuetab[0] = 0x%x\r\n", double_adc1_ordinary_valuetab[0]);
@@ -230,9 +282,8 @@ int main(void)
         printf("adc1_ordinary_valuetab[1] = 0x%x\r\n", adc1_ordinary_valuetab[1]);
         printf("adc1_ordinary_valuetab[2] = 0x%x\r\n", adc1_ordinary_valuetab[2]);
       }
+      printf("\r\n");
     }
-    printf("\r\n");
-    delay_sec(1);
   }
 }
 

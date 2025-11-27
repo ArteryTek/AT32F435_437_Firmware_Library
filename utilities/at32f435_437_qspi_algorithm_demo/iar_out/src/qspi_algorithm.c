@@ -51,7 +51,8 @@ void custom_qspi_xip_enable(confirm_state new_state)
 void custom_xip_enable_config(void)
 {
   uint32_t xc0_val = 0, xc1_val = 0, xc2_val = 0;
-  qspi_xip_type *custom_xip_config = NULL;
+  qspi_xip_type qspi_xip_config; 
+  qspi_xip_type *custom_xip_config = &qspi_xip_config;
 
   custom_xip_config->read_instruction_code = 0xEB;
   custom_xip_config->read_address_length = QSPI_XIP_ADDRLEN_3_BYTE;

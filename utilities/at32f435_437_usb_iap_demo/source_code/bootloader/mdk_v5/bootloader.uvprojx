@@ -770,7 +770,7 @@
               <IROM>
                 <Type>1</Type>
                 <StartAddress>0x8000000</StartAddress>
-                <Size>0x400000</Size>
+                <Size>0x3f0000</Size>
               </IROM>
               <XRAM>
                 <Type>0</Type>

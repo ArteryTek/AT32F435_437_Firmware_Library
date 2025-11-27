@@ -3,7 +3,8 @@
   * @file     at32f435_437_clock.c
   * @brief    system clock config program
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to
   * download from Artery official website is the copyrighted work of Artery.
@@ -113,12 +114,6 @@ void system_clock_config(void)
 
   /* disable auto step mode */
   crm_auto_step_mode_enable(FALSE);
-
-  *(__IO uint32_t*)0x40023C60 &= 0xFFFFFFFC;
-  *(__IO uint32_t*)0x40023C60 |= 0x00000001;
-  while ((*(__IO uint32_t*)0x40023C60 & 0x30) != 0x10)
-  {
-  }
 
   /* update system_core_clock global variable */
   system_core_clock_update();

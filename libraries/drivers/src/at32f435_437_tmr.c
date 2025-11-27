@@ -3,7 +3,8 @@
   * @file     at32f435_437_tmr.c
   * @brief    contains all the functions for the tmr firmware library
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to
   * download from Artery official website is the copyrighted work of Artery.
@@ -365,21 +366,31 @@ void tmr_output_channel_config(tmr_type *tmr_x, tmr_channel_select_type tmr_chan
   /* set channel output mode */
   channel = tmr_channel;
 
+  /* reset output channel(complementary) enable bit */
+  chx_offset = (tmr_channel * 2);
+  chcx_offset = ((tmr_channel * 2) + 2);
+  tmr_x->cctrl &= ~(1<<chcx_offset);
+  tmr_x->cctrl &= ~(1<<chx_offset);
+
   switch(channel)
   {
     case TMR_SELECT_CHANNEL_1:
+      tmr_x->cm1_output_bit.c1c = FALSE;
       tmr_x->cm1_output_bit.c1octrl = tmr_output_struct->oc_mode;
       break;
 
     case TMR_SELECT_CHANNEL_2:
+      tmr_x->cm1_output_bit.c2c = FALSE;
       tmr_x->cm1_output_bit.c2octrl = tmr_output_struct->oc_mode;
       break;
 
     case TMR_SELECT_CHANNEL_3:
+      tmr_x->cm2_output_bit.c3c = FALSE;
       tmr_x->cm2_output_bit.c3octrl = tmr_output_struct->oc_mode;
       break;
 
     case TMR_SELECT_CHANNEL_4:
+      tmr_x->cm2_output_bit.c4c = FALSE;
       tmr_x->cm2_output_bit.c4octrl = tmr_output_struct->oc_mode;
       break;
 
@@ -408,9 +419,6 @@ void tmr_output_channel_config(tmr_type *tmr_x, tmr_channel_select_type tmr_chan
   tmr_x->cctrl &= ~(1<<chx_offset);
   tmr_x->cctrl |= channel_index;
 
-  chx_offset = (tmr_channel * 2);
-  chcx_offset = ((tmr_channel * 2) + 2);
-
   /* get channel enable bit position in cctrl register */
   channel_index = (uint16_t)(tmr_output_struct->oc_output_state << (tmr_channel * 2));
 
@@ -418,11 +426,9 @@ void tmr_output_channel_config(tmr_type *tmr_x, tmr_channel_select_type tmr_chan
   channel_c_index = (uint16_t)(tmr_output_struct->occ_output_state << ((tmr_channel * 2) + 2));
 
   /* set output channel complementary enable bit */
-  tmr_x->cctrl &= ~(1<<chcx_offset);
   tmr_x->cctrl |= channel_c_index;
 
   /* set output channel enable bit */
-  tmr_x->cctrl &= ~(1<<chx_offset);
   tmr_x->cctrl |= channel_index;
 }
 
@@ -1047,6 +1053,8 @@ void tmr_pwm_input_config(tmr_type *tmr_x, tmr_input_config_type *input_struct, 
   switch(channel)
   {
     case TMR_SELECT_CHANNEL_1:
+      tmr_x->cctrl_bit.c1en = FALSE;
+      tmr_x->cctrl_bit.c2en = FALSE;
       if(input_struct->input_polarity_select == TMR_INPUT_RISING_EDGE)
       {
         /* set channel polarity */
@@ -1090,6 +1098,8 @@ void tmr_pwm_input_config(tmr_type *tmr_x, tmr_input_config_type *input_struct, 
       break;
 
     case TMR_SELECT_CHANNEL_2:
+      tmr_x->cctrl_bit.c1en = FALSE;
+      tmr_x->cctrl_bit.c2en = FALSE;
       if(input_struct->input_polarity_select == TMR_INPUT_RISING_EDGE)
       {
         /* set channel polarity */
@@ -1710,6 +1720,9 @@ void tmr_encoder_mode_config(tmr_type *tmr_x, tmr_encoder_mode_type encoder_mode
                              ic1_polarity, tmr_input_polarity_type ic2_polarity)
 {
   tmr_x->stctrl_bit.smsel = encoder_mode;
+
+  tmr_x->cctrl_bit.c1en = FALSE;
+  tmr_x->cctrl_bit.c2en = FALSE;
 
   /* set ic1 polarity */
   tmr_x->cctrl_bit.c1p =  (ic1_polarity & 0x1);

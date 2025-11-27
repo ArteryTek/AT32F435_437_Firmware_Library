@@ -3,7 +3,8 @@
   * @file     at32f435_437_qspi.h
   * @brief    at32f435_437 qspi header file
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to
   * download from Artery official website is the copyrighted work of Artery.
@@ -431,8 +432,8 @@ typedef struct
     __IO uint32_t xip_cmd_w2;
     struct
     {
-      __IO uint32_t xipr_dcnt            : 5; /* [4:0] */
-      __IO uint32_t reserved1            : 3; /* [7:5] */
+      __IO uint32_t xipr_dcnt            : 6; /* [5:0] */
+      __IO uint32_t reserved1            : 2; /* [7:6] */
       __IO uint32_t xipr_tcnt            : 7; /* [14:8] */
       __IO uint32_t xipr_sel             : 1; /* [15] */
       __IO uint32_t xipw_dcnt            : 5; /* [20:16] */

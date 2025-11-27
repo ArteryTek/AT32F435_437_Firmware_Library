@@ -3,7 +3,8 @@
   * @file     at_surf_f437_board_ov2640.c
   * @brief    header file of ov2640 program
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to
   * download from Artery official website is the copyrighted work of Artery.

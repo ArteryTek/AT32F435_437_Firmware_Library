@@ -3,7 +3,8 @@
   * @file     qspi1_gpio_select.c
   * @brief    device algorithm for new device flash
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to
   * download from Artery official website is the copyrighted work of Artery.
@@ -215,7 +216,7 @@ void qspi_gpio_slect(void)
   //  <3=> PF6
   //  <4=> PG14
   //  <5=> PC5
-  #define QSPI_IO3_PIN_SELECT     5
+  #define QSPI_IO3_PIN_SELECT     3
   #if (QSPI_IO3_PIN_SELECT == 0)
     #define GPIO_IO3_PORT_VALUE  GPIOA
     #define GPIO_IO3_CLOCK_VALUE  0U

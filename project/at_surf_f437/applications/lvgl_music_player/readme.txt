@@ -12,7 +12,7 @@
   XMC_A10     LCD_RS         PG0
   XMC_NE1     LCD_CS         PD7
   XMC_NWE     LCD_WR         PD5
-  XMC_NWE     LCD_RD         PD4
+  XMC_NOE     LCD_RD         PD4
   XMC_D0      DATA[0]        PD14
   XMC_D1      DATA[1]        PD15
   XMC_D2      DATA[2]        PD0

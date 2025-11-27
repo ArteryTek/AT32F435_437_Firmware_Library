@@ -3,7 +3,8 @@
   * @file     at32f435_437_usart.c
   * @brief    contains all the functions for the usart firmware library
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to
   * download from Artery official website is the copyrighted work of Artery.
@@ -105,7 +106,7 @@ void usart_reset(usart_type* usart_x)
   *         - USART_DATA_7BITS
   *         - USART_DATA_8BITS
   *         - USART_DATA_9BITS.
-  *         note：
+  *         note:
   *         - when parity check is disabled, the data bit width is the actual data bit number.
   *         - when parity check is enabled, the data bit width is the actual data bit number minus 1, and the MSB bit is replaced with the parity bit.
   * @param  stop_bit: stop bits transmitted
@@ -547,7 +548,7 @@ void usart_irda_low_power_enable(usart_type* usart_x, confirm_state new_state)
   * @brief  configure the usart's hardware flow control.
   * @param  usart_x: select the usart or the uart peripheral.
   *         this parameter can be one of the following values:
-  *         USART1, USART2, USART3
+  *         USART1, USART2, USART3, USART6
   * @param  flow_state: specifies the hardware flow control.
   *         this parameter can be one of the following values:
   *         - USART_HARDWARE_FLOW_NONE
@@ -618,7 +619,7 @@ flag_status usart_flag_get(usart_type* usart_x, uint32_t flag)
   *         USART1, USART2, USART3, UART4, UART5, USART6, UART7 or UART8.
   * @param  flag: specifies the flag to check.
   *         this parameter can be one of the following values:
-  *         - USART_CTSCF_FLAG: cts change flag (not available for UART4,UART5)
+  *         - USART_CTSCF_FLAG: cts change flag (not available for UART4, UART5, UART7 and UART8)
   *         - USART_BFF_FLAG:   break frame flag
   *         - USART_TDBE_FLAG:  transmit data buffer empty flag
   *         - USART_TDC_FLAG:   transmit data complete flag
@@ -691,7 +692,7 @@ flag_status usart_interrupt_flag_get(usart_type* usart_x, uint32_t flag)
   *         USART1, USART2, USART3, UART4, UART5, USART6, UART7 or UART8.
   * @param  flag: specifies the flag to clear.
   *         this parameter can be any combination of the following values:
-  *         - USART_CTSCF_FLAG: (not available for UART4,UART5,USART6,UART7 and UART8).
+  *         - USART_CTSCF_FLAG: (not available for UART4, UART5, UART7 and UART8).
   *         - USART_BFF_FLAG:
   *         - USART_TDC_FLAG:
   *         - USART_RDBF_FLAG:
@@ -727,7 +728,7 @@ void usart_flag_clear(usart_type* usart_x, uint32_t flag)
   * @brief  configure the usart's rs485 transmit delay time.
   * @param  usart_x: select the usart or the uart peripheral.
   *         this parameter can be one of the following values:
-  *         USART1, USART2, USART3
+  *         USART1, USART2, USART3, USART6
   * @param  start_delay_time: transmit start delay time.
   * @param  complete_delay_time: transmit complete delay time.
   * @retval none
@@ -770,7 +771,7 @@ void usart_id_bit_num_set(usart_type* usart_x, usart_identification_bit_num_type
   * @brief  set the usart's de polarity.
   * @param  usart_x: select the usart or the uart peripheral.
   *         this parameter can be one of the following values:
-  *         USART1, USART2, USART3
+  *         USART1, USART2, USART3, USART6
   * @param  de_polarity: the usart de polarity selection.
   *         this parameter can be: USART_DE_POLARITY_HIGH or USART_DE_POLARITY_LOW.
   * @retval none
@@ -784,7 +785,7 @@ void usart_de_polarity_set(usart_type* usart_x, usart_de_polarity_type de_polari
   * @brief  enable or disable the usart's rs485 mode.
   * @param  usart_x: select the usart or the uart peripheral.
   *         this parameter can be one of the following values:
-  *         USART1, USART2, USART3
+  *         USART1, USART2, USART3, USART6
   * @param  new_state: new state of the irda mode.
   *         this parameter can be: TRUE or FALSE.
   * @retval none

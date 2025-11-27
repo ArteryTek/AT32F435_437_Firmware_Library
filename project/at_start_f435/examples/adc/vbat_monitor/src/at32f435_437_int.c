@@ -3,7 +3,8 @@
   * @file     at32f435_437_int.c
   * @brief    main interrupt service routines.
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to
   * download from Artery official website is the copyrighted work of Artery.
@@ -32,9 +33,6 @@
 /** @addtogroup 435_ADC_vbat_monitor
   * @{
   */
-
-
-extern __IO uint32_t adc1_overflow_flag;
 
 /**
   * @brief  this function handles nmi exception.
@@ -131,20 +129,6 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
-}
-
-/**
-  * @brief  this function handles adc1_2_3 handler.
-  * @param  none
-  * @retval none
-  */
-void ADC1_2_3_IRQHandler(void)
-{
-  if(adc_interrupt_flag_get(ADC1, ADC_OCCO_FLAG) != RESET)
-  {
-    adc_flag_clear(ADC1, ADC_OCCO_FLAG);
-    adc1_overflow_flag++;
-  }
 }
 
 /**

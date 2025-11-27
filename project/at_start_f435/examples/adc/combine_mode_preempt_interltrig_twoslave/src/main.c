@@ -3,7 +3,8 @@
   * @file     main.c
   * @brief    main program
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to
   * download from Artery official website is the copyrighted work of Artery.
@@ -33,15 +34,13 @@
   * @{
   */
 
-__IO uint16_t adc1_preempt_valuetab[2][3] = {0};
-__IO uint16_t adc2_preempt_valuetab[2][3] = {0};
-__IO uint16_t adc3_preempt_valuetab[2][3] = {0};
+__IO uint16_t adc1_preempt_valuetab[3] = {0};
+__IO uint16_t adc2_preempt_valuetab[3] = {0};
+__IO uint16_t adc3_preempt_valuetab[3] = {0};
 __IO uint16_t adc1_preempt_conversion_count = 0;
 __IO uint16_t adc2_preempt_conversion_count = 0;
 __IO uint16_t adc3_preempt_conversion_count = 0;
-
-static void gpio_config(void);
-static void adc_config(void);
+__IO uint32_t adc_conversion_times_index = 0;
 
 /**
   * @brief  gpio configuration.
@@ -83,6 +82,7 @@ static void adc_config(void)
   crm_periph_clock_enable(CRM_ADC1_PERIPH_CLOCK, TRUE);
   crm_periph_clock_enable(CRM_ADC2_PERIPH_CLOCK, TRUE);
   crm_periph_clock_enable(CRM_ADC3_PERIPH_CLOCK, TRUE);
+  adc_reset();
   nvic_irq_enable(ADC1_2_3_IRQn, 0, 0);
 
   adc_common_default_para_init(&adc_common_struct);
@@ -192,6 +192,39 @@ static void adc_config(void)
 }
 
 /**
+  * @brief  this function handles adc1_2_3 handler.
+  * @param  none
+  * @retval none
+  */
+void ADC1_2_3_IRQHandler(void)
+{
+  if(adc_interrupt_flag_get(ADC1, ADC_PCCE_FLAG) != RESET)
+  {
+    adc_flag_clear(ADC1, ADC_PCCE_FLAG);
+    adc1_preempt_valuetab[0] = adc_preempt_conversion_data_get(ADC1, ADC_PREEMPT_CHANNEL_1);
+    adc1_preempt_valuetab[1] = adc_preempt_conversion_data_get(ADC1, ADC_PREEMPT_CHANNEL_2);
+    adc1_preempt_valuetab[2] = adc_preempt_conversion_data_get(ADC1, ADC_PREEMPT_CHANNEL_3);
+    adc1_preempt_conversion_count++;
+  }
+  if(adc_interrupt_flag_get(ADC2, ADC_PCCE_FLAG) != RESET)
+  {
+    adc_flag_clear(ADC2, ADC_PCCE_FLAG);
+    adc2_preempt_valuetab[0] = adc_preempt_conversion_data_get(ADC2, ADC_PREEMPT_CHANNEL_1);
+    adc2_preempt_valuetab[1] = adc_preempt_conversion_data_get(ADC2, ADC_PREEMPT_CHANNEL_2);
+    adc2_preempt_valuetab[2] = adc_preempt_conversion_data_get(ADC2, ADC_PREEMPT_CHANNEL_3);
+    adc2_preempt_conversion_count++;
+  }
+  if(adc_interrupt_flag_get(ADC3, ADC_PCCE_FLAG) != RESET)
+  {
+    adc_flag_clear(ADC3, ADC_PCCE_FLAG);
+    adc3_preempt_valuetab[0] = adc_preempt_conversion_data_get(ADC3, ADC_PREEMPT_CHANNEL_1);
+    adc3_preempt_valuetab[1] = adc_preempt_conversion_data_get(ADC3, ADC_PREEMPT_CHANNEL_2);
+    adc3_preempt_valuetab[2] = adc_preempt_conversion_data_get(ADC3, ADC_PREEMPT_CHANNEL_3);
+    adc3_preempt_conversion_count++;
+  }
+}
+
+/**
   * @brief  main function.
   * @param  none
   * @retval none
@@ -213,44 +246,39 @@ int main(void)
   gpio_config();
   adc_config();
   printf("combine_mode_preempt_interltrig_twoslave \r\n");
-
-  /* adc1 software trigger start conversion */
-  for(index = 0; index < 6; index++)
+  while(1)
   {
     adc_preempt_software_trigger_enable(ADC1, TRUE);
     delay_sec(1);
-  }
-  if((adc1_preempt_conversion_count != 2) || (adc2_preempt_conversion_count != 2) || (adc3_preempt_conversion_count != 2))
-  {
-    /* printf flag when error occur */
-    at32_led_on(LED3);
-    at32_led_on(LED4);
-    printf("error occur\r\n");
-    printf("adc1_preempt_conversion_count = %d\r\n",adc1_preempt_conversion_count);
-    printf("adc2_preempt_conversion_count = %d\r\n",adc2_preempt_conversion_count);
-    printf("adc3_preempt_conversion_count = %d\r\n",adc3_preempt_conversion_count);
-  }
-  else
-  {
-    /* printf data when conversion end without error */
-    printf("conversion end without error\r\n");
-    for(index = 0; index < 2; index++)
+    if((adc_conversion_times_index + 1) != (adc1_preempt_conversion_count + adc2_preempt_conversion_count + adc3_preempt_conversion_count))
     {
-      printf("adc1_preempt_valuetab[%d][0] = 0x%x\r\n", index, adc1_preempt_valuetab[index][0]);
-      printf("adc1_preempt_valuetab[%d][1] = 0x%x\r\n", index, adc1_preempt_valuetab[index][1]);
-      printf("adc1_preempt_valuetab[%d][2] = 0x%x\r\n", index, adc1_preempt_valuetab[index][2]);
-      printf("adc2_preempt_valuetab[%d][0] = 0x%x\r\n", index, adc2_preempt_valuetab[index][0]);
-      printf("adc2_preempt_valuetab[%d][1] = 0x%x\r\n", index, adc2_preempt_valuetab[index][1]);
-      printf("adc2_preempt_valuetab[%d][2] = 0x%x\r\n", index, adc2_preempt_valuetab[index][2]);
-      printf("adc3_preempt_valuetab[%d][0] = 0x%x\r\n", index, adc3_preempt_valuetab[index][0]);
-      printf("adc3_preempt_valuetab[%d][1] = 0x%x\r\n", index, adc3_preempt_valuetab[index][1]);
-      printf("adc3_preempt_valuetab[%d][2] = 0x%x\r\n", index, adc3_preempt_valuetab[index][2]);
+      /* printf flag when error occur */
+      at32_led_on(LED3);
+      at32_led_on(LED4);
+      printf("error occur\r\n");
+      printf("adc_conversion_times_index = %d\r\n",adc_conversion_times_index);
+      printf("adc1_preempt_conversion_count = %d\r\n",adc1_preempt_conversion_count);
+      printf("adc2_preempt_conversion_count = %d\r\n",adc2_preempt_conversion_count);
+      printf("adc3_preempt_conversion_count = %d\r\n",adc3_preempt_conversion_count);
+      adc_conversion_times_index = adc1_preempt_conversion_count + adc2_preempt_conversion_count + adc3_preempt_conversion_count;
       printf("\r\n");
     }
-  }
-  at32_led_on(LED2);
-  while(1)
-  {
+    else
+    {
+      /* printf data when conversion end without error */
+      adc_conversion_times_index = adc1_preempt_conversion_count + adc2_preempt_conversion_count + adc3_preempt_conversion_count;
+      printf("adc_conversion_times_index = %d\r\n",adc_conversion_times_index);
+      printf("adc1_preempt_valuetab[0] = 0x%x\r\n", adc1_preempt_valuetab[0]);
+      printf("adc1_preempt_valuetab[1] = 0x%x\r\n", adc1_preempt_valuetab[1]);
+      printf("adc1_preempt_valuetab[2] = 0x%x\r\n", adc1_preempt_valuetab[2]);
+      printf("adc2_preempt_valuetab[0] = 0x%x\r\n", adc2_preempt_valuetab[0]);
+      printf("adc2_preempt_valuetab[1] = 0x%x\r\n", adc2_preempt_valuetab[1]);
+      printf("adc2_preempt_valuetab[2] = 0x%x\r\n", adc2_preempt_valuetab[2]);
+      printf("adc3_preempt_valuetab[0] = 0x%x\r\n", adc3_preempt_valuetab[0]);
+      printf("adc3_preempt_valuetab[1] = 0x%x\r\n", adc3_preempt_valuetab[1]);
+      printf("adc3_preempt_valuetab[2] = 0x%x\r\n", adc3_preempt_valuetab[2]);
+      printf("\r\n");
+    }
   }
 }
 

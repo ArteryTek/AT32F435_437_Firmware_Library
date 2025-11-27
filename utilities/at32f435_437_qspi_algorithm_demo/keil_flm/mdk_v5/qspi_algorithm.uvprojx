@@ -482,7 +482,7 @@
         <TargetCommonOption>
           <Device>-AT32F435ZMT7</Device>
           <Vendor>ArteryTek</Vendor>
-          <PackID>ArteryTek.AT32F435_437_DFP.2.1.5</PackID>
+          <PackID>ArteryTek.AT32F435_437_DFP.2.2.3</PackID>
           <Cpu></Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>

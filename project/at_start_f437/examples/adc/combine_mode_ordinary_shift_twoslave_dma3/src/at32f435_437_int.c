@@ -3,7 +3,8 @@
   * @file     at32f435_437_int.c
   * @brief    main interrupt service routines.
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to
   * download from Artery official website is the copyrighted work of Artery.
@@ -32,11 +33,6 @@
 /** @addtogroup 437_ADC_combine_mode_ordinary_shift_twoslave_dma3
   * @{
   */
-
-extern __IO uint32_t dma1_trans_complete_flag;
-extern __IO uint32_t adc1_overflow_flag;
-extern __IO uint32_t adc2_overflow_flag;
-extern __IO uint32_t adc3_overflow_flag;
 
 /**
   * @brief  this function handles nmi exception.
@@ -133,44 +129,6 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
-}
-
-/**
-  * @brief  this function handles dma1_channel1 handler.
-  * @param  none
-  * @retval none
-  */
-void DMA1_Channel1_IRQHandler(void)
-{
-  if(dma_interrupt_flag_get(DMA1_FDT1_FLAG) != RESET)
-  {
-    dma_flag_clear(DMA1_FDT1_FLAG);
-    dma1_trans_complete_flag = 1;
-  }
-}
-
-/**
-  * @brief  this function handles adc1_2_3 handler.
-  * @param  none
-  * @retval none
-  */
-void ADC1_2_3_IRQHandler(void)
-{
-  if(adc_interrupt_flag_get(ADC1, ADC_OCCO_FLAG) != RESET)
-  {
-    adc_flag_clear(ADC1, ADC_OCCO_FLAG);
-    adc1_overflow_flag++;
-  }
-  if(adc_interrupt_flag_get(ADC2, ADC_OCCO_FLAG) != RESET)
-  {
-    adc_flag_clear(ADC2, ADC_OCCO_FLAG);
-    adc2_overflow_flag++;
-  }
-  if(adc_interrupt_flag_get(ADC3, ADC_OCCO_FLAG) != RESET)
-  {
-    adc_flag_clear(ADC3, ADC_OCCO_FLAG);
-    adc3_overflow_flag++;
-  }
 }
 
 /**

@@ -3,7 +3,8 @@
   * @file     FlashPrg.c
   * @brief    device algorithm for new device flash
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to
   * download from Artery official website is the copyrighted work of Artery.
@@ -74,7 +75,8 @@ void custom_qspi_xip_enable(confirm_state new_state)
 void custom_xip_enable_config(void)
 {
   uint32_t xc0_val = 0, xc1_val = 0, xc2_val = 0;
-  qspi_xip_type *custom_xip_config;
+  qspi_xip_type qspi_xip_config; 
+  qspi_xip_type *custom_xip_config = &qspi_xip_config;
 
   custom_xip_config->read_instruction_code = 0xEB;
   custom_xip_config->read_address_length = QSPI_XIP_ADDRLEN_3_BYTE;
@@ -402,6 +404,33 @@ int ProgramPage (unsigned long adr, unsigned long sz, unsigned char *buf)
   custom_xip_enable_config();
   return 0;
 }
+
+#if 0
+unsigned long Verify(unsigned long adr, unsigned long sz, unsigned char *buf)
+{
+  while (sz)
+  {
+    if(*(uint8_t *)adr != *(uint8_t *)buf)
+      return (adr);
+    sz -= sizeof(uint8_t);
+    adr += sizeof(uint8_t);
+    buf += sizeof(uint8_t);
+  }
+  return (adr);
+}
+
+int BlankCheck(unsigned long adr, unsigned long sz, unsigned char pat)
+{
+  unsigned char* ptr = (unsigned char*)adr;
+  unsigned int i;
+  for(i = 0; i < sz; i++)
+  {
+    if(ptr[i] != pat) 
+      return (1);
+  }
+  return (0);
+}
+#endif
 
 /**
   * @}

@@ -3,7 +3,8 @@
   * @file     main.c
   * @brief    main program
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to
   * download from Artery official website is the copyrighted work of Artery.
@@ -33,12 +34,11 @@
   * @{
   */
 
+__IO uint32_t conversion_index = 0;
 __IO uint16_t adc1_ordinary_valuetab[3] = {0};
 __IO uint16_t *p_adc1_ordinary = adc1_ordinary_valuetab;
 __IO uint32_t adc1_overflow_flag = 0;
-
-static void gpio_config(void);
-static void adc_config(void);
+__IO uint32_t error_times_index = 0;
 
 /**
   * @brief  gpio configuration.
@@ -68,6 +68,7 @@ static void adc_config(void)
   adc_common_config_type adc_common_struct;
   adc_base_config_type adc_base_struct;
   crm_periph_clock_enable(CRM_ADC1_PERIPH_CLOCK, TRUE);
+  adc_reset();
   nvic_irq_enable(ADC1_2_3_IRQn, 0, 0);
 
   adc_common_default_para_init(&adc_common_struct);
@@ -135,13 +136,32 @@ static void adc_config(void)
 }
 
 /**
+  * @brief  this function handles adc1_2_3 handler.
+  * @param  none
+  * @retval none
+  */
+void ADC1_2_3_IRQHandler(void)
+{
+  if(adc_interrupt_flag_get(ADC1, ADC_OCCO_FLAG) != RESET)
+  {
+    adc_flag_clear(ADC1, ADC_OCCO_FLAG);
+    adc1_overflow_flag++;
+
+    /* to avoid data wrong,it is recommended to add the following recovery code */
+    adc_enable(ADC1, FALSE);
+    p_adc1_ordinary = adc1_ordinary_valuetab;
+    conversion_index = 0;
+    adc_enable(ADC1, TRUE);
+  }
+}
+
+/**
   * @brief  main function.
   * @param  none
   * @retval none
   */
 int main(void)
 {
-  __IO uint32_t index = 0;
   nvic_priority_group_config(NVIC_PRIORITY_GROUP_4);
 
   /* config the system clock */
@@ -157,30 +177,35 @@ int main(void)
   gpio_config();
   adc_config();
   printf("use_polling_get_conversion_data \r\n");
+  
+  /* ordinary software start conversion */
   adc_ordinary_software_trigger_enable(ADC1, TRUE);
   while(1)
   {
     while(adc_flag_get(ADC1, ADC_OCCE_FLAG) == RESET);
     *(p_adc1_ordinary++) = adc_ordinary_conversion_data_get(ADC1);
-    index++;
-    if(adc1_overflow_flag != 0)
+    conversion_index++;
+    if(error_times_index != adc1_overflow_flag)
     {
       /* printf flag when error occur */
+      error_times_index = adc1_overflow_flag;
       at32_led_on(LED3);
       at32_led_on(LED4);
       printf("error occur\r\n");
-      printf("adc1_overflow_flag = %d\r\n",adc1_overflow_flag);
-      while(1);
+      printf("error_times_index = %d\r\n",error_times_index);
+      printf("\r\n");
     }
-    if(index%3 == 0)
+    if(conversion_index%3 == 0)
     {
-      printf("conversion end without error\r\n");
+      printf("loop_index = %d\r\n", conversion_index);
       printf("adc1_ordinary_valuetab[0] = 0x%x\r\n", adc1_ordinary_valuetab[0]);
       printf("adc1_ordinary_valuetab[1] = 0x%x\r\n", adc1_ordinary_valuetab[1]);
       printf("adc1_ordinary_valuetab[2] = 0x%x\r\n", adc1_ordinary_valuetab[2]);
       printf("\r\n");
       delay_sec(1);
       p_adc1_ordinary = adc1_ordinary_valuetab;
+
+      /* ordinary software start conversion */
       adc_ordinary_software_trigger_enable(ADC1, TRUE);
     }
   }

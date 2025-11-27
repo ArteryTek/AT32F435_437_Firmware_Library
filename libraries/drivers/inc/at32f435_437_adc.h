@@ -3,7 +3,8 @@
   * @file     at32f435_437_adc.h
   * @brief    at32f435_437 adc header file
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to
   * download from Artery official website is the copyrighted work of Artery.
@@ -876,6 +877,8 @@ void adc_base_default_para_init(adc_base_config_type *adc_base_struct);
 void adc_base_config(adc_type *adc_x, adc_base_config_type *adc_base_struct);
 void adc_common_default_para_init(adc_common_config_type *adc_common_struct);
 void adc_common_config(adc_common_config_type *adc_common_struct);
+void adc_combine_mode_set(adc_combine_mode_type combine_mode);
+uint32_t adc_combine_mode_get(void);
 void adc_resolution_set(adc_type *adc_x, adc_resolution_type resolution);
 void adc_voltage_battery_enable(confirm_state new_state);
 void adc_dma_mode_enable(adc_type *adc_x, confirm_state new_state);

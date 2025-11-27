@@ -5,8 +5,8 @@
   **************************************************************************
   */
 
-  this demo is based on the at-start board and AT32-Comm-EV board, in this demo, 
-  shows how to use spi access the w25q flash chip.
+  this demo is based on the at-start board, in this demo, shows how to use spi access 
+  the w25q flash chip.
   the pins connection as follow:
   - spi2                     w25qxx
     pd0(cs)        <--->     cs pin

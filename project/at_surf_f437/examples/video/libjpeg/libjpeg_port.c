@@ -3,7 +3,8 @@
   * @file     libjpeg_port.c
   * @brief    contains all the functions for the i2c firmware library
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to
   * download from Artery official website is the copyrighted work of Artery.

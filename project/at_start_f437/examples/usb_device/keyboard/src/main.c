@@ -3,7 +3,8 @@
   * @file     main.c
   * @brief    main program
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to
   * download from Artery official website is the copyrighted work of Artery.
@@ -161,11 +162,27 @@ int main(void)
         /* enter deep sleep mode */
         pwc_deep_sleep_mode_enter(PWC_DEEP_SLEEP_ENTER_WFI);
         
-        /* hick 8MHz as system clock, wait clock stable, 
-           wait 3 LICK cycles to ensure clock stable, at least 120us */
-        for(delay_index = 0; delay_index < 600; delay_index++)
+        /* determine if the debugging function is enabled or the revision code is revision A */
+        if(((DEBUGMCU->ctrl & 0x00000007) != 0x00000000) || (DEBUGMCU->ser_id_bit.rev_id == 0))
         {
-          __NOP();
+          /* wait 3 LICK(maximum 120us) cycles to ensure clock stable */
+          /* when wakeup from deepsleep,system clock source changes to HICK */
+          if((CRM->misc1_bit.hick_to_sclk == TRUE) && (CRM->misc1_bit.hickdiv == TRUE))
+          {
+            /* HICK is 48MHz */
+            for(delay_index = 0; delay_index < 750; delay_index++)
+            {
+              __NOP();
+            }
+          }
+          else
+          {
+            /* HICK is 8MHz */
+            for(delay_index = 0; delay_index < 125; delay_index++)
+            {
+              __NOP();
+            }
+          }
         }
         
         system_clock_recover();
@@ -189,6 +206,8 @@ int main(void)
   */
 void usb_clock48m_select(usb_clk48_s clk_s)
 {
+  crm_clocks_freq_type clocks_struct;
+  
   if(clk_s == USB_CLK_HICK)
   {
     crm_usb_clock_source_select(CRM_USB_CLOCK_SOURCE_HICK);
@@ -210,7 +229,8 @@ void usb_clock48m_select(usb_clk48_s clk_s)
   }
   else
   {
-    switch(system_core_clock)
+    crm_clocks_freq_get(&clocks_struct);
+    switch(clocks_struct.sclk_freq)
     {
       /* 48MHz */
       case 48000000:
@@ -273,7 +293,6 @@ void usb_clock48m_select(usb_clk48_s clk_s)
     }
   }
 }
-
 /**
   * @brief  this function config gpio.
   * @param  none

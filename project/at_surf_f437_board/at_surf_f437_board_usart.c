@@ -3,7 +3,8 @@
   * @file     at_surf_f437_board_usart.c
   * @brief    set of firmware functions to manage usart.
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to
   * download from Artery official website is the copyrighted work of Artery.
@@ -31,12 +32,12 @@
   __asm (".global __use_no_semihosting\n\t");
   void _sys_exit(int x)
   {
-    x = x;
+    UNUSED(x);
   }
   /* __use_no_semihosting was requested, but _ttywrch was */
   void _ttywrch(int ch)
   {
-    ch = ch;
+    UNUSED(ch);
   }
   FILE __stdout;
 #else
@@ -49,12 +50,12 @@
   FILE __stdout;
   void _sys_exit(int x)
   {
-    x = x;
+    UNUSED(x);
   }
   /* __use_no_semihosting was requested, but _ttywrch was */
   void _ttywrch(int ch)
   {
-    ch = ch;
+    UNUSED(ch);
   }
  #endif
 #endif
@@ -86,6 +87,7 @@ int _write(int fd, char *pbuffer, int size)
 int __write(int fd, char *pbuffer, int size)
 #endif
 {
+  UNUSED(fd);
   for(int i = 0; i < size; i ++)
   {
     while(usart_flag_get(USART1, USART_TDBE_FLAG) == RESET);

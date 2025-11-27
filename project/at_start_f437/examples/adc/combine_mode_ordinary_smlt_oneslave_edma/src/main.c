@@ -3,7 +3,8 @@
   * @file     main.c
   * @brief    main program
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to
   * download from Artery official website is the copyrighted work of Artery.
@@ -33,14 +34,12 @@
   * @{
   */
 
-__IO uint32_t adccom_ordinary_valuetab[5][3];
+__IO uint32_t adccom_ordinary_valuetab[3];
 __IO uint32_t edma_trans_complete_flag = 0;
+__IO uint32_t adc_conversion_times_index = 0;
 __IO uint32_t adc1_overflow_flag = 0;
 __IO uint32_t adc2_overflow_flag = 0;
-
-static void gpio_config(void);
-static void edma_config(void);
-static void adc_config(void);
+__IO uint32_t error_times_index = 0;
 
 /**
   * @brief  gpio configuration.
@@ -78,7 +77,7 @@ static void edma_config(void)
 
   edma_reset(EDMA_STREAM1);
   edma_default_para_init(&edma_init_struct);
-  edma_init_struct.buffer_size = 15;
+  edma_init_struct.buffer_size = 3;
   edma_init_struct.direction = EDMA_DIR_PERIPHERAL_TO_MEMORY;
   edma_init_struct.memory0_base_addr = (uint32_t)adccom_ordinary_valuetab;
   edma_init_struct.memory_burst_mode = EDMA_MEMORY_SINGLE;
@@ -89,7 +88,7 @@ static void edma_config(void)
   edma_init_struct.peripheral_data_width = EDMA_PERIPHERAL_DATA_WIDTH_WORD;
   edma_init_struct.peripheral_inc_enable = FALSE;
   edma_init_struct.priority = EDMA_PRIORITY_VERY_HIGH;
-  edma_init_struct.loop_mode_enable = FALSE;
+  edma_init_struct.loop_mode_enable = TRUE;
   edma_init_struct.fifo_threshold = EDMA_FIFO_THRESHOLD_1QUARTER;
   edma_init_struct.fifo_mode_enable = FALSE;
   edma_init(EDMA_STREAM1, &edma_init_struct);
@@ -100,7 +99,6 @@ static void edma_config(void)
 
   /* enable edma full data transfer interrupt */
   edma_interrupt_enable(EDMA_STREAM1, EDMA_FDT_INT, TRUE);
-  edma_stream_enable(EDMA_STREAM1, TRUE);
 }
 
 /**
@@ -114,6 +112,7 @@ static void adc_config(void)
   adc_base_config_type adc_base_struct;
   crm_periph_clock_enable(CRM_ADC1_PERIPH_CLOCK, TRUE);
   crm_periph_clock_enable(CRM_ADC2_PERIPH_CLOCK, TRUE);
+  adc_reset();
   nvic_irq_enable(ADC1_2_3_IRQn, 0, 0);
 
   adc_common_default_para_init(&adc_common_struct);
@@ -128,7 +127,7 @@ static void adc_config(void)
   adc_common_struct.common_dma_mode = ADC_COMMON_DMAMODE_2;
 
   /* config common dma request repeat */
-  adc_common_struct.common_dma_request_repeat_state = FALSE;
+  adc_common_struct.common_dma_request_repeat_state = TRUE;
 
   /* config adjacent adc sampling interval,it's useful for ordinary shifting mode */
   adc_common_struct.sampling_interval = ADC_SAMPLING_INTERVAL_5CYCLES;
@@ -194,13 +193,84 @@ static void adc_config(void)
 }
 
 /**
+  * @brief  adc convert recovery process.
+  * @param  none
+  * @retval none
+  */
+void adc_convert_recovery_process(void)
+{
+  uint32_t recovery_index = 0;
+
+  /* disable adc */
+  adc_enable(ADC1, FALSE);
+  adc_enable(ADC2, FALSE);
+
+  /* record adc mode configuration */
+  recovery_index = adc_combine_mode_get();
+
+  /* clear adc mode configuration */
+  adc_combine_mode_set(ADC_INDEPENDENT_MODE);
+
+  /* reinitialize dma */
+  edma_stream_enable(EDMA_STREAM1, FALSE);
+  edma_flag_clear(EDMA_FDT1_FLAG);
+  edma_data_number_set(EDMA_STREAM1, 3);
+  edma_stream_enable(EDMA_STREAM1, TRUE);
+
+  /* recovery adc mode configuration */
+  adc_combine_mode_set((adc_combine_mode_type)recovery_index);
+
+  /* enable adc to detection trigger */
+  adc_enable(ADC1, TRUE);
+  adc_enable(ADC2, TRUE);
+}
+
+/**
+  * @brief  this function handles edma_stream1 handler.
+  * @param  none
+  * @retval none
+  */
+void EDMA_Stream1_IRQHandler(void)
+{
+  if(edma_interrupt_flag_get(EDMA_FDT1_FLAG) != RESET)
+  {
+    edma_flag_clear(EDMA_FDT1_FLAG);
+    edma_trans_complete_flag++;
+  }
+}
+
+/**
+  * @brief  this function handles adc1_2_3 handler.
+  * @param  none
+  * @retval none
+  */
+void ADC1_2_3_IRQHandler(void)
+{
+  if(adc_interrupt_flag_get(ADC1, ADC_OCCO_FLAG) != RESET)
+  {
+    adc_flag_clear(ADC1, ADC_OCCO_FLAG);
+    adc1_overflow_flag++;
+
+    /* to avoid data wrong,it is recommended to add the following recovery code */
+    adc_convert_recovery_process();
+  }
+  if(adc_interrupt_flag_get(ADC2, ADC_OCCO_FLAG) != RESET)
+  {
+    adc_flag_clear(ADC2, ADC_OCCO_FLAG);
+    adc2_overflow_flag++;
+
+    /* to avoid data wrong,it is recommended to add the following recovery code */
+    adc_convert_recovery_process();
+  }
+}
+
+/**
   * @brief  main function.
   * @param  none
   * @retval none
   */
 int main(void)
 {
-  __IO uint32_t index = 0;
   nvic_priority_group_config(NVIC_PRIORITY_GROUP_4);
 
   /* config the system clock */
@@ -215,43 +285,43 @@ int main(void)
   gpio_config();
   edma_config();
   adc_config();
-  printf("combine_mode_ordinary_simult \r\n");
 
-  /* adc1 software trigger start conversion */
-  for(index = 0; index < 5; index++)
-  {
-    adc_ordinary_software_trigger_enable(ADC1, TRUE);
-    delay_ms(100);
-  }
+  /* enable EDMA after ADC activation */
+  edma_stream_enable(EDMA_STREAM1, TRUE);
 
-  if((edma_trans_complete_flag == 0) || (adc1_overflow_flag != 0) || (adc2_overflow_flag != 0))
-  {
-    /* printf flag when error occur */
-    at32_led_on(LED3);
-    at32_led_on(LED4);
-    printf("error occur\r\n");
-    printf("edma_trans_complete_flag = %d\r\n",edma_trans_complete_flag);
-    printf("adc1_overflow_flag = %d\r\n",adc1_overflow_flag);
-    printf("adc2_overflow_flag = %d\r\n",adc2_overflow_flag);
-  }
-  else
-  {
-    /* printf data when conversion end without error */
-    printf("conversion end without error\r\n");
-    for(index = 0; index < 5; index++)
-    {
-      printf("adc1_ordinary_channel4[%d] = 0x%x\r\n",index, adccom_ordinary_valuetab[index][0] & 0xFFFF);
-      printf("adc1_ordinary_channel5[%d] = 0x%x\r\n",index, adccom_ordinary_valuetab[index][1] & 0xFFFF);
-      printf("adc1_ordinary_channel6[%d] = 0x%x\r\n",index, adccom_ordinary_valuetab[index][2] & 0xFFFF);
-      printf("adc2_ordinary_channel7[%d] = 0x%x\r\n",index, (adccom_ordinary_valuetab[index][0] >> 16) & 0xFFFF);
-      printf("adc2_ordinary_channel8[%d] = 0x%x\r\n",index, (adccom_ordinary_valuetab[index][1] >> 16) & 0xFFFF);
-      printf("adc2_ordinary_channel9[%d] = 0x%x\r\n",index, (adccom_ordinary_valuetab[index][2] >> 16) & 0xFFFF);
-      printf("\r\n");
-    }
-  }
-  at32_led_on(LED2);
+  printf("combine_mode_ordinary_smlt_oneslave_edma \r\n");
   while(1)
   {
+    /* adc1 software trigger start conversion */
+    adc_ordinary_software_trigger_enable(ADC1, TRUE);
+    delay_sec(1);
+
+    if(adc_conversion_times_index != edma_trans_complete_flag)
+    {
+      /* printf data when conversion end without error */
+      adc_conversion_times_index = edma_trans_complete_flag;
+      printf("adc_conversion_times_index = %d\r\n",adc_conversion_times_index);
+      printf("adc1_ordinary_channel4 = 0x%x\r\n", adccom_ordinary_valuetab[0] & 0xFFFF);
+      printf("adc1_ordinary_channel5 = 0x%x\r\n", adccom_ordinary_valuetab[1] & 0xFFFF);
+      printf("adc1_ordinary_channel6 = 0x%x\r\n", adccom_ordinary_valuetab[2] & 0xFFFF);
+      printf("adc2_ordinary_channel7 = 0x%x\r\n", (adccom_ordinary_valuetab[0] >> 16) & 0xFFFF);
+      printf("adc2_ordinary_channel8 = 0x%x\r\n", (adccom_ordinary_valuetab[1] >> 16) & 0xFFFF);
+      printf("adc2_ordinary_channel9 = 0x%x\r\n", (adccom_ordinary_valuetab[2] >> 16) & 0xFFFF);
+      printf("\r\n");
+      at32_led_toggle(LED2);
+    }
+    if(error_times_index != (adc1_overflow_flag + adc2_overflow_flag))
+    {
+      /* printf flag when error occur */
+      error_times_index = adc1_overflow_flag + adc2_overflow_flag;
+      at32_led_on(LED3);
+      at32_led_on(LED4);
+      printf("error occur\r\n");
+      printf("error_times_index = %d\r\n",error_times_index);
+      printf("adc1_overflow_flag = %d\r\n",adc1_overflow_flag);
+      printf("adc2_overflow_flag = %d\r\n",adc2_overflow_flag);
+      printf("\r\n");
+    }
   }
 }
 

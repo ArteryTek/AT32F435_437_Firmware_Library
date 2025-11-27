@@ -3,7 +3,8 @@
   * @file     at32f435_437_crm.h
   * @brief    at32f435_437 crm header file
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to
   * download from Artery official website is the copyrighted work of Artery.
@@ -1009,7 +1010,7 @@ typedef struct
       __IO uint32_t tmr7rst              : 1; /* [5] */
       __IO uint32_t tmr12rst             : 1; /* [6] */
       __IO uint32_t tmr13rst             : 1; /* [7] */
-      __IO uint32_t adc14rst             : 1; /* [8] */
+      __IO uint32_t tmr14rst             : 1; /* [8] */
       __IO uint32_t reserved1            : 2; /* [10:9] */
       __IO uint32_t wwdtrst              : 1; /* [11] */
       __IO uint32_t reserved2            : 2; /* [13:12] */
@@ -1183,7 +1184,7 @@ typedef struct
       __IO uint32_t tmr7en               : 1; /* [5] */
       __IO uint32_t tmr12en              : 1; /* [6] */
       __IO uint32_t tmr13en              : 1; /* [7] */
-      __IO uint32_t adc14en              : 1; /* [8] */
+      __IO uint32_t tmr14en              : 1; /* [8] */
       __IO uint32_t reserved1            : 2; /* [10:9] */
       __IO uint32_t wwdten               : 1; /* [11] */
       __IO uint32_t reserved2            : 2; /* [13:12] */
@@ -1222,8 +1223,10 @@ typedef struct
       __IO uint32_t usart1en             : 1; /* [4] */
       __IO uint32_t usart6en             : 1; /* [5] */
       __IO uint32_t reserved2            : 2; /* [7:6] */
-      __IO uint32_t adcen                : 1; /* [8] */
-      __IO uint32_t reserved3            : 3; /* [11:9] */
+      __IO uint32_t adc1en               : 1; /* [8] */
+      __IO uint32_t adc2en               : 1; /* [9] */
+      __IO uint32_t adc3en               : 1; /* [10] */
+      __IO uint32_t reserved3            : 1; /* [11] */
       __IO uint32_t spi1en               : 1; /* [12] */
       __IO uint32_t spi4en               : 1; /* [13] */
       __IO uint32_t scfgen               : 1; /* [14] */
@@ -1357,7 +1360,7 @@ typedef struct
       __IO uint32_t tmr7lpen             : 1; /* [5] */
       __IO uint32_t tmr12lpen            : 1; /* [6] */
       __IO uint32_t tmr13lpen            : 1; /* [7] */
-      __IO uint32_t adc14lpen            : 1; /* [8] */
+      __IO uint32_t tmr14lpen            : 1; /* [8] */
       __IO uint32_t reserved1            : 2; /* [10:9] */
       __IO uint32_t wwdtlpen             : 1; /* [11] */
       __IO uint32_t reserved2            : 2; /* [13:12] */
@@ -1396,8 +1399,10 @@ typedef struct
       __IO uint32_t usart1lpen           : 1; /* [4] */
       __IO uint32_t usart6lpen           : 1; /* [5] */
       __IO uint32_t reserved2            : 2; /* [7:6] */
-      __IO uint32_t adclpen              : 1; /* [8] */
-      __IO uint32_t reserved3            : 3; /* [11:9] */
+      __IO uint32_t adc11pen             : 1; /* [8] */
+      __IO uint32_t adc21pen             : 1; /* [9] */
+      __IO uint32_t adc31pen             : 1; /* [10] */
+      __IO uint32_t reserved3            : 1; /* [11] */
       __IO uint32_t spi1lpen             : 1; /* [12] */
       __IO uint32_t spi4lpen             : 1; /* [13] */
       __IO uint32_t scfglpen             : 1; /* [14] */

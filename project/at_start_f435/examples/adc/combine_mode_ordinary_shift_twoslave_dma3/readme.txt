@@ -12,8 +12,5 @@
   - adccom_ordinary_valuetab[0] ---> (adc2_channel_7<<8)  | adc1_channel_4
   - adccom_ordinary_valuetab[1] ---> (adc1_channel_4<<8)  | adc3_channel_10
   - adccom_ordinary_valuetab[2] ---> (adc3_channel_10<<8) | adc2_channel_7
-  - adccom_ordinary_valuetab[3] ---> (adc2_channel_7<<8)  | adc1_channel_4
-  - adccom_ordinary_valuetab[4] ---> (adc1_channel_4<<8)  | adc3_channel_10
-  - adccom_ordinary_valuetab[5] ---> (adc3_channel_10<<8) | adc2_channel_7
 
   for more detailed information. please refer to the application note document AN0093.
