@@ -266,6 +266,7 @@ error_status ape_song_play(audio_type *audio, uint8_t *pname)
   f_close(&audio->file);
   
   /* free memory */
+  at32_free(apex->seektable);   
   at32_free(filterbuf64); 
   at32_free(filterbuf256); 
   at32_free(filterbuf1280); 

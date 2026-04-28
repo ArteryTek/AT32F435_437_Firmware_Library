@@ -213,7 +213,9 @@ static usb_sts_type uhost_process_handler(void *uhost)
 {
   usbh_core_type *puhost = (usbh_core_type *)uhost;
   usbh_msc_type *pmsc = (usbh_msc_type *)puhost->class_handler->pdata;
+#ifdef USBH_DEBUG_ENABLE
   uint64_t msize = 0;
+#endif
   usb_sts_type status;
   switch(pmsc->state)
   {
@@ -255,10 +257,12 @@ static usb_sts_type uhost_process_handler(void *uhost)
             status = usbh_msc_bot_scsi_capacity(uhost, &pmsc->bot_trans, pmsc->cur_lun, &pmsc->l_unit_n[pmsc->cur_lun].capacity);
             if(status == USB_OK)
             {
+#ifdef USBH_DEBUG_ENABLE
               msize = (uint64_t)pmsc->l_unit_n[pmsc->cur_lun].capacity.blk_nbr * (uint64_t)pmsc->l_unit_n[pmsc->cur_lun].capacity.blk_size;
               USBH_DEBUG("Device capacity: %llu Byte", msize);
               USBH_DEBUG("Block num: %d ", pmsc->l_unit_n[pmsc->cur_lun].capacity.blk_nbr);
               USBH_DEBUG("Block size: %d Byte", pmsc->l_unit_n[pmsc->cur_lun].capacity.blk_size);
+#endif
               pmsc->l_unit_n[pmsc->cur_lun].state = USBH_MSC_IDLE;
               pmsc->cur_lun ++;
             }

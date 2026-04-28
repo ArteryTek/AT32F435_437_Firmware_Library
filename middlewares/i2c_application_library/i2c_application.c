@@ -999,8 +999,8 @@ i2c_status_type i2c_slave_transmit_dma(i2c_handle_type* hi2c, uint8_t* pdata, ui
   * @param  hi2c: the handle points to the operation information.
   * @param  mem_address_width: memory address width.
   *         this parameter can be one of the following values:
-  *         - I2C_MEM_ADDR_WIDIH_8:  memory address is 8 bit 
-  *         - I2C_MEM_ADDR_WIDIH_16:  memory address is 16 bit 
+  *         - I2C_MEM_ADDR_WIDTH_8:  memory address is 8 bit 
+  *         - I2C_MEM_ADDR_WIDTH_16:  memory address is 16 bit 
   * @param  address: memory device address.
   * @param  mem_address: memory address.
   * @param  timeout: maximum waiting time.
@@ -1010,7 +1010,7 @@ i2c_status_type i2c_memory_address_send(i2c_handle_type* hi2c, i2c_mem_address_w
 {
   i2c_status_type err_code;
   
-  if(mem_address_width == I2C_MEM_ADDR_WIDIH_8)
+  if(mem_address_width == I2C_MEM_ADDR_WIDTH_8)
   {
     /* send memory address */
     i2c_data_send(hi2c->i2cx, mem_address & 0xFF);
@@ -1040,8 +1040,8 @@ i2c_status_type i2c_memory_address_send(i2c_handle_type* hi2c, i2c_mem_address_w
   * @param  hi2c: the handle points to the operation information.
   * @param  mem_address_width: memory address width.
   *         this parameter can be one of the following values:
-  *         - I2C_MEM_ADDR_WIDIH_8:  memory address is 8 bit 
-  *         - I2C_MEM_ADDR_WIDIH_16:  memory address is 16 bit 
+  *         - I2C_MEM_ADDR_WIDTH_8:  memory address is 8 bit 
+  *         - I2C_MEM_ADDR_WIDTH_16:  memory address is 16 bit 
   * @param  address: memory device address.
   * @param  mem_address: memory address.
   * @param  pdata: data buffer.
@@ -1127,8 +1127,8 @@ i2c_status_type i2c_memory_write(i2c_handle_type* hi2c, i2c_mem_address_width_ty
   * @param  hi2c: the handle points to the operation information.
   * @param  mem_address_width: memory address width.
   *         this parameter can be one of the following values:
-  *         - I2C_MEM_ADDR_WIDIH_8:  memory address is 8 bit 
-  *         - I2C_MEM_ADDR_WIDIH_16:  memory address is 16 bit 
+  *         - I2C_MEM_ADDR_WIDTH_8:  memory address is 8 bit 
+  *         - I2C_MEM_ADDR_WIDTH_16:  memory address is 16 bit 
   * @param  address: memory device address.
   * @param  mem_address: memory address.
   * @param  pdata: data buffer.
@@ -1220,8 +1220,8 @@ i2c_status_type i2c_memory_read(i2c_handle_type* hi2c, i2c_mem_address_width_typ
   * @param  hi2c: the handle points to the operation information.
   * @param  mem_address_width: memory address width.
   *         this parameter can be one of the following values:
-  *         - I2C_MEM_ADDR_WIDIH_8:  memory address is 8 bit 
-  *         - I2C_MEM_ADDR_WIDIH_16:  memory address is 16 bit 
+  *         - I2C_MEM_ADDR_WIDTH_8:  memory address is 8 bit 
+  *         - I2C_MEM_ADDR_WIDTH_16:  memory address is 16 bit 
   * @param  address: memory device address.
   * @param  mem_address: memory address.
   * @param  pdata: data buffer.
@@ -1275,8 +1275,8 @@ i2c_status_type i2c_memory_write_int(i2c_handle_type* hi2c, i2c_mem_address_widt
   * @param  hi2c: the handle points to the operation information.
   * @param  mem_address_width: memory address width.
   *         this parameter can be one of the following values:
-  *         - I2C_MEM_ADDR_WIDIH_8:  memory address is 8 bit 
-  *         - I2C_MEM_ADDR_WIDIH_16:  memory address is 16 bit 
+  *         - I2C_MEM_ADDR_WIDTH_8:  memory address is 8 bit 
+  *         - I2C_MEM_ADDR_WIDTH_16:  memory address is 16 bit 
   * @param  address: memory device address.
   * @param  mem_address: memory address.
   * @param  pdata: data buffer.
@@ -1336,8 +1336,8 @@ i2c_status_type i2c_memory_read_int(i2c_handle_type* hi2c, i2c_mem_address_width
   * @param  hi2c: the handle points to the operation information.
   * @param  mem_address_width: memory address width.
   *         this parameter can be one of the following values:
-  *         - I2C_MEM_ADDR_WIDIH_8:  memory address is 8 bit 
-  *         - I2C_MEM_ADDR_WIDIH_16:  memory address is 16 bit 
+  *         - I2C_MEM_ADDR_WIDTH_8:  memory address is 8 bit 
+  *         - I2C_MEM_ADDR_WIDTH_16:  memory address is 16 bit 
   * @param  address: memory device address.
   * @param  mem_address: memory address.
   * @param  pdata: data buffer.
@@ -1403,8 +1403,8 @@ i2c_status_type i2c_memory_write_dma(i2c_handle_type* hi2c, i2c_mem_address_widt
   * @param  hi2c: the handle points to the operation information.
   * @param  mem_address_width: memory address width.
   *         this parameter can be one of the following values:
-  *         - I2C_MEM_ADDR_WIDIH_8:  memory address is 8 bit 
-  *         - I2C_MEM_ADDR_WIDIH_16:  memory address is 16 bit 
+  *         - I2C_MEM_ADDR_WIDTH_8:  memory address is 8 bit 
+  *         - I2C_MEM_ADDR_WIDTH_16:  memory address is 16 bit 
   * @param  address: memory device address.
   * @param  mem_address: memory address.
   * @param  pdata: data buffer.

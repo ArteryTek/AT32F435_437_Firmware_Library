@@ -38,6 +38,8 @@ extern "C" {
   * @{
   */
 
+#define SystemCoreClock                  system_core_clock
+
 /** @defgroup AT32F435_437_system_exported_variables
   * @{
   */

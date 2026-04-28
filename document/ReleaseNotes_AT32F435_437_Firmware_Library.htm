@@ -111,6 +111,141 @@ lang=EN-US style='font-size:16.0pt;font-family:"Arial",sans-serif;color:#0070C0'
 Firmware Library</span></i></b></p>
 
 <p class=MsoNormal style='word-break:break-all'><b><span lang=EN-US
+style='font-family:"Arial",sans-serif;color:#7030A0'>V2.2.4-2026/04/08</span></b></p>
+
+<p class=MsoListParagraph style='margin-left:21.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span lang=EN-US>CMSIS</span></p>
+
+<p class=MsoListParagraph style='margin-left:42.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>l<span
+style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=EN-US>at32f435_437.h</span></p>
+
+<p class=MsoListParagraph style='margin-left:63.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>w<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span></span><span
+style='font-family:宋体'>新增支持</span><span lang=EN-US>AT32F435VCH7</span><span
+style='font-family:宋体'>、</span><span lang=EN-US>AT32F435VDH7</span><span
+style='font-family:宋体'>、</span><span lang=EN-US>AT32F435VGH7</span><span
+style='font-family:宋体'>和</span><span lang=EN-US>AT32F435VMH7</span><span
+style='font-family:宋体'>等型号。</span></p>
+
+<p class=MsoListParagraph style='margin-left:63.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>w<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span></span><span
+style='font-family:宋体'>新增支持</span><span lang=EN-US>AT32F437VCH7</span><span
+style='font-family:宋体'>、</span><span lang=EN-US>AT32F437VDH7</span><span
+style='font-family:宋体'>、</span><span lang=EN-US>AT32F437VGH7</span><span
+style='font-family:宋体'>和</span><span lang=EN-US>AT32F437VMH7</span><span
+style='font-family:宋体'>等型号。</span></p>
+
+<p class=MsoListParagraph style='margin-left:42.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>l<span
+style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=EN-US>system_at32m412_416.h</span></p>
+
+<p class=MsoListParagraph style='margin-left:63.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>w<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span></span><span
+style='font-family:宋体'>新增</span><span lang=EN-US>SystemCoreClock</span><span
+style='font-family:宋体'>宏定义，防止三方库默认引用时报错。</span></p>
+
+<p class=MsoListParagraph style='margin-left:21.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span lang=EN-US>Middlewares</span></p>
+
+<p class=MsoListParagraph style='margin-left:42.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>l<span
+style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=EN-US>USB</span></p>
+
+<p class=MsoListParagraph style='margin-left:63.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>w<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span></span><span
+style='font-family:宋体'>更新</span><span lang=EN-US>host</span><span
+style='font-family:宋体'>模式下</span><span lang=EN-US>usbh_enum_handler()</span><span
+style='font-family:宋体'>函数，在进行主机枚举过程中，</span><span lang=EN-US>SET_ADDRESS</span><span
+style='font-family:宋体'>成功后添加</span><span lang=EN-US>10ms</span><span
+style='font-family:宋体'>延时等待设备端地址生效，再进行后续请求及配置。该项以增加兼容性。</span></p>
+
+<p class=MsoListParagraph style='margin-left:63.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>w<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span></span><span
+style='font-family:宋体'>更新</span><span lang=EN-US>msc class</span><span
+style='font-family:宋体'>，解决</span><span lang=EN-US>uhost_process_handler()</span><span
+style='font-family:宋体'>函数中在未开启</span><span lang=EN-US>USBH_DEBUG_ENABLE</span><span
+style='font-family:宋体'>调试模式时出现的编译警告问题。</span></p>
+
+<p class=MsoListParagraph style='margin-left:42.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>l<span
+style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=EN-US>I2C</span></p>
+
+<p class=MsoListParagraph style='margin-left:63.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>w<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span></span><span
+style='font-family:宋体'>修正宏定义拼写错误，</span><span lang=EN-US>I2C_MEM_ADDR_WIDIH_8</span><span
+style='font-family:宋体'>修正为</span><span lang=EN-US>I2C_MEM_ADDR_WIDTH_8</span><span
+style='font-family:宋体'>，</span><span lang=EN-US>I2C_MEM_ADDR_WIDIH_16</span><span
+style='font-family:宋体'>修正为</span><span lang=EN-US>I2C_MEM_ADDR_WIDTH_16</span><span
+style='font-family:宋体'>。</span></p>
+
+<p class=MsoListParagraph style='margin-left:21.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US>3.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span lang=EN-US>Demos</span></p>
+
+<p class=MsoListParagraph style='margin-left:42.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>l<span
+style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=EN-US>SUFER_BOARD</span></p>
+
+<p class=MsoListParagraph style='margin-left:63.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>w<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span></span><span
+style='font-family:宋体'>修正</span><span lang=EN-US>APE</span><span
+style='font-family:宋体'>格式解码时可能造成的内存泄漏问题。</span></p>
+
+<p class=MsoListParagraph style='margin-left:42.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>l<span
+style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=EN-US>Utilities</span></p>
+
+<p class=MsoListParagraph style='margin-left:63.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>w<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span></span><span
+style='font-family:宋体'>更新</span><span lang=EN-US>usb_iap_demo</span><span
+style='font-family:宋体'>，修改</span><span lang=EN-US>app_led4_toggle</span><span
+style='font-family:宋体'>工程中</span><span lang=EN-US>APP_ADDRESS</span><span
+style='font-family:宋体'>地址，从</span><span lang=EN-US>0x08005000</span><span
+style='font-family:宋体'>改到</span><span lang=EN-US>0x08006000</span><span
+style='font-family:宋体'>。</span></p>
+
+<p class=MsoListParagraph style='margin-left:42.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>l<span
+style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=EN-US>EMAC</span></p>
+
+<p class=MsoListParagraph style='margin-left:63.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>w<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span></span><span
+style='font-family:宋体'>更新</span><span lang=EN-US>http_server demo</span><span
+style='font-family:宋体'>，修改</span><span lang=EN-US>html_temp</span><span
+style='font-family:宋体'>数组大小由</span><span lang=EN-US>4096</span><span
+style='font-family:宋体'>改为</span><span lang=EN-US>8192</span><span
+style='font-family:宋体'>，解决因数组长度不够而导致问题。</span></p>
+
+<p class=MsoListParagraph style='margin-left:42.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>l<span
+style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=EN-US>I2C</span></p>
+
+<p class=MsoListParagraph style='margin-left:63.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>w<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span></span><span
+style='font-family:宋体'>更新所有</span><span lang=EN-US>I2C demo</span><span
+style='font-family:宋体'>中宏定义拼写错误，</span><span lang=EN-US>I2C_MEM_ADDR_WIDIH_8</span><span
+style='font-family:宋体'>修正为</span><span lang=EN-US>I2C_MEM_ADDR_WIDTH_8</span><span
+style='font-family:宋体'>，</span><span lang=EN-US>I2C_MEM_ADDR_WIDIH_16</span><span
+style='font-family:宋体'>修正为</span><span lang=EN-US>I2C_MEM_ADDR_WIDTH_16</span><span
+style='font-family:宋体'>。</span></p>
+
+<p class=MsoNormal style='word-break:break-all'><b><span lang=EN-US
+style='font-family:"Arial",sans-serif;color:#7030A0'>&nbsp;</span></b></p>
+
+<p class=MsoNormal style='word-break:break-all'><b><span lang=EN-US
 style='font-family:"Arial",sans-serif;color:#7030A0'>V2.2.3-2025/11/24</span></b></p>
 
 <p class=MsoListParagraph style='margin-left:21.0pt;text-indent:-21.0pt;

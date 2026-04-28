@@ -120,7 +120,7 @@ volatile static const default_filename httpd_default_filenames[] = {
   {"/AT32F437LED.html",   0 },
   {"/AT32F437ADC.html",   0 }
 };
-char html_tmp[4096] = {0};
+ALIGNED_HEAD char html_tmp[8192] ALIGNED_TAIL = {0};
 
 #define NUM_DEFAULT_FILENAMES LWIP_ARRAYSIZE(httpd_default_filenames)
 

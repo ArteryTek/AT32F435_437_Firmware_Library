@@ -57,9 +57,12 @@ extern "C" {
 
 typedef enum
 {
-  I2C_MEM_ADDR_WIDIH_8                   = 0x01, /*!< memory address is 8 bit */
-  I2C_MEM_ADDR_WIDIH_16                  = 0x02, /*!< memory address is 16 bit */
+  I2C_MEM_ADDR_WIDTH_8                   = 0x01, /*!< memory address is 8 bit */
+  I2C_MEM_ADDR_WIDTH_16                  = 0x02, /*!< memory address is 16 bit */
 } i2c_mem_address_width_type;
+
+#define I2C_MEM_ADDR_WIDIH_8             I2C_MEM_ADDR_WIDTH_8
+#define I2C_MEM_ADDR_WIDIH_16            I2C_MEM_ADDR_WIDTH_16
 
 /**
   * @}

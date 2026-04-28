@@ -110,8 +110,8 @@ i2c_status_type eeprom_ready_wait(i2c_handle_type* hi2c, uint16_t address, uint3
   *         - EE_MODE_DMA: dma mode
   * @param  mem_address_width: memory address width.
   *         this parameter can be one of the following values:
-  *         - I2C_MEM_ADDR_WIDIH_8: memory address is 8 bit 
-  *         - I2C_MEM_ADDR_WIDIH_16: memory address is 16 bit 
+  *         - I2C_MEM_ADDR_WIDTH_8: memory address is 8 bit 
+  *         - I2C_MEM_ADDR_WIDTH_16: memory address is 16 bit 
   * @param  address: eeprom address.
   * @param  mem_address: memory address.
   * @param  pdata: data buffer.
@@ -164,8 +164,8 @@ i2c_status_type eeprom_write_page(i2c_handle_type* hi2c, eeprom_mode_type mode, 
   *         - EE_MODE_DMA: dma mode
   * @param  mem_address_width: memory address width.
   *         this parameter can be one of the following values:
-  *         - I2C_MEM_ADDR_WIDIH_8: memory address is 8 bit 
-  *         - I2C_MEM_ADDR_WIDIH_16: memory address is 16 bit 
+  *         - I2C_MEM_ADDR_WIDTH_8: memory address is 8 bit 
+  *         - I2C_MEM_ADDR_WIDTH_16: memory address is 16 bit 
   * @param  address: eeprom address.
   * @param  mem_address: memory address.
   * @param  pdata: data buffer.
@@ -218,8 +218,8 @@ i2c_status_type eeprom_read_buffer(i2c_handle_type* hi2c, eeprom_mode_type mode,
   *         - EE_MODE_DMA: dma mode
   * @param  mem_address_width: memory address width.
   *         this parameter can be one of the following values:
-  *         - I2C_MEM_ADDR_WIDIH_8: memory address is 8 bit 
-  *         - I2C_MEM_ADDR_WIDIH_16: memory address is 16 bit 
+  *         - I2C_MEM_ADDR_WIDTH_8: memory address is 8 bit 
+  *         - I2C_MEM_ADDR_WIDTH_16: memory address is 16 bit 
   * @param  address: eeprom address.
   * @param  mem_address: memory address.
   * @param  pdata: data buffer.

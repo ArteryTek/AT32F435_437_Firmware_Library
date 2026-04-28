@@ -835,6 +835,8 @@ usb_sts_type usbh_enum_handler(usbh_core_type *uhost)
                       uhost->dev.address, EPT_CONTROL_TYPE,
                       uhost->ctrl.ept0_size,
                       uhost->dev.speed);
+        /* waiting for the device-side address to take effect. */
+        usb_delay_ms(10);
       }
       break;
 

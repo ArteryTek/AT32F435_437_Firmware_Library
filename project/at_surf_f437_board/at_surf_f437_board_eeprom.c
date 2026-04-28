@@ -130,11 +130,11 @@ i2c_status_type eeprom_page_write(i2c_handle_type* hi2c, eeprom_i2c_mode_type mo
 
   if(mode == EE_MODE_POLL)
   {
-    i2c_status = i2c_memory_write     (hi2c, I2C_MEM_ADDR_WIDIH_8, address, mem_address, pdata, number, timeout);
+    i2c_status = i2c_memory_write     (hi2c, I2C_MEM_ADDR_WIDTH_8, address, mem_address, pdata, number, timeout);
   }
   else if(mode == EE_MODE_INT)
   {
-    i2c_status = i2c_memory_write_int (hi2c, I2C_MEM_ADDR_WIDIH_8, address, mem_address, pdata, number, timeout);
+    i2c_status = i2c_memory_write_int (hi2c, I2C_MEM_ADDR_WIDTH_8, address, mem_address, pdata, number, timeout);
 
     /* wait for the communication to end */
     if(i2c_wait_end(hi2c, EE_I2C_TIMEOUT) != I2C_OK)
@@ -144,7 +144,7 @@ i2c_status_type eeprom_page_write(i2c_handle_type* hi2c, eeprom_i2c_mode_type mo
   }
   else if(mode == EE_MODE_DMA)
   {
-    i2c_status = i2c_memory_write_dma (hi2c, I2C_MEM_ADDR_WIDIH_8, address, mem_address, pdata, number, timeout);
+    i2c_status = i2c_memory_write_dma (hi2c, I2C_MEM_ADDR_WIDTH_8, address, mem_address, pdata, number, timeout);
 
     /* wait for the communication to end */
     if(i2c_wait_end(hi2c, EE_I2C_TIMEOUT) != I2C_OK)
@@ -284,11 +284,11 @@ i2c_status_type eeprom_data_read(i2c_handle_type* hi2c, eeprom_i2c_mode_type mod
 
   if(mode == EE_MODE_POLL)
   {
-    i2c_status = i2c_memory_read(hi2c, I2C_MEM_ADDR_WIDIH_8, address, mem_address, pdata, number, timeout);
+    i2c_status = i2c_memory_read(hi2c, I2C_MEM_ADDR_WIDTH_8, address, mem_address, pdata, number, timeout);
   }
   else if(mode == EE_MODE_INT)
   {
-    i2c_status = i2c_memory_read_int(hi2c, I2C_MEM_ADDR_WIDIH_8, address, mem_address, pdata, number, timeout);
+    i2c_status = i2c_memory_read_int(hi2c, I2C_MEM_ADDR_WIDTH_8, address, mem_address, pdata, number, timeout);
 
     /* wait for the communication to end */
     if(i2c_wait_end(hi2c, EE_I2C_TIMEOUT) != I2C_OK)
@@ -298,7 +298,7 @@ i2c_status_type eeprom_data_read(i2c_handle_type* hi2c, eeprom_i2c_mode_type mod
   }
   else if(mode == EE_MODE_DMA)
   {
-    i2c_status = i2c_memory_read_dma(hi2c, I2C_MEM_ADDR_WIDIH_8, address, mem_address, pdata, number, timeout);
+    i2c_status = i2c_memory_read_dma(hi2c, I2C_MEM_ADDR_WIDTH_8, address, mem_address, pdata, number, timeout);
 
     /* wait for the communication to end */
     if(i2c_wait_end(hi2c, EE_I2C_TIMEOUT) != I2C_OK)

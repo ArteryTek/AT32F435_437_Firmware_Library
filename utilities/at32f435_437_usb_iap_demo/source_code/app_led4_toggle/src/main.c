@@ -53,7 +53,7 @@ void usb_low_power_wakeup_config(void);
   */
 int main(void)
 {
-  nvic_vector_table_set(NVIC_VECTTAB_FLASH, 0x5000);
+  nvic_vector_table_set(NVIC_VECTTAB_FLASH, 0x6000);
 
   system_clock_config();
 
