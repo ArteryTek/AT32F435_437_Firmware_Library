@@ -90,6 +90,7 @@ extern "C" {
 #define MSC_STATE_MACHINE_STATUS         0x05
 #define MSC_STATE_MACHINE_FAILED         0x06
 #define MSC_STATE_MACHINE_IDLE           0x07
+#define MSC_STATE_MACHINE_NO_DATA        0x08
 
 #define MSC_BOT_STATE_IDLE               0x00
 #define MSC_BOT_STATE_RECOVERY           0x01
@@ -120,6 +121,10 @@ extern "C" {
 #define MEDIUM_HAVE_CHANGED              0x28
 
 #define SCSI_INQUIRY_DATA_LENGTH         36
+
+#define SCSI_MEDIUM_UNLOCKED             0x00
+#define SCSI_MEDIUM_LOCKED               0x01
+#define SCSI_MEDIUM_EJECTED              0x02
 
 /**
   * @brief typical command block description
@@ -208,6 +213,8 @@ typedef struct
 
   cbw_type cbw_struct;
   csw_type csw_struct;
+  
+  uint32_t scsi_medium_state;
 
 }msc_type;
 

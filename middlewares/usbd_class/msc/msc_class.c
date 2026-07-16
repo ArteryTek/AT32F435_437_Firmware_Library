@@ -153,8 +153,6 @@ static usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup)
           pmsc->alt_setting = setup->wValue;
           break;
         case USB_STD_REQ_CLEAR_FEATURE:
-          usbd_ept_close(pudev, (uint8_t)setup->wIndex);
-
           if((setup->wIndex & 0x80) == 0x80)
           {
             usbd_flush_tx_fifo(pudev, setup->wIndex & 0x7F);

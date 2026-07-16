@@ -70,7 +70,12 @@ void crm_reset(void)
   CRM->pllcfg = 0x00033002U;
 
   /* reset clkout[3], usbbufs, hickdiv, clkoutdiv */
+  CRM->misc1_bit.hick_to_sclk = 1;
+  __ISB();
+  CRM->misc1_bit.hickdiv = 0;
+  __ISB();
   CRM->misc1 = 0;
+  __ISB();
 
   /* disable all interrupts enable and clear pending bits  */
   CRM->clkint = 0x009F0000U;
@@ -626,7 +631,14 @@ void crm_auto_step_mode_enable(confirm_state new_state)
   */
 void crm_hick_divider_select(crm_hick_div_6_type value)
 {
+  __IO uint8_t temp_sclk = CRM->misc1_bit.hick_to_sclk;
+
+  CRM->misc1_bit.hick_to_sclk = 1;
+  __ISB();
   CRM->misc1_bit.hickdiv = value;
+  __ISB();
+  CRM->misc1_bit.hick_to_sclk = temp_sclk;
+  __ISB();
 }
 
 /**
@@ -639,8 +651,12 @@ void crm_hick_divider_select(crm_hick_div_6_type value)
   */
 void crm_hick_sclk_frequency_select(crm_hick_sclk_frequency_type value)
 {
-  crm_hick_divider_select(CRM_HICK48_NODIV);
+  CRM->misc1_bit.hick_to_sclk = 1;
+  __ISB();
+  CRM->misc1_bit.hickdiv = CRM_HICK48_NODIV;
+  __ISB();
   CRM->misc1_bit.hick_to_sclk = value;
+  __ISB();
 }
 
 /**
@@ -708,7 +724,7 @@ void crm_pll_config(crm_pll_clock_source_type clock_source, uint16_t pll_ns, \
   /* config pll clock source */
   if(clock_source == CRM_PLL_SOURCE_HICK)
   {
-    CRM->misc1_bit.hickdiv = CRM_HICK48_NODIV;
+    crm_hick_divider_select(CRM_HICK48_NODIV);
   }
   CRM->pllcfg_bit.pllrcs = clock_source;
 

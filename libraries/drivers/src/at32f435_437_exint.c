@@ -103,7 +103,7 @@ void exint_init(exint_init_type *exint_struct)
     {
       EXINT->polcfg2 |= line_index;
     }
-    else
+    else if(exint_struct->line_polarity == EXINT_TRIGGER_BOTH_EDGE)
     {
       EXINT->polcfg1 |= line_index;
       EXINT->polcfg2 |= line_index;
@@ -186,7 +186,7 @@ flag_status exint_interrupt_flag_get(uint32_t exint_line)
 /**
   * @brief  generate exint software interrupt event
   * @param  exint_line
-  *         this parameter can be one of the following values:
+  *         this parameter can be any combination of the following values:
   *         - EXINT_LINE_0
   *         - EXINT_LINE_1
   *         ...

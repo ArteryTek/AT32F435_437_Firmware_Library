@@ -97,7 +97,8 @@ typedef enum
 {
   EXINT_TRIGGER_RISING_EDGE              = 0x00, /*!< external interrupt line rising trigger mode */
   EXINT_TRIGGER_FALLING_EDGE             = 0x01, /*!< external interrupt line falling trigger mode */
-  EXINT_TRIGGER_BOTH_EDGE                = 0x02  /*!< external interrupt line both rising and falling trigger mode */
+  EXINT_TRIGGER_BOTH_EDGE                = 0x02, /*!< external interrupt line both rising and falling trigger mode */
+  EXINT_TRIGGER_NONE_EDGE                = 0x03  /*!< external interrupt line software trigger mode */
 } exint_polarity_config_type;
 
 /**

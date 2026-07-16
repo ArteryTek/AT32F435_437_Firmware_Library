@@ -111,6 +111,50 @@ lang=EN-US style='font-size:16.0pt;font-family:"Arial",sans-serif;color:#0070C0'
 Firmware Library Drivers</span></i></b></p>
 
 <p class=MsoNormal style='word-break:break-all'><b><span lang=EN-US
+style='font-family:"Arial",sans-serif;color:#7030A0'>V2.0.8-2026/06/02</span></b></p>
+
+<p class=MsoListParagraph style='margin-left:21.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span lang=EN-US>PWC</span></p>
+
+<p class=MsoListParagraph style='margin-left:42.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>l<span
+style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span
+style='font-family:宋体'>用于内存屏障的</span><span lang=EN-US>__force_stores()</span><span
+style='font-family:宋体'>改由</span><span lang=EN-US>__ISB()</span><span
+style='font-family:宋体'>和</span><span lang=EN-US>__DSB()</span><span
+style='font-family:宋体'>替代，解决不同编译器下共用问题。</span></p>
+
+<p class=MsoListParagraph style='margin-left:21.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span lang=EN-US>CRM</span></p>
+
+<p class=MsoListParagraph style='margin-left:42.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>l<span
+style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span
+style='font-family:宋体'>更新</span><span lang=EN-US>crm_reset()</span><span
+style='font-family:宋体'>，</span><span lang=EN-US>crm_hick_sclk_frequency_select()</span><span
+style='font-family:宋体'>和</span><span lang=EN-US>crm_hick_divider_select()</span><span
+style='font-family:宋体'>函数流程，避免切换过程中可能导致的时钟异常。</span></p>
+
+<p class=MsoListParagraph style='margin-left:21.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US>3.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span lang=EN-US>EXINT</span></p>
+
+<p class=MsoListParagraph style='margin-left:42.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>l<span
+style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span
+style='font-family:宋体'>新增定义</span><span lang=EN-US>EXINT_TRIGGER_NONE_EDGE</span><span
+style='font-family:宋体'>，以适应软触发无边沿配置需求。</span></p>
+
+<p class=MsoListParagraph style='margin-left:21.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US>4.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-family:宋体'>更新部分注释。</span></p>
+
+<p class=MsoNormal style='word-break:break-all'><b><span lang=EN-US
+style='font-family:"Arial",sans-serif;color:#7030A0'>&nbsp;</span></b></p>
+
+<p class=MsoNormal style='word-break:break-all'><b><span lang=EN-US
 style='font-family:"Arial",sans-serif;color:#7030A0'>V2.0.7-2025/11/24</span></b></p>
 
 <p class=MsoListParagraph style='margin-left:21.0pt;text-indent:-21.0pt;

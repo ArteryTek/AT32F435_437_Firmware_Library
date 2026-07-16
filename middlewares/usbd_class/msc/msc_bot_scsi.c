@@ -59,7 +59,7 @@ ALIGNED_HEAD sense_type sense_data ALIGNED_TAIL =
   0x00,
   SENSE_KEY_ILLEGAL_REQUEST,
   0x00000000,
-  0x0A,
+  0x0C,
   0x00000000,
   0x20,
   0x00,
@@ -107,6 +107,7 @@ void bot_scsi_init(void *udev)
   pmsc->msc_state = MSC_STATE_MACHINE_IDLE;
   pmsc->bot_status = MSC_BOT_STATE_IDLE;
   pmsc->max_lun = MSC_SUPPORT_MAX_LUN - 1;
+  pmsc->scsi_medium_state = SCSI_MEDIUM_UNLOCKED;
 
   pmsc->csw_struct.dCSWSignature = CSW_DCSWSIGNATURE;
   pmsc->csw_struct.dCSWDataResidue = 0;
@@ -218,7 +219,14 @@ void bot_cbw_decode(void *udev)
   {
     if(bot_scsi_cmd_process(udev) != USB_OK)
     {
-      bot_scsi_stall(udev);
+      if(pmsc->msc_state == MSC_STATE_MACHINE_NO_DATA)
+      {
+        bot_scsi_send_csw(udev, CSW_BCSWSTATUS_FAILED);
+      }
+      else
+      {
+        bot_scsi_stall(udev);
+      }
     }
     else if((pmsc->msc_state != MSC_STATE_MACHINE_DATA_IN) &&
             (pmsc->msc_state != MSC_STATE_MACHINE_DATA_OUT) &&
@@ -357,6 +365,13 @@ usb_sts_type bot_scsi_test_unit(void *udev, uint8_t lun)
     bot_scsi_sense_code(udev, SENSE_KEY_ILLEGAL_REQUEST, INVALID_COMMAND);
     return USB_FAIL;
   }
+  
+  if(pmsc->scsi_medium_state == SCSI_MEDIUM_EJECTED)
+  {
+    bot_scsi_sense_code(udev, SENSE_KEY_NOT_READY, MEDIUM_NOT_PRESENT);
+    pmsc->msc_state = MSC_STATE_MACHINE_NO_DATA;
+    return USB_FAIL;
+  }
 
   pmsc->data_len = 0;
   return status;
@@ -413,6 +428,28 @@ usb_sts_type bot_scsi_start_stop(void *udev, uint8_t lun)
 {
   usbd_core_type *pudev = (usbd_core_type *)udev;
   msc_type *pmsc = (msc_type *)pudev->class_handler->pdata;
+  uint8_t *cmd = pmsc->cbw_struct.CBWCB;
+  
+  if((pmsc->scsi_medium_state == SCSI_MEDIUM_LOCKED) &&
+    ((cmd[4] & 0x3) == 2))
+  {
+    bot_scsi_sense_code(udev, SENSE_KEY_ILLEGAL_REQUEST, INVALID_FIELED_IN_COMMAND);
+    return USB_FAIL;
+  }
+  
+  if((cmd[4] & 0x3) == 0x1)
+  {
+    pmsc->scsi_medium_state = SCSI_MEDIUM_UNLOCKED;
+  }
+  else if((cmd[4] & 0x3) == 0x2)
+  {
+    pmsc->scsi_medium_state = SCSI_MEDIUM_EJECTED;
+  }
+  else if((cmd[4] & 0x3) == 0x3)
+  {
+    pmsc->scsi_medium_state = SCSI_MEDIUM_UNLOCKED;
+  }
+  
   pmsc->data_len = 0;
   return USB_OK;
 }
@@ -427,6 +464,17 @@ usb_sts_type bot_scsi_allow_medium_removal(void *udev, uint8_t lun)
 {
   usbd_core_type *pudev = (usbd_core_type *)udev;
   msc_type *pmsc = (msc_type *)pudev->class_handler->pdata;
+  uint8_t *cmd = pmsc->cbw_struct.CBWCB;
+  
+  if(cmd[4] == 0)
+  {
+    pmsc->scsi_medium_state = SCSI_MEDIUM_UNLOCKED;
+  }
+  else
+  {
+    pmsc->scsi_medium_state = SCSI_MEDIUM_LOCKED;
+  }
+  
   pmsc->data_len = 0;
   return USB_OK;
 }
@@ -483,6 +531,12 @@ usb_sts_type bot_scsi_capacity(void *udev, uint8_t lun)
   msc_type *pmsc = (msc_type *)pudev->class_handler->pdata;
   uint8_t *pdata = pmsc->data;
   msc_disk_capacity(lun, &pmsc->blk_nbr[lun], &pmsc->blk_size[lun]);
+  
+  if(pmsc->scsi_medium_state == SCSI_MEDIUM_EJECTED)
+  {
+    bot_scsi_sense_code(udev, SENSE_KEY_NOT_READY, MEDIUM_NOT_PRESENT);
+    return USB_FAIL;
+  }
 
   pdata[0] = (uint8_t)((pmsc->blk_nbr[lun] - 1) >> 24);
   pdata[1] = (uint8_t)((pmsc->blk_nbr[lun] - 1) >> 16);
@@ -516,6 +570,12 @@ usb_sts_type bot_scsi_format_capacity(void *udev, uint8_t lun)
   pdata[3] = 0x08;
 
   msc_disk_capacity(lun, &pmsc->blk_nbr[lun], &pmsc->blk_size[lun]);
+  
+  if(pmsc->scsi_medium_state == SCSI_MEDIUM_EJECTED)
+  {
+    bot_scsi_sense_code(udev, SENSE_KEY_NOT_READY, MEDIUM_NOT_PRESENT);
+    return USB_FAIL;
+  }
 
   pdata[4] = (uint8_t)((pmsc->blk_nbr[lun] - 1) >> 24);
   pdata[5] = (uint8_t)((pmsc->blk_nbr[lun] - 1) >> 16);
@@ -545,13 +605,19 @@ usb_sts_type bot_scsi_request_sense(void *udev, uint8_t lun)
   usbd_core_type *pudev = (usbd_core_type *)udev;
   msc_type *pmsc = (msc_type *)pudev->class_handler->pdata;
   uint8_t *pdata = pmsc->data;
-  uint8_t *sdata = (uint8_t *)&sense_data;
-
+  
   while(trans_len)
   {
     trans_len --;
-    pdata[trans_len] = sdata[trans_len];
+    pdata[trans_len] = 0;
   }
+  
+  pdata[0] = sense_data.err_code;
+  pdata[7] = 12;
+  
+  pdata[2] = sense_data.sense_key;
+  pdata[12] = sense_data.asc;
+  pdata[13] = sense_data.ascq;
 
   if(pmsc->cbw_struct.dCBWDataTransferLength < REQ_SENSE_STANDARD_DATA_LEN)
   {
@@ -612,7 +678,11 @@ usb_sts_type bot_scsi_read10(void *udev, uint8_t lun)
       bot_scsi_sense_code(udev, SENSE_KEY_ILLEGAL_REQUEST, INVALID_COMMAND);
       return USB_FAIL;
     }
-
+    if(pmsc->scsi_medium_state == SCSI_MEDIUM_EJECTED)
+    {
+      bot_scsi_sense_code(udev, SENSE_KEY_NOT_READY, MEDIUM_NOT_PRESENT);
+      return USB_FAIL;
+    }
     pmsc->blk_addr = cmd[2] << 24 | cmd[3] << 16 | cmd[4] << 8 | cmd[5];
     pmsc->blk_len = cmd[7] << 8 | cmd[8];
 

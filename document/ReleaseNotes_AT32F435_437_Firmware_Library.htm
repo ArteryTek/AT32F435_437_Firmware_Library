@@ -111,6 +111,84 @@ lang=EN-US style='font-size:16.0pt;font-family:"Arial",sans-serif;color:#0070C0'
 Firmware Library</span></i></b></p>
 
 <p class=MsoNormal style='word-break:break-all'><b><span lang=EN-US
+style='font-family:"Arial",sans-serif;color:#7030A0'>V2.2.5-2026/06/02</span></b></p>
+
+<p class=MsoListParagraph style='margin-left:21.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span lang=EN-US>CMSIS</span></p>
+
+<p class=MsoListParagraph style='margin-left:42.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>l<span
+style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=EN-US>system_at32f435_437.c</span></p>
+
+<p class=MsoListParagraph style='margin-left:63.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>w<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span></span><span
+style='font-family:宋体'>更新</span><span lang=EN-US>System_init()</span><span
+style='font-family:宋体'>函数流程，避免切换过程中可能导致的时钟异常。</span></p>
+
+<p class=MsoListParagraph style='margin-left:21.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span lang=EN-US>Middlewares</span></p>
+
+<p class=MsoListParagraph style='margin-left:42.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>l<span
+style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=EN-US>USB</span></p>
+
+<p class=MsoListParagraph style='margin-left:63.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>w<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span></span><span
+style='font-family:宋体'>更新</span><span lang=EN-US>msc class</span><span
+style='font-family:宋体'>，增加对</span><span lang=EN-US>test_unit()</span><span
+style='font-family:宋体'>和</span><span lang=EN-US>start_stop()</span><span
+style='font-family:宋体'>函数的处理，完善兼容性。</span></p>
+
+<p class=MsoListParagraph style='margin-left:21.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US>3.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span lang=EN-US>Drivers</span></p>
+
+<p class=MsoListParagraph style='margin-left:42.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>l<span
+style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=EN-US>PWC</span></p>
+
+<p class=MsoListParagraph style='margin-left:63.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>w<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span></span><span
+style='font-family:宋体'>用于内存屏障的</span><span lang=EN-US>__force_stores()</span><span
+style='font-family:宋体'>改由</span><span lang=EN-US>__ISB()</span><span
+style='font-family:宋体'>和</span><span lang=EN-US>__DSB()</span><span
+style='font-family:宋体'>替代，解决不同编译器下共用问题。</span></p>
+
+<p class=MsoListParagraph style='margin-left:42.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>l<span
+style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=EN-US>CRM</span></p>
+
+<p class=MsoListParagraph style='margin-left:63.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>w<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span></span><span
+style='font-family:宋体'>更新</span><span lang=EN-US>crm_reset()</span><span
+style='font-family:宋体'>，</span><span lang=EN-US>crm_hick_sclk_frequency_select()</span><span
+style='font-family:宋体'>和</span><span lang=EN-US>crm_hick_divider_select()</span><span
+style='font-family:宋体'>函数流程，避免切换过程中可能导致的时钟异常。</span></p>
+
+<p class=MsoListParagraph style='margin-left:42.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>l<span
+style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=EN-US>EXINT</span></p>
+
+<p class=MsoListParagraph style='margin-left:63.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>w<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span></span><span
+style='font-family:宋体'>新增定义</span><span lang=EN-US>EXINT_TRIGGER_NONE_EDGE</span><span
+style='font-family:宋体'>，以适应软触发无边沿配置需求。</span></p>
+
+<p class=MsoListParagraph style='margin-left:21.0pt;text-indent:-21.0pt;
+word-break:break-all'><span lang=EN-US>4.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-family:宋体'>更新部分注释。</span></p>
+
+<p class=MsoNormal style='word-break:break-all'><b><span lang=EN-US
+style='font-family:"Arial",sans-serif;color:#7030A0'>&nbsp;</span></b></p>
+
+<p class=MsoNormal style='word-break:break-all'><b><span lang=EN-US
 style='font-family:"Arial",sans-serif;color:#7030A0'>V2.2.4-2026/04/08</span></b></p>
 
 <p class=MsoListParagraph style='margin-left:21.0pt;text-indent:-21.0pt;
@@ -141,7 +219,7 @@ style='font-family:宋体'>等型号。</span></p>
 
 <p class=MsoListParagraph style='margin-left:42.0pt;text-indent:-21.0pt;
 word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>l<span
-style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=EN-US>system_at32m412_416.h</span></p>
+style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=EN-US>system_at32f435_437.h</span></p>
 
 <p class=MsoListParagraph style='margin-left:63.0pt;text-indent:-21.0pt;
 word-break:break-all'><span lang=EN-US style='font-family:Wingdings'>w<span
@@ -625,7 +703,7 @@ word-break:break-all'><span lang=EN-US>3.<span style='font:7.0pt "Times New Roma
 style='font-family:"Arial",sans-serif;color:#7030A0'>V2.2.1-2024/12/13</span></b></p>
 
 <p class=MsoListParagraph style='margin-left:21.0pt;text-indent:-21.0pt;
-word-break:break-all'><span lang=EN-US>6.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+word-break:break-all'><span lang=EN-US>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span><span lang=EN-US>CMSIS</span></p>
 
 <p class=MsoListParagraph style='margin-left:42.0pt;text-indent:-21.0pt;
@@ -646,7 +724,7 @@ style='font-family:宋体'>中</span><span lang=EN-US>system_core_clock_update()</s
 style='font-family:宋体'>函数，修正可能计算值溢出导致结果错误的情况。</span></p>
 
 <p class=MsoListParagraph style='margin-left:21.0pt;text-indent:-21.0pt;
-word-break:break-all'><span lang=EN-US>7.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+word-break:break-all'><span lang=EN-US>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span><span lang=EN-US>Drivers</span></p>
 
 <p class=MsoListParagraph style='margin-left:42.0pt;text-indent:-21.0pt;
@@ -712,7 +790,7 @@ style='font-family:宋体'>模式下</span><span lang=EN-US>usb_ept_close()</span><sp
 style='font-family:宋体'>函数，完善关闭端点流程。</span></p>
 
 <p class=MsoListParagraph style='margin-left:21.0pt;text-indent:-21.0pt;
-word-break:break-all'><span lang=EN-US>8.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+word-break:break-all'><span lang=EN-US>3.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span><span lang=EN-US>Middlewares</span></p>
 
 <p class=MsoListParagraph style='margin-left:42.0pt;text-indent:-21.0pt;
@@ -752,7 +830,7 @@ style='font-family:宋体'>函数，修正</span><span lang=EN-US>USB set configuration
 style='font-family:宋体'>的判断方式。</span></p>
 
 <p class=MsoListParagraph style='margin-left:21.0pt;text-indent:-21.0pt'><span
-lang=EN-US>9.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+lang=EN-US>4.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span><span lang=EN-US>Demos</span></p>
 
 <p class=MsoListParagraph style='margin-left:42.0pt;text-indent:-21.0pt;
@@ -888,7 +966,7 @@ style='font-family:宋体'>下</span><span lang=EN-US>bootloader</span><span
 style='font-family:宋体'>的跳转地址变量，将局部变量方式改为全局变量，尽可能确保跳转地址不被优化所影响。</span></p>
 
 <p class=MsoListParagraph style='margin-left:21.0pt;text-indent:-21.0pt'><span
-lang=EN-US>10.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+lang=EN-US>5.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span><span style='font-family:宋体'>更新部分注释。</span></p>
 
 <p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>

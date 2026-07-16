@@ -90,7 +90,12 @@ void SystemInit (void)
   CRM->pllcfg = 0x00033002U;
 
   /* reset clkout[3], usbbufs, hickdiv, clkoutdiv */
+  CRM->misc1_bit.hick_to_sclk = 1;
+  __ISB();
+  CRM->misc1_bit.hickdiv = 0;
+  __ISB();
   CRM->misc1 = 0;
+  __ISB();
 
   /* disable all interrupts enable and clear pending bits  */
   CRM->clkint = 0x009F0000U;
